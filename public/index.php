@@ -58,6 +58,7 @@ set_exception_handler(static function (Throwable $exception) use ($isLocal): voi
 });
 
 // 4. Session sécurisée
+session_name((string) Config::get('security.session_name', 'fiucc_session'));
 session_set_cookie_params([
     'lifetime' => (int) Config::get('security.session_lifetime', 120) * 60,
     'path'     => '/',
