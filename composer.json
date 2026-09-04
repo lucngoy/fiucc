@@ -2,6 +2,13 @@
   "name": "fiucc/portal",
   "description": "Official digital portal of the Congolese Community of Final International University",
   "type": "project",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Congolese Community of Final",
+      "homepage": "https://github.com/lucngoy/fiucc"
+    }
+  ],
   "require": {
     "php": ">=8.2",
     "ext-pdo": "*",
