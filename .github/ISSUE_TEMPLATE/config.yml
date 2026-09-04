@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question sur le cahier des charges
+    url: https://github.com/
+    about: Poser la question dans le canal WhatsApp du bureau avant d'ouvrir une issue.

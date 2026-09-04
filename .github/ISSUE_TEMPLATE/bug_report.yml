@@ -1,0 +1,56 @@
+name: Bug
+description: Signaler un dysfonctionnement du portail
+labels: ["bug"]
+body:
+  - type: input
+    id: jira
+    attributes:
+      label: Ticket Jira (si existant)
+      placeholder: FIUCC-
+  - type: textarea
+    id: what
+    attributes:
+      label: Ce qui se passe
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Ce qui devrait se passer
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Étapes pour reproduire
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Zone concernée
+      options:
+        - Recensement / vérification email
+        - Espace membre
+        - Événements / galerie / actualités
+        - Élection / vote
+        - Annuaire / alumni / mentorat
+        - Administration
+        - Autre
+    validations:
+      required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: Appareil
+      options: [Mobile, Tablette, Desktop]
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Sécurité
+      options:
+        - label: Ce bug touche au vote, à l'authentification ou aux données personnelles

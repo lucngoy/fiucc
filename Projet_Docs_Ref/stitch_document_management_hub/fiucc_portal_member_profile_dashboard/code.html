@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-bright": "#f9f9ff", "tertiary-fixed": "#ffe083", "tertiary-container": "#cea700", "on-tertiary": "#ffffff", "surface-container-low": "#f1f3ff", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#00497a", "outline-variant": "#c2c6d5", "primary-fixed": "#d7e3ff", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#edc219", "surface": "#f9f9ff", "inverse-surface": "#293040", "inverse-on-surface": "#edf0ff", "secondary-container": "#7abbfe", "secondary": "#06629f", "on-secondary-fixed": "#001d35", "surface-container-highest": "#dce2f7", "on-tertiary-container": "#4e3e00", "on-error": "#ffffff", "primary": "#004c9a", "surface-container": "#e9edff", "on-secondary-container": "#004a7b", "secondary-fixed": "#d0e4ff", "on-primary": "#ffffff", "on-primary-fixed-variant": "#00458e", "secondary-fixed-dim": "#9ccaff", "outline": "#727784", "primary-container": "#0063c6", "on-surface": "#141b2b", "surface-dim": "#d3daef", "on-tertiary-fixed": "#231b00", "error": "#ba1a1a", "surface-tint": "#005cba", "tertiary": "#725c00", "on-background": "#141b2b", "background": "#f9f9ff", "surface-variant": "#dce2f7", "on-primary-fixed": "#001b3e", "on-secondary": "#ffffff", "on-surface-variant": "#424753", "on-tertiary-fixed-variant": "#564500", "on-error-container": "#93000a", "on-primary-container": "#d8e3ff", "surface-container-high": "#e1e8fd", "primary-fixed-dim": "#aac7ff", "inverse-primary": "#aac7ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-48": "3rem", "gutter-mobile": "1rem", "space-64": "4rem", "space-24": "1.5rem", "gutter-desktop": "1.5rem", "space-20": "1.25rem", "space-40": "2.5rem", "space-8": "0.5rem", "space-16": "1rem", "space-12": "0.75rem", "space-4": "0.25rem", "layout-max-width": "1200px", "space-32": "2rem", "space-2": "0.125rem" }, "fontFamily": { "headline-md": ["Inter"], "label-caps": ["Inter"], "label-md": ["Inter"], "display-hero-mobile": ["Inter"], "headline-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "display-hero": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="sticky top-0 z-50 w-full bg-surface-container-lowest border-b border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,0,0.03)]"><div class="max-w-layout-max-width mx-auto h-[72px] px-gutter-mobile md:px-gutter-desktop flex items-center justify-between gap-space-16"><div class="flex items-center gap-space-12 shrink-0"><a class="flex items-center gap-space-12" data-path="home" href="#"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface hidden lg:inline-block tracking-tight">Congolese Community of Final</span><span class="font-headline-sm text-headline-sm text-on-surface lg:hidden">FIUCC</span></a></div><nav class="hidden xl:flex items-center gap-space-20" data-active-classes="text-primary-container font-semibold border-b-2 border-primary-container pb- space-2"><a aria-current="page" class="transition-colors text-primary-container font-semibold border-b-2 border-primary-container pb- space-2" data-path="home" href="#">Home</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="community" href="#">Community</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="government" href="#">Government</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="events" href="#">Events</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="gallery" href="#">Gallery</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="news" href="#">News</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="members" href="#">Members</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="election" href="#">Election</a></nav><div class="flex items-center gap-space-16 shrink-0"><div class="flex items-center bg-surface-container-low p-space-2 rounded-lg border border-outline-variant/30 text-label-md font-label-md"><button class="px-space-8 py-space-4 rounded bg-primary-container text-on-primary font-bold">EN</button><button class="px-space-8 py-space-4 rounded text-on-surface-variant hover:text-on-surface">FR</button></div><a class="hidden sm:inline-block font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors" data-path="sign-in" href="#">Sign in</a><a class="bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg px-space-16 h-[40px] flex items-center justify-center rounded-lg transition-colors shadow-sm" data-path="membership-registration" href="#">Join the community</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-[72px] bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Profile Header Hero / Cover Band -->
+<div class="w-full relative bg-primary-container overflow-hidden">
+<!-- Subtle Institutional/Congolese Geometric Background Pattern -->
+<div class="absolute inset-0 opacity-15 pointer-events-none">
+<svg class="w-full h-full" height="100%" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<pattern height="48" id="fiucc-geo-grid" patternunits="userSpaceOnUse" width="48">
+<path d="M 0 24 L 24 0 L 48 24 L 24 48 Z" fill="none" stroke="#ffffff" stroke-width="1.2"></path>
+<polygon fill="#ffffff" opacity="0.35" points="24,18 30,24 24,30 18,24"></polygon>
+<circle cx="24" cy="24" fill="#ffe083" r="2"></circle>
+</pattern>
+</defs>
+<rect fill="url(#fiucc-geo-grid)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<div class="absolute -right-16 -top-20 w-96 h-96 rounded-full bg-secondary-container/20 blur-3xl pointer-events-none"></div>
+<div class="absolute left-1/4 -bottom-10 w-72 h-72 rounded-full bg-tertiary-fixed-dim/15 blur-2xl pointer-events-none"></div>
+<!-- Inner Cover Container -->
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop h-48 sm:h-52 flex items-end pb-space-12 relative z-10">
+<div class="flex items-center justify-between w-full">
+<span class="inline-flex items-center gap-space-8 px-space-12 py-space-4 rounded-full bg-surface-container-lowest/15 backdrop-blur-md text-on-primary font-label-caps text-label-caps tracking-wider uppercase">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+          Republic of Cyprus · FIU Chapter Portal
+        </span>
+<span class="text-on-primary/70 font-label-md text-label-md hidden sm:inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[16px] text-tertiary-fixed-dim">verified_user</span>
+          Secured FIUCC Member Node #0489
+        </span>
+</div>
+</div>
+</div>
+<!-- Profile Identity Bar & Actions -->
+<div class="w-full bg-surface-container-lowest shadow-sm">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="flex flex-col lg:flex-row lg:items-end justify-between pb-space-24 gap-space-20">
+<!-- Avatar & Details (Avatar overlaps cover by -mt-16) -->
+<div class="flex flex-col sm:flex-row sm:items-end gap-space-20 -mt-16 sm:-mt-20">
+<!-- Circular Member Avatar -->
+<div class="relative group shrink-0">
+<div class="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-surface-container shadow-md ring-4 ring-surface-container-lowest">
+<img class="w-full h-full object-cover" data-alt="Photographic headshot of Jonathan Mukendi Kabongo, an ambitious and smiling 21-year-old Congolese university scholar wearing a navy blue blazer over a clean collared shirt. Soft golden afternoon sunlight, shallow depth of field, sharp collegiate portrait photography with authentic warm skin tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMWuEj1Nk8X8SVENhIgEKABgUSqy98VZCcfppb7_p22RAFGsoYz4fOXQTaaCg2SKxtXfXqtzwXdtzlnx5oge3JDZIVNipxuO6Wbz-FCJNVLWlqCsMD02gehCsJz8HBujxY7cesAc9mb1O4z9qgnObzck_frNWNjXeCPUydP-JfKDJapaoFi3in1ZLLoYZXHr3B3pUug7vmOOTK4Jg1XK_VL5G0QaRIxD8Du9yBkTexOG4GLRK_355_"/>
+</div>
+<div class="absolute bottom-1 right-1 w-7 h-7 rounded-full bg-surface-container-lowest flex items-center justify-center shadow-sm">
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[13px]">school</span>
+</span>
+</div>
+</div>
+<!-- Name & Academic Metadata -->
+<div class="flex flex-col gap-space-8 pt-space-4">
+<div class="flex flex-wrap items-center gap-x-space-12 gap-y-space-4">
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+                Jonathan Mukendi Kabongo
+              </h1>
+<div class="flex flex-wrap items-center gap-space-8">
+<!-- Blue Student pill -->
+<span class="px-space-8 py-0.5 rounded-full bg-primary/10 text-primary font-label-md text-label-md inline-flex items-center gap-space-4">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                  Student
+                </span>
+<!-- Gold Verified Member pill -->
+<span class="px-space-8 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-semibold inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[13px] text-tertiary">check_circle</span>
+                  Verified Member
+                </span>
+<!-- Census Badge -->
+<span class="px-space-8 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-caps text-label-caps uppercase tracking-wider">
+                  Census 2024-2025
+                </span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant flex flex-wrap items-center gap-x-space-8">
+<span>Faculty of Engineering</span>
+<span class="text-outline-variant">·</span>
+<span>B.Sc. Computer Engineering (Year 2)</span>
+<span class="text-outline-variant">·</span>
+<span class="font-medium text-on-surface">Student ID: 20241890</span>
+</p>
+</div>
+</div>
+<!-- Right Side Header Action Buttons -->
+<div class="flex items-center gap-space-12 shrink-0 self-start sm:self-auto">
+<!-- Outline Edit Profile Button -->
+<button class="h-10 px-space-16 rounded-lg bg-surface-container-lowest text-primary hover:bg-surface-container-low transition-colors font-label-lg text-label-lg flex items-center gap-space-8 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span>Edit profile</span>
+</button>
+<!-- Secondary / Accent Download Digital ID Button -->
+<button class="h-10 px-space-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary transition-colors font-label-lg text-label-lg flex items-center gap-space-8 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">badge</span>
+<span>Download digital ID</span>
+</button>
+</div>
+</div>
+<!-- Segmented Navigation Tab Bar -->
+<div class="flex items-center gap-space-32 overflow-x-auto scrollbar-none pt-space-4">
+<!-- Overview Tab (ACTIVE) -->
+<button class="relative pb-space-12 text-primary-container font-label-lg text-label-lg font-bold flex items-center gap-space-8 whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-[18px]">grid_view</span>
+<span>Overview</span>
+<span class="absolute bottom-0 left-0 right-0 h-0.5 bg-primary-container rounded-full"></span>
+</button>
+<!-- My Events Tab -->
+<button class="relative pb-space-12 text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors flex items-center gap-space-8 whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-[18px]">event</span>
+<span>My events</span>
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface font-label-caps text-label-caps flex items-center justify-center">2</span>
+</button>
+<!-- My Documents Tab -->
+<button class="relative pb-space-12 text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors flex items-center gap-space-8 whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-[18px]">folder</span>
+<span>My documents</span>
+<span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface font-label-caps text-label-caps flex items-center justify-center">3</span>
+</button>
+<!-- Privacy Settings Tab -->
+<button class="relative pb-space-12 text-on-surface-variant hover:text-on-surface font-label-lg text-label-lg transition-colors flex items-center gap-space-8 whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-[18px]">security</span>
+<span>Privacy settings</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Dashboard Overview Main Content Grid -->
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-32 w-full">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-24">
+<!-- ================= LEFT COLUMN (65% / 8 cols) ================= -->
+<div class="lg:col-span-8 flex flex-col gap-space-24">
+<!-- WIDGET A: FIUCC Digital Membership Card -->
+<div class="relative rounded-xl overflow-hidden bg-gradient-to-br from-primary-container via-primary to-on-primary-fixed-variant text-on-primary shadow-md p-space-24 sm:p-space-32">
+<!-- Card Decorative Ambient Shimmer -->
+<div class="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-secondary-container/20 blur-2xl pointer-events-none"></div>
+<div class="absolute -left-16 -bottom-16 w-56 h-56 rounded-full bg-tertiary-fixed-dim/15 blur-2xl pointer-events-none"></div>
+<!-- Subtle Card Watermark Crest -->
+<div class="absolute right-32 top-1/2 -translate-y-1/2 opacity-10 pointer-events-none hidden md:block">
+<svg fill="none" height="220" viewbox="0 0 200 200" width="220" xmlns="http://www.w3.org/2000/svg">
+<circle cx="100" cy="100" r="90" stroke="#ffffff" stroke-width="6"></circle>
+<polygon fill="#ffffff" points="100,25 122,70 172,77 136,112 144,162 100,138 56,162 64,112 28,77 78,70"></polygon>
+</svg>
+</div>
+<div class="relative z-10 flex flex-col justify-between gap-space-24">
+<!-- Card Top Row: Entity & Security Chip -->
+<div class="flex items-start justify-between gap-space-16">
+<div class="flex items-center gap-space-12">
+<div class="w-12 h-12 rounded-full bg-surface-container-lowest/15 backdrop-blur-md p-1.5 flex items-center justify-center shadow-inner">
+<span class="material-symbols-outlined text-tertiary-fixed text-[26px]">stars</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-primary tracking-tight font-bold">FIUCC OFFICIAL CARD</span>
+<span class="font-label-caps text-label-caps text-on-primary-container tracking-wider uppercase">Republic of Cyprus · FIU Chapter</span>
+</div>
+</div>
+<!-- Gold Microchip Visual -->
+<div class="flex items-center gap-space-8">
+<div class="w-11 h-8 rounded bg-gradient-to-tr from-tertiary to-tertiary-fixed p-1 shadow-sm flex flex-col justify-between">
+<div class="w-full h-1 bg-on-tertiary/40 rounded-sm"></div>
+<div class="w-3/4 h-1 bg-on-tertiary/40 rounded-sm"></div>
+<div class="w-full h-1 bg-on-tertiary/40 rounded-sm"></div>
+</div>
+<span class="material-symbols-outlined text-tertiary-fixed text-[20px]" title="Contactless Active">contactless</span>
+</div>
+</div>
+<!-- Card Mid Section: Member Data vs QR Gate Code -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-space-16 items-center">
+<div class="sm:col-span-8 flex flex-col gap-space-12">
+<div>
+<div class="font-label-caps text-label-caps text-on-primary-container uppercase tracking-wider">Member Name</div>
+<div class="font-headline-md text-headline-md text-on-primary font-bold tracking-tight">Jonathan Mukendi Kabongo</div>
+</div>
+<div class="grid grid-cols-2 gap-x-space-16 gap-y-space-8 pt-space-4">
+<div>
+<span class="block font-label-caps text-label-caps text-on-primary-container uppercase tracking-wider">Member ID</span>
+<span class="font-mono text-body-md font-semibold text-tertiary-fixed">FIUCC-2024-0489</span>
+</div>
+<div>
+<span class="block font-label-caps text-label-caps text-on-primary-container uppercase tracking-wider">Validity</span>
+<span class="font-body-md text-on-primary font-medium">AY 2024-2025</span>
+</div>
+<div class="col-span-2">
+<span class="block font-label-caps text-label-caps text-on-primary-container uppercase tracking-wider">Faculty & Major</span>
+<span class="font-body-sm text-body-sm text-on-primary">Engineering & Technology · Computer Eng.</span>
+</div>
+</div>
+</div>
+<!-- Realistic Scannable QR Code Box -->
+<div class="sm:col-span-4 flex flex-col items-center sm:items-end justify-center">
+<div class="p-2.5 bg-surface-container-lowest rounded-xl shadow-md flex flex-col items-center">
+<!-- Custom Detailed QR Vector Representation -->
+<svg class="text-inverse-surface fill-current" height="104" viewbox="0 0 100 100" width="104">
+<!-- Top Left Marker -->
+<rect height="30" rx="3" width="30" x="0" y="0"></rect>
+<rect fill="#ffffff" height="20" rx="1" width="20" x="5" y="5"></rect>
+<rect height="12" rx="1" width="12" x="9" y="9"></rect>
+<!-- Top Right Marker -->
+<rect height="30" rx="3" width="30" x="70" y="0"></rect>
+<rect fill="#ffffff" height="20" rx="1" width="20" x="75" y="5"></rect>
+<rect height="12" rx="1" width="12" x="79" y="9"></rect>
+<!-- Bottom Left Marker -->
+<rect height="30" rx="3" width="30" x="0" y="70"></rect>
+<rect fill="#ffffff" height="20" rx="1" width="20" x="5" y="75"></rect>
+<rect height="12" rx="1" width="12" x="9" y="79"></rect>
+<!-- Data Points Matrix -->
+<rect height="6" width="6" x="36" y="6"></rect>
+<rect height="6" width="6" x="48" y="10"></rect>
+<rect height="6" width="6" x="40" y="20"></rect>
+<rect height="6" width="6" x="54" y="24"></rect>
+<rect height="6" width="6" x="6" y="38"></rect>
+<rect height="6" width="6" x="18" y="44"></rect>
+<rect height="6" width="6" x="28" y="38"></rect>
+<rect height="6" width="6" x="38" y="36"></rect>
+<rect height="8" width="8" x="46" y="44"></rect>
+<rect height="6" width="6" x="60" y="40"></rect>
+<rect height="6" width="6" x="74" y="36"></rect>
+<rect height="6" width="6" x="88" y="42"></rect>
+<rect height="6" width="6" x="36" y="60"></rect>
+<rect height="6" width="6" x="48" y="66"></rect>
+<rect height="6" width="6" x="62" y="56"></rect>
+<rect height="6" width="6" x="40" y="76"></rect>
+<rect height="6" width="6" x="52" y="84"></rect>
+<rect height="6" width="6" x="68" y="74"></rect>
+<rect height="6" width="6" x="80" y="68"></rect>
+<rect height="6" width="6" x="74" y="86"></rect>
+<rect height="8" width="8" x="86" y="82"></rect>
+</svg>
+<span class="font-label-caps text-label-caps text-on-surface font-semibold mt-1 tracking-wider">GATE SCAN VERIFIED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Strip: DRC Flag Trim (Sky blue, yellow star accent, red stripe bordered by yellow) -->
+<div class="absolute bottom-0 left-0 right-0 h-2 bg-[#007fff] flex overflow-hidden">
+<div class="h-full w-2/5 bg-[#007fff] relative">
+<span class="absolute left-2 -top-1 text-[#fcd116] text-[10px]">★</span>
+</div>
+<div class="h-full w-1.5 bg-[#fcd116]"></div>
+<div class="h-full w-1/4 bg-[#ce1021]"></div>
+<div class="h-full w-1.5 bg-[#fcd116]"></div>
+<div class="h-full flex-1 bg-[#007fff]"></div>
+</div>
+</div>
+<!-- WIDGET B: Your Upcoming Events -->
+<div class="rounded-xl bg-surface-container-lowest p-space-24 shadow-sm flex flex-col gap-space-20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[24px]">calendar_month</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Your upcoming events</h2>
+</div>
+<a class="font-label-lg text-label-lg text-primary-container hover:text-primary transition-colors flex items-center gap-space-4 font-semibold" href="#">
+<span>View calendar</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Events Rows Container -->
+<div class="flex flex-col gap-space-12">
+<!-- Event Row 1 -->
+<div class="p-space-16 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-space-16">
+<div class="flex items-center gap-space-16">
+<!-- Distinct Date Block in Gold Accent -->
+<div class="w-16 h-16 rounded-lg bg-tertiary-fixed flex flex-col items-center justify-center shrink-0 shadow-sm text-on-tertiary-fixed">
+<span class="font-label-caps text-label-caps font-bold tracking-widest uppercase">JUN</span>
+<span class="font-display-hero-mobile text-display-hero-mobile font-extrabold leading-none">30</span>
+</div>
+<div class="flex flex-col gap-space-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-tight">
+                    Congolese Cultural Gala & Independence Day
+                  </h3>
+<div class="flex flex-wrap items-center gap-space-8 text-on-surface-variant font-body-sm text-body-sm">
+<span class="inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[15px] text-primary">schedule</span>
+                      18:30 - 23:00 EEST
+                    </span>
+<span>·</span>
+<span class="inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+                      FIU Grand Auditorium, Girne
+                    </span>
+</div>
+</div>
+</div>
+<!-- Registration Pill & Ticket QR Action -->
+<div class="flex items-center gap-space-12 self-end sm:self-center shrink-0">
+<span class="px-space-12 py-space-4 rounded-full bg-primary/10 text-primary font-label-md text-label-md font-semibold inline-flex items-center gap-space-4">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                  Registered
+                </span>
+<button class="p-space-8 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-on-surface transition-colors shadow-sm" title="View Entry Pass QR" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</button>
+</div>
+</div>
+<!-- Event Row 2 -->
+<div class="p-space-16 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-space-16">
+<div class="flex items-center gap-space-16">
+<!-- Distinct Date Block in Primary Blue -->
+<div class="w-16 h-16 rounded-lg bg-primary-container flex flex-col items-center justify-center shrink-0 shadow-sm text-on-primary">
+<span class="font-label-caps text-label-caps font-bold tracking-widest uppercase text-on-primary-container">JUL</span>
+<span class="font-display-hero-mobile text-display-hero-mobile font-extrabold leading-none">14</span>
+</div>
+<div class="flex flex-col gap-space-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-tight">
+                    General Assembly & Mandate Review 2024
+                  </h3>
+<div class="flex flex-wrap items-center gap-space-8 text-on-surface-variant font-body-sm text-body-sm">
+<span class="inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[15px] text-primary">schedule</span>
+                      14:00 - 17:00 EEST
+                    </span>
+<span>·</span>
+<span class="inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+                      Conference Hall B4 & Online Stream
+                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-12 self-end sm:self-center shrink-0">
+<span class="px-space-12 py-space-4 rounded-full bg-primary/10 text-primary font-label-md text-label-md font-semibold inline-flex items-center gap-space-4">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+                  Registered
+                </span>
+<button class="p-space-8 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-on-surface transition-colors shadow-sm" title="View Entry Pass QR" type="button">
+<span class="material-symbols-outlined text-[20px]">qr_code_2</span>
+</button>
+</div>
+</div>
+<!-- Event Row 3 -->
+<div class="p-space-16 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-space-16">
+<div class="flex items-center gap-space-16">
+<!-- Distinct Date Block in Secondary Blue -->
+<div class="w-16 h-16 rounded-lg bg-secondary-container flex flex-col items-center justify-center shrink-0 shadow-sm text-on-secondary-container">
+<span class="font-label-caps text-label-caps font-bold tracking-widest uppercase">AUG</span>
+<span class="font-display-hero-mobile text-display-hero-mobile font-extrabold leading-none">02</span>
+</div>
+<div class="flex flex-col gap-space-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold leading-tight">
+                    Inter-University Congolese Cup: Girne Qualifier
+                  </h3>
+<div class="flex flex-wrap items-center gap-space-8 text-on-surface-variant font-body-sm text-body-sm">
+<span class="inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[15px] text-primary">schedule</span>
+                      10:00 - 16:30 EEST
+                    </span>
+<span>·</span>
+<span class="inline-flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[15px] text-primary">location_on</span>
+                      FIU Olympic Sports Complex
+                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-space-12 self-end sm:self-center shrink-0">
+<span class="px-space-12 py-space-4 rounded-full bg-surface-container-high text-on-surface-variant font-label-md text-label-md font-semibold inline-flex items-center gap-space-4">
+<span>RSVP Open</span>
+</span>
+<button class="h-9 px-space-12 rounded-lg bg-primary-container text-on-primary hover:bg-primary font-label-md text-label-md transition-colors shadow-sm" type="button">
+                  Join Team
+                </button>
+</div>
+</div>
+</div>
+</div>
+<!-- WIDGET C: Recent Community News & Dispatches -->
+<div class="rounded-xl bg-surface-container-lowest p-space-24 shadow-sm flex flex-col gap-space-20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[24px]">campaign</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Recent community news</h2>
+</div>
+<a class="font-label-lg text-label-lg text-primary-container hover:text-primary transition-colors flex items-center gap-space-4 font-semibold" href="#">
+<span>All dispatches</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- Structured News Items -->
+<div class="flex flex-col gap-space-16">
+<!-- News Item 1 -->
+<div class="p-space-16 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row gap-space-16 items-start">
+<div class="w-12 h-12 rounded-lg bg-primary-fixed flex items-center justify-center shrink-0 text-on-primary-fixed">
+<span class="material-symbols-outlined text-[24px]">policy</span>
+</div>
+<div class="flex-1 flex flex-col gap-space-4">
+<div class="flex items-center gap-space-8">
+<span class="px-space-8 py-space-2 rounded bg-primary/10 text-primary font-label-caps text-label-caps uppercase font-bold">
+                    Consular Advisory
+                  </span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">Yesterday at 16:40</span>
+</div>
+<a class="font-headline-sm text-headline-sm text-on-surface font-semibold hover:text-primary-container transition-colors" href="#">
+                  Consular Delegation Visit from Athens: Passport Extensions & Civil Status Verification
+                </a>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                  The Embassy delegation will host dedicated biometric processing sessions on campus from July 18 to July 21. Pre-registration via the FIUCC diplomatic secretariat portal is mandatory for appointment queues.
+                </p>
+</div>
+</div>
+<!-- News Item 2 -->
+<div class="p-space-16 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row gap-space-16 items-start">
+<div class="w-12 h-12 rounded-lg bg-tertiary-fixed flex items-center justify-center shrink-0 text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-[24px]">menu_book</span>
+</div>
+<div class="flex-1 flex flex-col gap-space-4">
+<div class="flex items-center gap-space-8">
+<span class="px-space-8 py-space-2 rounded bg-tertiary-fixed/40 text-on-tertiary-container font-label-caps text-label-caps uppercase font-bold">
+                    Academic Aid
+                  </span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">3 days ago</span>
+</div>
+<a class="font-headline-sm text-headline-sm text-on-surface font-semibold hover:text-primary-container transition-colors" href="#">
+                  Peer-to-Peer Engineering & Calculus Tutoring Pods: Summer Session Launch
+                </a>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                  Senior FIUCC fellows in Computer Engineering and Civil Infrastructure are conducting bi-weekly problem-solving workshops ahead of midterm examinations.
+                </p>
+</div>
+</div>
+<!-- News Item 3 -->
+<div class="p-space-16 rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex flex-col sm:flex-row gap-space-16 items-start">
+<div class="w-12 h-12 rounded-lg bg-secondary-fixed flex items-center justify-center shrink-0 text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[24px]">how_to_vote</span>
+</div>
+<div class="flex-1 flex flex-col gap-space-4">
+<div class="flex items-center gap-space-8">
+<span class="px-space-8 py-space-2 rounded bg-secondary-fixed/50 text-on-secondary-fixed-variant font-label-caps text-label-caps uppercase font-bold">
+                    Election Notice
+                  </span>
+<span class="text-on-surface-variant font-body-sm text-body-sm">May 28, 2025</span>
+</div>
+<a class="font-headline-sm text-headline-sm text-on-surface font-semibold hover:text-primary-container transition-colors" href="#">
+                  Independent Electoral Commission (CENI-FIUCC) Publishes Preliminary Roll of Candidates
+                </a>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                  Review the official candidacy statements, platform manifests, and ethical codes for the upcoming 2026 Executive Bureau mandate elections.
+                </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= RIGHT COLUMN (35% / 4 cols) ================= -->
+<div class="lg:col-span-4 flex flex-col gap-space-24">
+<!-- CARD 1: Complete Your Profile (75% Progress) -->
+<div class="rounded-xl bg-surface-container-lowest p-space-24 shadow-sm flex flex-col gap-space-16">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Complete profile</h3>
+<span class="font-label-lg text-label-lg font-bold text-primary-container">75%</span>
+</div>
+<!-- Progress Visualization Bar & Ring -->
+<div class="flex items-center gap-space-16 p-space-12 rounded-lg bg-surface-container-low">
+<div class="relative w-12 h-12 shrink-0 flex items-center justify-center">
+<svg class="w-12 h-12 -rotate-90" viewbox="0 0 36 36">
+<!-- Background circle -->
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<!-- Progress circle (75%) -->
+<path class="text-primary-container" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="75, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="absolute font-label-caps text-label-caps font-bold text-primary">3/4</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">One step remaining</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Unlock emergency repatriation coverage</span>
+</div>
+</div>
+<!-- Checklist Items -->
+<div class="flex flex-col gap-space-8 pt-space-4">
+<!-- Item 1: Completed -->
+<div class="flex items-center justify-between p-space-8 rounded-lg bg-surface-container-low/50">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Census form submitted</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Done</span>
+</div>
+<!-- Item 2: Completed -->
+<div class="flex items-center justify-between p-space-8 rounded-lg bg-surface-container-low/50">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Official email verified</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Done</span>
+</div>
+<!-- Item 3: Completed -->
+<div class="flex items-center justify-between p-space-8 rounded-lg bg-surface-container-low/50">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-[18px] text-primary">check_circle</span>
+<span class="font-body-sm text-body-sm text-on-surface">Student ID photo approved</span>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Done</span>
+</div>
+<!-- Item 4: Pending -->
+<a class="flex items-center justify-between p-space-8 rounded-lg bg-tertiary-fixed/30 hover:bg-tertiary-fixed/50 transition-colors group" href="#">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-[18px] text-tertiary">radio_button_unchecked</span>
+<span class="font-body-sm text-body-sm font-semibold text-on-surface">Add Cyprus emergency contact</span>
+</div>
+<span class="material-symbols-outlined text-[18px] text-on-surface group-hover:translate-x-0.5 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+<!-- CARD 2: Voting Eligibility -->
+<div class="rounded-xl bg-surface-container-lowest p-space-24 shadow-sm flex flex-col gap-space-16 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-28 h-28 bg-primary/5 rounded-bl-full pointer-events-none"></div>
+<div class="flex items-center gap-space-12">
+<div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[22px]">verified</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold">CENI E-Registry</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold">Voting Eligibility</h3>
+</div>
+</div>
+<div class="p-space-12 rounded-lg bg-surface-container-low flex flex-col gap-space-4">
+<div class="flex items-center gap-space-6 text-on-surface font-label-lg text-label-lg font-bold">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span>Eligible for 2026 General Election</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Electoral status: <span class="font-semibold text-on-surface">ACTIVE</span> · Registered Voter ID: <span class="font-mono text-on-surface font-medium">FIU-VOTE-7824</span>
+</p>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Your diaspora status and enrolled university credits meet all constitutional quorum criteria for the upcoming electoral cycle.
+          </p>
+<a class="w-full h-10 px-space-16 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary-container font-label-lg text-label-lg flex items-center justify-center gap-space-8 transition-colors" href="#">
+<span>Learn about candidates & dates</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<!-- CARD 3: Community Connection & Directory -->
+<div class="rounded-xl bg-surface-container-lowest p-space-24 shadow-sm flex flex-col gap-space-16">
+<div class="flex flex-col gap-space-4">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[20px]">groups</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Community Network</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Connect with 450+ Congolese scholars, researchers, and alumni across Northern Cyprus.
+            </p>
+</div>
+<!-- Mini Avatar Stack of Fellow Engineering Students -->
+<div class="flex items-center justify-between p-space-12 rounded-lg bg-surface-container-low">
+<div class="flex -space-x-3 overflow-hidden p-1">
+<div class="inline-block h-10 w-10 rounded-full ring-2 ring-surface-container-lowest overflow-hidden bg-surface-container">
+<img class="h-full w-full object-cover" data-alt="Close-up portrait of a young female Congolese engineering student smiling warmly wearing glasses and university lanyard against clean campus backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMXXwhQ1ha-ygK-zAXK8sKiCcL9qfwcVQEYyDO8Ye6Wd6elRyVSs2cJ6LCBCGbWU13q5Q-JaebAkWaa-Ry8gweAOPGsMWNACX2cbzDt1TFkJHltTQG7BW6WQZ5aI8YUMTzse9z_MVfMRrx5KO35n7oeBP4OZkEo3LNSFUac0dyfL0C2YvLVuBKIrQGk7FQojxO5WMd_lV0iHWVbkWvGerEgVzPWIUJnGZ-E_Id6fiE8cf7-2I-K2XJ"/>
+</div>
+<div class="inline-block h-10 w-10 rounded-full ring-2 ring-surface-container-lowest overflow-hidden bg-surface-container">
+<img class="h-full w-full object-cover" data-alt="Portrait of a young male Congolese scholar in a smart casual polo shirt on the university library steps in bright daylight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCE4C_JDqLngXq1tBRrMpdA-VFe6Shh3yBUTvzm3aqQlZEZTNCJMeAUSTQxVzzHEZahx2LpqqNmOKop-XXhj57kA369oeYOln9DSaKUmUF8-_jYIDyrjcR2s_ykEZHLDybeQYn9tTnpS2dCprJdkQQN7sUCZ_XG2gLApuQwD6DJOdgcOpo7Jgum5nq5yf9PMW5N-OP0J4tlhnsRYb6ffG5UrOjt5xO5A3--wm2LlUDhne0g6MLbHDD_"/>
+</div>
+<div class="inline-block h-10 w-10 rounded-full ring-2 ring-surface-container-lowest overflow-hidden bg-surface-container">
+<img class="h-full w-full object-cover" data-alt="Portrait of an African university student outdoors smiling with soft natural light and academic campus buildings blurred in background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAN2i2o_O6VE9ceYDX21yi5s99OtmxH2S5cjm5nfHQI9gpIAAsLBlCsKKke43lnx7wu0u-G-QGMs0vv-NtF6UsG9dkbBofXJdxB78uOZOEWPiHkA-iXuE17Z3a2I4OuU4Viy2LbWFAVbIyu5zfLq-xVItZ0tDAcLcvVV2dRiiUIDrYGeleqzliH1Lk5hrkFHpCrJcAyKPVXr8mzcB2L9she53p2FeFCD75NLN39Z-zkj7LbZd122r2"/>
+</div>
+<div class="flex items-center justify-center h-10 w-10 rounded-full ring-2 ring-surface-container-lowest bg-primary-container text-on-primary font-label-md text-label-md font-bold">
+                +42
+              </div>
+</div>
+<div class="flex flex-col text-right">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Faculty Peers</span>
+<span class="font-label-md text-label-md font-bold text-on-surface">Engineering</span>
+</div>
+</div>
+<a class="w-full h-10 px-space-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg flex items-center justify-center gap-space-8 transition-colors shadow-sm" href="#">
+<span>Explore member directory</span>
+<span class="material-symbols-outlined text-[16px]">search</span>
+</a>
+</div>
+<!-- CARD 4: Quick Assistance & Consular Help -->
+<div class="rounded-xl bg-surface-container-low p-space-24 shadow-sm flex flex-col gap-space-16">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[20px]">support_agent</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Official Desk</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Need urgent administrative, visa attestation, or consular assistance? Reach the General Secretariat directly.
+          </p>
+<div class="flex flex-col gap-space-8">
+<a class="h-10 px-space-16 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-space-8 transition-colors shadow-sm" href="#">
+<span class="material-symbols-outlined text-[18px] text-primary">chat</span>
+<span>General Secretariat WhatsApp</span>
+</a>
+<a class="h-10 px-space-16 rounded-lg bg-surface-container-lowest hover:bg-surface-container-high text-on-surface font-label-md text-label-md flex items-center gap-space-8 transition-colors shadow-sm" href="#">
+<span class="material-symbols-outlined text-[18px] text-primary">mail</span>
+<span>consular-liaison@fiucc.org</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 mt-space-64"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-48 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-32"><div class="flex flex-col gap-space-16"><div class="flex items-center gap-space-8"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface">FIUCC Portal</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">The official democratic and social home of Congolese students at Final International University, promoting mutual aid, academic excellence, and diplomatic leadership abroad.</p></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Quick Links</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="home" href="#">Portal Home</a></li><li class="hover:text-primary-container transition-colors"><a data-path="events" href="#">Upcoming Gatherings</a></li><li class="hover:text-primary-container transition-colors"><a data-path="news" href="#">Campus Dispatches</a></li><li class="hover:text-primary-container transition-colors"><a data-path="election" href="#">Electoral Commission</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Community</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="members" href="#">Student Directory</a></li><li class="hover:text-primary-container transition-colors"><a data-path="community" href="#">Alumni Network</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Executive Mentors</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Official Documents & Statutes</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Contact</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">mail</span>contact@fiucc.org</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">chat</span>Official WhatsApp Group</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">camera_alt</span>@fiucc_official</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">location_on</span>Final International University, Girne</li></ul></div></div><div class="w-full bg-primary-container py-space-16"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col md:flex-row items-center justify-between gap-space-8 font-body-sm text-body-sm text-on-primary"><p>© 2025 Congolese Community of Final (FIUCC). All rights reserved.</p><p class="text-on-primary/90 font-label-md text-label-md">Made by the Congolese Community of Final</p></div></div></footer></body></html>

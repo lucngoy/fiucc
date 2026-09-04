@@ -1,0 +1,37 @@
+name: Fonctionnalité
+description: Proposer une évolution du portail
+labels: ["enhancement"]
+body:
+  - type: input
+    id: jira
+    attributes:
+      label: Ticket Jira (si existant)
+      placeholder: FIUCC-
+  - type: textarea
+    id: need
+    attributes:
+      label: Le besoin
+      description: Quel problème réel de la communauté cette fonctionnalité résout-elle ?
+    validations:
+      required: true
+  - type: dropdown
+    id: phase
+    attributes:
+      label: Étape du cycle communautaire concernée
+      options:
+        - Découverte / onboarding
+        - Recensement
+        - Événements
+        - Souvenirs / galerie
+        - Rencontres / annuaire
+        - Élections
+        - Alumni / mentorat
+        - Administration
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposition
+    validations:
+      required: true

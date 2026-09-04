@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-bright": "#f9f9ff", "tertiary-fixed": "#ffe083", "tertiary-container": "#cea700", "on-tertiary": "#ffffff", "surface-container-low": "#f1f3ff", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#00497a", "outline-variant": "#c2c6d5", "primary-fixed": "#d7e3ff", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#edc219", "surface": "#f9f9ff", "inverse-surface": "#293040", "inverse-on-surface": "#edf0ff", "secondary-container": "#7abbfe", "secondary": "#06629f", "on-secondary-fixed": "#001d35", "surface-container-highest": "#dce2f7", "on-tertiary-container": "#4e3e00", "on-error": "#ffffff", "primary": "#004c9a", "surface-container": "#e9edff", "on-secondary-container": "#004a7b", "secondary-fixed": "#d0e4ff", "on-primary": "#ffffff", "on-primary-fixed-variant": "#00458e", "secondary-fixed-dim": "#9ccaff", "outline": "#727784", "primary-container": "#0063c6", "on-surface": "#141b2b", "surface-dim": "#d3daef", "on-tertiary-fixed": "#231b00", "error": "#ba1a1a", "surface-tint": "#005cba", "tertiary": "#725c00", "on-background": "#141b2b", "background": "#f9f9ff", "surface-variant": "#dce2f7", "on-primary-fixed": "#001b3e", "on-secondary": "#ffffff", "on-surface-variant": "#424753", "on-tertiary-fixed-variant": "#564500", "on-error-container": "#93000a", "on-primary-container": "#d8e3ff", "surface-container-high": "#e1e8fd", "primary-fixed-dim": "#aac7ff", "inverse-primary": "#aac7ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-48": "3rem", "gutter-mobile": "1rem", "space-64": "4rem", "space-24": "1.5rem", "gutter-desktop": "1.5rem", "space-20": "1.25rem", "space-40": "2.5rem", "space-8": "0.5rem", "space-16": "1rem", "space-12": "0.75rem", "space-4": "0.25rem", "layout-max-width": "1200px", "space-32": "2rem", "space-2": "0.125rem" }, "fontFamily": { "headline-md": ["Inter"], "label-caps": ["Inter"], "label-md": ["Inter"], "display-hero-mobile": ["Inter"], "headline-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "display-hero": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="sticky top-0 z-50 w-full bg-surface-container-lowest border-b border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,0,0.03)]"><div class="max-w-layout-max-width mx-auto h-[72px] px-gutter-mobile md:px-gutter-desktop flex items-center justify-between gap-space-16"><div class="flex items-center gap-space-12 shrink-0"><a class="flex items-center gap-space-12" data-path="home" href="#"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface hidden lg:inline-block tracking-tight">Congolese Community of Final</span><span class="font-headline-sm text-headline-sm text-on-surface lg:hidden">FIUCC</span></a></div><nav class="hidden xl:flex items-center gap-space-20" data-active-classes="text-primary-container font-semibold border-b-2 border-primary-container pb- space-2"><a aria-current="page" class="transition-colors text-primary-container font-semibold border-b-2 border-primary-container pb- space-2" data-path="home" href="#">Home</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="community" href="#">Community</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="government" href="#">Government</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="events" href="#">Events</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="gallery" href="#">Gallery</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="news" href="#">News</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="members" href="#">Members</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="election" href="#">Election</a></nav><div class="flex items-center gap-space-16 shrink-0"><div class="flex items-center bg-surface-container-low p-space-2 rounded-lg border border-outline-variant/30 text-label-md font-label-md"><button class="px-space-8 py-space-4 rounded bg-primary-container text-on-primary font-bold">EN</button><button class="px-space-8 py-space-4 rounded text-on-surface-variant hover:text-on-surface">FR</button></div><a class="hidden sm:inline-block font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors" data-path="sign-in" href="#">Sign in</a><a class="bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg px-space-16 h-[40px] flex items-center justify-center rounded-lg transition-colors shadow-sm" data-path="membership-registration" href="#">Join the community</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-[72px] bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- SECTION A: NEWS & ANNOUNCEMENTS LISTING HUB -->
+<section class="w-full py-space-32 md:py-space-48">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col gap-space-32">
+<!-- Breadcrumb & Section Header -->
+<div class="flex flex-col gap-space-12">
+<nav class="flex items-center gap-space-8 font-label-md text-label-md text-on-surface-variant">
+<a class="hover:text-primary-container transition-colors" data-path="home" href="#">Home</a>
+<span class="text-outline-variant">/</span>
+<span class="text-primary-container font-semibold">News & Announcements</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-16 pb-space-8">
+<div>
+<div class="flex items-center gap-space-8 mb-space-4">
+<span class="inline-flex items-center justify-center w-2 h-2 rounded-full bg-primary-container"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-primary-container font-bold">Official Press & Information Bureau</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">News & Announcements</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl mt-space-4">
+              Official dispatches, administrative resolutions, and campus life updates from the FIUCC Secretariat.
+            </p>
+</div>
+<div class="flex items-center gap-space-8 shrink-0">
+<span class="font-label-caps text-label-caps px-space-12 py-space-4 rounded-full bg-surface-container-high text-on-surface-variant">Academic Term 2025-2026</span>
+<span class="inline-flex items-center gap-space-4 font-label-md text-label-md px-space-12 py-space-4 rounded-full bg-secondary-container/25 text-primary-container font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container animate-pulse"></span>
+              Feed Live
+            </span>
+</div>
+</div>
+<!-- Filter Pill Bar -->
+<div class="flex items-center gap-space-8 overflow-x-auto pb-space-4 pt-space-8 no-scrollbar">
+<button class="px-space-16 py-space-8 rounded-lg font-label-lg text-label-lg bg-primary-container text-on-primary shadow-sm whitespace-nowrap transition-all">
+            All (38)
+          </button>
+<button class="px-space-16 py-space-8 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all whitespace-nowrap">
+            Official Announcements (14)
+          </button>
+<button class="px-space-16 py-space-8 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all whitespace-nowrap">
+            Academic & Campus (11)
+          </button>
+<button class="px-space-16 py-space-8 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all whitespace-nowrap">
+            Cultural Events (8)
+          </button>
+<button class="px-space-16 py-space-8 rounded-lg font-label-lg text-label-lg bg-surface-container-lowest text-error hover:bg-error-container/40 transition-all whitespace-nowrap font-semibold">
+            Urgent Dispatches (5)
+          </button>
+</div>
+</div>
+<!-- Featured Article Hero Card (2-Column Bento style) -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+<div class="grid grid-cols-1 lg:grid-cols-12">
+<div class="lg:col-span-6 relative min-h-[300px] lg:min-h-[420px]">
+<img class="w-full h-full object-cover" data-alt="Dignified assembly of Congolese university students gathered inside a contemporary lecture auditorium at Final International University in Girne, sunlight through high windows, blue and gold institutional banners, cinematic documentary lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpGV6U3HtCxXqfkbaqkG1Tly7753r3gA1bu6K8m0RczREZ-_DNyi_Dvf2eHSIxkp02woWdgGPj7FYa0W_MAyPHZYjTekUOYwSSAd1Q3tbBiInJFDIPMRno8EDYPMNoxfGb1OdnqpngqBdchzXT5pF8xiT59yXQn21acYh1MO4BlKA6oJILLNoaYdg-m0CSFIxiQ9VDA1OTIHdgvyKboYH9Ghb0ZY3M2MgpgzXyA8dUNO35094AUAlU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent lg:hidden"></div>
+<div class="absolute bottom-4 left-4 lg:hidden">
+<span class="px-space-12 py-space-4 rounded-full font-label-md text-label-md bg-primary-container text-on-primary">Official Communique</span>
+</div>
+</div>
+<div class="lg:col-span-6 p-space-24 lg:p-space-40 flex flex-col justify-between">
+<div class="flex flex-col gap-space-16">
+<div class="hidden lg:flex items-center gap-space-8">
+<span class="px-space-12 py-space-4 rounded-full font-label-md text-label-md bg-secondary-container/20 text-primary-container font-semibold">
+                  Official Communique
+                </span>
+<span class="font-label-caps text-label-caps uppercase text-outline">Ref: FIUCC/SEC/2025-10</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-tight">
+                FIUCC Executive Bureau Announces General Assembly & Bilateral Academic Review for 2025-2026
+              </h2>
+<div class="space-y-space-12 text-on-surface-variant font-body-md text-body-md">
+<p>
+                  The Executive Bureau of the Congolese Community of Final International University (FIUCC) hereby convenes all registered scholars, postgraduate researchers, and incoming diaspora students for the mandatory Fall 2025 General Assembly.
+                </p>
+<p class="hidden sm:block">
+                  Key agenda items encompass the finalized diplomatic liaison framework with Turkish Cypriot immigration authorities for expeditious student residence renewals, transparent allocation of the community academic distress fund, and institutional partnerships for winter internship placements.
+                </p>
+</div>
+</div>
+<div class="pt-space-24 mt-space-24 flex flex-col sm:flex-row sm:items-center justify-between gap-space-16">
+<div class="flex items-center gap-space-12">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-headline-sm text-headline-sm">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+</div>
+<div>
+<p class="font-label-lg text-label-lg text-on-surface font-bold">Secrétariat Général FIUCC</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant">October 14, 2025 · 4 min read</p>
+</div>
+</div>
+<a class="inline-flex items-center gap-space-8 font-label-lg text-label-lg text-primary-container hover:text-primary font-bold group" href="#article-preview">
+<span>Read full communique</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</article>
+<!-- Two-Column Main Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-32 items-start">
+<!-- Left Column: Articles Grid (approx 68% / 8 columns) -->
+<div class="lg:col-span-8 flex flex-col gap-space-24">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Recent Dispatches</h3>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1-4 of 38 articles</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-20">
+<!-- Card 1: Urgent Red Badge -->
+<article class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div class="flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-space-4 px-space-10 py-space-4 rounded-full font-label-md text-label-md bg-error-container text-on-error-container font-bold">
+<span class="material-symbols-outlined text-[14px]">warning</span>
+                    URGENT DISPATCH
+                  </span>
+<span class="font-label-caps text-label-caps text-outline">3 MIN READ</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface line-clamp-2 hover:text-primary-container transition-colors cursor-pointer">
+                  Ministry of Interior Immigration Directive: Deadline for Student Residence Permits (İkamet) Renewal
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                  Urgent administrative notice regarding mandatory document submissions to the Girne District Police Headquarters. Failure to register biometric records before November 10 risks statutory fines.
+                </p>
+</div>
+<div class="pt-space-16 mt-space-16 flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Oct 13, 2025</span>
+<a class="text-primary-container font-label-md text-label-md font-semibold hover:underline" href="#article-preview">Full Protocol →</a>
+</div>
+</article>
+<!-- Card 2: Gold Badge -->
+<article class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div class="flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-space-4 px-space-10 py-space-4 rounded-full font-label-md text-label-md bg-tertiary-fixed text-on-tertiary-fixed font-bold">
+<span class="material-symbols-outlined text-[14px]">stars</span>
+                    EVENT HIGHLIGHT
+                  </span>
+<span class="font-label-caps text-label-caps text-outline">5 MIN READ</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface line-clamp-2 hover:text-primary-container transition-colors cursor-pointer">
+                  64th Congolese Independence Gala Highlights & Financial Transparency Report Released
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                  The Treasury Bureau has published the certified balance sheet following our annual diplomatic gala in Kyrenia. An operational surplus of €1,420 has been redirected to the student medical emergency pool.
+                </p>
+</div>
+<div class="pt-space-16 mt-space-16 flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Oct 10, 2025</span>
+<a class="text-primary-container font-label-md text-label-md font-semibold hover:underline" href="#">View Ledger →</a>
+</div>
+</article>
+<!-- Card 3: Blue Badge -->
+<article class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div class="flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-space-4 px-space-10 py-space-4 rounded-full font-label-md text-label-md bg-secondary-container/30 text-on-secondary-container font-semibold">
+<span class="material-symbols-outlined text-[14px]">school</span>
+                    ACADEMIC LIFE
+                  </span>
+<span class="font-label-caps text-label-caps text-outline">2 MIN READ</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface line-clamp-2 hover:text-primary-container transition-colors cursor-pointer">
+                  Fall 2025 Peer Tutoring Schedule: Mathematics, Programming & Civil Engineering Modules
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                  Free bi-weekly study sessions supervised by senior Congolese scholars have officially resumed in FIU Library Block C. Group schedules and registration details are now accessible.
+                </p>
+</div>
+<div class="pt-space-16 mt-space-16 flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Oct 08, 2025</span>
+<a class="text-primary-container font-label-md text-label-md font-semibold hover:underline" href="#">Tutoring Table →</a>
+</div>
+</article>
+<!-- Card 4: Light Blue Badge -->
+<article class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+<div class="flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-space-4 px-space-10 py-space-4 rounded-full font-label-md text-label-md bg-primary-fixed text-on-primary-fixed font-semibold">
+<span class="material-symbols-outlined text-[14px]">diversity_3</span>
+                    COMMUNITY NOTICE
+                  </span>
+<span class="font-label-caps text-label-caps text-outline">3 MIN READ</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface line-clamp-2 hover:text-primary-container transition-colors cursor-pointer">
+                  FIUCC Welcomes Record Inflow of 45+ Congolese Freshmen for Fall Semester
+                </h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-3">
+                  The Integration & Hospitality Taskforce concludes its airport pickup operations across Ercan International. Discover the complete orientation itinerary and mentor assignments.
+                </p>
+</div>
+<div class="pt-space-16 mt-space-16 flex items-center justify-between font-body-sm text-body-sm text-on-surface-variant">
+<span>Oct 04, 2025</span>
+<a class="text-primary-container font-label-md text-label-md font-semibold hover:underline" href="#">Freshmen Guide →</a>
+</div>
+</article>
+</div>
+<!-- Pagination Bar -->
+<div class="flex items-center justify-center gap-space-8 pt-space-16">
+<button class="w-10 h-10 rounded-lg bg-surface-container-low text-on-surface-variant flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary-container text-on-primary font-label-lg text-label-lg font-bold shadow-sm">
+              1
+            </button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-colors">
+              2
+            </button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-colors">
+              3
+            </button>
+<span class="text-outline-variant font-label-lg">...</span>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-lg text-label-lg transition-colors">
+              6
+            </button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-low text-on-surface-variant flex items-center justify-center hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Sidebar Widgets (approx 32% / 4 columns) -->
+<aside class="lg:col-span-4 flex flex-col gap-space-24">
+<!-- Card 1: Subscribe Box -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 right-0 h-1 bg-primary-container"></div>
+<div class="flex items-center gap-space-12 mb-space-12">
+<div class="w-10 h-10 rounded-lg bg-secondary-container/25 text-primary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[22px]">mark_email_unread</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface leading-snug">Subscribe to Dispatches</h4>
+<p class="font-label-caps text-label-caps text-outline uppercase tracking-wider">Direct Consular Telegram</p>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-16">
+              Get immediate alerts regarding university regulations, immigration deadlines, and community relief disbursements directly to your inbox.
+            </p>
+<form class="flex flex-col gap-space-8" onsubmit="event.preventDefault();">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">alternate_email</span>
+<input class="w-full h-10 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-colors" placeholder="student@final.edu.tr" required="" type="email"/>
+</div>
+<button class="w-full h-10 bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg font-semibold rounded-lg shadow-sm transition-colors flex items-center justify-center gap-space-8" type="submit">
+<span>Subscribe</span>
+<span class="material-symbols-outlined text-[16px]">send</span>
+</button>
+</form>
+<p class="font-label-md text-label-md text-outline mt-space-8 text-center">Zero spam. FIUCC internal communications only.</p>
+</div>
+<!-- Card 2: Categories & Archives -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-16 flex items-center justify-between">
+<span>Categories</span>
+<span class="material-symbols-outlined text-outline text-[18px]">folder_open</span>
+</h4>
+<div class="flex flex-col gap-space-8 font-body-sm text-body-sm">
+<a class="flex items-center justify-between p-space-8 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="text-on-surface-variant group-hover:text-primary-container font-medium">Official Communiques</span>
+<span class="px-space-8 py-space-2 rounded-full font-label-md text-label-md bg-secondary-container/20 text-primary-container font-bold">14</span>
+</a>
+<a class="flex items-center justify-between p-space-8 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="text-on-surface-variant group-hover:text-primary-container font-medium">Legal & Visa Directives</span>
+<span class="px-space-8 py-space-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant font-bold">7</span>
+</a>
+<a class="flex items-center justify-between p-space-8 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="text-on-surface-variant group-hover:text-primary-container font-medium">Academic Aid & Tutoring</span>
+<span class="px-space-8 py-space-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant font-bold">9</span>
+</a>
+<a class="flex items-center justify-between p-space-8 rounded-lg hover:bg-surface-container-low transition-colors group" href="#">
+<span class="text-on-surface-variant group-hover:text-primary-container font-medium">Sports, Culture & Galas</span>
+<span class="px-space-8 py-space-2 rounded-full font-label-md text-label-md bg-surface-container text-on-surface-variant font-bold">8</span>
+</a>
+</div>
+</div>
+<!-- Card 3: Most Read Dispatches -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm">
+<div class="flex items-center justify-between mb-space-16">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Trending Dispatches</h4>
+<span class="material-symbols-outlined text-tertiary text-[20px]">trending_up</span>
+</div>
+<div class="flex flex-col gap-space-16">
+<a class="flex items-start gap-space-12 group" href="#article-preview">
+<span class="font-headline-md text-headline-md text-secondary-container font-extrabold leading-none shrink-0 group-hover:text-primary-container transition-colors">01</span>
+<div class="flex flex-col">
+<h5 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                    Residence Permit (İkamet) Step-by-Step Renewal Guide 2025
+                  </h5>
+<div class="flex items-center gap-space-8 text-outline font-label-md text-label-md mt-space-2">
+<span>Oct 12</span>
+<span>•</span>
+<span>1,842 views</span>
+</div>
+</div>
+</a>
+<a class="flex items-start gap-space-12 group" href="#">
+<span class="font-headline-md text-headline-md text-secondary-container font-extrabold leading-none shrink-0 group-hover:text-primary-container transition-colors">02</span>
+<div class="flex flex-col">
+<h5 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                    Tuition Payment Plans in Installments: Rectorate Resolution
+                  </h5>
+<div class="flex items-center gap-space-8 text-outline font-label-md text-label-md mt-space-2">
+<span>Sep 28</span>
+<span>•</span>
+<span>1,410 views</span>
+</div>
+</div>
+</a>
+<a class="flex items-start gap-space-12 group" href="#">
+<span class="font-headline-md text-headline-md text-secondary-container font-extrabold leading-none shrink-0 group-hover:text-primary-container transition-colors">03</span>
+<div class="flex flex-col">
+<h5 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                    Consular Mission from Ankara to Lefkoşa Scheduled for November
+                  </h5>
+<div class="flex items-center gap-space-8 text-outline font-label-md text-label-md mt-space-2">
+<span>Oct 02</span>
+<span>•</span>
+<span>1,190 views</span>
+</div>
+</div>
+</a>
+<a class="flex items-start gap-space-12 group" href="#">
+<span class="font-headline-md text-headline-md text-secondary-container font-extrabold leading-none shrink-0 group-hover:text-primary-container transition-colors">04</span>
+<div class="flex flex-col">
+<h5 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                    Emergency Medical Fund Protocols & Clinic Partnerships in Kyrenia
+                  </h5>
+<div class="flex items-center gap-space-8 text-outline font-label-md text-label-md mt-space-2">
+<span>Sep 19</span>
+<span>•</span>
+<span>945 views</span>
+</div>
+</div>
+</a>
+<a class="flex items-start gap-space-12 group" href="#">
+<span class="font-headline-md text-headline-md text-secondary-container font-extrabold leading-none shrink-0 group-hover:text-primary-container transition-colors">05</span>
+<div class="flex flex-col">
+<h5 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                    FIUCC Inter-University Football Tournament Roster Announcement
+                  </h5>
+<div class="flex items-center gap-space-8 text-outline font-label-md text-label-md mt-space-2">
+<span>Oct 05</span>
+<span>•</span>
+<span>812 views</span>
+</div>
+</div>
+</a>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<!-- TRANSITION BANNER / SYSTEM VIEW SEPARATOR -->
+<div class="w-full bg-surface-container-high py-space-16 my-space-16" id="article-preview">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col sm:flex-row sm:items-center justify-between gap-space-12">
+<div class="flex items-center gap-space-12">
+<span class="w-3 h-3 rounded-full bg-primary animate-ping"></span>
+<div class="flex items-center gap-space-8 font-label-caps text-label-caps uppercase tracking-wider text-primary font-bold">
+<span>Live System View: Article & Official Communique Detail Page (Screen B)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-8">
+<span class="px-space-12 py-space-4 rounded-full bg-surface-container-lowest text-primary font-label-md text-label-md font-semibold shadow-sm">
+          Viewing Article #FIUCC-DISP-2025-08
+        </span>
+</div>
+</div>
+</div>
+<!-- SECTION B: ARTICLE DETAIL VIEW (SCREEN B) -->
+<section class="w-full py-space-32 md:py-space-48">
+<article class="max-w-[780px] mx-auto px-gutter-mobile md:px-space-24 bg-surface-container-lowest rounded-xl shadow-sm p-space-24 md:p-space-48">
+<!-- Article Header & Meta -->
+<div class="flex flex-col gap-space-16 pb-space-24">
+<!-- Breadcrumb Inside Article -->
+<nav class="flex items-center flex-wrap gap-space-8 font-label-md text-label-md text-on-surface-variant">
+<a class="hover:text-primary-container" href="#">Home</a>
+<span>/</span>
+<a class="hover:text-primary-container" href="#">News</a>
+<span>/</span>
+<a class="hover:text-primary-container" href="#">Official Communiques</a>
+<span>/</span>
+<span class="text-primary-container font-semibold truncate">Residence Permits Guidelines</span>
+</nav>
+<!-- Category Tags -->
+<div class="flex flex-wrap items-center gap-space-8 pt-space-4">
+<span class="px-space-12 py-space-4 rounded-full font-label-md text-label-md bg-secondary-container/25 text-primary font-bold">
+            Legal & Immigration Advisory
+          </span>
+<span class="px-space-12 py-space-4 rounded-full font-label-md text-label-md bg-error-container text-error font-bold flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[14px]">bolt</span>
+            Immediate Action Required
+          </span>
+</div>
+<!-- Article H1 -->
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight leading-tight">
+          Official Protocol & Step-by-Step Guide: Student Residence Permit (İkamet) Renewal & Health Insurance Compliance in North Cyprus
+        </h1>
+<!-- Author & Metadata Strip -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-16 pt-space-12 pb-space-12">
+<div class="flex items-center gap-space-12">
+<div class="w-12 h-12 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-label-lg">
+              JM
+            </div>
+<div>
+<div class="flex items-center gap-space-4">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">Jonathan Mukendi</span>
+<span class="material-symbols-outlined text-primary-container text-[16px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Secrétariat Général & Affaires Consulaires</p>
+<p class="font-label-md text-label-md text-outline">October 12, 2025 · 6 min read</p>
+</div>
+</div>
+<!-- Share buttons -->
+<div class="flex items-center gap-space-8 shrink-0">
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface-variant hover:text-primary-container hover:bg-surface-container-high transition-colors flex items-center justify-center" title="Share on WhatsApp">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface-variant hover:text-primary-container hover:bg-surface-container-high transition-colors flex items-center justify-center" title="Share on Telegram">
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface-variant hover:text-primary-container hover:bg-surface-container-high transition-colors flex items-center justify-center" title="Copy Link">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container text-on-surface-variant hover:text-primary-container hover:bg-surface-container-high transition-colors flex items-center justify-center" title="Print Official Circular">
+<span class="material-symbols-outlined text-[18px]">print</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Wide Featured Image -->
+<figure class="my-space-24">
+<div class="rounded-xl overflow-hidden shadow-sm aspect-video w-full bg-surface-container">
+<img class="w-full h-full object-cover" data-alt="Group of formal Congolese students standing outside the Northern Cyprus administrative ministry office in Kyrenia, holding official academic dossiers and blue university folders, crisp Mediterranean sunny morning lighting, dignified and professional diaspora youth" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV9DST9v6ZyhAYXcHXPtpEMClSGlrVXGkg9torW7Fj2NNnaH-DwGPVMvHjQuUaHm8thnQnUEA_ThphzdB4Wyuwmmg2xcxvw7UIa-seo2Ic0oyLo61dYz4zhAoSvjJGOEOoaANYSA0piCeuFwwcFQYkGWCPp8FsozxshQG7kTPnO-YXA_cPlcJb6JvQ51dprvLb5SXx7gGC9PGjF1oBNuqM6VkwghUou0CGGA--NY3chhE8ScG2gygz"/>
+</div>
+<figcaption class="mt-space-8 text-center font-body-sm text-body-sm text-on-surface-variant italic">
+          Congolese scholars at the Girne District Administration Registry, October 2025. Photo: FIUCC Communications Desk.
+        </figcaption>
+</figure>
+<!-- Editorial Content Body -->
+<div class="flex flex-col gap-space-24 text-on-surface font-body-lg text-body-lg leading-relaxed">
+<p class="font-body-lg text-body-lg text-on-surface font-medium leading-relaxed">
+          Pursuant to executive circular no. TRNC-MINT-2025/44 issued by the Ministry of Interior in Lefkoşa, all international students registered at Final International University must ensure their online student residency permits (<span class="italic">İkamet</span>) are formally completed prior to the statutory grace period expiring on November 15, 2025.
+        </p>
+<h2 class="font-headline-md text-headline-md text-on-surface pt-space-12 text-primary-container flex items-center gap-space-8">
+<span>1. Mandatory Documents & FIU Registrar Attestation</span>
+</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Before initiating your digital portal submission at <code class="px-space-8 py-space-2 bg-surface-container text-primary font-mono text-label-md rounded">icisleri.gov.ct.tr</code>, ensure you have obtained the certified physical and scanned electronic copies of the following documents:
+        </p>
+<!-- Numbered Step List -->
+<div class="flex flex-col gap-space-12">
+<div class="flex items-start gap-space-12 p-space-16 bg-surface-container-low rounded-lg">
+<span class="w-7 h-7 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shrink-0">1</span>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">Active Student Certificate (Öğrenci Belgesi)</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">Issued strictly within the last 15 days by the FIU Registrar's Office with active QR-code verification.</p>
+</div>
+</div>
+<div class="flex items-start gap-space-12 p-space-16 bg-surface-container-low rounded-lg">
+<span class="w-7 h-7 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shrink-0">2</span>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">Certified Dormitory Lease or Mukhtar Residence Letter</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">Stamp and signature from your local district Mukhtar (Muhtar Belgesi) or official on-campus housing contract.</p>
+</div>
+</div>
+<div class="flex items-start gap-space-12 p-space-16 bg-surface-container-low rounded-lg">
+<span class="w-7 h-7 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-bold flex items-center justify-center shrink-0">3</span>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">Valid Democratic Republic of Congo Passport</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">Must possess a minimum residual validity of at least six (6) months from the submission date.</p>
+</div>
+</div>
+</div>
+<!-- Pull Quote -->
+<blockquote class="my-space-16 p-space-24 bg-surface-container-low rounded-r-xl relative overflow-hidden">
+<div class="absolute top-0 bottom-0 left-0 w-1 bg-primary-container"></div>
+<p class="font-headline-sm text-headline-sm text-on-surface italic font-serif">
+            “No Congolese scholar abroad should experience administrative vulnerability due to regulatory confusion. The community stands as a collective shield, ensuring that legal status and dignity are preserved for every brother and sister.”
+          </p>
+<cite class="block font-label-caps text-label-caps uppercase tracking-wider text-primary-container font-bold mt-space-12 not-italic">
+            — Executive Address, FIUCC General Assembly 2025
+          </cite>
+</blockquote>
+<h2 class="font-headline-md text-headline-md text-on-surface pt-space-12 text-primary-container">
+          2. Digital Health Insurance Verification & Blood Work Protocol
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Payment for the government medical examination fee (approximately 1,480 TL) must be rendered via credit or debit card on the ministry portal. First-year scholars must undergo mandatory biometric blood screenings and chest X-rays at Lefkoşa Burhan Nalbantoğlu State Hospital or authorized Girne clinics.
+        </p>
+<!-- Callout Notice Box -->
+<div class="p-space-20 bg-surface-container-high rounded-xl flex items-start gap-space-16 my-space-8">
+<div class="w-10 h-10 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">support_agent</span>
+</div>
+<div>
+<h3 class="font-label-lg text-label-lg font-bold text-on-surface">FIUCC Legal Desk In-Person Support</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4">
+              The FIUCC Legal Desk is available every Wednesday from 14:00 to 17:00 in Student Union Room B2 for dossier review, document translation, and accompaniment to immigration appointments.
+            </p>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Once your health report is approved digitally, the final residency permit certificate will be generated electronically. Download the PDF and maintain both a laminated physical copy and a smartphone backup at all times.
+        </p>
+</div>
+<!-- Bottom of Article: Tags & Signatory -->
+<div class="pt-space-32 mt-space-32 flex flex-col gap-space-24">
+<!-- Tags Row -->
+<div class="flex flex-wrap gap-space-8 items-center">
+<span class="font-label-caps text-label-caps text-outline uppercase">Tags:</span>
+<a class="px-space-12 py-space-4 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-primary-container hover:text-on-primary transition-colors" href="#">#ResidencePermit</a>
+<a class="px-space-12 py-space-4 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-primary-container hover:text-on-primary transition-colors" href="#">#ImmigrationNorthCyprus</a>
+<a class="px-space-12 py-space-4 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-primary-container hover:text-on-primary transition-colors" href="#">#StudentWelfare</a>
+<a class="px-space-12 py-space-4 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-primary-container hover:text-on-primary transition-colors" href="#">#LegalAid</a>
+<a class="px-space-12 py-space-4 rounded-full bg-surface-container text-on-surface-variant font-label-md text-label-md hover:bg-primary-container hover:text-on-primary transition-colors" href="#">#FIUCC</a>
+</div>
+<!-- Official Signatory Card -->
+<div class="bg-surface-container-low rounded-xl p-space-24 flex flex-col sm:flex-row items-center justify-between gap-space-16">
+<div class="flex items-center gap-space-16">
+<div class="w-14 h-14 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-headline-sm">
+<span class="material-symbols-outlined text-[28px]">verified_user</span>
+</div>
+<div>
+<p class="font-label-caps text-label-caps uppercase text-primary tracking-wider font-bold">Official Bureau Endorsement</p>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Secrétariat Général FIUCC</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Attested under Community Bylaw Title IV, Article 18</p>
+</div>
+</div>
+<div class="shrink-0 text-center sm:text-right">
+<span class="inline-block px-space-12 py-space-4 rounded-lg bg-surface-container-lowest font-mono font-label-md text-label-md text-primary font-bold shadow-sm">
+              SEAL: FIUCC-NORTHCYPRUS-2025
+            </span>
+</div>
+</div>
+<!-- Social Share Row -->
+<div class="flex items-center justify-between pt-space-8">
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">Share this communique:</span>
+<div class="flex items-center gap-space-8">
+<button class="px-space-16 py-space-8 rounded-lg bg-surface-container-low hover:bg-primary-container hover:text-on-primary transition-colors font-label-md text-label-md flex items-center gap-space-4">
+<span class="material-symbols-outlined text-[16px]">share</span>
+              Forward to WhatsApp Group
+            </button>
+</div>
+</div>
+</div>
+<!-- Related Dispatches & Announcements -->
+<div class="pt-space-40 mt-space-32 flex flex-col gap-space-16">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Related Dispatches & Announcements</h3>
+<a class="font-label-md text-label-md text-primary-container font-semibold hover:underline" href="#">View archive →</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-16">
+<div class="bg-surface-container-low rounded-xl p-space-16 flex flex-col justify-between hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex flex-col gap-space-8">
+<span class="font-label-caps text-label-caps text-outline">Oct 09, 2025</span>
+<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                Embassy Consular Visit: Passport Renewals & Civil Documentation
+              </h4>
+</div>
+<span class="font-body-sm text-body-sm text-primary-container font-medium mt-space-12">Read notice →</span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-space-16 flex flex-col justify-between hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex flex-col gap-space-8">
+<span class="font-label-caps text-label-caps text-outline">Sep 30, 2025</span>
+<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                Health Insurance Coverage Details at Kyrenia State Hospital
+              </h4>
+</div>
+<span class="font-body-sm text-body-sm text-primary-container font-medium mt-space-12">Read notice →</span>
+</div>
+<div class="bg-surface-container-low rounded-xl p-space-16 flex flex-col justify-between hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex flex-col gap-space-8">
+<span class="font-label-caps text-label-caps text-outline">Sep 22, 2025</span>
+<h4 class="font-label-lg text-label-lg text-on-surface group-hover:text-primary-container line-clamp-2 transition-colors">
+                Banking Protocols: Opening Student Accounts in Girne Banks
+              </h4>
+</div>
+<span class="font-body-sm text-body-sm text-primary-container font-medium mt-space-12">Read notice →</span>
+</div>
+</div>
+</div>
+</article>
+</section>
+</div></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 mt-space-64"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-48 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-32"><div class="flex flex-col gap-space-16"><div class="flex items-center gap-space-8"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface">FIUCC Portal</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">The official democratic and social home of Congolese students at Final International University, promoting mutual aid, academic excellence, and diplomatic leadership abroad.</p></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Quick Links</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="home" href="#">Portal Home</a></li><li class="hover:text-primary-container transition-colors"><a data-path="events" href="#">Upcoming Gatherings</a></li><li class="hover:text-primary-container transition-colors"><a data-path="news" href="#">Campus Dispatches</a></li><li class="hover:text-primary-container transition-colors"><a data-path="election" href="#">Electoral Commission</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Community</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="members" href="#">Student Directory</a></li><li class="hover:text-primary-container transition-colors"><a data-path="community" href="#">Alumni Network</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Executive Mentors</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Official Documents & Statutes</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Contact</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">mail</span>contact@fiucc.org</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">chat</span>Official WhatsApp Group</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">camera_alt</span>@fiucc_official</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">location_on</span>Final International University, Girne</li></ul></div></div><div class="w-full bg-primary-container py-space-16"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col md:flex-row items-center justify-between gap-space-8 font-body-sm text-body-sm text-on-primary"><p>© 2025 Congolese Community of Final (FIUCC). All rights reserved.</p><p class="text-on-primary/90 font-label-md text-label-md">Made by the Congolese Community of Final</p></div></div></footer></body></html>

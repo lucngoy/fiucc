@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"background":"#f9f9ff","tertiary-fixed":"#ffe083","on-tertiary-fixed-variant":"#564500","on-secondary-fixed":"#001d35","surface-container-highest":"#dce2f7","surface-container-high":"#e1e8fd","surface-dim":"#d3daef","primary-fixed-dim":"#aac7ff","primary-fixed":"#d7e3ff","primary":"#004c9a","tertiary":"#725c00","on-surface":"#141b2b","on-primary-fixed":"#001b3e","on-tertiary-container":"#4e3e00","secondary-fixed-dim":"#9ccaff","surface-container-low":"#f1f3ff","surface-tint":"#005cba","on-error-container":"#93000a","primary-container":"#0063c6","surface":"#f9f9ff","secondary":"#06629f","error":"#ba1a1a","on-primary":"#ffffff","on-secondary":"#ffffff","on-secondary-container":"#004a7b","outline-variant":"#c2c6d5","on-background":"#141b2b","on-primary-container":"#d8e3ff","inverse-primary":"#aac7ff","on-primary-fixed-variant":"#00458e","on-tertiary-fixed":"#231b00","surface-bright":"#f9f9ff","on-secondary-fixed-variant":"#00497a","inverse-surface":"#293040","tertiary-container":"#cea700","surface-container":"#e9edff","surface-variant":"#dce2f7","secondary-container":"#7abbfe","on-surface-variant":"#424753","tertiary-fixed-dim":"#edc219","on-error":"#ffffff","inverse-on-surface":"#edf0ff","outline":"#727784","on-tertiary":"#ffffff","error-container":"#ffdad6","surface-container-lowest":"#ffffff","secondary-fixed":"#d0e4ff"},borderRadius:{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},spacing:{"space-12":"0.75rem","space-24":"1.5rem","layout-max-width":"1200px","gutter-mobile":"1rem","space-2":"0.125rem","space-64":"4rem","space-4":"0.25rem","space-48":"3rem","space-40":"2.5rem","space-8":"0.5rem","space-32":"2rem","gutter-desktop":"1.5rem","space-20":"1.25rem","space-16":"1rem"},fontFamily:{"label-caps":["Inter"],"headline-lg-mobile":["Inter"],"display-hero":["Inter"],"label-lg":["Inter"],"label-md":["Inter"],"body-sm":["Inter"],"body-lg":["Inter"],"headline-lg":["Inter"],"headline-md":["Inter"],"headline-sm":["Inter"],"body-md":["Inter"],"display-hero-mobile":["Inter"]},fontSize:{"label-caps":["11px",{"lineHeight":"16px","letterSpacing":"0.06em","fontWeight":"700"}],"headline-lg-mobile":["26px",{"lineHeight":"34px","letterSpacing":"-0.015em","fontWeight":"700"}],"display-hero":["48px",{"lineHeight":"56px","letterSpacing":"-0.025em","fontWeight":"800"}],"label-lg":["14px",{"lineHeight":"20px","letterSpacing":"0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"body-sm":["14px",{"lineHeight":"20px","fontWeight":"400"}],"body-lg":["18px",{"lineHeight":"28px","fontWeight":"400"}],"headline-lg":["36px",{"lineHeight":"44px","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.015em","fontWeight":"700"}],"headline-sm":["18px",{"lineHeight":"26px","letterSpacing":"-0.01em","fontWeight":"600"}],"body-md":["16px",{"lineHeight":"24px","fontWeight":"400"}],"display-hero-mobile":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"800"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased min-h-screen relative selection:bg-secondary-container selection:text-on-secondary-container"><div class="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(#004c9a_1px,transparent_1px)] [background-size:24px_24px] opacity-[0.035]"></div><div class="fixed inset-0 pointer-events-none z-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary-fixed/20 via-transparent to-transparent"></div><header class="fixed top-0 left-0 right-0 w-full z-50 bg-surface-container-lowest/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter-desktop flex items-center justify-between gap-space-16"><div class="flex items-center gap-space-12 min-w-0"><img alt="Brand logo. - Primary color: #0063c6
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><a class="hidden sm:inline-flex items-center gap-space-4 font-label-md text-label-md text-outline hover:text-primary transition-colors" data-path="election-hub" href="#"><span class="material-symbols-outlined text-[16px]">arrow_back</span><span>Cancel &amp; return to Election Hub</span></a></div><div class="flex-1 text-center px-space-8 min-w-0"><h1 class="font-label-lg text-label-lg text-on-surface font-bold tracking-tight truncate">Presidential Election 2026 <span class="text-outline-variant font-normal mx-space-4">·</span> <span class="text-primary font-semibold">CENI Secure Ballot Portal</span></h1></div><div class="flex items-center justify-end gap-space-12"><div class="flex items-center gap-space-8 bg-surface-container-low px-space-12 py-space-4 rounded-full"><span class="material-symbols-outlined text-outline text-[16px]">lock</span><span class="font-label-md text-label-md text-on-surface-variant tabular-nums font-semibold">12:45 remaining</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="relative z-10 w-full pt-16 min-h-screen flex flex-col justify-center items-center px-gutter-mobile lg:px-gutter-desktop py-space-32"><div class="flex flex-col w-full">
+<!-- Section 1: Compact Page Header Band -->
+<section class="w-full bg-primary text-on-primary py-space-40 px-gutter-mobile lg:px-gutter-desktop shadow-md relative overflow-hidden">
+<div class="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/10 to-transparent pointer-events-none"></div>
+<div class="max-w-[1200px] mx-auto w-full flex flex-col gap-space-12 relative z-10">
+<!-- Breadcrumb -->
+<nav aria-label="Breadcrumb" class="flex items-center gap-space-8 text-on-primary/80 font-label-md text-label-md">
+<a class="hover:text-white transition-colors" href="#">Home</a>
+<span class="text-white/50">/</span>
+<span class="text-tertiary-fixed font-semibold">Community</span>
+</nav>
+<!-- Title & Badge Group -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-16">
+<div>
+<h1 class="font-display-hero text-display-hero tracking-tight text-white mb-space-4">
+            Our Community
+          </h1>
+<p class="font-body-lg text-body-lg text-primary-fixed max-w-3xl leading-relaxed">
+            A brotherhood of Congolese scholars united for academic excellence, mutual solidarity, and cultural pride at Final International University.
+          </p>
+</div>
+<div class="shrink-0 inline-flex items-center gap-space-8 bg-white/10 backdrop-blur-sm px-space-16 py-space-8 rounded-full text-white self-start md:self-auto">
+<span class="material-symbols-outlined text-tertiary-fixed text-[18px]">workspace_premium</span>
+<span class="font-label-md text-label-md font-semibold tracking-wide">Founded 2021 · Girne, North Cyprus</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 2: Intro Section ("Our Story") -->
+<section class="w-full py-space-64 px-gutter-mobile lg:px-gutter-desktop">
+<div class="max-w-[1200px] mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-space-48 items-center">
+<!-- Left Column: Photo & Graphic Composition -->
+<div class="lg:col-span-5 relative">
+<div class="relative z-10 rounded-xl overflow-hidden shadow-xl bg-surface-container-low">
+<img class="w-full h-[460px] object-cover" data-alt="A dignified group of Congolese university students at Final International University gathering outside modern campus architecture. Scholars in crisp navy blazers, collegiate attire, and subtle DRC flag lapel pins holding academic binders and an official FIUCC seal banner. Warm Mediterranean sun, crisp institutional photography with vibrant azure and gold accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyjb-uTnQBcFSpXsX3wtZ8bDwGo_JNlYyKpIO0XOC2y6zGtwxDakQWHU2w2DsqzmqXjz_6qMGerXgpXldpav48twXgoZI-E6_DF-P6X3gBe6XDzT-Tk5Cy2Lq-lIegyQ5svW6OkL93W-yJyaoVt4mAeJyrB2rWEe_VnNrrSEV2L_irVuAZqOGYi0n7l3MuPgz1OgmZ9mCqt1JDjncXmEydUe9iuVe1t3EWUgxQ3JUyOZ0rE4na5298"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-space-20 left-space-20 right-space-20 text-white">
+<span class="font-label-caps text-label-caps uppercase text-tertiary-fixed tracking-widest block mb-space-4">Official Archives · Est. 2021</span>
+<p class="font-headline-sm text-headline-sm font-semibold">Scholars of the Democratic Republic of Congo</p>
+</div>
+</div>
+<!-- Layered Floating Accent Pill -->
+<div class="absolute -bottom-space-16 -right-space-16 z-20 bg-surface-container-lowest p-space-16 rounded-xl shadow-lg hidden sm:flex items-center gap-space-12 max-w-[260px]">
+<div class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[24px]">verified</span>
+</div>
+<div>
+<div class="font-label-lg text-label-lg text-on-surface font-bold">Accredited Body</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">FIU Rectorate &amp; Student Affairs</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Editorial Narrative -->
+<div class="lg:col-span-7 flex flex-col gap-space-20">
+<div class="flex items-center gap-space-8 text-primary font-label-caps uppercase tracking-wider">
+<span class="w-8 h-[2px] bg-primary"></span>
+<span>Our Story &amp; Origins</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface leading-tight">
+          From a Resilient Handshake in Kyrenia to a Recognized Diaspora Force
+        </h2>
+<div class="flex flex-col gap-space-16 font-body-md text-body-md text-on-surface-variant leading-relaxed">
+<p>
+            In the autumn of 2021, the inaugural cohort of Congolese scholars arriving at Final International University recognized the critical necessity of an institutional diaspora organ. Navigating foreign administrative frameworks, overseas residency documentation, and academic acclimation required more than casual friendships—it demanded a codified body dedicated to student welfare and mutual protection thousands of kilometers from Kinshasa, Goma, and Lubumbashi.
+          </p>
+<p>
+            What began as spontaneous weekend assemblies in Girne rapidly evolved into a rigorous constitutional framework. Collaborating hand-in-hand with the FIU Rectorate and the International Student Directorate, student leaders drafted, deliberated, and democratically ratified the foundational Constitution of the Congolese Community at FIU (FIUCC), cementing its stature as an accredited diplomatic partner within the university's institutional ecosystem.
+          </p>
+<p>
+            Today, FIUCC serves as an active vanguard: coordinating rapid-response medical and financial relief funds, organizing consular missions with the DRC Embassy in Ankara, stewarding scholastic mentorship across six academic faculties, and proudly exhibiting the rich intellectual and cultural dynamism of the Congo on the global Mediterranean stage.
+          </p>
+</div>
+<div class="pt-space-8 flex flex-wrap items-center gap-space-24">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary text-[20px]">verified_user</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Autonomous Governance</span>
+</div>
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary text-[20px]">account_balance</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Embassy Liaison Desks</span>
+</div>
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary text-[20px]">diversity_3</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Democratic CENI Suffrage</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 3: Mission & Vision -->
+<section class="w-full bg-surface-container-low py-space-64 px-gutter-mobile lg:px-gutter-desktop">
+<div class="max-w-[1200px] mx-auto w-full flex flex-col gap-space-32">
+<div class="text-center max-w-2xl mx-auto">
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-wider block mb-space-4">Foundational Mandate</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Mission &amp; Vision</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-8">
+          The sovereign principles guiding our administration, programmatic investments, and institutional advocacy across the academic cycle.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-24">
+<!-- Card 1: Mission -->
+<div class="bg-surface-container-lowest p-space-32 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle Gold Left Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary-container"></div>
+<div class="flex flex-col gap-space-20 pl-space-8">
+<div class="w-14 h-14 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">menu_book</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-outline block mb-space-4">Core Obligation</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Our Mission</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              To empower every Congolese scholar enrolled at Final International University through uncompromising academic mentorship, immediate humanitarian solidarity, and institutional legal advocacy. We rigorously protect the dignity, health, and civil rights of our diaspora community while nurturing an atmosphere of fraternal responsibility, scholarly diligence, and proud cultural identity.
+            </p>
+</div>
+<div class="mt-space-24 pt-space-16 pl-space-8 flex items-center gap-space-8 text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Unconditional Student Welfare &amp; Advocacy</span>
+</div>
+</div>
+<!-- Card 2: Vision -->
+<div class="bg-surface-container-lowest p-space-32 rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden">
+<!-- Subtle Blue Left Accent -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex flex-col gap-space-20 pl-space-8">
+<div class="w-14 h-14 rounded-full bg-secondary-container/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[32px]">public</span>
+</div>
+<div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-outline block mb-space-4">Strategic Horizon</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Our Vision</h3>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              To cultivate an elite, internationally recognized cadre of visionary engineers, jurists, healthcare pioneers, and public administrators who champion Congolese excellence on the global stage. We envision an active, connected alumni bridge channeling intellectual innovation, technology transfer, and strategic investments back to the transformative rebuilding of the Democratic Republic of Congo.
+            </p>
+</div>
+<div class="mt-space-24 pt-space-16 pl-space-8 flex items-center gap-space-8 text-primary font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-[18px]">stars</span>
+<span>National Transformation Through Global Mastery</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Our Values Grid -->
+<section class="w-full py-space-64 px-gutter-mobile lg:px-gutter-desktop">
+<div class="max-w-[1200px] mx-auto w-full flex flex-col gap-space-40">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-16">
+<div>
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-wider block mb-space-4">Guiding Ethos</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">The Six Pillars of FIUCC</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+          Constitutional principles observed by every executive officer, delegate, and enrolled member of our assembly.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-24">
+<!-- Value 1 -->
+<div class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-space-16">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">school</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider mb-space-2">Rigueur &amp; Réussite</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">1. Academic Excellence</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Fostering mutual tutoring circles, high scholarly standing, and intellectual rigor across all university faculties and examinations.
+          </p>
+</div>
+<!-- Value 2 -->
+<div class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-space-16">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">volunteer_activism</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider mb-space-2">Solidarité &amp; Entraide</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">2. Fraternal Solidarity</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Standing together through an emergency welfare fund, illness assistance, and seamless airport reception for newcomers.
+          </p>
+</div>
+<!-- Value 3 -->
+<div class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-space-16">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">palette</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider mb-space-2">Identité &amp; Fierté Congolaise</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">3. Cultural Dignity</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Honoring our heritage, languages (Lingala, Swahili, Tshiluba, Kikongo), music, and arts on the international collegiate stage.
+          </p>
+</div>
+<!-- Value 4 -->
+<div class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-space-16">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">how_to_vote</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider mb-space-2">Transparence &amp; Démocratie</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">4. Democratic Integrity</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Upholding constitutional elections supervised by the independent electoral commission (CENI) with verified, transparent records.
+          </p>
+</div>
+<!-- Value 5 -->
+<div class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-space-16">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">gavel</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider mb-space-2">Discipline &amp; Citoyenneté</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">5. Institutional Respect</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Exemplary compliance with host country regulations, university bylaws, and civic responsibility throughout Northern Cyprus.
+          </p>
+</div>
+<!-- Value 6 -->
+<div class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 flex flex-col gap-space-16">
+<div class="w-12 h-12 rounded-lg bg-secondary-container/15 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">hub</span>
+</div>
+<div>
+<div class="font-label-caps text-label-caps text-secondary uppercase font-bold tracking-wider mb-space-2">Réseau &amp; Rayonnement</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">6. Global Forward-Looking</h3>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+            Building enduring bridges between current undergraduates, postgraduate researchers, and multinational alumni networks worldwide.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: The Community in Numbers Band -->
+<section class="w-full bg-surface-container-high py-space-48 px-gutter-mobile lg:px-gutter-desktop">
+<div class="max-w-[1200px] mx-auto w-full">
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-space-24 text-center">
+<!-- Metric 1 -->
+<div class="flex flex-col items-center p-space-20 bg-surface-container-lowest/70 backdrop-blur-sm rounded-xl shadow-sm">
+<div class="font-display-hero text-display-hero text-primary font-extrabold tracking-tight">
+            450<span class="text-tertiary-container">+</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-space-4">Verified Scholars</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">Registered since inception</div>
+</div>
+<!-- Metric 2 -->
+<div class="flex flex-col items-center p-space-20 bg-surface-container-lowest/70 backdrop-blur-sm rounded-xl shadow-sm">
+<div class="font-display-hero text-display-hero text-primary font-extrabold tracking-tight">
+            100<span class="text-tertiary-container">%</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-space-4">Census Ratification</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">Assembly voting compliance</div>
+</div>
+<!-- Metric 3 -->
+<div class="flex flex-col items-center p-space-20 bg-surface-container-lowest/70 backdrop-blur-sm rounded-xl shadow-sm">
+<div class="font-display-hero text-display-hero text-primary font-extrabold tracking-tight">
+            6
+          </div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-space-4">Faculties Represented</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">From Engineering to Medicine</div>
+</div>
+<!-- Metric 4 -->
+<div class="flex flex-col items-center p-space-20 bg-surface-container-lowest/70 backdrop-blur-sm rounded-xl shadow-sm">
+<div class="font-display-hero text-display-hero text-primary font-extrabold tracking-tight">
+            12<span class="text-tertiary-container">+</span>
+</div>
+<div class="font-headline-sm text-headline-sm text-on-surface font-semibold mt-space-4">Annual Milestones</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant mt-space-2">Diplomatic &amp; cultural programs</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 6: "Our Journey" Vertical Timeline -->
+<section class="w-full py-space-64 px-gutter-mobile lg:px-gutter-desktop">
+<div class="max-w-[1000px] mx-auto w-full flex flex-col gap-space-48">
+<div class="text-center max-w-xl mx-auto">
+<span class="font-label-caps text-label-caps text-primary uppercase tracking-wider block mb-space-4">Historical Progression</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Our Journey</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-8">
+          The defining milestones that transformed our scholar registry into an institutional pillar at Final International University.
+        </p>
+</div>
+<!-- Timeline Container -->
+<div class="relative flex flex-col gap-space-32 before:absolute before:left-4 md:before:left-1/2 before:top-4 before:bottom-4 before:w-0.5 before:-translate-x-1/2 before:bg-primary">
+<!-- Milestone 1 -->
+<div class="relative flex flex-col md:flex-row items-start md:items-center w-full pl-12 md:pl-0">
+<div class="md:w-1/2 md:pr-space-32 md:text-right">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-primary px-space-12 py-space-2 rounded-full font-bold">2021</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-space-4">The Founding Assembly</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4 leading-relaxed">
+              First 18 Congolese pioneers gather in Girne to formalize a mutual assistance registry and draft the preliminary founding bylaws under student consensus.
+            </p>
+</div>
+<!-- Center Glowing Dot -->
+<div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tertiary-container shadow-[0_0_0_4px_#ffffff,0_0_0_7px_#0063c6] z-10"></div>
+<div class="hidden md:block md:w-1/2 md:pl-space-32">
+<span class="text-outline text-body-sm italic">Girne Assembly Convened</span>
+</div>
+</div>
+<!-- Milestone 2 -->
+<div class="relative flex flex-col md:flex-row items-start md:items-center w-full pl-12 md:pl-0">
+<div class="hidden md:block md:w-1/2 md:pr-space-32 md:text-right">
+<span class="text-outline text-body-sm italic">Formal Diplomatic Accord</span>
+</div>
+<!-- Center Glowing Dot -->
+<div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tertiary-container shadow-[0_0_0_4px_#ffffff,0_0_0_7px_#0063c6] z-10"></div>
+<div class="md:w-1/2 md:pl-space-32">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-primary px-space-12 py-space-2 rounded-full font-bold">2022</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-space-4">Official University Accreditation</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4 leading-relaxed">
+              FIU Rectorate and Student Affairs Directorate formally approve the FIUCC as an accredited international student community with institutional representation rights.
+            </p>
+</div>
+</div>
+<!-- Milestone 3 -->
+<div class="relative flex flex-col md:flex-row items-start md:items-center w-full pl-12 md:pl-0">
+<div class="md:w-1/2 md:pr-space-32 md:text-right">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-primary px-space-12 py-space-2 rounded-full font-bold">2023</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-space-4">Consular &amp; Emergency Relief Protocol</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4 leading-relaxed">
+              Establishment of the permanent emergency welfare fund and coordinated passport/consular liaison desks with the Embassy of the DRC in Ankara.
+            </p>
+</div>
+<!-- Center Glowing Dot -->
+<div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tertiary-container shadow-[0_0_0_4px_#ffffff,0_0_0_7px_#0063c6] z-10"></div>
+<div class="hidden md:block md:w-1/2 md:pl-space-32">
+<span class="text-outline text-body-sm italic">Bilateral Consular Gateway</span>
+</div>
+</div>
+<!-- Milestone 4 -->
+<div class="relative flex flex-col md:flex-row items-start md:items-center w-full pl-12 md:pl-0">
+<div class="hidden md:block md:w-1/2 md:pr-space-32 md:text-right">
+<span class="text-outline text-body-sm italic">Pan-African Campus Unity</span>
+</div>
+<!-- Center Glowing Dot -->
+<div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tertiary-container shadow-[0_0_0_4px_#ffffff,0_0_0_7px_#0063c6] z-10"></div>
+<div class="md:w-1/2 md:pl-space-32">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-primary px-space-12 py-space-2 rounded-full font-bold">2024</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-space-4">Inaugural Inter-University Gala &amp; Athletic Cup</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4 leading-relaxed">
+              Launch of the landmark cultural showcase uniting over 300 international scholars, accompanied by regional university championship triumphs.
+            </p>
+</div>
+</div>
+<!-- Milestone 5 -->
+<div class="relative flex flex-col md:flex-row items-start md:items-center w-full pl-12 md:pl-0">
+<div class="md:w-1/2 md:pr-space-32 md:text-right">
+<span class="font-label-caps text-label-caps bg-tertiary-fixed text-on-tertiary-fixed font-bold px-space-12 py-space-2 rounded-full">2025–2026</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold mt-space-4">Digital Portal &amp; Democratic CENI Elections</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4 leading-relaxed">
+              Full enterprise rollout of the institutional digital portal, secure biometric census registry, and cryptographically verified universal suffrage.
+            </p>
+</div>
+<!-- Center Glowing Dot -->
+<div class="absolute left-4 md:left-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-tertiary-container shadow-[0_0_0_4px_#ffffff,0_0_0_7px_#0063c6] z-10"></div>
+<div class="hidden md:block md:w-1/2 md:pl-space-32">
+<span class="text-primary font-semibold text-body-sm">Current Institutional Era</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 7: Final Call-to-Action Band -->
+<section class="w-full bg-primary-container text-white py-space-64 px-gutter-mobile lg:px-gutter-desktop shadow-lg relative overflow-hidden">
+<!-- Subtle Background Accent Shapes -->
+<div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-white/5 pointer-events-none"></div>
+<div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-tertiary-container/10 pointer-events-none"></div>
+<div class="max-w-[1200px] mx-auto w-full text-center relative z-10 flex flex-col items-center gap-space-24">
+<span class="font-label-caps text-label-caps uppercase tracking-widest text-tertiary-fixed font-bold">
+        Engage With Your Association
+      </span>
+<div class="max-w-2xl">
+<h2 class="font-headline-lg text-headline-lg font-bold text-white mb-space-12">
+          Be Part of Our Living History
+        </h2>
+<p class="font-body-lg text-body-lg text-on-primary-container leading-relaxed">
+          Whether you are a newly arrived freshman, a senior preparing to graduate, or an alumnus in the workforce, your voice strengthens the community.
+        </p>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-center gap-space-16 w-full max-w-md pt-space-8">
+<!-- Gold Primary Button -->
+<a class="w-full sm:w-auto px-space-24 py-space-12 bg-tertiary-fixed-dim hover:bg-tertiary-fixed text-on-tertiary-fixed font-bold text-label-lg rounded-lg shadow-md transition-colors flex items-center justify-center gap-space-8" href="#">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+<span>Register in the Census</span>
+</a>
+<!-- White Outline Button -->
+<a class="w-full sm:w-auto px-space-24 py-space-12 bg-transparent hover:bg-white/10 text-white font-semibold text-label-lg rounded-lg shadow-sm transition-colors flex items-center justify-center gap-space-8" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+<span>Meet the Government</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Institutional 4-Column Footer -->
+<footer class="w-full bg-surface-container-lowest text-on-surface pt-space-64">
+<div class="max-w-[1200px] mx-auto px-gutter-mobile lg:px-gutter-desktop grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-40 pb-space-48">
+<!-- Column 1: Crest & Mission Statement -->
+<div class="flex flex-col gap-space-16">
+<div class="flex items-center gap-space-12">
+<div class="w-11 h-11 rounded-full bg-primary flex items-center justify-center text-white font-bold text-headline-sm">
+            F
+          </div>
+<div>
+<div class="font-headline-sm text-headline-sm font-bold text-on-surface">FIUCC</div>
+<div class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Communauté Congolaise</div>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+          The sovereign diplomatic student association of Congolese scholars at Final International University, Girne, North Cyprus. Established to protect rights, celebrate culture, and spur academic brilliance.
+        </p>
+<div class="flex items-center gap-space-12 text-primary">
+<a class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">public</span>
+</a>
+<a class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">share</span>
+</a>
+<a class="w-9 h-9 rounded-full bg-surface-container-low flex items-center justify-center hover:bg-surface-container transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+</a>
+</div>
+</div>
+<!-- Column 2: Quick Resources -->
+<div class="flex flex-col gap-space-16">
+<h4 class="font-headline-sm text-headline-sm font-bold text-on-surface">Student Resources</h4>
+<ul class="flex flex-col gap-space-12 font-body-sm text-body-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Consular &amp; Passport Services</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">New Arrivals Airport Desk</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Academic Tutoring Syllabus</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Emergency Medical Relief Fund</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Off-Campus Housing Directory</a></li>
+</ul>
+</div>
+<!-- Column 3: Association Governance -->
+<div class="flex flex-col gap-space-16">
+<h4 class="font-headline-sm text-headline-sm font-bold text-on-surface">Governance &amp; Law</h4>
+<ul class="flex flex-col gap-space-12 font-body-sm text-body-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Community Constitution (2022)</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Executive Committee Minutes</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Independent CENI Protocols</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">General Assembly Resolutions</a></li>
+<li><a class="hover:text-primary transition-colors flex items-center gap-space-4" href="#">Financial Transparency Audits</a></li>
+</ul>
+</div>
+<!-- Column 4: Campus Contact & Office Hours -->
+<div class="flex flex-col gap-space-16">
+<h4 class="font-headline-sm text-headline-sm font-bold text-on-surface">Secretariat &amp; Campus</h4>
+<div class="flex flex-col gap-space-12 font-body-sm text-body-sm text-on-surface-variant">
+<div class="flex items-start gap-space-8">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">location_on</span>
+<span>Final International University, Student Center Level 2, Girne, TRNC</span>
+</div>
+<div class="flex items-start gap-space-8">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">schedule</span>
+<span>Office Hours: Mon–Fri, 10:00 – 16:30</span>
+</div>
+<div class="flex items-start gap-space-8">
+<span class="material-symbols-outlined text-primary text-[18px] mt-0.5">call</span>
+<span>Secretariat Helpline: +90 (392) 650 6666</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sub-footer Anchor Bar -->
+<div class="w-full bg-primary text-white py-space-16 px-gutter-mobile lg:px-gutter-desktop">
+<div class="max-w-[1200px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-space-8 font-body-sm text-body-sm text-white/90">
+<p>© 2021–2026 Communauté Congolaise à Final International University (FIUCC). All rights reserved.</p>
+<div class="flex items-center gap-space-16 text-label-md font-medium">
+<a class="hover:text-white transition-colors" href="#">Bylaws</a>
+<span>·</span>
+<a class="hover:text-white transition-colors" href="#">Privacy &amp; Data</a>
+<span>·</span>
+<a class="hover:text-white transition-colors" href="#">Affiliation: FIU Rectorate</a>
+</div>
+</div>
+</div>
+</footer>
+</div></main></body></html>

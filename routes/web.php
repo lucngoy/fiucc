@@ -1,0 +1,63 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Routes publiques et membres — section 46 du cahier des charges.
+ * Les routes marquées [auth] exigent une session membre validée.
+ * Les routes marquées [vote] passent par le middleware de token de vote.
+ */
+
+return [
+    // Vitrine
+    ['GET',  '/',                              'HomeController@index'],
+    ['GET',  '/community',                     'CommunityController@index'],
+    ['GET',  '/community/government',          'GovernmentController@index'],
+    ['GET',  '/community/government/archives', 'GovernmentController@archives'],
+    ['GET',  '/new-at-final',                  'OnboardingController@index'],
+
+    // Contenu
+    ['GET',  '/events',                        'EventController@index'],
+    ['GET',  '/events/{slug}',                 'EventController@show'],
+    ['POST', '/events/{slug}/register',        'EventController@register'],        // [auth]
+    ['GET',  '/news',                          'NewsController@index'],
+    ['GET',  '/news/{slug}',                   'NewsController@show'],
+    ['GET',  '/gallery',                       'GalleryController@index'],
+    ['GET',  '/documents',                     'DocumentController@index'],
+
+    // Recensement et authentification
+    ['GET',  '/register',                      'RegistrationController@create'],
+    ['POST', '/register',                      'RegistrationController@store'],
+    ['GET',  '/verify-email',                  'VerificationController@show'],
+    ['POST', '/verify-email',                  'VerificationController@verify'],
+    ['POST', '/verify-email/resend',           'VerificationController@resend'],
+    ['GET',  '/login',                         'AuthController@showLogin'],
+    ['POST', '/login',                         'AuthController@login'],
+    ['POST', '/logout',                        'AuthController@logout'],
+
+    // Espace membre
+    ['GET',  '/profile',                       'ProfileController@index'],         // [auth]
+    ['GET',  '/profile/edit',                  'ProfileController@edit'],          // [auth]
+    ['POST', '/profile',                       'ProfileController@update'],        // [auth]
+    ['POST', '/profile/privacy',               'ProfileController@updatePrivacy'], // [auth]
+
+    // Réseau et alumni (phase 6)
+    ['GET',  '/directory',                     'DirectoryController@index'],       // [auth]
+    ['GET',  '/directory/{id}',                'DirectoryController@show'],        // [auth]
+    ['GET',  '/alumni',                        'AlumniController@index'],
+    ['GET',  '/mentors',                       'MentorController@index'],          // [auth]
+    ['POST', '/mentors/{id}/request',          'MentorController@request'],        // [auth]
+
+    // Élections
+    ['GET',  '/elections',                     'ElectionController@index'],
+    ['GET',  '/elections/{id}',                'ElectionController@show'],
+    ['GET',  '/elections/{id}/candidates',     'ElectionController@candidates'],
+    ['GET',  '/elections/{id}/authenticate',   'VoteController@authenticate'],     // [auth]
+    ['POST', '/elections/{id}/authenticate',   'VoteController@sendToken'],        // [auth]
+    ['GET',  '/elections/{id}/vote',           'VoteController@ballot'],           // [vote]
+    ['POST', '/elections/{id}/vote',           'VoteController@submit'],           // [vote]
+    ['GET',  '/elections/{id}/results',        'ElectionController@results'],
+
+    // Divers
+    ['GET',  '/contact',                       'ContactController@index'],
+    ['POST', '/contact',                       'ContactController@send'],
+];

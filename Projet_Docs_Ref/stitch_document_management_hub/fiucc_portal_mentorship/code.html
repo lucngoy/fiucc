@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-bright": "#f9f9ff", "tertiary-fixed": "#ffe083", "tertiary-container": "#cea700", "on-tertiary": "#ffffff", "surface-container-low": "#f1f3ff", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#00497a", "outline-variant": "#c2c6d5", "primary-fixed": "#d7e3ff", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#edc219", "surface": "#f9f9ff", "inverse-surface": "#293040", "inverse-on-surface": "#edf0ff", "secondary-container": "#7abbfe", "secondary": "#06629f", "on-secondary-fixed": "#001d35", "surface-container-highest": "#dce2f7", "on-tertiary-container": "#4e3e00", "on-error": "#ffffff", "primary": "#004c9a", "surface-container": "#e9edff", "on-secondary-container": "#004a7b", "secondary-fixed": "#d0e4ff", "on-primary": "#ffffff", "on-primary-fixed-variant": "#00458e", "secondary-fixed-dim": "#9ccaff", "outline": "#727784", "primary-container": "#0063c6", "on-surface": "#141b2b", "surface-dim": "#d3daef", "on-tertiary-fixed": "#231b00", "error": "#ba1a1a", "surface-tint": "#005cba", "tertiary": "#725c00", "on-background": "#141b2b", "background": "#f9f9ff", "surface-variant": "#dce2f7", "on-primary-fixed": "#001b3e", "on-secondary": "#ffffff", "on-surface-variant": "#424753", "on-tertiary-fixed-variant": "#564500", "on-error-container": "#93000a", "on-primary-container": "#d8e3ff", "surface-container-high": "#e1e8fd", "primary-fixed-dim": "#aac7ff", "inverse-primary": "#aac7ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-48": "3rem", "gutter-mobile": "1rem", "space-64": "4rem", "space-24": "1.5rem", "gutter-desktop": "1.5rem", "space-20": "1.25rem", "space-40": "2.5rem", "space-8": "0.5rem", "space-16": "1rem", "space-12": "0.75rem", "space-4": "0.25rem", "layout-max-width": "1200px", "space-32": "2rem", "space-2": "0.125rem" }, "fontFamily": { "headline-md": ["Inter"], "label-caps": ["Inter"], "label-md": ["Inter"], "display-hero-mobile": ["Inter"], "headline-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "display-hero": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="sticky top-0 z-50 w-full bg-surface-container-lowest border-b border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,0,0.03)]"><div class="max-w-layout-max-width mx-auto h-[72px] px-gutter-mobile md:px-gutter-desktop flex items-center justify-between gap-space-16"><div class="flex items-center gap-space-12 shrink-0"><a class="flex items-center gap-space-12" data-path="home" href="#"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface hidden lg:inline-block tracking-tight">Congolese Community of Final</span><span class="font-headline-sm text-headline-sm text-on-surface lg:hidden">FIUCC</span></a></div><nav class="hidden xl:flex items-center gap-space-20" data-active-classes="text-primary-container font-semibold border-b-2 border-primary-container pb- space-2"><a aria-current="page" class="transition-colors text-primary-container font-semibold border-b-2 border-primary-container pb- space-2" data-path="home" href="#">Home</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="community" href="#">Community</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="government" href="#">Government</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="events" href="#">Events</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="gallery" href="#">Gallery</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="news" href="#">News</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="members" href="#">Members</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="election" href="#">Election</a></nav><div class="flex items-center gap-space-16 shrink-0"><div class="flex items-center bg-surface-container-low p-space-2 rounded-lg border border-outline-variant/30 text-label-md font-label-md"><button class="px-space-8 py-space-4 rounded bg-primary-container text-on-primary font-bold">EN</button><button class="px-space-8 py-space-4 rounded text-on-surface-variant hover:text-on-surface">FR</button></div><a class="hidden sm:inline-block font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors" data-path="sign-in" href="#">Sign in</a><a class="bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg px-space-16 h-[40px] flex items-center justify-center rounded-lg transition-colors shadow-sm" data-path="membership-registration" href="#">Join the community</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-[72px] bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- 1. Header Band: Deep Brand Blue (#0063C6 / bg-primary-container) -->
+<section class="w-full bg-primary-container text-on-primary">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-40 md:py-space-48">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-space-8 text-label-md font-label-md text-on-primary/80 mb-space-16">
+<a class="hover:text-on-primary transition-colors" data-path="home" href="#">Home</a>
+<span class="text-on-primary/50">/</span>
+<a class="hover:text-on-primary transition-colors" data-path="community" href="#">Community</a>
+<span class="text-on-primary/50">/</span>
+<span class="text-tertiary-fixed font-semibold">Mentorship</span>
+</nav>
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-space-24">
+<div class="max-w-3xl flex flex-col gap-space-12">
+<!-- Institutional Badge -->
+<div class="inline-flex items-center gap-space-8 w-fit px-space-12 py-space-4 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-label-caps font-label-caps uppercase tracking-wider shadow-sm">
+<span class="material-symbols-outlined text-[15px]" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span>FIUCC Academic & Career Guidance Program</span>
+</div>
+<h1 class="font-display-hero text-display-hero text-on-primary tracking-tight">
+            Mentorship
+          </h1>
+<p class="font-body-lg text-body-lg text-on-primary/90 max-w-2xl">
+            Connect with Congolese alumni and senior peers for academic excellence, career navigation, and life abroad.
+          </p>
+</div>
+<!-- Metric Stat Chips -->
+<div class="flex flex-wrap lg:flex-col gap-space-12 shrink-0">
+<div class="flex items-center gap-space-12 px-space-16 py-space-12 rounded-xl bg-surface-container-lowest/10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-[24px]">group</span>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-primary font-bold">42 Active</div>
+<div class="font-label-caps text-label-caps text-on-primary/75 uppercase tracking-wide">Alumni Mentors</div>
+</div>
+</div>
+<div class="flex items-center gap-space-12 px-space-16 py-space-12 rounded-xl bg-surface-container-lowest/10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-[24px]">thumb_up</span>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-primary font-bold">98% Match</div>
+<div class="font-label-caps text-label-caps text-on-primary/75 uppercase tracking-wide">Satisfaction Rate</div>
+</div>
+</div>
+<div class="flex items-center gap-space-12 px-space-16 py-space-12 rounded-xl bg-surface-container-lowest/10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-tertiary-fixed text-[24px]">volunteer_activism</span>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-primary font-bold">100% Free</div>
+<div class="font-label-caps text-label-caps text-on-primary/75 uppercase tracking-wide">Peer-Led Initiative</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 2. "How it works" Strip -->
+<section class="w-full bg-surface-container-low py-space-40">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col gap-space-24">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-8">
+<div>
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-wider">Framework & Protocol</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">How the program works</h2>
+</div>
+<div class="inline-flex items-center gap-space-8 text-label-md font-label-md text-on-surface-variant bg-surface-container-lowest px-space-12 py-space-4 rounded-full shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span>Semester Cycle 2024-2025</span>
+</div>
+</div>
+<!-- Steps with Connector -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-24 relative">
+<!-- Step 1 -->
+<div class="flex flex-col gap-space-12 p-space-24 bg-surface-container-lowest rounded-xl shadow-sm relative z-10 hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm font-bold shadow-sm">
+              1
+            </div>
+<span class="material-symbols-outlined text-secondary text-[24px]">person_search</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-4">Find a mentor</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Browse verified profiles filtered by your academic faculty, post-grad career aspirations, and preferred working language.
+            </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex flex-col gap-space-12 p-space-24 bg-surface-container-lowest rounded-xl shadow-sm relative z-10 hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm font-bold shadow-sm">
+              2
+            </div>
+<span class="material-symbols-outlined text-secondary text-[24px]">send</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-4">Send a request</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Outline your goals, course hurdles, target residency requirements, or submit an early CV draft for asynchronous feedback.
+            </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="flex flex-col gap-space-12 p-space-24 bg-surface-container-lowest rounded-xl shadow-sm relative z-10 hover:shadow-md transition-all">
+<div class="flex items-center justify-between">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-headline-sm text-headline-sm font-bold shadow-sm">
+              3
+            </div>
+<span class="material-symbols-outlined text-secondary text-[24px]">trending_up</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-semibold mb-space-4">Meet and grow</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Connect via recurring 30-minute video check-ins, informal campus coffee chats in Girne, or long-term portfolio mentoring.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. Two-Column Mentorship Explorer Layout -->
+<section class="w-full py-space-48">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="flex flex-col lg:flex-row items-start gap-space-32">
+<!-- Left Sidebar: Filter Panel -->
+<aside class="w-full lg:w-[310px] shrink-0 bg-surface-container-lowest rounded-xl shadow-sm p-space-24 flex flex-col gap-space-24">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[20px]">filter_alt</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Filter Mentors</h3>
+</div>
+<button class="font-label-md text-label-md text-primary-container hover:underline font-semibold" id="reset-filters">
+              Reset all
+            </button>
+</div>
+<!-- Filter Group: Specialization -->
+<div class="flex flex-col gap-space-12">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Field / Specialization</span>
+<div class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface">
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="flex items-center gap-space-8">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Engineering & Tech</span>
+</span>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-space-8 py-space-2 rounded-full">18</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="flex items-center gap-space-8">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Medicine & Health</span>
+</span>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-space-8 py-space-2 rounded-full">9</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="flex items-center gap-space-8">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Economics & Business</span>
+</span>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-space-8 py-space-2 rounded-full">11</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="flex items-center gap-space-8">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">International Law</span>
+</span>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-space-8 py-space-2 rounded-full">4</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="flex items-center gap-space-8">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Architecture & Design</span>
+</span>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-space-8 py-space-2 rounded-full">6</span>
+</label>
+<label class="flex items-center justify-between cursor-pointer group">
+<span class="flex items-center gap-space-8">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Pharmacy & Life Sciences</span>
+</span>
+<span class="font-label-md text-label-md text-on-surface-variant bg-surface-container-low px-space-8 py-space-2 rounded-full">5</span>
+</label>
+</div>
+</div>
+<!-- Filter Group: Availability -->
+<div class="flex flex-col gap-space-12 pt-space-16 bg-surface-container-low/40 p-space-12 rounded-lg">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Cadence & Availability</span>
+<div class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface">
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Weekly (30 min calls)</span>
+</label>
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Bi-weekly / Monthly</span>
+</label>
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">One-off guidance / CV audit</span>
+</label>
+</div>
+</div>
+<!-- Filter Group: Format -->
+<div class="flex flex-col gap-space-12">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Format</span>
+<div class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface">
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">In Person (Girne Campus)</span>
+</label>
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Online (Google Meet / Zoom)</span>
+</label>
+</div>
+</div>
+<!-- Filter Group: Language -->
+<div class="flex flex-col gap-space-12">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Language Support</span>
+<div class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface">
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input checked="" class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">French & English</span>
+</label>
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Lingala fluency</span>
+</label>
+<label class="flex items-center gap-space-8 cursor-pointer group">
+<input class="w-4 h-4 rounded text-primary-container focus:ring-secondary-container" type="checkbox"/>
+<span class="group-hover:text-primary-container transition-colors">Swahili fluency</span>
+</label>
+</div>
+</div>
+<!-- Live Indicator / CTA -->
+<div class="pt-space-8 flex flex-col gap-space-8">
+<div class="flex items-center justify-between text-label-sm font-label-md text-on-surface-variant">
+<span>Status</span>
+<span class="font-bold text-primary-container">Showing 12 active mentors</span>
+</div>
+<button class="w-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg h-10 rounded-lg shadow-sm transition-all flex items-center justify-center gap-space-8">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+<span>Apply Filters</span>
+</button>
+</div>
+</aside>
+<!-- Right Column: Mentors Listing -->
+<div class="flex-1 w-full flex flex-col gap-space-20">
+<!-- Search and Sort Header Bar -->
+<div class="bg-surface-container-lowest p-space-16 rounded-xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-16">
+<div class="relative w-full sm:max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="w-full pl-10 pr-4 h-10 rounded-lg bg-surface-container-low text-body-sm font-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:bg-surface-container-lowest" placeholder="Search mentors by company, faculty, or topic..." type="text"/>
+</div>
+<div class="flex items-center gap-space-8 w-full sm:w-auto justify-end">
+<span class="font-label-md text-label-md text-on-surface-variant shrink-0">Sort by:</span>
+<select class="bg-surface-container-low text-on-surface font-label-md text-label-md rounded-lg h-10 px-space-12 focus:outline-none cursor-pointer">
+<option>Most available</option>
+<option>Recently active</option>
+<option>Graduation year (Desc)</option>
+<option>Industry seniority</option>
+</select>
+</div>
+</div>
+<!-- Mentors Cards Container -->
+<div class="flex flex-col gap-space-16">
+<!-- Card 1: Patrick M. Kalonji -->
+<article class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row gap-space-20 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+<!-- Avatar & Academic Tag -->
+<div class="flex flex-row lg:flex-col items-center lg:items-center text-center gap-space-12 shrink-0">
+<img class="w-20 h-20 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Close-up portrait of Patrick M. Kalonji, a confident African professional male software engineer wearing dark navy blazer, warm subtle studio light, blurred minimalist office background, modern color grade." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWoGfFJ-7JtKlRghABsIJSzRvUcfrE1kbwhAHIbpS6pPCKu8YjMFscTpziISfrphGY7Qk9oGIpIXq9dOPLk5SbZude3L3bG1JTh8I8TeAIOvUp--lA3ZBUxxZ5OHZl0jEfVJC1DCdETPZxZnr3IITOzENcqzVMhWa380cfPVCXl5MsxeAmqc76Qfzg7uPFXagd0sXrbDxEluUNlY8oR94ay4N0S9q5ISt93zwZe7WIDDfZpfvFxpen"/>
+<div class="flex flex-col items-start lg:items-center">
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-wider">Class of 2021</span>
+<span class="font-label-md text-label-md text-on-surface-variant">B.Sc. Comp Engineering</span>
+</div>
+</div>
+<!-- Main Content Body -->
+<div class="flex-1 flex flex-col justify-between gap-space-16">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-space-8 mb-space-4">
+<div class="flex items-center gap-space-8">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Patrick M. Kalonji</h3>
+<span class="inline-flex items-center gap-1.5 px-space-8 py-0.5 rounded-full bg-surface-container-high text-primary font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified Alumni
+                      </span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-space-12 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                      Accepting Mentees
+                    </span>
+</div>
+<p class="font-label-lg text-label-lg text-secondary font-medium mb-space-8">
+                    Senior Cloud Solutions Architect @ Microsoft Europe <span class="text-on-surface-variant font-normal">· Dublin, Ireland</span>
+</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-12">
+                    Former FIUCC Academic Delegate. Helping students navigate international tech internships, coding interviews, and relocation to European cloud engineering hubs.
+                  </p>
+<!-- Field Tags -->
+<div class="flex flex-wrap gap-space-8">
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#CloudComputing</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#SoftwareCareers</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#StudyAbroadInTech</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#GradSchoolEurope</span>
+</div>
+</div>
+<!-- Footer details + CTA -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-16 pt-space-12 bg-surface-container-low/60 px-space-16 py-space-12 rounded-lg">
+<div class="flex items-center gap-space-8 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px]">schedule</span>
+<span>Next slot: <strong class="text-on-surface font-semibold">Friday 16:00 GMT</strong> · 2 slots left this month</span>
+</div>
+<div class="flex items-center gap-space-12">
+<a class="font-label-md text-label-md text-primary-container hover:underline font-semibold" href="#">View Full Profile</a>
+<button class="h-10 px-space-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center gap-space-8" onclick="document.getElementById('request-modal-preview').scrollIntoView({behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span>Request Mentorship</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Clarisse Tshimanga -->
+<article class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row gap-space-20 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+<!-- Avatar & Academic Tag -->
+<div class="flex flex-row lg:flex-col items-center lg:items-center text-center gap-space-12 shrink-0">
+<img class="w-20 h-20 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Warm studio portrait of Clarisse Tshimanga, an accomplished Congolese corporate finance executive woman smiling pleasantly, wearing refined beige business suit, clean modern background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkjamagNfxuAhVEGOVRBZwsgihfcg4w4I3Orf04D2ZczxvrU0BYYEcP1xZksJz8j8qoYvq6EqGcCGQ65UMOsdMYyFWmCQMNH4HW3xzCoTgqpKpE-4v21Do_3GAmDYigrs7OgDlNkFgpfT70eKuQZQNO21H5YLYEcioHOwlduXB6KrE9XHkHYDgVsAMKs6G39jmYY-MdlU7DdMc38H185sUiXp8PQG5mrXS2d9_H_v30FzQWvnxn47J"/>
+<div class="flex flex-col items-start lg:items-center">
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-wider">Class of 2022</span>
+<span class="font-label-md text-label-md text-on-surface-variant">B.Sc. Banking & Finance</span>
+</div>
+</div>
+<!-- Main Content Body -->
+<div class="flex-1 flex flex-col justify-between gap-space-16">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-space-8 mb-space-4">
+<div class="flex items-center gap-space-8">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Clarisse Tshimanga</h3>
+<span class="inline-flex items-center gap-1.5 px-space-8 py-0.5 rounded-full bg-surface-container-high text-primary font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified Alumni
+                      </span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-space-12 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                      Accepting Mentees
+                    </span>
+</div>
+<p class="font-label-lg text-label-lg text-secondary font-medium mb-space-8">
+                    Investment & Corporate Analyst @ Ecobank RDC <span class="text-on-surface-variant font-normal">· Kinshasa, DRC</span>
+</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-12">
+                    Specializing in corporate credit assessment. Passionate about guiding final-year business and economics students preparing for professional entry in Central Africa.
+                  </p>
+<!-- Field Tags -->
+<div class="flex flex-wrap gap-space-8">
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#CorporateFinance</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#BankingCareers</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#ReturnToDRC</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#InvestmentAnalysis</span>
+</div>
+</div>
+<!-- Footer details + CTA -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-16 pt-space-12 bg-surface-container-low/60 px-space-16 py-space-12 rounded-lg">
+<div class="flex items-center gap-space-8 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px]">calendar_today</span>
+<span><strong class="text-on-surface font-semibold">Bi-weekly online sessions</strong> · Flexible weekend slots</span>
+</div>
+<div class="flex items-center gap-space-12">
+<a class="font-label-md text-label-md text-primary-container hover:underline font-semibold" href="#">View Full Profile</a>
+<button class="h-10 px-space-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center gap-space-8" onclick="document.getElementById('request-modal-preview').scrollIntoView({behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span>Request Mentorship</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: Dr. Mireille Kazadi -->
+<article class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row gap-space-20 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+<!-- Avatar & Academic Tag -->
+<div class="flex flex-row lg:flex-col items-center lg:items-center text-center gap-space-12 shrink-0">
+<img class="w-20 h-20 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Professional medical scientist portrait of Dr. Mireille Kazadi, an African woman in white clinical lab coat, smart glasses, calm academic laboratory setting with soft blue tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdhndYzQaLp9LpGnkR49d0K-l2-idaxZerx0W_J_Fx63DKKf0XhcSqyLkYMCYhIrYVNqemJYiZQODMIoY3mWPrhJfheRxcQme7YvuK0lb09Jh2wVeN6c-AHRPRfRiqXUiwYx1yr_jUSCGI3OEyOg2uWu9PLIZ9O2eX6vLZYXmQPpP8zUrAED5FO2M3ABwvqp-6ywBwBAdNrSrejNYVHjzZoiuvI4EpRZH544G9Y4JZhS8LBtotFzLQ"/>
+<div class="flex flex-col items-start lg:items-center">
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-wider">Class of 2020</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Faculty of Pharmacy</span>
+</div>
+</div>
+<!-- Main Content Body -->
+<div class="flex-1 flex flex-col justify-between gap-space-16">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-space-8 mb-space-4">
+<div class="flex items-center gap-space-8">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Dr. Mireille Kazadi</h3>
+<span class="inline-flex items-center gap-1.5 px-space-8 py-0.5 rounded-full bg-surface-container-high text-primary font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified Alumni
+                      </span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-space-12 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                      Accepting Mentees
+                    </span>
+</div>
+<p class="font-label-lg text-label-lg text-secondary font-medium mb-space-8">
+                    Clinical Research Fellow @ CHU Brugmann <span class="text-on-surface-variant font-normal">· Brussels, Belgium</span>
+</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-12">
+                    Guiding pre-med and pharmacy scholars through diploma equivalence in the EU, residency applications, and clinical research publication workflows.
+                  </p>
+<!-- Field Tags -->
+<div class="flex flex-wrap gap-space-8">
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#ClinicalResearch</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#HospitalPharmacy</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#MedicalEquivalence</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#PhDPrep</span>
+</div>
+</div>
+<!-- Footer details + CTA -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-16 pt-space-12 bg-surface-container-low/60 px-space-16 py-space-12 rounded-lg">
+<div class="flex items-center gap-space-8 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px]">verified_user</span>
+<span><strong class="text-on-surface font-semibold">Monthly in-depth guidance</strong> · 1 mentee slot available</span>
+</div>
+<div class="flex items-center gap-space-12">
+<a class="font-label-md text-label-md text-primary-container hover:underline font-semibold" href="#">View Full Profile</a>
+<button class="h-10 px-space-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center gap-space-8" onclick="document.getElementById('request-modal-preview').scrollIntoView({behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span>Request Mentorship</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 4: Marc B. Ilunga -->
+<article class="bg-surface-container-lowest p-space-24 rounded-xl shadow-sm hover:shadow-md transition-all flex flex-col lg:flex-row gap-space-20 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-primary-container"></div>
+<!-- Avatar & Academic Tag -->
+<div class="flex flex-row lg:flex-col items-center lg:items-center text-center gap-space-12 shrink-0">
+<img class="w-20 h-20 rounded-full object-cover shadow-sm ring-2 ring-primary-fixed" data-alt="Editorial portrait of Marc B. Ilunga, an energetic Congolese tech lead wearing dark charcoal shirt, thoughtful focused expression, contemporary tech workspace background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCakdfcs3s65se1m1GVlRF-eO-e_4jIoebdQmWSuVjqNBRCTK7KFUi1SUs2wr1_l83FXzoDMRgHMhk06E4ZyXUNheVmT_DwOyqRaS1J0inAPixX74_SJ7RIQcxKTfhAQ2dMHn8Cd_x20S0nDffh0psnPrGJ_PxocxoFCUPzcxGOsJnRnQgGSse1xzgF2rD8FYdZsUwRCZRaDPH9dy-4BbNNaqGcKLodQfu8rv6prHI-aym1rLeKFurM"/>
+<div class="flex flex-col items-start lg:items-center">
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-wider">Class of 2021</span>
+<span class="font-label-md text-label-md text-on-surface-variant">B.Sc. Comp Engineering</span>
+</div>
+</div>
+<!-- Main Content Body -->
+<div class="flex-1 flex flex-col justify-between gap-space-16">
+<div>
+<div class="flex flex-wrap items-center justify-between gap-space-8 mb-space-4">
+<div class="flex items-center gap-space-8">
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Marc B. Ilunga</h3>
+<span class="inline-flex items-center gap-1.5 px-space-8 py-0.5 rounded-full bg-surface-container-high text-primary font-label-md text-label-md">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Verified Alumni
+                      </span>
+</div>
+<span class="inline-flex items-center gap-1.5 px-space-12 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed font-label-md text-label-md">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+                      Accepting Mentees
+                    </span>
+</div>
+<p class="font-label-lg text-label-lg text-secondary font-medium mb-space-8">
+                    Lead DevOps Engineer @ Orange RDC <span class="text-on-surface-variant font-normal">· Lubumbashi, DRC</span>
+</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mb-space-12">
+                    Mentoring junior engineers on AWS/Kubernetes certifications, portfolio building, and landing high-paying remote contracts while in Girne.
+                  </p>
+<!-- Field Tags -->
+<div class="flex flex-wrap gap-space-8">
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#DevOps</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#CloudInfrastructure</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#Linux</span>
+<span class="px-space-12 py-1 rounded-full bg-secondary-fixed/60 text-on-secondary-fixed-variant text-label-md font-label-md">#Certifications</span>
+</div>
+</div>
+<!-- Footer details + CTA -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-16 pt-space-12 bg-surface-container-low/60 px-space-16 py-space-12 rounded-lg">
+<div class="flex items-center gap-space-8 text-body-sm font-body-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary text-[18px]">alarm</span>
+<span><strong class="text-on-surface font-semibold">Weekly sessions on Thursdays</strong> · 3 slots available</span>
+</div>
+<div class="flex items-center gap-space-12">
+<a class="font-label-md text-label-md text-primary-container hover:underline font-semibold" href="#">View Full Profile</a>
+<button class="h-10 px-space-16 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center gap-space-8" onclick="document.getElementById('request-modal-preview').scrollIntoView({behavior: 'smooth'})">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+<span>Request Mentorship</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. Modal Preview Component: "Request Mentorship" Dialog Preview -->
+<section class="w-full bg-surface-container-high/40 py-space-48" id="request-modal-preview">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col items-center">
+<!-- Section descriptor -->
+<div class="text-center max-w-xl mb-space-24">
+<span class="font-label-caps text-label-caps uppercase text-secondary font-bold tracking-wider">Live System Component</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Interactive Preview: Mentorship Request Dialog</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-space-4">
+          Experience the structured student-to-mentor matching flow before initiating your official session proposal.
+        </p>
+</div>
+<!-- The Modal Window (approx 520px) -->
+<div class="w-full max-w-[540px] bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden">
+<!-- Modal Top Bar -->
+<div class="px-space-24 py-space-16 bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[22px]">contact_mail</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface font-bold">Request Mentorship Session</h3>
+</div>
+<button aria-label="Close dialog" class="w-8 h-8 rounded-full hover:bg-surface-container-highest flex items-center justify-center text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<div class="p-space-24 flex flex-col gap-space-20">
+<!-- Mentor Target Card Snippet -->
+<div class="flex items-center gap-space-12 p-space-12 rounded-xl bg-surface-container-low">
+<img class="w-12 h-12 rounded-full object-cover shadow-sm ring-1 ring-primary-fixed shrink-0" data-alt="Patrick M. Kalonji headshot badge avatar with warm ambient studio lighting, tailored professional styling." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAWnyIYX1IfDFZu31RMRm8YZYIM9XJ6QtWjx2eGRnvHFe2JhX3rQv_aaznkaTUkl6bndZUtfDL32zO9FnmXFeXqQWti0ImB8prdyx--9dNeAhtPZpwq1ydfoo1BlCYBEaWNOQAqMaMp_eLpJ6rGElWJiCDg6RrBl_GpEa6776k1MWnZFlhw6BKDrdopn2Ga_ekpPoJTfT6JGs8doH6K1s4n83mJqfWl_4jmoLKdAdf1K21WhvFAr1Tn"/>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Patrick M. Kalonji</span>
+<span class="font-body-sm text-body-sm text-secondary truncate">Senior Cloud Architect · Dublin (Class of 2021)</span>
+</div>
+<span class="ml-auto shrink-0 font-label-caps text-label-caps text-tertiary-container bg-tertiary-fixed px-space-8 py-1 rounded font-bold uppercase">
+              Mentor
+            </span>
+</div>
+<!-- Form Element: Topic -->
+<div class="flex flex-col gap-space-8">
+<label class="font-label-md text-label-md font-bold text-on-surface">
+              Session Topic / Focus Area <span class="text-error">*</span>
+</label>
+<select class="w-full h-10 px-space-12 rounded-lg bg-surface-container-lowest text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-2 focus:ring-secondary-container">
+<option>Career Transition & European Job Market</option>
+<option>CV, Portfolio & Technical Interview Preparation</option>
+<option>Academic Course Guidance & Senior Project Review</option>
+<option>Relocation, Visa & Diaspora Life Adaptation</option>
+</select>
+</div>
+<!-- Form Element: Pre-filled Current Status -->
+<div class="flex flex-col gap-space-8">
+<label class="font-label-md text-label-md font-bold text-on-surface">
+              Your Current Academic Status
+            </label>
+<div class="w-full h-10 px-space-12 rounded-lg bg-surface-container-low text-on-surface-variant font-body-sm text-body-sm flex items-center justify-between">
+<span class="truncate">Jonathan Mukendi · 2nd Year Computer Engineering</span>
+<span class="material-symbols-outlined text-[18px] text-secondary shrink-0">badge</span>
+</div>
+</div>
+<!-- Form Element: Format Choice -->
+<div class="flex flex-col gap-space-8">
+<label class="font-label-md text-label-md font-bold text-on-surface">
+              Preferred Collaboration Format
+            </label>
+<div class="grid grid-cols-2 gap-space-12">
+<label class="flex items-center gap-space-8 p-space-12 rounded-lg bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input checked="" class="text-primary-container focus:ring-secondary-container" name="format" type="radio"/>
+<span class="font-label-md text-label-md text-on-surface">30 min Google Meet</span>
+</label>
+<label class="flex items-center gap-space-8 p-space-12 rounded-lg bg-surface-container-low cursor-pointer hover:bg-surface-container transition-colors">
+<input class="text-primary-container focus:ring-secondary-container" name="format" type="radio"/>
+<span class="font-label-md text-label-md text-on-surface">Async CV Review</span>
+</label>
+</div>
+</div>
+<!-- Form Element: Textarea -->
+<div class="flex flex-col gap-space-8">
+<label class="font-label-md text-label-md font-bold text-on-surface">
+              Message to Patrick <span class="text-error">*</span>
+</label>
+<textarea class="w-full p-space-12 rounded-lg bg-surface-container-lowest text-body-sm font-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:ring-2 focus:ring-secondary-container" placeholder="Explain your background, what you hope to learn, and specific questions you would like to discuss..." rows="3"></textarea>
+</div>
+<!-- Trust Note -->
+<div class="flex items-start gap-space-8 p-space-12 rounded-lg bg-surface-container-high/60">
+<span class="material-symbols-outlined text-secondary text-[20px] shrink-0 mt-0.5">info</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+              Your request will be delivered directly to Patrick's portal inbox. Average mentor response turnaround is within <strong>48 hours</strong>.
+            </p>
+</div>
+<!-- Modal Action Buttons -->
+<div class="flex items-center justify-end gap-space-12 pt-space-8">
+<button class="h-10 px-space-16 rounded-lg bg-surface-container text-on-surface font-label-lg text-label-lg hover:bg-surface-container-high transition-colors" type="button">
+              Cancel
+            </button>
+<button class="h-10 px-space-20 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg shadow-sm transition-all flex items-center gap-space-8" type="button">
+<span class="material-symbols-outlined text-[18px]">send</span>
+<span>Send Request</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. Bottom Band (CTA): Alumnus Onboarding -->
+<section class="w-full bg-inverse-surface text-inverse-on-surface py-space-48">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop">
+<div class="flex flex-col md:flex-row items-center justify-between gap-space-32 bg-surface-container-lowest/5 p-space-32 rounded-2xl">
+<div class="max-w-2xl flex flex-col gap-space-8">
+<div class="inline-flex items-center gap-space-8 text-tertiary-fixed font-label-caps text-label-caps uppercase tracking-wider font-bold">
+<span class="material-symbols-outlined text-[18px]">workspace_premium</span>
+<span>Diaspora Giving Back</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-inverse-on-surface tracking-tight">
+            Are you an alumnus? Become a mentor
+          </h2>
+<p class="font-body-md text-body-md text-inverse-on-surface/80">
+            Share your professional insights and academic experience with the next generation of Congolese scholars at Final International University. Commitment is only 1–2 hours per month.
+          </p>
+</div>
+<div class="shrink-0 flex flex-col sm:flex-row items-center gap-space-16 w-full md:w-auto">
+<a class="w-full sm:w-auto h-11 px-space-24 rounded-lg bg-tertiary-fixed text-on-tertiary-fixed hover:bg-tertiary-fixed-dim font-headline-sm text-headline-sm font-bold shadow-md transition-all flex items-center justify-center gap-space-8" href="#">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+<span>Apply as Mentor</span>
+</a>
+<a class="font-label-lg text-label-lg text-inverse-on-surface/90 hover:text-tertiary-fixed underline transition-colors" href="#">
+            Review Charter
+          </a>
+</div>
+</div>
+</div>
+</section>
+</div>
+<script>
+  // Simple micro-interaction for resetting sidebar inputs
+  document.getElementById('reset-filters')?.addEventListener('click', function() {
+    const checkboxes = document.querySelectorAll('aside input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+    const search = document.querySelector('input[type="text"]');
+    if (search) search.value = '';
+  });
+</script></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 mt-space-64"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-48 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-32"><div class="flex flex-col gap-space-16"><div class="flex items-center gap-space-8"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface">FIUCC Portal</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">The official democratic and social home of Congolese students at Final International University, promoting mutual aid, academic excellence, and diplomatic leadership abroad.</p></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Quick Links</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="home" href="#">Portal Home</a></li><li class="hover:text-primary-container transition-colors"><a data-path="events" href="#">Upcoming Gatherings</a></li><li class="hover:text-primary-container transition-colors"><a data-path="news" href="#">Campus Dispatches</a></li><li class="hover:text-primary-container transition-colors"><a data-path="election" href="#">Electoral Commission</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Community</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="members" href="#">Student Directory</a></li><li class="hover:text-primary-container transition-colors"><a data-path="community" href="#">Alumni Network</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Executive Mentors</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Official Documents & Statutes</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Contact</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">mail</span>contact@fiucc.org</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">chat</span>Official WhatsApp Group</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">camera_alt</span>@fiucc_official</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">location_on</span>Final International University, Girne</li></ul></div></div><div class="w-full bg-primary-container py-space-16"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col md:flex-row items-center justify-between gap-space-8 font-body-sm text-body-sm text-on-primary"><p>© 2025 Congolese Community of Final (FIUCC). All rights reserved.</p><p class="text-on-primary/90 font-label-md text-label-md">Made by the Congolese Community of Final</p></div></div></footer></body></html>

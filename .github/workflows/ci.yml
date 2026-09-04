@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  php-lint:
+    name: php-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pdo, pdo_mysql, mbstring, fileinfo
+
+      - name: Vérifier la syntaxe PHP
+        run: find app public routes config database -name '*.php' -print0 | xargs -0 -n1 php -l
+
+      - name: Valider composer.json
+        run: composer validate --strict
+
+      - name: Vérifier qu'aucun .env n'est commité
+        run: |
+          if git ls-files | grep -E '^\.env$'; then
+            echo "::error::Un fichier .env est présent dans le dépôt."
+            exit 1
+          fi
+
+      - name: Vérifier l'anonymat du scrutin
+        run: python3 .github/scripts/check_vote_anonymity.py

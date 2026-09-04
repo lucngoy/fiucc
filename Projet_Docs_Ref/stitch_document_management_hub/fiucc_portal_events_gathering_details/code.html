@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "surface-bright": "#f9f9ff", "tertiary-fixed": "#ffe083", "tertiary-container": "#cea700", "on-tertiary": "#ffffff", "surface-container-low": "#f1f3ff", "error-container": "#ffdad6", "on-secondary-fixed-variant": "#00497a", "outline-variant": "#c2c6d5", "primary-fixed": "#d7e3ff", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#edc219", "surface": "#f9f9ff", "inverse-surface": "#293040", "inverse-on-surface": "#edf0ff", "secondary-container": "#7abbfe", "secondary": "#06629f", "on-secondary-fixed": "#001d35", "surface-container-highest": "#dce2f7", "on-tertiary-container": "#4e3e00", "on-error": "#ffffff", "primary": "#004c9a", "surface-container": "#e9edff", "on-secondary-container": "#004a7b", "secondary-fixed": "#d0e4ff", "on-primary": "#ffffff", "on-primary-fixed-variant": "#00458e", "secondary-fixed-dim": "#9ccaff", "outline": "#727784", "primary-container": "#0063c6", "on-surface": "#141b2b", "surface-dim": "#d3daef", "on-tertiary-fixed": "#231b00", "error": "#ba1a1a", "surface-tint": "#005cba", "tertiary": "#725c00", "on-background": "#141b2b", "background": "#f9f9ff", "surface-variant": "#dce2f7", "on-primary-fixed": "#001b3e", "on-secondary": "#ffffff", "on-surface-variant": "#424753", "on-tertiary-fixed-variant": "#564500", "on-error-container": "#93000a", "on-primary-container": "#d8e3ff", "surface-container-high": "#e1e8fd", "primary-fixed-dim": "#aac7ff", "inverse-primary": "#aac7ff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-48": "3rem", "gutter-mobile": "1rem", "space-64": "4rem", "space-24": "1.5rem", "gutter-desktop": "1.5rem", "space-20": "1.25rem", "space-40": "2.5rem", "space-8": "0.5rem", "space-16": "1rem", "space-12": "0.75rem", "space-4": "0.25rem", "layout-max-width": "1200px", "space-32": "2rem", "space-2": "0.125rem" }, "fontFamily": { "headline-md": ["Inter"], "label-caps": ["Inter"], "label-md": ["Inter"], "display-hero-mobile": ["Inter"], "headline-sm": ["Inter"], "headline-lg-mobile": ["Inter"], "display-hero": ["Inter"], "body-lg": ["Inter"], "body-sm": ["Inter"], "headline-lg": ["Inter"], "body-md": ["Inter"], "label-lg": ["Inter"] }, "fontSize": { "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "label-caps": ["11px", { "lineHeight": "16px", "letterSpacing": "0.06em", "fontWeight": "700" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }], "display-hero-mobile": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "display-hero": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.025em", "fontWeight": "800" }], "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }], "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }], "headline-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "label-lg": ["14px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }] } } } };</script></head><body class="bg-background font-body-md text-on-surface antialiased"><header class="sticky top-0 z-50 w-full bg-surface-container-lowest border-b border-outline-variant/30 shadow-[0_4px_12px_rgba(0,0,0,0.03)]"><div class="max-w-layout-max-width mx-auto h-[72px] px-gutter-mobile md:px-gutter-desktop flex items-center justify-between gap-space-16"><div class="flex items-center gap-space-12 shrink-0"><a class="flex items-center gap-space-12" data-path="home" href="#"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface hidden lg:inline-block tracking-tight">Congolese Community of Final</span><span class="font-headline-sm text-headline-sm text-on-surface lg:hidden">FIUCC</span></a></div><nav class="hidden xl:flex items-center gap-space-20" data-active-classes="text-primary-container font-semibold border-b-2 border-primary-container pb- space-2"><a aria-current="page" class="transition-colors text-primary-container font-semibold border-b-2 border-primary-container pb- space-2" data-path="home" href="#">Home</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="community" href="#">Community</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="government" href="#">Government</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="events" href="#">Events</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="gallery" href="#">Gallery</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="news" href="#">News</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="members" href="#">Members</a><a class="font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-colors" data-path="election" href="#">Election</a></nav><div class="flex items-center gap-space-16 shrink-0"><div class="flex items-center bg-surface-container-low p-space-2 rounded-lg border border-outline-variant/30 text-label-md font-label-md"><button class="px-space-8 py-space-4 rounded bg-primary-container text-on-primary font-bold">EN</button><button class="px-space-8 py-space-4 rounded text-on-surface-variant hover:text-on-surface">FR</button></div><a class="hidden sm:inline-block font-label-lg text-label-lg text-on-surface-variant hover:text-primary-container transition-colors" data-path="sign-in" href="#">Sign in</a><a class="bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg px-space-16 h-[40px] flex items-center justify-center rounded-lg transition-colors shadow-sm" data-path="membership-registration" href="#">Join the community</a><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-[72px] bg-surface min-h-screen"><div class="flex flex-col w-full">
+<!-- Top Academic Context Ribbon -->
+<div class="w-full bg-primary-container text-on-primary py-space-8 px-gutter-mobile md:px-gutter-desktop">
+<div class="max-w-layout-max-width mx-auto flex flex-wrap items-center justify-between gap-space-12 text-label-md font-label-md">
+<div class="flex items-center gap-space-8">
+<span class="inline-block w-2 h-2 rounded-full bg-tertiary-fixed-dim animate-pulse"></span>
+<span>Official Cultural & Academic Calendar · 2024–2025 Academic Year</span>
+</div>
+<div class="flex items-center gap-space-16 text-on-primary-container">
+<span class="flex items-center gap-space-4"><span class="material-symbols-outlined text-[16px]">verified</span> Accredited Student Union Program</span>
+<span class="hidden sm:inline-block">FIU Girne, North Cyprus</span>
+</div>
+</div>
+</div>
+<!-- SECTION A: EVENTS LISTING -->
+<section class="w-full bg-surface py-space-40 md:py-space-64">
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col gap-space-40">
+<!-- Section A Header Band -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 md:p-space-32 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-space-24">
+<div class="flex flex-col gap-space-8">
+<div class="flex items-center gap-space-8 text-label-md font-label-md text-primary-container">
+<span>Portal Home</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface-variant font-semibold">Events & Assemblies</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Campus Gatherings & Events</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+            Connect, celebrate Congolese heritage, and excel academically in Northern Cyprus through certified community gatherings.
+          </p>
+</div>
+<!-- Controls: Switcher + Search + View toggle -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-space-12">
+<!-- Segmented Filter -->
+<div class="inline-flex p-space-4 bg-surface-container-low rounded-lg shadow-inner text-label-md font-label-md">
+<button class="px-space-16 py-space-8 rounded-lg bg-primary-container text-on-primary font-semibold shadow-sm transition-all">
+              Upcoming (8)
+            </button>
+<button class="px-space-16 py-space-8 rounded-lg text-on-surface-variant hover:text-on-surface transition-all">
+              Past Events (24)
+            </button>
+</div>
+<!-- Event Search -->
+<div class="relative flex-1 sm:w-60">
+<span class="material-symbols-outlined absolute left-space-12 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full h-[40px] pl-space-40 pr-space-12 bg-surface-container-lowest rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary-container" placeholder="Search symposium, gala..." type="text"/>
+</div>
+<!-- View Toggle -->
+<div class="flex items-center bg-surface-container-low p-space-4 rounded-lg">
+<button class="p-space-8 rounded bg-surface-container-lowest text-primary-container shadow-sm" title="Grid View">
+<span class="material-symbols-outlined text-[20px] block">grid_view</span>
+</button>
+<button class="p-space-8 rounded text-on-surface-variant hover:text-on-surface" title="Calendar View">
+<span class="material-symbols-outlined text-[20px] block">calendar_month</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Featured Next Event Hero Card -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 relative group">
+<!-- Accent stripe on top -->
+<div class="absolute top-0 left-0 right-0 h-1 bg-primary-container"></div>
+<!-- Left Visual -->
+<div class="lg:col-span-5 relative min-h-[320px] lg:min-h-[440px] overflow-hidden">
+<img class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" data-alt="A dignified university gala hall filled with elegant Congolese students dressed in sophisticated formal black tie and vibrant Liputa wax-print formal gowns, laughing and conversing under warm amber chandeliers at Final International University, cinematic architectural photography, rich saturated cobalt and gold accents, shallow depth of field" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1412DzXHzwf4NSwo_Iy3U86D4z6DA1Qj_KU14RRHj1t3B_0aD9Lt-yfwkgk9KbGXZoBgYGCqsjd0h94VTJm09pO57FztqXRj558lpwcTdp3aZ3tPynECKOnF3rc2N3kuUy7sA_OSzlUMQNnBqnUFbmg28ymYuI6Y2pUUHc3HeCEMhkpTVF1Vd3v-W1TRykHkG_uCQmcuatuuBP_ltmg3Q747SOnMyRJl3reCYeNSGVZPYX0-MmQpo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-inverse-surface/30 to-transparent lg:hidden"></div>
+<div class="absolute top-space-16 left-space-16 z-10 flex flex-col gap-space-8">
+<span class="bg-primary-container text-on-primary font-label-caps text-label-caps uppercase px-space-12 py-space-4 rounded-full tracking-wider shadow-sm">
+              Official Flagship Gathering
+            </span>
+</div>
+<div class="absolute bottom-space-16 left-space-16 right-space-16 z-10 text-inverse-on-surface lg:hidden">
+<span class="font-label-md text-label-md bg-tertiary-fixed text-on-tertiary-fixed px-space-8 py-space-4 rounded font-bold">JUN 30 · 18:30 EEST</span>
+</div>
+</div>
+<!-- Right Detailed Content -->
+<div class="lg:col-span-7 p-space-24 md:p-space-40 flex flex-col justify-between gap-space-24">
+<div class="flex flex-col gap-space-16">
+<div class="flex flex-wrap items-center justify-between gap-space-12">
+<span class="font-label-md text-label-md bg-tertiary-fixed text-on-tertiary-fixed font-bold px-space-12 py-space-4 rounded-full hidden lg:inline-block">
+                JUN 30 · 18:30 EEST
+              </span>
+<span class="font-label-md text-label-md bg-secondary-container/20 text-secondary font-semibold px-space-12 py-space-4 rounded-full">
+                Cultural Celebration & Honors
+              </span>
+<span class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-space-4 ml-auto">
+<span class="material-symbols-outlined text-primary-container text-[16px]">verified</span> Mandate 2024-2025
+              </span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight hover:text-primary-container transition-colors cursor-pointer">
+              Congolese Cultural Gala & 64th Independence Celebration
+            </h2>
+<div class="flex items-center gap-space-8 text-on-surface-variant font-label-lg text-label-lg">
+<span class="material-symbols-outlined text-primary-container text-[20px]">location_on</span>
+<span>FIU Grand Auditorium & Amphitheatre, Girne</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Our signature annual cultural showcase featuring traditional Rumba and folk performances, authentic culinary degustation, keynote addresses by student leaders, and diploma recognition for the Class of 2025.
+            </p>
+</div>
+<!-- Live Countdown Row -->
+<div class="bg-surface-container-low rounded-xl p-space-16 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-16">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Countdown to Doors Open</span>
+<span class="font-label-md text-label-md text-primary-container font-semibold">Auditorium check-in begins at 18:00</span>
+</div>
+<div class="flex items-center gap-space-8" id="featuredCountdown">
+<div class="bg-surface-container-lowest px-space-12 py-space-8 rounded-lg shadow-sm text-center min-w-[64px]">
+<span class="block font-headline-md text-headline-md text-on-surface">14</span>
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Days</span>
+</div>
+<span class="text-on-surface-variant font-bold">:</span>
+<div class="bg-surface-container-lowest px-space-12 py-space-8 rounded-lg shadow-sm text-center min-w-[64px]">
+<span class="block font-headline-md text-headline-md text-on-surface">08</span>
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Hours</span>
+</div>
+<span class="text-on-surface-variant font-bold">:</span>
+<div class="bg-surface-container-lowest px-space-12 py-space-8 rounded-lg shadow-sm text-center min-w-[64px]">
+<span class="block font-headline-md text-headline-md text-on-surface">35</span>
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Mins</span>
+</div>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-wrap items-center gap-space-12 pt-space-8">
+<button class="bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg px-space-24 h-[44px] rounded-lg shadow-sm flex items-center gap-space-8 transition-colors">
+<span class="material-symbols-outlined text-[18px]">how_to_reg</span>
+              Register for this event
+            </button>
+<button class="bg-surface-container-low hover:bg-surface-container text-primary-container font-label-lg text-label-lg px-space-20 h-[44px] rounded-lg transition-colors flex items-center gap-space-8">
+<span class="material-symbols-outlined text-[18px]">calendar_add_on</span>
+              Add to Calendar
+            </button>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-auto flex items-center gap-space-4">
+<span class="material-symbols-outlined text-tertiary text-[18px]">group</span>
+              248 Students Confirmed
+            </span>
+</div>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex items-center gap-space-8 overflow-x-auto pb-space-8 scrollbar-none">
+<button class="px-space-16 py-space-8 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-semibold whitespace-nowrap shadow-sm">
+          All Categories (8)
+        </button>
+<button class="px-space-16 py-space-8 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap shadow-sm transition-colors">
+          Cultural (2)
+        </button>
+<button class="px-space-16 py-space-8 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap shadow-sm transition-colors">
+          Sports & Tournaments (3)
+        </button>
+<button class="px-space-16 py-space-8 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap shadow-sm transition-colors">
+          Academic & Career (2)
+        </button>
+<button class="px-space-16 py-space-8 rounded-full bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-md text-label-md whitespace-nowrap shadow-sm transition-colors">
+          Social & Welcomes (1)
+        </button>
+</div>
+<!-- Upcoming Events 3-Card Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-24">
+<!-- Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200 group">
+<div>
+<div class="relative h-52 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern university lecture amphitheatre at Final International University where Congolese student delegates in business attire hold open agenda booklets during a student parliamentary general assembly, sharp professional atmosphere with institutional blue banners" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBVSvp-X3-eG2mPy4ou81tjEuAaHM4yeAlCxTC96itUuD4apyCMZ8wlNBMA-qv42r6Fg5IkNiME4H7QvGm8wlKtJnXlOjScIRsDvHX6XyAzhfBiu1NAI0QywjyZ3SE41-PBbFm70jBUyhukyhE5qR1Xxbugy1YGJcl1RU_K5rMH630r_ymh8ycp2PnkqxZauLcXAkEYQdmgyO2cOtFI4xtKAodu6t_8Oh54WmdwcT41iNGSlFYunxDZ"/>
+<div class="absolute top-space-12 left-space-12 flex gap-space-8">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-bold px-space-12 py-space-4 rounded shadow-sm">
+                  JUL 14
+                </span>
+<span class="bg-surface-container-lowest/90 backdrop-blur text-primary-container font-label-caps text-label-caps uppercase font-bold px-space-8 py-space-4 rounded">
+                  Mandatory Assembly
+                </span>
+</div>
+</div>
+<div class="p-space-20 flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-secondary font-bold px-space-8 py-space-2 rounded">
+                  Democratic Governance
+                </span>
+<span class="text-on-surface-variant font-label-caps text-label-caps">14:00 EEST</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary-container transition-colors">
+                General Assembly & Mandate Review 2024–2025
+              </h3>
+<div class="flex items-center gap-space-8 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary-container text-[18px]">meeting_room</span>
+<span>Conference Hall B4 & Zoom</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Constitutional deliberation on annual budget allocation, electoral reform proposals, and committee reports ahead of semester closing.
+              </p>
+</div>
+</div>
+<div class="px-space-20 pb-space-20 pt-space-12 flex items-center justify-between bg-surface-container-low/40 mt-space-12">
+<div class="flex items-center gap-space-4 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary-container">groups</span>
+<span>142 registered</span>
+</div>
+<button class="bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-space-16 h-[36px] rounded-lg transition-colors flex items-center gap-space-4 shadow-sm">
+              Register
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200 group">
+<div>
+<div class="relative h-52 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Athletic young Congolese student athletes playing an energetic football match on an emerald green artificial turf pitch under the Mediterranean sun in Girne Cyprus, players in royal blue and bright yellow jerseys with cheering spectators in the university stadium stands" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAveX9GXjmgQF0resmspxE_peQn9vq6caJq6we0cyG5tVBgsBjIg2uR9DRdIihZtUnisE7g9w_5GWUElRtluwts2njB5u0slDbtQWDX-i5BSWzciQk39J667tfj0AcHQLYS3wUkrA4BjQqGuBoOFazzWVjI8lu5bx56OHWnog2fkprHCBviLqbTPSm6Hiow94UPfLze94qSwiKlfxa6khOAueSl-fUQD3wxOmXwRLt0Myt2AN79d6i"/>
+<div class="absolute top-space-12 left-space-12 flex gap-space-8">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-bold px-space-12 py-space-4 rounded shadow-sm">
+                  AUG 02
+                </span>
+<span class="bg-surface-container-lowest/90 backdrop-blur text-primary-container font-label-caps text-label-caps uppercase font-bold px-space-8 py-space-4 rounded">
+                  Tournament
+                </span>
+</div>
+</div>
+<div class="p-space-20 flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-secondary font-bold px-space-8 py-space-2 rounded">
+                  Sports & Tournaments
+                </span>
+<span class="text-on-surface-variant font-label-caps text-label-caps">16:30 EEST</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary-container transition-colors">
+                Inter-University Congolese Cup: Girne Qualifier
+              </h3>
+<div class="flex items-center gap-space-8 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary-container text-[18px]">sports_soccer</span>
+<span>FIU Olympic Sports Complex</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Annual soccer derby uniting Congolese scholars from FIU, CIU, and EMU in friendly athletic competition with trophy presentation.
+              </p>
+</div>
+</div>
+<div class="px-space-20 pb-space-20 pt-space-12 flex items-center justify-between bg-surface-container-low/40 mt-space-12">
+<div class="flex items-center gap-space-4 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary-container">groups</span>
+<span>88 registered</span>
+</div>
+<button class="bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-space-16 h-[36px] rounded-lg transition-colors flex items-center gap-space-4 shadow-sm">
+              Register
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col justify-between hover:shadow-md transition-all duration-200 group">
+<div>
+<div class="relative h-52 w-full overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Congolese university mentors welcoming new freshmen students in a sunny university lobby with informational banners, orientation packets, laptops, and friendly welcoming handshakes between African scholars at Final International University" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8gt3hN-Rhl__6vrVAJLZn3Jw_PX0KzKEmgzEvU_ntfCtgCIiIvr9W31HYJNAd11SvlsT_RlL5oDp0SrNLQ5id8U6px71QbeTTXeCQkLi8Y-mOVV9jSixj8FROvS0zO9-2nsda3DBVttPGx-a708jL1iTZLtzYvM293uVfaxxihvcLJsI8_9TSIy-vIZNGbvTdUcZ3waNy5vmKY7TR4TQNOBM7TZkMUslzeOdfIbrvYZJrKlYFaP7a"/>
+<div class="absolute top-space-12 left-space-12 flex gap-space-8">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed font-label-md text-label-md font-bold px-space-12 py-space-4 rounded shadow-sm">
+                  SEP 18
+                </span>
+<span class="bg-surface-container-lowest/90 backdrop-blur text-primary-container font-label-caps text-label-caps uppercase font-bold px-space-8 py-space-4 rounded">
+                  Orientation
+                </span>
+</div>
+</div>
+<div class="p-space-20 flex flex-col gap-space-12">
+<div class="flex items-center justify-between">
+<span class="font-label-caps text-label-caps bg-secondary-container/20 text-secondary font-bold px-space-8 py-space-2 rounded">
+                  Academic Guidance
+                </span>
+<span class="text-on-surface-variant font-label-caps text-label-caps">10:00 EEST</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary-container transition-colors">
+                Fall 2025 Freshmen Welcome & Orientation
+              </h3>
+<div class="flex items-center gap-space-8 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-primary-container text-[18px]">school</span>
+<span>Student Union Hall 2</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">
+                Essential acclimatization seminar covering student visa residency paperwork, course registration tactics, housing safety, and peer mentorship matching.
+              </p>
+</div>
+</div>
+<div class="px-space-20 pb-space-20 pt-space-12 flex items-center justify-between bg-surface-container-low/40 mt-space-12">
+<div class="flex items-center gap-space-4 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-[16px] text-primary-container">groups</span>
+<span>65 attending</span>
+</div>
+<button class="bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md px-space-16 h-[36px] rounded-lg transition-colors flex items-center gap-space-4 shadow-sm">
+              Register
+              <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</button>
+</div>
+</article>
+</div>
+<!-- Past Events Section (Muted Treatment) -->
+<div class="flex flex-col gap-space-24 pt-space-32">
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-space-8">
+<div>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-outline">Community Archives</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Past Gatherings & Memories</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Relive key milestones from previous community semesters at FIU.</p>
+</div>
+<a class="font-label-md text-label-md text-primary-container hover:underline flex items-center gap-space-4" href="#">
+            Browse complete archive (2020–2024)
+            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-24">
+<!-- Past Card 1 -->
+<div class="bg-surface-container-lowest/70 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group">
+<div class="relative h-44 w-full overflow-hidden bg-surface-dim">
+<img class="w-full h-full object-cover grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" data-alt="A desaturated vintage-toned photograph of a high-spirited Congolese university seminar discussion room with students listening intently to an academic speaker delivering career guidance at Final International University" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_tPX-NzOfP4VMgi-wsNF6OjHQBmWKBs89IGlohpKJ6X26jaJYVXjYRNsbjdYc7hyOOuWKo6-QHXvL0qSWU-cuvuhwvPS30VrZPJjIdT9aDh11T5WoRstimPsxEDAsgzacdLLnM1JNpUs0NKQ3ot1vUZeLP4GwEYsC8O6OmBqhoISU1oG41NaH75MIrMiOsIoBCCQaNPgt7rZ74bdQ47-OdhT0tEd5oxTUfNuC5mYDQZMyNEmY_9WX"/>
+<span class="absolute top-space-12 left-space-12 bg-inverse-surface/80 backdrop-blur text-inverse-on-surface font-label-caps text-label-caps uppercase px-space-8 py-space-2 rounded">
+                Archived · MAY 15
+              </span>
+</div>
+<div class="p-space-16 flex flex-col gap-space-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Diplomatic Career Workshop</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">International Law & Career Pathways in Lefkoşa</h4>
+<div class="flex items-center justify-between text-body-sm text-body-sm text-on-surface-variant pt-space-8">
+<span>94 attendees</span>
+<a class="text-primary-container font-label-md text-label-md hover:underline flex items-center gap-space-2" href="#">
+                  View photo gallery
+                  <span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Past Card 2 -->
+<div class="bg-surface-container-lowest/70 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group">
+<div class="relative h-44 w-full overflow-hidden bg-surface-dim">
+<img class="w-full h-full object-cover grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" data-alt="Monochrome photograph capturing university scholars enjoying an outdoor spring picnic on green lawns with traditional food platters, laughing in the afternoon sunshine at Girne Northern Cyprus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMKoTv6gYW6psaSFB7lS3YUjvTFaQGcCY04TE9Tzdu-c8uDFiAW8GzA3F8AmHfBlAwsAfoEEjYRxiLQLF3ozjE3RyaV2r1ZmPKPu3MJyGkx6DlK4hkLdCG3hb1TJTlJUrcFqUzk6ooCP1d0LFCi7RWt0iEeNrbY3H3ShnSraUOkswqrbwXKdRk6k3A5sn35ifpFZIZ2yDAAs_qZD7z3FWCwqe9P_B3geuje5VSE3QzCkExS1Hf7NYE"/>
+<span class="absolute top-space-12 left-space-12 bg-inverse-surface/80 backdrop-blur text-inverse-on-surface font-label-caps text-label-caps uppercase px-space-8 py-space-2 rounded">
+                Archived · APR 20
+              </span>
+</div>
+<div class="p-space-16 flex flex-col gap-space-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Diaspora Social Gathering</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Spring Welcome Barbecue & Games Afternoon</h4>
+<div class="flex items-center justify-between text-body-sm text-body-sm text-on-surface-variant pt-space-8">
+<span>165 attendees</span>
+<a class="text-primary-container font-label-md text-label-md hover:underline flex items-center gap-space-2" href="#">
+                  View photo gallery
+                  <span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Past Card 3 -->
+<div class="bg-surface-container-lowest/70 rounded-xl overflow-hidden shadow-sm flex flex-col justify-between group">
+<div class="relative h-44 w-full overflow-hidden bg-surface-dim">
+<img class="w-full h-full object-cover grayscale opacity-75 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" data-alt="Muted artistic archive photo of a round table diplomatic model assembly with Congolese student officers reviewing bilingual constitutions and voting flags in an auditorium hall at Final International University" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAw5cuq06tujOdceFFISGUcumWRXO5k4S3Sp_7-eCIIPYqlNu-NwgURmAUdqpnkS_vW0B5dRoLvYd_AzQq8aYQpGC8YQrzsBXEK07GKAk2k1VxMrmlyjA22wzQOaW8-WBYcm_ikPcma62TBN_4wZsxMw4cJ7oMXV0kkhO0yejnrIUsnS7oPAjvFdsipV1fY1oTj7OMGsRYLoMClkzpTQTHfY_FtYZlW6DJkgkv83kDbC1NfOc8t_aFF"/>
+<span class="absolute top-space-12 left-space-12 bg-inverse-surface/80 backdrop-blur text-inverse-on-surface font-label-caps text-label-caps uppercase px-space-8 py-space-2 rounded">
+                Archived · FEB 12
+              </span>
+</div>
+<div class="p-space-16 flex flex-col gap-space-8">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Civic Education</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Electoral Commission Workshop & By-Law Review</h4>
+<div class="flex items-center justify-between text-body-sm text-body-sm text-on-surface-variant pt-space-8">
+<span>80 attendees</span>
+<a class="text-primary-container font-label-md text-label-md hover:underline flex items-center gap-space-2" href="#">
+                  View photo gallery
+                  <span class="material-symbols-outlined text-[14px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Centered Pagination -->
+<div class="flex items-center justify-center gap-space-8 pt-space-16">
+<button class="w-10 h-10 rounded-lg bg-surface-container-low text-on-surface-variant flex items-center justify-center hover:bg-surface-container">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md font-bold shadow-sm">1</button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low shadow-sm">2</button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low shadow-sm">3</button>
+<span class="px-space-8 text-on-surface-variant font-label-md text-label-md">...</span>
+<button class="w-10 h-10 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md hover:bg-surface-container-low shadow-sm">8</button>
+<button class="w-10 h-10 rounded-lg bg-surface-container-low text-on-surface-variant flex items-center justify-center hover:bg-surface-container">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- TRANSITION BANNER -->
+<div class="w-full bg-surface-container-high py-space-20 px-gutter-mobile md:px-gutter-desktop shadow-inner">
+<div class="max-w-layout-max-width mx-auto flex flex-col sm:flex-row items-center justify-between gap-space-12">
+<div class="flex items-center gap-space-12">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span>
+<span class="font-label-caps text-label-caps uppercase tracking-wider text-on-surface font-bold">
+          LIVE PREVIEW: Event Details & Registration Page (Gala 2025)
+        </span>
+</div>
+<div class="flex items-center gap-space-16 text-label-md font-label-md text-on-surface-variant">
+<span>Displaying Screen B in full administrative mode</span>
+<button class="text-primary-container hover:underline font-semibold flex items-center gap-space-4">
+          Open in standalone view
+          <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+<!-- SECTION B: EVENT DETAIL VIEW PREVIEW (Screen B) -->
+<section class="w-full bg-surface-bright pb-space-64">
+<!-- Hero Banner with dark overlay & metadata -->
+<div class="w-full relative min-h-[440px] flex items-end">
+<!-- Background photo -->
+<img class="absolute inset-0 w-full h-full object-cover" data-alt="Spectacular grand auditorium with stage bathed in royal blue and golden spotlights where an official Congolese national emblem and university crest are displayed on large screens, rows of dignified scholars in festive and academic attire celebrating with joy at Final International University in Cyprus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBMjnKeUxtpZbC5XiRq3WKXdT8sW5TRzie-I-tOdMY9p7OVMW2C6IJ2m51g3LD7JgxUi0YfCmxgg6DYkT5H4wk5ZUstS7icoJ8bkzjr3lPH-mMed-iHrUtU1atlK9-Ou65gWYXaI91-7RChYnzXE4gOVXt5D-jSovPlc8pKsZkUyQnozjJgi559SOcCcPrfelM0cXhrolKVxCxBgbd-e3TOhAwv2XyaV7NhjZ3bAVlZf-0PhBzeUJro"/>
+<!-- Gradient Scrim for institutional contrast -->
+<div class="absolute inset-0 bg-gradient-to-t from-inverse-surface via-inverse-surface/80 to-inverse-surface/40"></div>
+<div class="relative z-10 w-full max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-48 flex flex-col gap-space-20">
+<!-- Breadcrumb Navigation -->
+<div class="flex flex-wrap items-center gap-space-8 text-label-md font-label-md text-inverse-on-surface/75">
+<a class="hover:text-inverse-on-surface" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-inverse-on-surface" href="#">Events</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-secondary-fixed">Cultural</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-inverse-on-surface font-semibold">Gala & Independence Day 2025</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-12">
+<span class="font-label-caps text-label-caps uppercase bg-tertiary-fixed text-on-tertiary-fixed px-space-12 py-space-4 rounded-full font-bold shadow-sm">
+            64th Anniversary National Commemoration
+          </span>
+<span class="font-label-caps text-label-caps uppercase bg-secondary-container/30 text-secondary-fixed px-space-12 py-space-4 rounded-full font-bold backdrop-blur">
+            Official Campus Celebration
+          </span>
+</div>
+<h1 class="font-display-hero text-display-hero text-inverse-on-surface tracking-tight max-w-4xl">
+          Congolese Cultural Gala & 64th Independence Celebration
+        </h1>
+<!-- High contrast metadata row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-16 pt-space-12">
+<div class="flex items-center gap-space-12 bg-inverse-surface/60 backdrop-blur rounded-lg p-space-12">
+<span class="material-symbols-outlined text-secondary-container text-[24px]">calendar_today</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-inverse-on-surface/70 uppercase">Date</span>
+<span class="font-label-md text-label-md text-inverse-on-surface font-bold">Sunday, June 30, 2025</span>
+</div>
+</div>
+<div class="flex items-center gap-space-12 bg-inverse-surface/60 backdrop-blur rounded-lg p-space-12">
+<span class="material-symbols-outlined text-secondary-container text-[24px]">schedule</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-inverse-on-surface/70 uppercase">Time & Access</span>
+<span class="font-label-md text-label-md text-inverse-on-surface font-bold">18:30 – 23:30 EEST (Doors: 18:00)</span>
+</div>
+</div>
+<div class="flex items-center gap-space-12 bg-inverse-surface/60 backdrop-blur rounded-lg p-space-12">
+<span class="material-symbols-outlined text-secondary-container text-[24px]">apartment</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-inverse-on-surface/70 uppercase">Venue</span>
+<span class="font-label-md text-label-md text-inverse-on-surface font-bold">Grand Auditorium & Terrace</span>
+</div>
+</div>
+<div class="flex items-center gap-space-12 bg-inverse-surface/60 backdrop-blur rounded-lg p-space-12">
+<span class="material-symbols-outlined text-tertiary-fixed text-[24px]">checkroom</span>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-inverse-on-surface/70 uppercase">Dress Protocol</span>
+<span class="font-label-md text-label-md text-inverse-on-surface font-bold">Traditional Liputa or Black Tie</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Detail Content Area (Two Columns) -->
+<div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop mt-space-32">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-32">
+<!-- Left Column (65% -> 8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-32">
+<!-- About Section -->
+<article class="bg-surface-container-lowest rounded-xl p-space-24 md:p-space-32 shadow-sm flex flex-col gap-space-16">
+<div class="flex items-center gap-space-8 text-primary-container">
+<span class="material-symbols-outlined text-[24px]">history_edu</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">About This Gala</h3>
+</div>
+<div class="font-body-md text-body-md text-on-surface-variant flex flex-col gap-space-16">
+<p>
+                Each year on June 30th, Congolese students across Northern Cyprus gather to honor the proclamation of our national independence. Organised by the FIUCC Executive Bureau in collaboration with the Student Activities Directorate, the 2025 Gala stands as the highest diplomatic and cultural event on our student calendar.
+              </p>
+<p>
+                The evening brings together university officials, foreign diplomats, faculty members, and student delegations from all major universities in the TRNC. Expect an unforgettable display of our rich heritage—from authentic Rumba and traditional folk dance orchestrations to high-level keynote addresses, research awards, and the formal recognition of our graduating Class of 2025 scholars.
+              </p>
+</div>
+<!-- Highlights Pill Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-12 pt-space-12">
+<div class="bg-surface-container-low p-space-12 rounded-lg flex flex-col items-center text-center gap-space-4">
+<span class="material-symbols-outlined text-primary-container text-[24px]">music_note</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Live Rumba Band</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Direct Kinshasa style</span>
+</div>
+<div class="bg-surface-container-low p-space-12 rounded-lg flex flex-col items-center text-center gap-space-4">
+<span class="material-symbols-outlined text-primary-container text-[24px]">restaurant_menu</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Authentic Buffet</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Pondu, Makayabu, Kwanga</span>
+</div>
+<div class="bg-surface-container-low p-space-12 rounded-lg flex flex-col items-center text-center gap-space-4">
+<span class="material-symbols-outlined text-primary-container text-[24px]">workspace_premium</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Honors Ceremony</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Class of 2025 Trophies</span>
+</div>
+<div class="bg-surface-container-low p-space-12 rounded-lg flex flex-col items-center text-center gap-space-4">
+<span class="material-symbols-outlined text-primary-container text-[24px]">photo_camera</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">Official Red Carpet</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Media photocall</span>
+</div>
+</div>
+</article>
+<!-- Program & Timeline -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 md:p-space-32 shadow-sm flex flex-col gap-space-24">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-8 text-primary-container">
+<span class="material-symbols-outlined text-[24px]">timeline</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Event Schedule & Program</h3>
+</div>
+<span class="font-label-caps text-label-caps uppercase bg-surface-container-low px-space-12 py-space-4 rounded text-on-surface-variant">
+                Standard EEST Time
+              </span>
+</div>
+<!-- Timeline Entries -->
+<div class="flex flex-col gap-space-20 relative">
+<!-- Slot 1 -->
+<div class="flex gap-space-16 items-start">
+<div class="w-24 shrink-0 font-label-lg text-label-lg text-primary-container font-bold pt-space-2">
+                  18:00 – 19:00
+                </div>
+<div class="w-4 h-4 rounded-full bg-primary-container mt-space-4 shrink-0 shadow-sm"></div>
+<div class="flex flex-col gap-space-2 bg-surface-container-low/60 p-space-12 rounded-lg flex-1">
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">Red Carpet Reception & Welcome Cocktail</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Guest arrival at the Grand Foyer, official registration credential badge check, cocktail drinks, and photographic portrait session.</p>
+</div>
+</div>
+<!-- Slot 2 -->
+<div class="flex gap-space-16 items-start">
+<div class="w-24 shrink-0 font-label-lg text-label-lg text-primary-container font-bold pt-space-2">
+                  19:00 – 19:45
+                </div>
+<div class="w-4 h-4 rounded-full bg-primary-container mt-space-4 shrink-0 shadow-sm"></div>
+<div class="flex flex-col gap-space-2 bg-surface-container-low/60 p-space-12 rounded-lg flex-1">
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">National Anthems & Presidential Keynote</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Solemn playing of "Debout Congolais", ceremonial welcome address by FIUCC President Jonathan Mukendi, followed by FIU Rectorate representative address.</p>
+</div>
+</div>
+<!-- Slot 3 -->
+<div class="flex gap-space-16 items-start">
+<div class="w-24 shrink-0 font-label-lg text-label-lg text-tertiary font-bold pt-space-2">
+                  19:45 – 21:00
+                </div>
+<div class="w-4 h-4 rounded-full bg-tertiary-fixed-dim mt-space-4 shrink-0 shadow-sm"></div>
+<div class="flex flex-col gap-space-2 bg-surface-container-low/60 p-space-12 rounded-lg flex-1">
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">Cultural Choreography & Live Congolese Rumba Set</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Performance by the FIUCC Cultural Troupe highlighting the cultural tapestry of the 26 provinces, followed by live orchestra tribute to Franco, Tabu Ley, and Papa Wemba.</p>
+</div>
+</div>
+<!-- Slot 4 -->
+<div class="flex gap-space-16 items-start">
+<div class="w-24 shrink-0 font-label-lg text-label-lg text-primary-container font-bold pt-space-2">
+                  21:00 – 22:00
+                </div>
+<div class="w-4 h-4 rounded-full bg-primary-container mt-space-4 shrink-0 shadow-sm"></div>
+<div class="flex flex-col gap-space-2 bg-surface-container-low/60 p-space-12 rounded-lg flex-1">
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">Academic Honors & Leadership Recognition</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Conferral of community sash awards for Class of 2025 graduates, Dean’s High Honor commendations, and presentation of the Annual Leadership Medal.</p>
+</div>
+</div>
+<!-- Slot 5 -->
+<div class="flex gap-space-16 items-start">
+<div class="w-24 shrink-0 font-label-lg text-label-lg text-primary-container font-bold pt-space-2">
+                  22:00 – 23:30
+                </div>
+<div class="w-4 h-4 rounded-full bg-primary-container mt-space-4 shrink-0 shadow-sm"></div>
+<div class="flex flex-col gap-space-2 bg-surface-container-low/60 p-space-12 rounded-lg flex-1">
+<h4 class="font-label-lg text-label-lg text-on-surface font-bold">Gastronomic Dinner Buffet & Diaspora Networking</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Full course traditional Congolese banquet served on the Amphitheatre terrace, followed by informal community dance floor and DJ set.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Guidelines & Dress Code Callout Card -->
+<div class="bg-surface-container-high rounded-xl p-space-24 shadow-sm flex flex-col gap-space-16">
+<div class="flex items-center gap-space-12">
+<span class="material-symbols-outlined text-primary-container text-[28px]">shield</span>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Institutional Guidelines & Entry Protocol</h4>
+<span class="font-label-md text-label-md text-on-surface-variant">Security Notice from the General Secretariat</span>
+</div>
+</div>
+<ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant">
+<li class="flex items-start gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-space-2">badge</span>
+<span><strong>Valid Student ID:</strong> Entry is strictly regulated. All registered students must present their physical FIU Student Card or official national passport at the registration desk.</span>
+</li>
+<li class="flex items-start gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-space-2">styler</span>
+<span><strong>Dress Code:</strong> Traditional Congolese gala attire (Liputa, Abacost, boubou) or formal evening black-tie suits and evening gowns. Casual jeans, trainers, and sportswear are strictly forbidden.</span>
+</li>
+<li class="flex items-start gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[18px] shrink-0 mt-space-2">schedule</span>
+<span><strong>Punctuality:</strong> Auditorium doors will close promptly at 18:45 for the formal national anthem ceremony and will not reopen until the keynote conclusion.</span>
+</li>
+</ul>
+</div>
+<!-- Campus Venue Map -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm flex flex-col gap-space-16">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[24px]">map</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Auditorium Location & Parking</h4>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Final International University Campus</span>
+</div>
+<div class="w-full h-64 bg-cover bg-center rounded-xl relative overflow-hidden shadow-inner" data-location="Final International University, Girne, Cyprus" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuALf9_Els9ZA8WmeYDMTdnfPnvi9RUBXHqFiXbkMyryc71FW4UOxyP1CuyGm8wG9wJPoMof5C4ZCdOgkAi2zfaW89JAx94xtGi_Kv_tVN_eBcruMUvwPMWPkMqVmBFygGzllBpHQxxq2BQt1Z8LLjTp0VZRvfQbOn6VOcumiyQseG-YVWTvEVBgFad5wYJF4lCqrOChHqvNoEuRYsYmRPVcyeEZl-Pr6EPmXIAUnKLx2CGFeJS8_91R')">
+<div class="absolute inset-0 bg-inverse-surface/30 backdrop-blur-[1px] flex items-center justify-center">
+<div class="bg-surface-container-lowest p-space-16 rounded-xl shadow-lg flex items-center gap-space-12 max-w-sm">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">pin_drop</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-lg text-label-lg text-on-surface font-bold">FIU Main Auditorium</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Building A, Central Campus, Girne</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-12 text-body-sm text-body-sm text-on-surface-variant">
+<span>Shuttle buses depart from Girne City Center Terminal every 20 minutes from 17:00 to 00:30.</span>
+<a class="text-primary-container font-label-md text-label-md hover:underline flex items-center gap-space-4" href="#">
+                Open Directions in Google Maps
+                <span class="material-symbols-outlined text-[16px]">navigation</span>
+</a>
+</div>
+</div>
+<!-- Photos from past editions -->
+<div class="bg-surface-container-lowest rounded-xl p-space-24 shadow-sm flex flex-col gap-space-16">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-8">
+<span class="material-symbols-outlined text-primary-container text-[24px]">photo_library</span>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Photos From Past Editions</h4>
+</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Gala 2024 & 2023 Retrospective</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-space-12">
+<div class="relative h-32 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Young Congolese student musicians playing live saxophone and drums with radiant smiles on a colorfully lit gala stage during a university cultural celebration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1JXHhpFA3tzfgeQaMmHybA7hLUQ9Z_CQLFziknOuXezIJIV9kTftW4UbAMsV0q9PFyV71VKh6XQNZiR4UC3ubuxIN7olM359n4MbcqG-mAnFVFzSMwJMCj7yT1X9XlhF18caAiKL5LtjNCcyQOZyqfPhGiOytQAFSL4UMq3KS2KEkv4BQlw8o_OmTSpB3e--ueT_arZn5-LvHylhRKKrSzgkshvL___dilOvlQxeXxRroKQiZkxxs"/>
+</div>
+<div class="relative h-32 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Two elegant Congolese female university graduates holding academic diplomas wearing wax-print sashes over evening dresses posing in front of a celebratory institutional backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBS8dMRKrhYcVfGWL9yhuIrip4uCYAu28bWWRUshWUekPyJNauKEngdnZCnzZQPO2GgwS1kSme5zDpn2r-QxN3TBzpXOqkeFn_Boiwwr89BeTrH23Jf5Y7o2nxLhn0X3pt_6wFNujQjZDyAe7Q0WEgRY9MasQlqQPAMj4ytnyhoQu0CBP2-9tTaaZzJMR3MnMjL9EC7Jw62gGX9qMiE_VMzrkzrqUJKN0D_objR6wYI0fy7oPHs6Zbw"/>
+</div>
+<div class="relative h-32 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Sumptuous culinary buffet featuring traditional Congolese delicacies served in copper chafing dishes with plantain, stewed greens, and fresh Mediterranean salads" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeyb--hMEymIMzeVildy23-Hc_ZiEZaT34x0T7Bzxs1lsqEYoduFGy050krcPQHOx21o4JPn9E-UYGpfYlnTwnEVTS7BJEoLfGMh5zZ-3EpK0pm13TF_bx67r_UX-0w79XcLe5xlRskcLG_kOt_-Ktf3rY56th1zj3Szm7v19Fg9Y68PtPyKiI1B9Zo-iXdxGcQnmgLXalnb93WZWaCPjlFTLwbCbqeJxCO3eey_1qjVzo8wVTon9p"/>
+</div>
+<div class="relative h-32 rounded-lg overflow-hidden group">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Large joyous group photograph of Congolese community leaders and scholars raising their hands in unity in a packed illuminated auditorium hall at Final International University" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrKMZBtumTCsEHnL0tSIY0f8opglL8iCN_82wj0PqB5sKe_FAEAn4WfuYhqzsI-vner1I9AKTRFYSaHyFSfnXR4BB4fsxe5HimGAl6BSs_cecEv5_Q0fweQ1UkTJWw2Gd2ZXCDU46Meu0RsClroXJxrWhy1zZLZnO85SYmYks1rZTMdZElkMHBp5PaujD8_5PH_I-iIXTl9ITCvh0jO1BVuMlvvHc9IZvqNMjdtWVEtSrUr_w7UeAH"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Sticky Ticket & Registration Card (35% -> 4 cols) -->
+<aside class="lg:col-span-4">
+<div class="bg-surface-container-lowest rounded-xl p-space-24 shadow-md sticky top-[96px] flex flex-col gap-space-20">
+<!-- Badge -->
+<div class="flex items-center justify-between">
+<span class="bg-secondary-container/20 text-secondary font-label-caps text-label-caps uppercase font-bold px-space-8 py-space-4 rounded">
+                Official Registration Open
+              </span>
+<span class="font-label-md text-label-md text-tertiary font-bold">100% Subsidized</span>
+</div>
+<!-- Price & Member note -->
+<div class="flex flex-col gap-space-4">
+<div class="flex items-baseline gap-space-8">
+<span class="font-display-hero text-headline-lg text-on-surface">Free</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">for all registered FIUCC students</span>
+</div>
+<p class="font-label-md text-label-md text-outline">
+                Non-member guests / external university scholars: 150 TRY at door.
+              </p>
+</div>
+<div class="h-[1px] w-full bg-surface-container-highest"></div>
+<!-- Organizer Info -->
+<div class="flex items-center gap-space-12">
+<div class="w-12 h-12 rounded-full bg-primary-container/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary-container text-[24px]">corporate_fare</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps uppercase text-on-surface-variant">Host Organizer</span>
+<span class="font-label-lg text-label-lg text-on-surface font-semibold">FIUCC Executive Bureau & Cultural Committee</span>
+</div>
+</div>
+<!-- Attendee Stack -->
+<div class="bg-surface-container-low p-space-12 rounded-lg flex items-center justify-between gap-space-12">
+<div class="flex -space-x-2 overflow-hidden">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-label-caps text-[10px] ring-2 ring-surface-container-lowest font-bold">JM</div>
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary font-label-caps text-[10px] ring-2 ring-surface-container-lowest font-bold">BK</div>
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary font-label-caps text-[10px] ring-2 ring-surface-container-lowest font-bold">AL</div>
+<div class="w-8 h-8 rounded-full bg-outline flex items-center justify-center text-inverse-on-surface font-label-caps text-[10px] ring-2 ring-surface-container-lowest font-bold">+245</div>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-semibold">248 Confirmed</span>
+</div>
+<!-- Primary CTA -->
+<div class="flex flex-col gap-space-12">
+<button class="w-full bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg h-[48px] rounded-lg shadow-sm flex items-center justify-center gap-space-8 transition-colors" onclick="alert('Registration modal launched! Please present your FIU Student ID on arrival.')">
+<span class="material-symbols-outlined text-[20px]">how_to_reg</span>
+                Confirm My Attendance
+              </button>
+<button class="w-full bg-surface-container-low hover:bg-surface-container text-primary-container font-label-lg text-label-lg h-[44px] rounded-lg flex items-center justify-center gap-space-8 transition-colors">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                Add to Google / Apple Calendar
+              </button>
+</div>
+<!-- Deadline notification -->
+<div class="flex items-center gap-space-8 text-on-surface-variant font-label-md text-label-md bg-surface-container-high/60 p-space-12 rounded-lg">
+<span class="material-symbols-outlined text-tertiary text-[18px]">timer</span>
+<span>RSVP closes June 27 at 23:59 EEST for catering finalization.</span>
+</div>
+<!-- Social Share icons row -->
+<div class="flex flex-col gap-space-8 pt-space-8">
+<span class="font-label-caps text-label-caps uppercase text-outline text-center">Share with fellow Congolese students</span>
+<div class="flex items-center justify-center gap-space-12">
+<button class="w-10 h-10 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary-container hover:bg-surface-container flex items-center justify-center transition-colors" title="Share via WhatsApp">
+<span class="material-symbols-outlined text-[18px]">chat</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary-container hover:bg-surface-container flex items-center justify-center transition-colors" title="Share via Telegram">
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary-container hover:bg-surface-container flex items-center justify-center transition-colors" title="Copy Event Link">
+<span class="material-symbols-outlined text-[18px]">link</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-surface-container-low text-on-surface-variant hover:text-primary-container hover:bg-surface-container flex items-center justify-center transition-colors" title="Print Official Invitation">
+<span class="material-symbols-outlined text-[18px]">print</span>
+</button>
+</div>
+</div>
+<!-- Need Assistance Support Box -->
+<div class="bg-surface-container-low/40 p-space-12 rounded-lg flex flex-col gap-space-4">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Special Accommodations?</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                For dietary requirements, accessible seating, or protocol questions, reach out to <a class="text-primary-container underline" href="mailto:events@fiucc.org">events@fiucc.org</a>.
+              </p>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</section>
+<!-- Interactive Script for micro-countdown updates -->
+<script>
+    (function() {
+      // Micro countdown timer visual increment
+      const countdownBox = document.getElementById('featuredCountdown');
+      if (countdownBox) {
+        let mins = 35;
+        let hours = 8;
+        setInterval(() => {
+          mins = mins > 0 ? mins - 1 : 59;
+          const minSpan = countdownBox.querySelectorAll('span.font-headline-md')[2];
+          if (minSpan) {
+            minSpan.textContent = mins < 10 ? '0' + mins : mins;
+          }
+        }, 60000);
+      }
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-lowest border-t border-outline-variant/30 mt-space-64"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop py-space-48 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-32"><div class="flex flex-col gap-space-16"><div class="flex items-center gap-space-8"><img alt="FIUCC Official Seal Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1X0uqi8RtE2xJmHYC0-zq-g8I5-BleDt6RqSY5S--H43o-JVOwvlQ3-OsJ81tDwJYaw0S9fqOabo5TSqWfVszpsqDDnPXUbR6_u5k3iWFGzWJ0FOr71p2h1Z3vu4xSC0N4x2BWOCYYatdejRJCLiYYvkrNEy-ldgwIx5FCgjzjJwGCgwbpWt-ep2tRPjJgUhhB4Rbdj9oEdizzqpx7_rMpEJ5DN31EMTcPF04tsqs022M5m6DnXLAU7xxg"/><span class="font-headline-sm text-headline-sm text-on-surface">FIUCC Portal</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">The official democratic and social home of Congolese students at Final International University, promoting mutual aid, academic excellence, and diplomatic leadership abroad.</p></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Quick Links</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="home" href="#">Portal Home</a></li><li class="hover:text-primary-container transition-colors"><a data-path="events" href="#">Upcoming Gatherings</a></li><li class="hover:text-primary-container transition-colors"><a data-path="news" href="#">Campus Dispatches</a></li><li class="hover:text-primary-container transition-colors"><a data-path="election" href="#">Electoral Commission</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Community</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="hover:text-primary-container transition-colors"><a data-path="members" href="#">Student Directory</a></li><li class="hover:text-primary-container transition-colors"><a data-path="community" href="#">Alumni Network</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Executive Mentors</a></li><li class="hover:text-primary-container transition-colors"><a data-path="government" href="#">Official Documents & Statutes</a></li></ul></div><div class="flex flex-col gap-space-12"><h4 class="font-label-caps text-label-caps uppercase text-on-surface-variant tracking-wider">Contact</h4><ul class="flex flex-col gap-space-8 font-body-sm text-body-sm text-on-surface-variant"><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">mail</span>contact@fiucc.org</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">chat</span>Official WhatsApp Group</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">camera_alt</span>@fiucc_official</li><li class="flex items-center gap-space-8"><span class="material-symbols-outlined text-primary-container text-[18px]">location_on</span>Final International University, Girne</li></ul></div></div><div class="w-full bg-primary-container py-space-16"><div class="max-w-layout-max-width mx-auto px-gutter-mobile md:px-gutter-desktop flex flex-col md:flex-row items-center justify-between gap-space-8 font-body-sm text-body-sm text-on-primary"><p>© 2025 Congolese Community of Final (FIUCC). All rights reserved.</p><p class="text-on-primary/90 font-label-md text-label-md">Made by the Congolese Community of Final</p></div></div></footer></body></html>

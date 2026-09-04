@@ -1,0 +1,33 @@
+# Environnement
+.env
+.env.*
+!.env.example
+
+# Dépendances
+/vendor/
+/node_modules/
+
+# Uploads : le contenu ne va JAMAIS dans git (photos de membres, données perso)
+/public/uploads/*
+!/public/uploads/**/.gitkeep
+
+# Stockage runtime
+/storage/logs/*
+/storage/cache/*
+/storage/backups/*
+!/storage/**/.gitkeep
+
+# Build
+/public/assets/css/app.css
+/public/assets/css/*.map
+
+# Système
+.DS_Store
+Thumbs.db
+*.log
+*.sql.gz
+
+# Éditeurs
+.idea/
+.vscode/
+*.swp
