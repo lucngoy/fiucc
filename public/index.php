@@ -13,20 +13,30 @@ define('BASE_PATH', dirname(__DIR__));
 
 require BASE_PATH . '/vendor/autoload.php';
 
-// 1. Environnement et configuration
-Env::load(BASE_PATH . '/.env');
-Config::load(BASE_PATH . '/config');
-
-$isLocal = Config::get('app.env') === 'local';
-
-// 2. Fuseau horaire
-date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
-
-// 3. Erreurs — journalisées toujours, affichées uniquement en local (CLAUDE.md, règle 10)
+// 1. Handlers d'erreurs — enregistrés AVANT tout code pouvant lever (Env, Config).
+//    Repli sûr par défaut : rien affiché, tout journalisé. Reconfiguré une fois
+//    app.env connu (voir plus bas). Sans ça, une exception levée pendant le
+//    chargement de la config n'est interceptée par personne et Apache renvoie
+//    un 500 nu, sans passer par storage/logs/.
 error_reporting(E_ALL);
-ini_set('display_errors', $isLocal ? '1' : '0');
+ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 ini_set('error_log', BASE_PATH . '/storage/logs/app-' . date('Y-m-d') . '.log');
+
+$bootstrap = ['local' => false];
+
+$renderErrorPage = static function (string $detail) use (&$bootstrap): void {
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
+
+    if ($bootstrap['local']) {
+        echo '<pre>' . htmlspecialchars($detail, ENT_QUOTES, 'UTF-8') . '</pre>';
+        return;
+    }
+
+    echo 'Something went wrong. Please try again later.';
+};
 
 set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
     if (!(error_reporting() & $severity)) {
@@ -36,7 +46,7 @@ set_error_handler(static function (int $severity, string $message, string $file,
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
-set_exception_handler(static function (Throwable $exception) use ($isLocal): void {
+set_exception_handler(static function (Throwable $exception) use ($renderErrorPage): void {
     error_log(sprintf(
         '%s: %s in %s:%d%s%s',
         get_class($exception),
@@ -47,15 +57,34 @@ set_exception_handler(static function (Throwable $exception) use ($isLocal): voi
         $exception->getTraceAsString()
     ));
 
-    http_response_code(500);
+    $renderErrorPage((string) $exception);
+});
 
-    if ($isLocal) {
-        echo '<pre>' . htmlspecialchars((string) $exception, ENT_QUOTES, 'UTF-8') . '</pre>';
+// Filet de sécurité pour les erreurs fatales que set_error_handler ne reçoit
+// jamais (parse error dans un fichier inclus, dépassement mémoire, timeout).
+register_shutdown_function(static function () use ($renderErrorPage): void {
+    $error = error_get_last();
+
+    if ($error === null || !in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR], true)) {
         return;
     }
 
-    echo 'Something went wrong. Please try again later.';
+    $detail = sprintf('%s in %s:%d', $error['message'], $error['file'], $error['line']);
+    error_log('Fatal: ' . $detail);
+
+    $renderErrorPage($detail);
 });
+
+// 2. Environnement et configuration
+Env::load(BASE_PATH . '/.env');
+Config::load(BASE_PATH . '/config');
+
+$isLocal = Config::get('app.env') === 'local';
+$bootstrap['local'] = $isLocal;
+ini_set('display_errors', $isLocal ? '1' : '0');
+
+// 3. Fuseau horaire
+date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
 
 // 4. Session sécurisée
 session_name((string) Config::get('security.session_name', 'fiucc_session'));
