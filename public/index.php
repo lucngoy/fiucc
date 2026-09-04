@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use App\Core\Config;
 use App\Core\Env;
+use App\Core\Router;
 
 define('BASE_PATH', dirname(__DIR__));
 
@@ -98,10 +99,13 @@ session_set_cookie_params([
 ]);
 session_start();
 
-// TODO FIUCC-15 :
-// 5. charger routes/web.php et routes/admin.php
-// 6. dispatcher la requête via App\Core\Router
+// 5. Routing
+$router = new Router();
+$router->loadRoutes(BASE_PATH . '/routes/web.php');
+$router->loadRoutes(BASE_PATH . '/routes/admin.php');
 
-echo 'FIUCC Portal — bootstrap OK (environment: '
-    . htmlspecialchars((string) Config::get('app.env'), ENT_QUOTES, 'UTF-8')
-    . ')';
+// Le script peut être servi depuis un sous-dossier (ex. /web/fiucc-portal/public
+// en dev sans vhost dédié) : on retire ce préfixe pour router sur le chemin réel.
+$basePath = str_replace('\\', '/', dirname((string) $_SERVER['SCRIPT_NAME']));
+
+$router->dispatch((string) $_SERVER['REQUEST_METHOD'], (string) $_SERVER['REQUEST_URI'], $basePath);
