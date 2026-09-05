@@ -17,25 +17,33 @@ use App\Models\EmailVerification;
 final class Otp
 {
     /**
-     * @return array{ok: bool, error: string|null}
+     * @return array{ok: bool, error: string|null, reason: string|null}
+     *               reason vaut 'cooldown' ou 'rate_limited' en cas d'échec —
+     *               distingue le cas déjà visible côté vue (bouton désactivé
+     *               + compte à rebours, inutile de le répéter en alerte) du
+     *               cas réellement nouveau à signaler (plafond horaire atteint,
+     *               attendre le cooldown ne suffira pas).
      */
     public static function send(int $userId, string $toEmail, string $toName): array
     {
-        $cooldown = (int) Config::get('security.otp_resend_cooldown_seconds', 60);
-        $lastSentAt = EmailVerification::lastSentAt($userId);
+        $wait = self::secondsUntilResendAllowed($userId);
 
-        if ($lastSentAt !== null) {
-            $wait = strtotime($lastSentAt) + $cooldown - time();
-
-            if ($wait > 0) {
-                return ['ok' => false, 'error' => "Please wait {$wait} second(s) before requesting a new code."];
-            }
+        if ($wait > 0) {
+            return [
+                'ok' => false,
+                'error' => "Please wait {$wait} second(s) before requesting a new code.",
+                'reason' => 'cooldown',
+            ];
         }
 
         $maxPerHour = (int) Config::get('security.otp_max_resends_per_hour', 5);
 
         if (EmailVerification::countRecentFor($userId, 60) >= $maxPerHour) {
-            return ['ok' => false, 'error' => 'You have requested too many codes recently. Please try again later.'];
+            return [
+                'ok' => false,
+                'error' => 'You have requested too many codes recently. Please try again later.',
+                'reason' => 'rate_limited',
+            ];
         }
 
         $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
@@ -53,7 +61,24 @@ final class Otp
             [$code]
         );
 
-        return ['ok' => true, 'error' => null];
+        return ['ok' => true, 'error' => null, 'reason' => null];
+    }
+
+    /**
+     * Secondes restantes avant qu'un renvoi soit accepté (0 si déjà autorisé)
+     * — utilisé pour afficher un compte à rebours côté vue, sans dupliquer
+     * la règle de cooldown déjà appliquée dans send().
+     */
+    public static function secondsUntilResendAllowed(int $userId): int
+    {
+        $cooldown = (int) Config::get('security.otp_resend_cooldown_seconds', 60);
+        $lastSentAt = EmailVerification::lastSentAt($userId);
+
+        if ($lastSentAt === null) {
+            return 0;
+        }
+
+        return max(0, strtotime($lastSentAt) + $cooldown - time());
     }
 
     /**

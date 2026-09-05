@@ -5,6 +5,7 @@
 $notice ??= null;
 $error ??= null;
 $verified ??= false;
+$resendWaitSeconds ??= 0;
 ?>
 <div class="max-w-md mx-auto px-4 py-16 text-center">
     <?php if ($verified): ?>
@@ -25,18 +26,30 @@ $verified ??= false;
             <div class="mb-6 text-left"><?= component('alert', ['type' => 'error', 'message' => $error]) ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="/verify-email" class="flex flex-col gap-6 text-left">
+        <form method="POST" action="/verify-email" id="verify-form" class="flex flex-col gap-6 text-left">
             <?= csrf_field() ?>
             <?= component('form_field', [
                 'name' => 'code', 'label' => 'Verification code', 'required' => true,
                 'placeholder' => '••••••',
             ]) ?>
-            <?= component('button', ['label' => 'Verify', 'variant' => 'primary', 'type' => 'submit']) ?>
         </form>
 
-        <form method="POST" action="/verify-email/resend" class="mt-4">
-            <?= csrf_field() ?>
-            <?= component('button', ['label' => 'Resend code', 'variant' => 'secondary', 'type' => 'submit']) ?>
-        </form>
+        <div class="mt-4 flex justify-center gap-3">
+            <?= component('button', [
+                'label' => 'Verify', 'variant' => 'primary', 'type' => 'submit',
+                'attributes' => 'form="verify-form"',
+            ]) ?>
+
+            <form method="POST" action="/verify-email/resend">
+                <?= csrf_field() ?>
+                <?= component('button', [
+                    'label' => 'Resend code', 'variant' => 'secondary', 'type' => 'submit',
+                    'attributes' => 'id="resend-button" data-wait="' . (int) $resendWaitSeconds . '"'
+                        . ($resendWaitSeconds > 0 ? ' disabled' : ''),
+                ]) ?>
+            </form>
+        </div>
+
+        <script src="/assets/js/verify-email.js" defer></script>
     <?php endif; ?>
 </div>
