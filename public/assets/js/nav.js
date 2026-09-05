@@ -7,14 +7,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     toggle.addEventListener('click', function () {
-        var isHidden = menu.hasAttribute('hidden');
+        var isOpen = menu.classList.contains('flex');
 
-        if (isHidden) {
-            menu.removeAttribute('hidden');
-        } else {
-            menu.setAttribute('hidden', '');
-        }
-
-        toggle.setAttribute('aria-expanded', String(isHidden));
+        menu.classList.toggle('flex', !isOpen);
+        menu.classList.toggle('hidden', isOpen);
+        toggle.setAttribute('aria-expanded', String(!isOpen));
     });
 });

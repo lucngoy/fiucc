@@ -9,7 +9,7 @@
  * n'est encore branché (cf. CLAUDE.md §38, phase Polish) — FR ne change
  * rien tant que ce système n'existe pas.
  */
-$siteName ??= \App\Core\Config::get('app.name', 'FIUCC Portal');
+$brandName ??= 'FIUCC';
 $locale ??= \App\Core\Config::get('app.locale', 'en');
 
 $navLinks = [
@@ -27,7 +27,10 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
 ?>
 <header class="sticky top-0 z-50 w-full bg-white border-b border-border shadow-nav">
     <div class="max-w-layout mx-auto h-[72px] px-4 md:px-6 flex items-center justify-between gap-4">
-        <a href="/" class="font-headline-sm text-headline-sm text-ink shrink-0"><?= e($siteName) ?></a>
+        <a href="/" class="flex items-center gap-3 shrink-0">
+            <img src="/assets/images/fiucc-seal.png" alt="FIUCC official seal" class="h-11 w-11 object-contain">
+            <span class="font-headline-sm text-headline-sm text-ink"><?= e($brandName) ?></span>
+        </a>
 
         <nav class="hidden lg:flex items-center gap-6" aria-label="Main navigation">
             <?php foreach ($navLinks as $link): ?>
@@ -49,7 +52,7 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
         </button>
     </div>
 
-    <nav id="mobile-nav" hidden class="lg:hidden border-t border-border bg-white px-4 py-4 flex flex-col gap-4" aria-label="Mobile navigation">
+    <nav id="mobile-nav" class="hidden lg:hidden flex-col gap-4 border-t border-border bg-white px-4 py-4" aria-label="Mobile navigation">
         <?php foreach ($navLinks as $link): ?>
             <a href="<?= e($link['href']) ?>" class="font-label-lg text-label-lg text-ink"><?= e($link['label']) ?></a>
         <?php endforeach; ?>

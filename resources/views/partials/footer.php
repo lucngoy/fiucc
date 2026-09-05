@@ -5,13 +5,16 @@
  * routes/web.php — pas de contenu inventé (réseaux sociaux en lien inerte,
  * cahier des charges §40 ne fournit pas de handle réel).
  */
-$siteName ??= \App\Core\Config::get('app.name', 'FIUCC Portal');
+$brandName ??= 'FIUCC';
 $year = date('Y');
 ?>
 <footer class="w-full bg-white border-t border-border">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div class="flex flex-col gap-3">
-            <span class="font-headline-sm text-headline-sm text-ink"><?= e($siteName) ?></span>
+            <div class="flex items-center gap-3">
+                <img src="/assets/images/fiucc-seal.png" alt="FIUCC official seal" class="h-10 w-10 object-contain">
+                <span class="font-headline-sm text-headline-sm text-ink"><?= e($brandName) ?></span>
+            </div>
             <p class="text-body-sm text-muted">United by our roots, driven by the future.</p>
         </div>
 
@@ -48,7 +51,7 @@ $year = date('Y');
 
     <div class="w-full bg-primary">
         <div class="max-w-layout mx-auto px-4 md:px-6 py-4 text-center text-body-sm text-white">
-            <p>&copy; <?= e($year) ?> <?= e($siteName) ?>. All rights reserved.</p>
+            <p>&copy; <?= e($year) ?> <?= e($brandName) ?>. All rights reserved.</p>
         </div>
     </div>
 </footer>
