@@ -79,7 +79,18 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
    distinctes**, sans identifiant commun.
 3. Les **tokens de vote et codes OTP sont stockés hashés**, jamais en clair.
 4. **Toutes** les requêtes SQL passent par des requêtes préparées PDO.
-5. **Toutes** les sorties sont échappées (`htmlspecialchars` avec `ENT_QUOTES` et `UTF-8`).
+5. **Toutes** les sorties sont échappées avec le helper `e()` (`app/Helpers/helpers.php`,
+   `htmlspecialchars` avec `ENT_QUOTES` et `UTF-8`) — jamais `htmlspecialchars()` en direct,
+   jamais une valeur imprimée sans passer par `e()`, y compris une valeur qu'on croit
+   interne/sûre (booléen, énumération) : la règle ne souffre pas d'exception au cas par
+   cas, elle se vérifie par grep. Deux exceptions **documentées**, seules tolérées :
+   - `$content` dans `resources/views/layouts/*.php` : HTML déjà rendu par la vue
+     enfant (voir `App\Core\View::render`), pas une donnée à échapper une seconde fois.
+   - le paramètre `content` de `resources/views/partials/card.php` : même principe,
+     un fragment HTML déjà composé par l'appelant.
+   Un fragment HTML **statique**, sans aucune variable interpolée (ex. un `<span>`
+   codé en dur dans un ternaire), n'a rien à échapper — mais dès qu'une variable
+   entre en jeu, elle passe par `e()`, sans exception.
 6. **Tous** les POST portent un token CSRF vérifié côté serveur.
 7. Uploads : type MIME réel vérifié avec `finfo`, jamais `$_FILES['type']` ni l'extension.
    Nom de fichier aléatoire. Aucune exécution PHP dans `public/uploads/`.

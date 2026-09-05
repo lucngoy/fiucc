@@ -2,7 +2,7 @@
 <h1><?= e($siteName) ?></h1>
 <p>
     Database connection:
-    <strong style="color: <?= $dbConnected ? '#0063C6' : '#C00F1F' ?>;">
-        <?= $dbConnected ? 'OK' : 'FAILED' ?>
+    <strong style="color: <?= e($dbConnected ? '#0063C6' : '#C00F1F') ?>;">
+        <?= e($dbConnected ? 'OK' : 'FAILED') ?>
     </strong>
 </p>

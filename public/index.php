@@ -32,7 +32,7 @@ $renderErrorPage = static function (string $detail) use (&$bootstrap): void {
     }
 
     if ($bootstrap['local']) {
-        echo '<pre>' . htmlspecialchars($detail, ENT_QUOTES, 'UTF-8') . '</pre>';
+        echo '<pre>' . e($detail) . '</pre>';
         return;
     }
 
