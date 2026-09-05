@@ -138,6 +138,13 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
     jamais nécessaire (il regroupe la vérification de session). Sans cette
     distinction, une simple adresse `@final.edu.tr` — jamais vérifiée par un
     humain — donnerait accès à la liste complète de la communauté.
+    **Point ouvert (FIUCC-86, Page Alumni Network) :** `/alumni` n'a
+    aujourd'hui aucun middleware (page publique, `AlumniController` n'existe
+    pas encore). À trancher au moment de construire cette page : si son
+    contenu expose des profils d'alumni (comme l'annuaire), elle doit passer
+    sous `['validated']` comme les autres routes de cette liste ; si c'est une
+    page vitrine du programme sans profils individuels, rester publique est
+    correct. Ne pas deviner avant que la page existe réellement.
 
 ## Charte graphique
 
