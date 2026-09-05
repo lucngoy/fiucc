@@ -70,5 +70,23 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    show(0);
+    // Après un échec de validation serveur (FIUCC-32), le formulaire est
+    // réaffiché rempli avec les erreurs — on saute directement à la première
+    // étape qui en contient une, plutôt que de repartir de l'étape 1 à
+    // chaque fois (l'utilisateur devrait sinon re-cliquer "Next" plusieurs
+    // fois pour voir ce qui a été refusé).
+    function firstErrorStepIndex() {
+        var errorField = form.querySelector('[role="alert"]');
+
+        if (!errorField) {
+            return 0;
+        }
+
+        var stepEl = errorField.closest('[data-step]');
+        var index = steps.indexOf(stepEl);
+
+        return index === -1 ? 0 : index;
+    }
+
+    show(firstErrorStepIndex());
 });

@@ -197,7 +197,7 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
 
                 <?= component('checkbox_field', [
                     'name' => 'consent', 'label' => 'I certify that I am a current Congolese student at Final International University and agree to the Community Charter and Data Protection Policy.',
-                    'required' => true, 'checked' => $field('consent') === '1',
+                    'required' => true, 'checked' => $field('consent') === '1', 'error' => $error('consent'),
                 ]) ?>
             </div>
 

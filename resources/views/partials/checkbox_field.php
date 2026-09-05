@@ -5,11 +5,14 @@
  * @param string|null $description
  * @param bool $checked
  * @param bool $required
+ * @param string|null $error   Message d'erreur — même convention que form_field/select_field
  */
 $description ??= null;
 $checked ??= false;
 $required ??= false;
+$error ??= null;
 $fieldId = 'field-' . $name;
+$hasError = $error !== null && $error !== '';
 ?>
 <label for="<?= e($fieldId) ?>" class="flex items-start gap-3 cursor-pointer">
     <input
@@ -25,6 +28,9 @@ $fieldId = 'field-' . $name;
         <?= e($label) ?>
         <?php if ($description !== null): ?>
             <span class="block text-muted"><?= e($description) ?></span>
+        <?php endif; ?>
+        <?php if ($hasError): ?>
+            <span class="block text-danger" role="alert"><?= e($error) ?></span>
         <?php endif; ?>
     </span>
 </label>

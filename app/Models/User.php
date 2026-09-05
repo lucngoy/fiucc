@@ -62,4 +62,22 @@ final class User extends Model
         $stmt = static::db()->prepare('UPDATE users SET last_login_at = NOW() WHERE id = :id');
         $stmt->execute(['id' => $id]);
     }
+
+    public static function emailExists(string $email): bool
+    {
+        $stmt = static::db()->prepare('SELECT 1 FROM users WHERE email = :email LIMIT 1');
+        $stmt->execute(['email' => $email]);
+
+        return $stmt->fetchColumn() !== false;
+    }
+
+    public static function create(string $email, string $passwordHash, string $role = 'member'): int
+    {
+        $stmt = static::db()->prepare(
+            'INSERT INTO users (email, password_hash, role) VALUES (:email, :password_hash, :role)'
+        );
+        $stmt->execute(['email' => $email, 'password_hash' => $passwordHash, 'role' => $role]);
+
+        return (int) static::db()->lastInsertId();
+    }
 }
