@@ -7,6 +7,7 @@ use App\Core\Config;
 use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\LoginThrottle;
+use App\Models\Member;
 use App\Models\User;
 
 final class AuthController extends Controller
@@ -138,6 +139,26 @@ final class AuthController extends Controller
         }
 
         LoginThrottle::reset($userId, $ip);
+
+        // Cycle de statut (FIUCC-35) : rejected/suspended sont des décisions
+        // admin délibérées, pas une attaque externe — contrairement au
+        // verrouillage par mot de passe (voir plus haut), bloquer ici ne
+        // prive personne de son droit de vote par harcèlement. 'pending'
+        // reste autorisé à se connecter : rien à cacher à un membre qui
+        // attend simplement sa validation.
+        $member = Member::findByUserIdWithStatus($userId);
+
+        if ($member !== null && in_array($member['status'], ['rejected', 'suspended'], true)) {
+            ActivityLog::record($userId, 'login_blocked_' . $member['status'], 'user', $userId);
+
+            $this->view('auth.login', [
+                'title' => t('auth.sign_in'),
+                'email' => $email,
+                'error' => $member['status'] === 'suspended' ? t('auth.suspended') : t('auth.rejected'),
+            ]);
+            return;
+        }
+
         $this->completeLogin($user);
     }
 

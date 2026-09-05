@@ -85,4 +85,73 @@ final class Member extends Model
         $stmt = static::db()->prepare('UPDATE members SET email_verified_at = NOW() WHERE user_id = :user_id');
         $stmt->execute(['user_id' => $userId]);
     }
+
+    /**
+     * Cycle de statut (section 24 du cahier des charges) : pending, validated,
+     * rejected, suspended. Aucune contrainte de transition entre eux — le
+     * cahier liste ces trois actions comme des capacités indépendantes de
+     * l'admin, pas un enchaînement strict. validate()/reject()/suspend()
+     * effacent chacune les raisons de l'état négatif qu'elles remplacent,
+     * pour qu'une ancienne raison de rejet ne survive pas à une validation.
+     *
+     * $adminUserId n'est jamais l'auteur de sa propre validation — c'est
+     * toujours un compte admin distinct du membre concerné (appliqué par le
+     * futur contrôleur d'administration, FIUCC-44 ; pas revérifié ici, ce
+     * modèle ne connaît pas la notion de session).
+     */
+    public static function validate(int $memberId, int $adminUserId): void
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE members
+             SET status = 'validated', rejection_reason = NULL, suspension_reason = NULL,
+                 validated_by = :admin_id, validated_at = NOW()
+             WHERE id = :id"
+        );
+        $stmt->execute(['admin_id' => $adminUserId, 'id' => $memberId]);
+    }
+
+    public static function reject(int $memberId, int $adminUserId, string $reason): void
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE members
+             SET status = 'rejected', rejection_reason = :reason, suspension_reason = NULL,
+                 validated_by = :admin_id, validated_at = NOW()
+             WHERE id = :id"
+        );
+        $stmt->execute(['reason' => $reason, 'admin_id' => $adminUserId, 'id' => $memberId]);
+    }
+
+    public static function suspend(int $memberId, int $adminUserId, ?string $reason = null): void
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE members
+             SET status = 'suspended', suspension_reason = :reason,
+                 validated_by = :admin_id, validated_at = NOW()
+             WHERE id = :id"
+        );
+        $stmt->execute(['reason' => $reason, 'admin_id' => $adminUserId, 'id' => $memberId]);
+    }
+
+    /**
+     * Droit de vote (CLAUDE.md, règle non négociable) : status='validated'
+     * ET status_type='student' — un alumni reste membre sans être électeur.
+     * Point d'entrée unique pour ne pas réimplémenter cette règle ailleurs
+     * (élections, phase 4).
+     */
+    public static function isVoterEligible(array $member): bool
+    {
+        return ($member['status'] ?? null) === 'validated'
+            && ($member['status_type'] ?? null) === 'student';
+    }
+
+    public static function findByUserIdWithStatus(int $userId): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT id, full_name, status, status_type FROM members WHERE user_id = :user_id LIMIT 1'
+        );
+        $stmt->execute(['user_id' => $userId]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
 }

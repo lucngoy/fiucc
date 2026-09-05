@@ -35,6 +35,8 @@ return [
     'auth.invalid'          => 'Invalid email or password.',
     'auth.locked'           => 'This account is temporarily locked after too many failed attempts. Please try again later.',
     'auth.notice_required'  => 'Please sign in to access this page.',
+    'auth.rejected'         => 'Your registration was not approved. Contact the community administrators for more information.',
+    'auth.suspended'        => 'Your account has been suspended. Contact the community administrators for more information.',
 
     'error.404_title' => 'Page not found',
     'error.404_body'  => "The page you're looking for doesn't exist or may have been moved.",

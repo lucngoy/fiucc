@@ -34,6 +34,8 @@ return [
     'auth.invalid'          => 'Email ou mot de passe invalide.',
     'auth.locked'           => 'Ce compte est temporairement verrouillé après trop de tentatives échouées. Réessayez plus tard.',
     'auth.notice_required'  => 'Veuillez vous connecter pour accéder à cette page.',
+    'auth.rejected'         => 'Votre inscription n\'a pas été approuvée. Contactez les administrateurs de la communauté pour plus d\'informations.',
+    'auth.suspended'        => 'Votre compte a été suspendu. Contactez les administrateurs de la communauté pour plus d\'informations.',
 
     'error.404_title' => 'Page introuvable',
     'error.404_body'  => "La page que vous recherchez n'existe pas ou a peut-être été déplacée.",
