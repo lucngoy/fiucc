@@ -11,5 +11,5 @@ return [
     'locale'   => Env::get('APP_LOCALE', 'en'),
     // Utilisé en phase 4 comme sel de vote_hash — pas encore obligatoire.
     'key'      => Env::get('APP_KEY'),
-    'timezone' => 'UTC',
+    'timezone' => 'Europe/Istanbul',
 ];

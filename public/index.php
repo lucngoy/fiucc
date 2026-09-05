@@ -76,6 +76,11 @@ register_shutdown_function(static function () use ($renderErrorPage): void {
     $renderErrorPage($detail);
 });
 
+// Fuseau sûr le temps de charger la config — sinon les erreurs levées par
+// Env::load()/Config::load() sont horodatées avec le fuseau par défaut de
+// php.ini au lieu de celui de l'app. Réappliqué avec la vraie valeur juste après.
+date_default_timezone_set('UTC');
+
 // 2. Environnement et configuration
 Env::load(BASE_PATH . '/.env');
 Config::load(BASE_PATH . '/config');
@@ -84,7 +89,7 @@ $isLocal = Config::get('app.env') === 'local';
 $bootstrap['local'] = $isLocal;
 ini_set('display_errors', $isLocal ? '1' : '0');
 
-// 3. Fuseau horaire
+// 3. Fuseau horaire réel
 date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
 
 // 4. Session sécurisée
