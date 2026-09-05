@@ -24,7 +24,15 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         current = index;
-        steps[index].scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+        // Décalage calculé à la main, pas scroll-margin-top + scrollIntoView :
+        // ce dernier ignore scroll-margin-top en smooth scroll sur certains
+        // navigateurs (Safari), laissant le haut de l'étape sous le header
+        // sticky (72px). getBoundingClientRect() force un reflow, donc la
+        // position est à jour même juste après avoir démasqué l'étape.
+        var headerOffset = 88;
+        var top = steps[index].getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        window.scrollTo({ top: top, behavior: 'smooth' });
     }
 
     // Ne valide que les champs requis de l'étape courante — pas tout le
