@@ -37,6 +37,8 @@ return [
     'auth.rejected'         => 'Votre inscription n\'a pas été approuvée. Contactez les administrateurs de la communauté pour plus d\'informations.',
     'auth.suspended'        => 'Votre compte a été suspendu. Contactez les administrateurs de la communauté pour plus d\'informations.',
 
+    'error.403_title' => 'Session expirée',
+    'error.403_body'  => 'Votre session a expiré ou le formulaire est invalide. Revenez en arrière, actualisez la page et réessayez.',
     'error.404_title' => 'Page introuvable',
     'error.404_body'  => "La page que vous recherchez n'existe pas ou a peut-être été déplacée.",
     'error.500_title' => 'Une erreur est survenue',

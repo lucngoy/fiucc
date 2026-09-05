@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Core\Csrf;
+use App\Core\View;
 
 /**
  * Appliqué à tout POST par App\Core\Router, sans exception ni opt-in par
@@ -22,9 +23,10 @@ final class CsrfMiddleware
 
         // Message volontairement neutre : techniquement indiscernable d'une
         // session qui a simplement expiré pendant que le formulaire était
-        // rempli, de loin le cas le plus fréquent — pas d'accusation.
+        // rempli, de loin le cas le plus fréquent — pas d'accusation. Même
+        // gabarit que les pages 404/500 (FIUCC-27), pas un texte brut.
         http_response_code(403);
-        echo '403 — Your session has expired or the form is invalid. Please go back, refresh the page, and try again.';
+        echo View::render('errors.403', ['title' => t('error.403_title')], 'layouts.error');
 
         return false;
     }

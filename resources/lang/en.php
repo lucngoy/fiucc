@@ -38,6 +38,8 @@ return [
     'auth.rejected'         => 'Your registration was not approved. Contact the community administrators for more information.',
     'auth.suspended'        => 'Your account has been suspended. Contact the community administrators for more information.',
 
+    'error.403_title' => 'Session expired',
+    'error.403_body'  => 'Your session has expired or the form is invalid. Please go back, refresh the page, and try again.',
     'error.404_title' => 'Page not found',
     'error.404_body'  => "The page you're looking for doesn't exist or may have been moved.",
     'error.500_title' => 'Something went wrong',
