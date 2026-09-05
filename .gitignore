@@ -18,7 +18,8 @@
 !/storage/**/.gitkeep
 
 # Build
-/public/assets/css/app.css
+# app.css est généré par `npm run build:css` mais commité : la prod n'a pas
+# Node.js et ne doit lancer aucune étape de build (voir CLAUDE.md).
 /public/assets/css/*.map
 
 # Système

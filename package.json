@@ -1,0 +1,11 @@
+{
+  "name": "fiucc-portal-assets",
+  "private": true,
+  "description": "Outillage de build du design system (Tailwind) — dev uniquement, jamais requis en production.",
+  "scripts": {
+    "build:css": "tailwindcss -i ./resources/css/app.css -o ./public/assets/css/app.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.19"
+  }
+}
