@@ -16,6 +16,15 @@ namespace App\Core;
  */
 final class Logger
 {
+    /**
+     * Filet de sécurité par motif — ne remplace pas un masquage explicite
+     * (ex. App\Services\Mail::send() $secrets), le complète pour ce qu'on
+     * oublierait de déclarer. Appliqué à toute ligne, sur tous les canaux.
+     */
+    private const PATTERN_6_DIGITS = '/\b\d{6}\b/';
+    private const PATTERN_LONG_HEX = '/\b[0-9a-fA-F]{32,}\b/';
+    private const PATTERN_LABELLED = '/\b(password|token|code)\b((?:\s+is)?\s*[:=]\s*)\S+/i';
+
     public static function info(string $channel, string $message, array $context = []): void
     {
         self::write($channel, 'info', $message, $context);
@@ -35,8 +44,25 @@ final class Logger
     {
         $contextSuffix = $context === [] ? '' : ' ' . json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $line = sprintf('[%s] %s: %s%s', date('Y-m-d H:i:s'), strtoupper($level), $message, $contextSuffix);
+        $line = self::redact($line);
 
         $path = BASE_PATH . '/storage/logs/' . $channel . '.log';
         file_put_contents($path, $line . PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    /**
+     * Masque par motif ce qui ressemble à un secret : code à 6 chiffres
+     * isolé (OTP), chaîne hexadécimale de 32 caractères ou plus (token de
+     * vote, CSRF...), et tout ce qui suit "password"/"token"/"code" après
+     * un délimiteur explicite (":", "=", "is:") — pas juste le mot lui-même,
+     * pour ne pas mutiler une phrase normale ("code expires in...").
+     */
+    private static function redact(string $text): string
+    {
+        $text = preg_replace(self::PATTERN_6_DIGITS, '[REDACTED]', $text) ?? $text;
+        $text = preg_replace(self::PATTERN_LONG_HEX, '[REDACTED]', $text) ?? $text;
+        $text = preg_replace(self::PATTERN_LABELLED, '$1$2[REDACTED]', $text) ?? $text;
+
+        return $text;
     }
 }
