@@ -23,6 +23,8 @@ final class User extends Model
     }
 
     /**
+     * Verrouillage dur — comptes admin uniquement (voir CLAUDE.md). Les
+     * membres utilisent App\Models\LoginThrottle, jamais ces colonnes.
      * Incrémente le compteur d'échecs et verrouille le compte si le seuil est atteint.
      */
     public static function registerFailedAttempt(int $id, int $currentAttempts, int $maxAttempts, int $lockoutMinutes): void
@@ -43,11 +45,21 @@ final class User extends Model
         $stmt->execute(['attempts' => $newAttempts, 'id' => $id]);
     }
 
+    /**
+     * Admin uniquement — voir registerFailedAttempt().
+     */
     public static function resetFailedAttempts(int $id): void
     {
-        $stmt = static::db()->prepare(
-            'UPDATE users SET failed_attempts = 0, locked_until = NULL, last_login_at = NOW() WHERE id = :id'
-        );
+        $stmt = static::db()->prepare('UPDATE users SET failed_attempts = 0, locked_until = NULL WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
+
+    /**
+     * Connexion réussie, admin ou membre.
+     */
+    public static function touchLastLogin(int $id): void
+    {
+        $stmt = static::db()->prepare('UPDATE users SET last_login_at = NOW() WHERE id = :id');
         $stmt->execute(['id' => $id]);
     }
 }

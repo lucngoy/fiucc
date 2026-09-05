@@ -5,6 +5,8 @@ namespace App\Controllers;
 
 use App\Core\Config;
 use App\Core\Controller;
+use App\Models\ActivityLog;
+use App\Models\LoginThrottle;
 use App\Models\User;
 
 final class AuthController extends Controller
@@ -27,43 +29,23 @@ final class AuthController extends Controller
 
         $user = User::findByEmail($email);
 
-        if ($user !== null && $this->isLocked($user)) {
-            $this->view('auth.login', [
-                'title' => 'Sign in',
-                'email' => $email,
-                'error' => 'This account is temporarily locked after too many failed attempts. Please try again later.',
-            ]);
+        if ($user !== null && $user['role'] === 'admin') {
+            $this->attemptAdminLogin($user, $email, $password);
             return;
         }
 
-        // Même message générique que l'email existe ou non : ne jamais révéler
-        // si un compte existe (évite l'énumération d'adresses).
-        if ($user === null || !password_verify($password, $user['password_hash'])) {
-            if ($user !== null) {
-                User::registerFailedAttempt(
-                    (int) $user['id'],
-                    (int) $user['failed_attempts'],
-                    (int) Config::get('security.login_max_attempts', 5),
-                    (int) Config::get('security.login_lockout_minutes', 15)
-                );
-            }
-
-            $this->view('auth.login', [
-                'title' => 'Sign in',
-                'email' => $email,
-                'error' => 'Invalid email or password.',
-            ]);
+        if ($user !== null) {
+            $this->attemptMemberLogin($user, $email, $password);
             return;
         }
 
-        User::resetFailedAttempts((int) $user['id']);
-
-        // Empêche la fixation de session : nouvel identifiant à chaque connexion.
-        session_regenerate_id(true);
-        $_SESSION['user_id'] = (int) $user['id'];
-        $_SESSION['role'] = $user['role'];
-
-        $this->redirect($user['role'] === 'admin' ? '/admin' : '/profile');
+        // Même message générique que le compte existe ou non : ne jamais
+        // révéler si une adresse est enregistrée (évite l'énumération).
+        $this->view('auth.login', [
+            'title' => 'Sign in',
+            'email' => $email,
+            'error' => 'Invalid email or password.',
+        ]);
     }
 
     public function logout(): void
@@ -78,6 +60,97 @@ final class AuthController extends Controller
         session_destroy();
 
         $this->redirect('/login');
+    }
+
+    /**
+     * Comptes admin : verrouillage dur inchangé (FIUCC-23). Peu de comptes,
+     * cible à forte valeur — pas de risque de "priver de vote" un admin,
+     * contrairement à un membre (voir attemptMemberLogin).
+     */
+    private function attemptAdminLogin(array $user, string $email, string $password): void
+    {
+        if ($this->isLocked($user)) {
+            $this->view('auth.login', [
+                'title' => 'Sign in',
+                'email' => $email,
+                'error' => 'This account is temporarily locked after too many failed attempts. Please try again later.',
+            ]);
+            return;
+        }
+
+        if (!password_verify($password, $user['password_hash'])) {
+            User::registerFailedAttempt(
+                (int) $user['id'],
+                (int) $user['failed_attempts'],
+                (int) Config::get('security.login_max_attempts', 5),
+                (int) Config::get('security.login_lockout_minutes', 15)
+            );
+            ActivityLog::record((int) $user['id'], 'login_failed', 'user', (int) $user['id']);
+
+            $this->view('auth.login', [
+                'title' => 'Sign in',
+                'email' => $email,
+                'error' => 'Invalid email or password.',
+            ]);
+            return;
+        }
+
+        User::resetFailedAttempts((int) $user['id']);
+        $this->completeLogin($user);
+    }
+
+    /**
+     * Comptes membre : jamais de blocage total — un verrouillage par compte
+     * permettrait à n'importe qui d'empêcher un électeur de voter (voir
+     * CLAUDE.md). Ralentissement progressif par (compte, IP), plafonné.
+     *
+     * Le délai est appliqué AVANT de vérifier le mot de passe, à partir du
+     * nombre d'échecs déjà enregistrés — pas après avoir constaté l'échec
+     * du tentative en cours. Sinon, un essai correct répondrait
+     * instantanément là où un essai raté serait lent : la latence de la
+     * réponse révélerait à elle seule si le mot de passe était bon, avant
+     * même d'afficher quoi que ce soit.
+     */
+    private function attemptMemberLogin(array $user, string $email, string $password): void
+    {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $userId = (int) $user['id'];
+
+        $priorFailures = LoginThrottle::failedAttempts($userId, $ip);
+        $step = (int) Config::get('security.member_login_throttle_step_seconds', 5);
+        $max = (int) Config::get('security.member_login_throttle_max_seconds', 30);
+        $delay = min($max, $priorFailures * $step);
+
+        if ($delay > 0) {
+            sleep($delay);
+        }
+
+        if (!password_verify($password, $user['password_hash'])) {
+            LoginThrottle::registerFailure($userId, $ip);
+            ActivityLog::record($userId, 'login_failed', 'user', $userId);
+
+            $this->view('auth.login', [
+                'title' => 'Sign in',
+                'email' => $email,
+                'error' => 'Invalid email or password.',
+            ]);
+            return;
+        }
+
+        LoginThrottle::reset($userId, $ip);
+        $this->completeLogin($user);
+    }
+
+    private function completeLogin(array $user): void
+    {
+        User::touchLastLogin((int) $user['id']);
+
+        // Empêche la fixation de session : nouvel identifiant à chaque connexion.
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = (int) $user['id'];
+        $_SESSION['role'] = $user['role'];
+
+        $this->redirect($user['role'] === 'admin' ? '/admin' : '/profile');
     }
 
     private function isLocked(array $user): bool

@@ -98,6 +98,32 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
    `members.status_type = 'student'`. Un alumni reste membre sans être électeur.
 9. Aucune credential en dur. Tout passe par `.env`, qui n'est jamais commité.
 10. En production, aucune trace d'erreur ne fuit vers le navigateur.
+11. **Jamais de verrouillage de compte par identifiant seul pour un membre** — un
+    électeur reconnaissable (email `@final.edu.tr` au format prévisible) peut sinon
+    être privé de vote par n'importe qui, en saisissant volontairement 5 mauvais
+    mots de passe le jour du scrutin. Les membres subissent un ralentissement
+    progressif par `(compte, IP)` (`App\Models\LoginThrottle`), plafonné à **30
+    secondes** (`security.member_login_throttle_max_seconds`) : assez long pour
+    rendre un brute-force en ligne impraticable, assez court pour ne jamais
+    empêcher réellement quelqu'un de se connecter — le bon mot de passe fonctionne
+    toujours, à n'importe quel moment. Le délai est appliqué **avant** de vérifier
+    le mot de passe (pas après avoir constaté l'échec), pour qu'un essai correct
+    ne soit jamais plus rapide qu'un essai raté au même niveau de pénalité — sinon
+    le temps de réponse à lui seul révélerait si le mot de passe était bon.
+    Les comptes **admin** gardent le verrouillage dur (`users.failed_attempts`/
+    `locked_until`) : peu de comptes, cible à forte valeur, aucun risque de priver
+    quelqu'un de son droit de vote. Chaque échec est journalisé dans
+    `activity_logs` avec l'IP (`App\Models\ActivityLog`), admin et membre :
+    supprimer le verrouillage membre ne doit pas faire perdre la capacité de
+    constater un harcèlement après coup.
+    Compromis assumé : le délai est un `sleep()` côté serveur, qui bloque le
+    worker Apache/PHP pendant sa durée. De nombreuses requêtes lentes en
+    parallèle peuvent donc dégrader la disponibilité du serveur — un vecteur de
+    déni de service différent de celui qu'on corrige, limité mais pas éliminé par
+    le plafond de 30s. Un déblocage par email (lien à usage unique envoyé à
+    l'adresse universitaire, pour que le titulaire réel reprenne la main
+    immédiatement même sur un compte harcelé) est prévu en ticket séparé, phase 2,
+    avec le reste de l'infrastructure email.
 
 ## Charte graphique
 
