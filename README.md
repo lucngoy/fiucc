@@ -28,8 +28,13 @@ cd fiucc-portal
 composer install
 cp .env.example .env          # puis renseigner DB_* et MAIL_*
 mysql -u root -p -e "CREATE DATABASE congolese_community CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-mysql -u root -p congolese_community < database/migrations/001_initial_schema.sql
+php database/migrate.php    # applique les migrations, une seule fois chacune
+php database/seed.php       # optionnel : comptes de test + données de démonstration
 ```
+
+`database/migrate.php` fonctionne aussi en production (changement de schéma). `database/seed.php`
+refuse de s'exécuter si `APP_ENV=production` : il ne crée que des comptes de test et des
+données de démonstration (cahier des charges, section 53), jamais de la donnée réelle.
 
 Pointer le DocumentRoot d'Apache sur `public/` — jamais sur la racine du projet.
 
