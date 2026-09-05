@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\Member;
 use App\Models\User;
+use App\Services\MemberNotifier;
 use App\Services\Otp;
 
 final class VerificationController extends Controller
@@ -40,6 +41,12 @@ final class VerificationController extends Controller
 
         Member::markEmailVerified($userId);
         ActivityLog::record($userId, 'email_verified', 'user', $userId);
+
+        // Envoyé ici, pas à la soumission du formulaire (FIUCC-36) : l'adresse
+        // n'est prouvée qu'une fois ce code vérifié, pas avant. Sinon on
+        // doublerait le mail OTP déjà envoyé à la soumission.
+        MemberNotifier::notifyRegistrationReceived($userId);
+
         unset($_SESSION['pending_verification_user_id']);
 
         $this->render(null, null, true);
