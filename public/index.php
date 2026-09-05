@@ -50,7 +50,7 @@ $renderErrorPage = static function (string $detail) use (&$bootstrap): void {
 <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
-<div class="max-w-layout mx-auto px-4 py-24 text-center">
+<div class="min-h-screen w-full flex flex-col items-center justify-center text-center px-4">
 <p class="font-label-caps text-label-caps uppercase text-danger tracking-wider mb-4">Error 500</p>
 <h1 class="font-headline-lg text-headline-lg text-ink mb-4">Something went wrong</h1>
 <p class="text-body-md text-muted mb-8">Please try again in a moment. If the problem persists, contact the community administrators.</p>
