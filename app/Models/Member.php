@@ -68,4 +68,21 @@ final class Member extends Model
 
         return $memberId;
     }
+
+    public static function findByUserId(int $userId): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT id, full_name, email_verified_at FROM members WHERE user_id = :user_id LIMIT 1'
+        );
+        $stmt->execute(['user_id' => $userId]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    public static function markEmailVerified(int $userId): void
+    {
+        $stmt = static::db()->prepare('UPDATE members SET email_verified_at = NOW() WHERE user_id = :user_id');
+        $stmt->execute(['user_id' => $userId]);
+    }
 }

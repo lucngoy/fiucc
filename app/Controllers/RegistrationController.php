@@ -9,6 +9,7 @@ use App\Core\Database;
 use App\Models\ActivityLog;
 use App\Models\Member;
 use App\Models\User;
+use App\Services\Otp;
 use DateTime;
 use PDOException;
 use Throwable;
@@ -48,8 +49,15 @@ final class RegistrationController extends Controller
 
         ActivityLog::record($userId, 'member_registered', 'member', $memberId);
 
-        // FIUCC-33/34 pas encore construits : 404 propre en attendant,
-        // cohérent avec le reste des routes non encore implémentées.
+        // Envoi immédiat du premier code (section 14 du cahier des charges) :
+        // pas de garde-fou sur l'échec d'envoi ici, la page de vérification
+        // propose un renvoi si le premier message se perd.
+        Otp::send($userId, $input['email'], $input['full_name']);
+
+        // Pas de session pleinement authentifiée à ce stade — juste assez
+        // pour savoir qui vérifie, sans redemander l'email.
+        $_SESSION['pending_verification_user_id'] = $userId;
+
         $this->redirect('/verify-email');
     }
 

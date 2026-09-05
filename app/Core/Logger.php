@@ -13,39 +13,50 @@ namespace App\Core;
  * validation de membre, élection ouverte/fermée...), consultable par
  * l'administration. Logger est la sortie technique fichier (erreurs, envois
  * d'email simulés en local...), jamais destinée à un écran d'administration.
+ *
+ * Masquage des secrets — tout passe par ici, un seul endroit qui connaît la
+ * règle mail.reveal_secrets : un appelant (ex. App\Services\Mail) ne doit
+ * JAMAIS masquer lui-même avant d'appeler Logger, sinon l'exception de
+ * reveal ne peut plus rien démasquer (bug déjà rencontré et corrigé).
  */
 final class Logger
 {
     /**
-     * Filet de sécurité par motif — ne remplace pas un masquage explicite
-     * (ex. App\Services\Mail::send() $secrets), le complète pour ce qu'on
-     * oublierait de déclarer. Appliqué à toute ligne, sur tous les canaux.
+     * Filet de sécurité par motif — complète le masquage déclaré via
+     * $secrets, pour ce qu'un appelant oublierait de déclarer. Appliqué à
+     * toute ligne, sur tous les canaux.
      */
     private const PATTERN_6_DIGITS = '/\b\d{6}\b/';
     private const PATTERN_LONG_HEX = '/\b[0-9a-fA-F]{32,}\b/';
     private const PATTERN_LABELLED = '/\b(password|token|code)\b((?:\s+is)?\s*[:=]\s*)\S+/i';
 
-    public static function info(string $channel, string $message, array $context = []): void
+    /**
+     * @param array $secrets Valeurs sensibles réellement présentes dans $message
+     *                       (code OTP, token...) — remplacées par [REDACTED],
+     *                       sauf échappatoire (voir revealsSecrets()).
+     */
+    public static function info(string $channel, string $message, array $context = [], array $secrets = []): void
     {
-        self::write($channel, 'info', $message, $context);
+        self::write($channel, 'info', $message, $context, $secrets);
     }
 
-    public static function warning(string $channel, string $message, array $context = []): void
+    public static function warning(string $channel, string $message, array $context = [], array $secrets = []): void
     {
-        self::write($channel, 'warning', $message, $context);
+        self::write($channel, 'warning', $message, $context, $secrets);
     }
 
-    public static function error(string $channel, string $message, array $context = []): void
+    public static function error(string $channel, string $message, array $context = [], array $secrets = []): void
     {
-        self::write($channel, 'error', $message, $context);
+        self::write($channel, 'error', $message, $context, $secrets);
     }
 
-    private static function write(string $channel, string $level, string $message, array $context): void
+    private static function write(string $channel, string $level, string $message, array $context, array $secrets = []): void
     {
         $contextSuffix = $context === [] ? '' : ' ' . json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $line = sprintf('[%s] %s: %s%s', date('Y-m-d H:i:s'), strtoupper($level), $message, $contextSuffix);
 
         if (!self::revealsSecrets($channel)) {
+            $line = self::maskDeclared($line, $secrets);
             $line = self::redact($line);
         }
 
@@ -68,6 +79,22 @@ final class Logger
 
         return Config::get('mail.reveal_secrets', false) === true
             && Config::get('app.env') === 'local';
+    }
+
+    /**
+     * Masquage déclaré par l'appelant (ex. le code OTP réellement envoyé).
+     */
+    private static function maskDeclared(string $text, array $secrets): string
+    {
+        foreach ($secrets as $secret) {
+            if ($secret === null || $secret === '') {
+                continue;
+            }
+
+            $text = str_replace((string) $secret, '[REDACTED]', $text);
+        }
+
+        return $text;
     }
 
     /**

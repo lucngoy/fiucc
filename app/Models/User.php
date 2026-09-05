@@ -80,4 +80,13 @@ final class User extends Model
 
         return (int) static::db()->lastInsertId();
     }
+
+    public static function find(int $id): ?array
+    {
+        $stmt = static::db()->prepare('SELECT id, email, role FROM users WHERE id = :id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
 }

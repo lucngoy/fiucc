@@ -1,0 +1,42 @@
+<?php
+/**
+ * Vérification email (section 14 du cahier des charges) — FIUCC-34.
+ */
+$notice ??= null;
+$error ??= null;
+$verified ??= false;
+?>
+<div class="max-w-md mx-auto px-4 py-16 text-center">
+    <?php if ($verified): ?>
+        <div class="flex flex-col items-center gap-4">
+            <span class="h-16 w-16 rounded-full bg-success/15 text-success flex items-center justify-center text-3xl font-bold">&#10003;</span>
+            <h1 class="font-headline-lg text-headline-lg text-ink">Email Verified</h1>
+            <p class="text-body-md text-muted">Your registration is now awaiting administrator approval. You'll be notified once your membership is validated.</p>
+            <?= component('button', ['label' => 'Back to home', 'variant' => 'primary', 'href' => '/']) ?>
+        </div>
+    <?php else: ?>
+        <h1 class="font-headline-lg text-headline-lg text-ink mb-3">Verify your email</h1>
+        <p class="text-body-md text-muted mb-8">Enter the 6-digit verification code we sent to your university email.</p>
+
+        <?php if ($notice !== null): ?>
+            <div class="mb-6 text-left"><?= component('alert', ['type' => 'success', 'message' => $notice]) ?></div>
+        <?php endif; ?>
+        <?php if ($error !== null): ?>
+            <div class="mb-6 text-left"><?= component('alert', ['type' => 'error', 'message' => $error]) ?></div>
+        <?php endif; ?>
+
+        <form method="POST" action="/verify-email" class="flex flex-col gap-6 text-left">
+            <?= csrf_field() ?>
+            <?= component('form_field', [
+                'name' => 'code', 'label' => 'Verification code', 'required' => true,
+                'placeholder' => '••••••',
+            ]) ?>
+            <?= component('button', ['label' => 'Verify', 'variant' => 'primary', 'type' => 'submit']) ?>
+        </form>
+
+        <form method="POST" action="/verify-email/resend" class="mt-4">
+            <?= csrf_field() ?>
+            <?= component('button', ['label' => 'Resend code', 'variant' => 'secondary', 'type' => 'submit']) ?>
+        </form>
+    <?php endif; ?>
+</div>

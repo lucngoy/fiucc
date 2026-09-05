@@ -26,11 +26,11 @@ final class Mail
      * @param string $contentHtml  Corps HTML du message (fragment, injecté
      *                             dans le layout — pas un document complet)
      * @param array $secrets       Valeurs sensibles réellement présentes dans
-     *                             ce message (code OTP, token...) — remplacées
-     *                             par [REDACTED] dans storage/logs/mail.log,
-     *                             sans exception d'environnement. N'affecte
-     *                             jamais l'email réellement envoyé (driver
-     *                             smtp) : seul le journal est masqué.
+     *                             ce message (code OTP, token...) — transmises
+     *                             telles quelles à App\Core\Logger, qui décide
+     *                             seul de les masquer ou non (mail.reveal_secrets).
+     *                             N'affecte jamais l'email réellement envoyé
+     *                             (driver smtp) : seul le journal est concerné.
      * @param string|null $plainText Texte de repli ; dérivé du HTML si omis.
      */
     public static function send(
@@ -78,8 +78,11 @@ final class Mail
         } catch (PHPMailerException $exception) {
             // Le mot de passe SMTP n'apparaît dans aucun message PHPMailer
             // connu, mais on le masque par prudence si un jour ça changeait.
+            // Masquage délégué à Logger (jamais fait ici) : lui seul connaît
+            // l'échappatoire mail.reveal_secrets, un masquage fait en amont
+            // la rendrait inopérante (bug déjà rencontré et corrigé).
             $secretsToMask = array_merge($secrets, [(string) Config::get('mail.password', '')]);
-            Logger::error('mail', self::mask("Failed to send to {$toEmail}: {$exception->getMessage()}", $secretsToMask));
+            Logger::error('mail', "Failed to send to {$toEmail}: {$exception->getMessage()}", [], $secretsToMask);
 
             return false;
         }
@@ -89,7 +92,7 @@ final class Mail
     {
         $entry = "To: {$toName} <{$toEmail}>\nSubject: {$subject}\n\n{$plainText}\n" . str_repeat('-', 40);
 
-        Logger::info('mail', self::mask($entry, $secrets));
+        Logger::info('mail', $entry, [], $secrets);
     }
 
     /**
@@ -101,22 +104,5 @@ final class Mail
         $text = html_entity_decode(strip_tags((string) $withBreaks), ENT_QUOTES, 'UTF-8');
 
         return trim((string) preg_replace("/\n{3,}/", "\n\n", $text));
-    }
-
-    /**
-     * Remplace chaque valeur sensible par [REDACTED] — jamais un secret en
-     * clair dans un log, quel que soit l'environnement (CLAUDE.md).
-     */
-    private static function mask(string $text, array $secrets): string
-    {
-        foreach ($secrets as $secret) {
-            if ($secret === null || $secret === '') {
-                continue;
-            }
-
-            $text = str_replace((string) $secret, '[REDACTED]', $text);
-        }
-
-        return $text;
     }
 }
