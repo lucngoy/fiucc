@@ -118,6 +118,12 @@ $isLocal = Config::get('app.env') === 'local';
 $bootstrap['local'] = $isLocal;
 ini_set('display_errors', $isLocal ? '1' : '0');
 
+// Le flag est ignoré hors local (voir App\Core\Logger), mais pas
+// silencieusement : une combinaison dangereuse doit se voir dans les logs.
+if (Config::get('mail.reveal_secrets', false) === true && !$isLocal) {
+    Logger::warning('app-' . date('Y-m-d'), 'MAIL_REVEAL_SECRETS is enabled outside of a local environment — ignored, but should be unset.');
+}
+
 // 3. Fuseau horaire réel
 date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
 

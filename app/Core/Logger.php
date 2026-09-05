@@ -44,10 +44,30 @@ final class Logger
     {
         $contextSuffix = $context === [] ? '' : ' ' . json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         $line = sprintf('[%s] %s: %s%s', date('Y-m-d H:i:s'), strtoupper($level), $message, $contextSuffix);
-        $line = self::redact($line);
+
+        if (!self::revealsSecrets($channel)) {
+            $line = self::redact($line);
+        }
 
         $path = BASE_PATH . '/storage/logs/' . $channel . '.log';
         file_put_contents($path, $line . PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    /**
+     * Échappatoire volontaire et étroite : uniquement le canal 'mail', et
+     * uniquement si mail.reveal_secrets ET app.env=local sont vrais tous
+     * les deux — jamais l'un sans l'autre. Le bootstrap (public/index.php)
+     * journalise un avertissement si le flag est vrai hors local : il est
+     * ignoré ici, mais pas silencieusement.
+     */
+    private static function revealsSecrets(string $channel): bool
+    {
+        if ($channel !== 'mail') {
+            return false;
+        }
+
+        return Config::get('mail.reveal_secrets', false) === true
+            && Config::get('app.env') === 'local';
     }
 
     /**
