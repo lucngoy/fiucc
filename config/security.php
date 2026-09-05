@@ -16,4 +16,5 @@ return [
     // Ralentissement progressif — comptes membre, par (compte, IP).
     'member_login_throttle_step_seconds' => (int) Env::get('MEMBER_LOGIN_THROTTLE_STEP_SECONDS', 5),
     'member_login_throttle_max_seconds'  => (int) Env::get('MEMBER_LOGIN_THROTTLE_MAX_SECONDS', 30),
+    'password_min_length' => (int) Env::get('PASSWORD_MIN_LENGTH', 10),
 ];
