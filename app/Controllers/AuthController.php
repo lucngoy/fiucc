@@ -143,11 +143,17 @@ final class AuthController extends Controller
 
     private function completeLogin(array $user): void
     {
-        User::touchLastLogin((int) $user['id']);
+        $userId = (int) $user['id'];
+
+        User::touchLastLogin($userId);
+        // "Admin login" est une action sensible explicitement listée au
+        // cahier des charges (section 48) ; journalisé pour les deux rôles
+        // par symétrie avec les échecs, déjà journalisés pour les deux.
+        ActivityLog::record($userId, 'login_success', 'user', $userId);
 
         // Empêche la fixation de session : nouvel identifiant à chaque connexion.
         session_regenerate_id(true);
-        $_SESSION['user_id'] = (int) $user['id'];
+        $_SESSION['user_id'] = $userId;
         $_SESSION['role'] = $user['role'];
 
         $this->redirect($user['role'] === 'admin' ? '/admin' : '/profile');

@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 use App\Core\Config;
 use App\Core\Env;
+use App\Core\Logger;
 use App\Core\Router;
 
 define('BASE_PATH', dirname(__DIR__));
@@ -22,6 +23,9 @@ require BASE_PATH . '/vendor/autoload.php';
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
+// Filet natif PHP (même fichier qu'App\Core\Logger, voir plus bas) : ne
+// couvre que ce qui échapperait à nos handlers explicites, pas le canal
+// principal — nos propres appels passent par Logger::error(), pas error_log().
 ini_set('error_log', BASE_PATH . '/storage/logs/app-' . date('Y-m-d') . '.log');
 
 $bootstrap = ['local' => false];
@@ -70,7 +74,7 @@ set_error_handler(static function (int $severity, string $message, string $file,
 });
 
 set_exception_handler(static function (Throwable $exception) use ($renderErrorPage): void {
-    error_log(sprintf(
+    Logger::error('app-' . date('Y-m-d'), sprintf(
         '%s: %s in %s:%d%s%s',
         get_class($exception),
         $exception->getMessage(),
@@ -93,7 +97,7 @@ register_shutdown_function(static function () use ($renderErrorPage): void {
     }
 
     $detail = sprintf('%s in %s:%d', $error['message'], $error['file'], $error['line']);
-    error_log('Fatal: ' . $detail);
+    Logger::error('app-' . date('Y-m-d'), 'Fatal: ' . $detail);
 
     $renderErrorPage($detail);
 });

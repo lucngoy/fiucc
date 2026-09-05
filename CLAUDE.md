@@ -58,7 +58,7 @@ app/Models/        Accès aux données, un modèle par table principale
 app/Services/      Logique métier (élection, mail, upload, tokens)
 app/Middleware/    auth, admin, csrf, vote
 app/Helpers/       Fonctions utilitaires
-app/Core/          Router, Controller, Model, View, Database, Config, Env
+app/Core/          Router, Controller, Model, View, Database, Config, Env, Logger
 config/            Fichiers de configuration retournant un tableau
 database/          migrations/ et seeders/
 public/            Racine web. index.php est l'unique point d'entrée.
