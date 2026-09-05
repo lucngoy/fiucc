@@ -16,6 +16,9 @@ module.exports = {
         primary: {
           DEFAULT: '#0063C6',
           light: '#7BBCFF',
+          // Hover du bouton primaire (DESIGN.md, section Buttons) : même teinte
+          // assombrie, pas une nouvelle couleur de la charte.
+          dark: '#0050A3',
         },
         gold: '#ECC117',
         danger: '#C00F1F',

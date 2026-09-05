@@ -22,6 +22,14 @@ final class View
         return self::capture(self::resolve($layout), array_merge($data, ['content' => $content]));
     }
 
+    /**
+     * Rendu d'un fragment sans layout — utilisé par le helper component().
+     */
+    public static function partial(string $view, array $data = []): string
+    {
+        return self::capture(self::resolve($view), $data);
+    }
+
     private static function capture(string $path, array $data): string
     {
         extract($data, EXTR_SKIP);

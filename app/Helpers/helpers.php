@@ -10,3 +10,13 @@ if (!function_exists('e')) {
         return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
     }
 }
+
+if (!function_exists('component')) {
+    /**
+     * Rend un composant réutilisable de resources/views/partials/{name}.php.
+     */
+    function component(string $name, array $data = []): string
+    {
+        return \App\Core\View::partial('partials.' . $name, $data);
+    }
+}
