@@ -49,7 +49,7 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
         <?= csrf_field() ?>
 
         <!-- Étape 1 : Identité -->
-        <div data-step="1">
+        <div data-step="1" class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
                 <h2 class="font-headline-sm text-headline-sm text-ink">Personal Identity</h2>
 
@@ -89,7 +89,7 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
         </div>
 
         <!-- Étape 2 : Études -->
-        <div data-step="2" hidden>
+        <div data-step="2" hidden class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
                 <h2 class="font-headline-sm text-headline-sm text-ink">Academic Studies at Final</h2>
 
@@ -125,7 +125,7 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
         </div>
 
         <!-- Étape 3 : Contact et compte -->
-        <div data-step="3" hidden>
+        <div data-step="3" hidden class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
                 <h2 class="font-headline-sm text-headline-sm text-ink">Contact Details</h2>
 
@@ -190,7 +190,7 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
         </div>
 
         <!-- Étape 4 : Confirmation -->
-        <div data-step="4" hidden>
+        <div data-step="4" hidden class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
                 <h2 class="font-headline-sm text-headline-sm text-ink">Confirm your registration</h2>
                 <p class="text-body-sm text-muted">Please review your information on the previous steps before submitting.</p>
