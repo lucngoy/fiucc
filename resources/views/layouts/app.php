@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>
-    <?= $content ?>
+    <?= component('header') ?>
+    <main><?= $content ?></main>
+    <?= component('footer') ?>
+    <script src="/assets/js/nav.js" defer></script>
 </body>
 </html>
