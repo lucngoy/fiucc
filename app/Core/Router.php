@@ -138,7 +138,7 @@ final class Router
         // réussi (Env/Config/session déjà chargés). Si le rendu échouait
         // quand même, le handler d'exceptions global de public/index.php
         // (déjà enregistré) prend le relais avec la page 500.
-        echo View::render('errors.404', ['title' => 'Page not found'], 'layouts.error');
+        echo View::render('errors.404', ['title' => t('error.404_title')], 'layouts.error');
     }
 
     private function methodNotAllowed(array $methods): void

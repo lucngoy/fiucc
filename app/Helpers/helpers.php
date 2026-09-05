@@ -32,3 +32,15 @@ if (!function_exists('csrf_field')) {
         return '<input type="hidden" name="_csrf_token" value="' . e(\App\Core\Csrf::token()) . '">';
     }
 }
+
+if (!function_exists('t')) {
+    /**
+     * Traduction (App\Core\Lang) — anglais par défaut, français si choisi
+     * via le switch de langue. Ne jamais écrire de texte d'interface en dur
+     * dans une vue (CLAUDE.md) : passer par t().
+     */
+    function t(string $key, array $replace = []): string
+    {
+        return \App\Core\Lang::get($key, $replace);
+    }
+}

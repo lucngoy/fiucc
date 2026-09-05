@@ -43,7 +43,10 @@ $renderErrorPage = static function (string $detail) use (&$bootstrap): void {
     // Page 500 volontairement autonome (pas de composant/layout) : ce handler
     // peut s'exécuter à n'importe quel stade du bootstrap, y compris avant que
     // Config/View soient fiables. Passer par le système de vues ici risquerait
-    // une seconde exception sans personne pour la rattraper.
+    // une seconde exception sans personne pour la rattraper. Pour la même
+    // raison, pas de t()/Lang::locale() ici (Lang::locale() lit $_SESSION,
+    // qui peut ne pas exister avant session_start()) : texte anglais fixe,
+    // seule page de l'app non traduite, délibérément (FIUCC-30).
     echo <<<'HTML'
 <!DOCTYPE html>
 <html lang="en">

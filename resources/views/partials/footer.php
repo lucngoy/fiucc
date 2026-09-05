@@ -15,43 +15,43 @@ $year = date('Y');
                 <img src="/assets/images/fiucc-seal.png" alt="FIUCC official seal" class="h-10 w-10 object-contain">
                 <span class="font-headline-sm text-headline-sm text-ink"><?= e($brandName) ?></span>
             </div>
-            <p class="text-body-sm text-muted">United by our roots, driven by the future.</p>
+            <p class="text-body-sm text-muted"><?= e(t('footer.tagline')) ?></p>
         </div>
 
         <div class="flex flex-col gap-3">
-            <h4 class="font-label-caps text-label-caps uppercase text-muted">Quick Links</h4>
+            <h4 class="font-label-caps text-label-caps uppercase text-muted"><?= e(t('footer.quick_links')) ?></h4>
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
-                <li><a href="/community" class="hover:text-primary transition-colors">Community</a></li>
-                <li><a href="/events" class="hover:text-primary transition-colors">Events</a></li>
-                <li><a href="/news" class="hover:text-primary transition-colors">News</a></li>
-                <li><a href="/gallery" class="hover:text-primary transition-colors">Gallery</a></li>
-                <li><a href="/elections" class="hover:text-primary transition-colors">Elections</a></li>
+                <li><a href="/community" class="hover:text-primary transition-colors"><?= e(t('nav.community')) ?></a></li>
+                <li><a href="/events" class="hover:text-primary transition-colors"><?= e(t('nav.events')) ?></a></li>
+                <li><a href="/news" class="hover:text-primary transition-colors"><?= e(t('nav.news')) ?></a></li>
+                <li><a href="/gallery" class="hover:text-primary transition-colors"><?= e(t('nav.gallery')) ?></a></li>
+                <li><a href="/elections" class="hover:text-primary transition-colors"><?= e(t('nav.elections')) ?></a></li>
             </ul>
         </div>
 
         <div class="flex flex-col gap-3">
-            <h4 class="font-label-caps text-label-caps uppercase text-muted">Community</h4>
+            <h4 class="font-label-caps text-label-caps uppercase text-muted"><?= e(t('footer.community')) ?></h4>
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
-                <li><a href="/directory" class="hover:text-primary transition-colors">Members Directory</a></li>
-                <li><a href="/alumni" class="hover:text-primary transition-colors">Alumni</a></li>
-                <li><a href="/community/government" class="hover:text-primary transition-colors">Government</a></li>
-                <li><a href="/documents" class="hover:text-primary transition-colors">Documents</a></li>
+                <li><a href="/directory" class="hover:text-primary transition-colors"><?= e(t('footer.directory')) ?></a></li>
+                <li><a href="/alumni" class="hover:text-primary transition-colors"><?= e(t('footer.alumni')) ?></a></li>
+                <li><a href="/community/government" class="hover:text-primary transition-colors"><?= e(t('footer.government')) ?></a></li>
+                <li><a href="/documents" class="hover:text-primary transition-colors"><?= e(t('footer.documents')) ?></a></li>
             </ul>
         </div>
 
         <div class="flex flex-col gap-3">
-            <h4 class="font-label-caps text-label-caps uppercase text-muted">Connect</h4>
+            <h4 class="font-label-caps text-label-caps uppercase text-muted"><?= e(t('footer.connect')) ?></h4>
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
-                <li><a href="#" class="hover:text-primary transition-colors">Instagram</a></li>
-                <li><a href="#" class="hover:text-primary transition-colors">WhatsApp Community</a></li>
-                <li><a href="/contact" class="hover:text-primary transition-colors">Contact</a></li>
+                <li><a href="#" class="hover:text-primary transition-colors"><?= e(t('footer.instagram')) ?></a></li>
+                <li><a href="#" class="hover:text-primary transition-colors"><?= e(t('footer.whatsapp')) ?></a></li>
+                <li><a href="/contact" class="hover:text-primary transition-colors"><?= e(t('footer.contact')) ?></a></li>
             </ul>
         </div>
     </div>
 
     <div class="w-full bg-primary">
         <div class="max-w-layout mx-auto px-4 md:px-6 py-4 text-center text-body-sm text-white">
-            <p>&copy; <?= e($year) ?> <?= e($brandName) ?>. All rights reserved.</p>
+            <p>&copy; <?= e($year) ?> <?= e($brandName) ?>. <?= e(t('footer.rights')) ?></p>
         </div>
     </div>
 </footer>

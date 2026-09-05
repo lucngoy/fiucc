@@ -4,7 +4,7 @@ $error ??= null;
 $notice ??= null;
 ?>
 <div class="max-w-md mx-auto px-4 py-16">
-    <h1 class="font-headline-lg text-headline-lg text-ink mb-8 text-center">Sign in</h1>
+    <h1 class="font-headline-lg text-headline-lg text-ink mb-8 text-center"><?= e(t('auth.sign_in')) ?></h1>
 
     <?php if ($notice !== null): ?>
         <div class="mb-6"><?= component('alert', ['type' => 'info', 'message' => $notice]) ?></div>
@@ -18,17 +18,17 @@ $notice ??= null;
         <?= csrf_field() ?>
         <?= component('form_field', [
             'name' => 'email',
-            'label' => 'University email',
+            'label' => t('auth.email'),
             'type' => 'email',
             'value' => $email,
             'required' => true,
         ]) ?>
         <?= component('form_field', [
             'name' => 'password',
-            'label' => 'Password',
+            'label' => t('auth.password'),
             'type' => 'password',
             'required' => true,
         ]) ?>
-        <?= component('button', ['label' => 'Sign in', 'variant' => 'primary', 'type' => 'submit']) ?>
+        <?= component('button', ['label' => t('auth.sign_in'), 'variant' => 'primary', 'type' => 'submit']) ?>
     </form>
 </div>

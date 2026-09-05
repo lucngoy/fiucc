@@ -16,10 +16,10 @@ final class AuthController extends Controller
         $notice = null;
 
         if (($_GET['notice'] ?? null) === 'auth_required') {
-            $notice = 'Please sign in to access this page.';
+            $notice = t('auth.notice_required');
         }
 
-        $this->view('auth.login', ['title' => 'Sign in', 'notice' => $notice]);
+        $this->view('auth.login', ['title' => t('auth.sign_in'), 'notice' => $notice]);
     }
 
     public function login(): void
@@ -42,9 +42,9 @@ final class AuthController extends Controller
         // Même message générique que le compte existe ou non : ne jamais
         // révéler si une adresse est enregistrée (évite l'énumération).
         $this->view('auth.login', [
-            'title' => 'Sign in',
+            'title' => t('auth.sign_in'),
             'email' => $email,
-            'error' => 'Invalid email or password.',
+            'error' => t('auth.invalid'),
         ]);
     }
 
@@ -71,9 +71,9 @@ final class AuthController extends Controller
     {
         if ($this->isLocked($user)) {
             $this->view('auth.login', [
-                'title' => 'Sign in',
+                'title' => t('auth.sign_in'),
                 'email' => $email,
-                'error' => 'This account is temporarily locked after too many failed attempts. Please try again later.',
+                'error' => t('auth.locked'),
             ]);
             return;
         }
@@ -88,9 +88,9 @@ final class AuthController extends Controller
             ActivityLog::record((int) $user['id'], 'login_failed', 'user', (int) $user['id']);
 
             $this->view('auth.login', [
-                'title' => 'Sign in',
+                'title' => t('auth.sign_in'),
                 'email' => $email,
-                'error' => 'Invalid email or password.',
+                'error' => t('auth.invalid'),
             ]);
             return;
         }
@@ -130,9 +130,9 @@ final class AuthController extends Controller
             ActivityLog::record($userId, 'login_failed', 'user', $userId);
 
             $this->view('auth.login', [
-                'title' => 'Sign in',
+                'title' => t('auth.sign_in'),
                 'email' => $email,
-                'error' => 'Invalid email or password.',
+                'error' => t('auth.invalid'),
             ]);
             return;
         }

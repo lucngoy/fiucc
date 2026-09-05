@@ -5,21 +5,20 @@
  * "About" pointe vers /community (mission/vision/valeurs) : aucune route
  * /about dédiée n'existe, on ne doit pas en inventer une hors ticket.
  *
- * Switch de langue : purement visuel pour l'instant, aucun système i18n
- * n'est encore branché (cf. CLAUDE.md §38, phase Polish) — FR ne change
- * rien tant que ce système n'existe pas.
+ * Switch de langue : branché sur GET /lang/{locale} (FIUCC-30), qui pose
+ * $_SESSION['locale'] et redirige vers la page d'origine.
  */
 $brandName ??= 'FIUCC';
-$locale ??= \App\Core\Config::get('app.locale', 'en');
+$locale = \App\Core\Lang::locale();
 
 $navLinks = [
-    ['label' => 'Home', 'href' => '/'],
-    ['label' => 'Community', 'href' => '/community'],
-    ['label' => 'Events', 'href' => '/events'],
-    ['label' => 'News', 'href' => '/news'],
-    ['label' => 'Gallery', 'href' => '/gallery'],
-    ['label' => 'Elections', 'href' => '/elections'],
-    ['label' => 'About', 'href' => '/community'],
+    ['label' => t('nav.home'), 'href' => '/'],
+    ['label' => t('nav.community'), 'href' => '/community'],
+    ['label' => t('nav.events'), 'href' => '/events'],
+    ['label' => t('nav.news'), 'href' => '/news'],
+    ['label' => t('nav.gallery'), 'href' => '/gallery'],
+    ['label' => t('nav.elections'), 'href' => '/elections'],
+    ['label' => t('nav.about'), 'href' => '/community'],
 ];
 
 $enClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
@@ -40,10 +39,10 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
 
         <div class="hidden lg:flex items-center gap-4 shrink-0">
             <div class="flex items-center bg-surface p-0.5 rounded-control border border-border text-label-md font-label-md">
-                <a href="#" class="px-2 py-1 rounded <?= e($enClasses) ?>">EN</a>
-                <a href="#" class="px-2 py-1 rounded <?= e($frClasses) ?>">FR</a>
+                <a href="/lang/en" class="px-2 py-1 rounded <?= e($enClasses) ?>">EN</a>
+                <a href="/lang/fr" class="px-2 py-1 rounded <?= e($frClasses) ?>">FR</a>
             </div>
-            <?= component('button', ['label' => 'Join Community', 'variant' => 'primary', 'href' => '/register']) ?>
+            <?= component('button', ['label' => t('nav.join'), 'variant' => 'primary', 'href' => '/register']) ?>
         </div>
 
         <button type="button" id="nav-toggle" class="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-control border border-border text-ink" aria-expanded="false" aria-controls="mobile-nav">
@@ -57,9 +56,9 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
             <a href="<?= e($link['href']) ?>" class="font-label-lg text-label-lg text-ink"><?= e($link['label']) ?></a>
         <?php endforeach; ?>
         <div class="flex items-center gap-2 pt-3 border-t border-border">
-            <a href="#" class="px-3 py-1.5 rounded-control border border-border <?= e($enClasses) ?>">EN</a>
-            <a href="#" class="px-3 py-1.5 rounded-control border border-border <?= e($frClasses) ?>">FR</a>
+            <a href="/lang/en" class="px-3 py-1.5 rounded-control border border-border <?= e($enClasses) ?>">EN</a>
+            <a href="/lang/fr" class="px-3 py-1.5 rounded-control border border-border <?= e($frClasses) ?>">FR</a>
         </div>
-        <?= component('button', ['label' => 'Join Community', 'variant' => 'primary', 'href' => '/register']) ?>
+        <?= component('button', ['label' => t('nav.join'), 'variant' => 'primary', 'href' => '/register']) ?>
     </nav>
 </header>

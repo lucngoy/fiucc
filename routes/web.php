@@ -62,4 +62,7 @@ return [
     // Divers
     ['GET',  '/contact',                       'ContactController@index'],
     ['POST', '/contact',                       'ContactController@send'],
+
+    // Langue (FIUCC-30)
+    ['GET',  '/lang/{locale}',                 'LocaleController@switch'],
 ];
