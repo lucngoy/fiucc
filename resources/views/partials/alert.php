@@ -3,14 +3,15 @@
  * @param string $message  Texte de l'alerte
  * @param string $type      info|success|warning|error (défaut "info")
  *
- * Pas de vert : la charte CLAUDE.md n'en définit aucun. "success" reprend donc
- * le bleu (info) plutôt que d'inventer une couleur hors charte.
+ * "success" utilise le vert dédié (extension de la charte, CLAUDE.md) et non
+ * le bleu : une confirmation et une information générale ne doivent pas se
+ * ressembler.
  */
 $type ??= 'info';
 
 $variants = [
     'info'    => ['bg' => 'bg-primary-light/20', 'text' => 'text-primary', 'icon' => 'i'],
-    'success' => ['bg' => 'bg-primary-light/20', 'text' => 'text-primary', 'icon' => '✓'],
+    'success' => ['bg' => 'bg-success/15',       'text' => 'text-success', 'icon' => '✓'],
     'warning' => ['bg' => 'bg-gold/20',          'text' => 'text-ink',     'icon' => '!'],
     'error'   => ['bg' => 'bg-danger/10',        'text' => 'text-danger', 'icon' => '✕'],
 ];

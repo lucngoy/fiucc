@@ -22,6 +22,10 @@ module.exports = {
         },
         gold: '#ECC117',
         danger: '#C00F1F',
+        // Extension FIUCC-21 (hors palette initiale de CLAUDE.md) : succès/
+        // confirmation uniquement, jamais l'information générale (primary)
+        // ni un accent décoratif (gold). Contraste ≈5.1:1 sur blanc — AA.
+        success: '#15803D',
         surface: '#F8FAFC',
         ink: '#111827',
         muted: '#64748B',

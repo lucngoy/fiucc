@@ -96,13 +96,16 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
 | Bleu clair | `#7BBCFF` | Fonds légers, hover, cartes |
 | Or | `#ECC117` | Badges, accents, CTA secondaires |
 | Rouge | `#C00F1F` | Alertes, actions destructives |
+| Vert succès | `#15803D` | **Extension FIUCC-21.** Confirmation/succès uniquement (ex. « votre recensement est validé »). Jamais pour une information générale (bleu) ni comme accent décoratif (or). Contraste ≈ 5,1:1 sur blanc — conforme AA texte normal, dans les deux sens (texte vert sur fond clair, ou texte blanc sur fond vert plein). |
 | Fond | `#F8FAFC` | |
 | Texte | `#111827` | |
 | Texte secondaire | `#64748B` | |
 | Bordures | `#E5E7EB` | |
 
 Le bleu domine. L'or et le rouge sont des accents, jamais des couleurs de fond.
-Pas de texte or sur blanc. Le rouge n'est jamais un bouton ordinaire.
+Pas de texte or sur blanc. Le rouge n'est jamais un bouton ordinaire. Le vert
+succès ne remplace ni le bleu (information) ni l'or (mise en avant) : un succès
+et une information ne doivent pas se ressembler.
 
 Style visé : moderne, institutionnel, africain subtil, universitaire.
 Style à éviter : « site d'association des années 2010 ».

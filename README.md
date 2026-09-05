@@ -67,6 +67,7 @@ docs/          Documentation projet
 | Bleu clair | `#7BBCFF` |
 | Or (accents) | `#ECC117` |
 | Rouge (alertes) | `#C00F1F` |
+| Vert succès (extension FIUCC-21, confirmation uniquement) | `#15803D` |
 | Fond | `#F8FAFC` |
 | Texte | `#111827` |
 | Texte secondaire | `#64748B` |
