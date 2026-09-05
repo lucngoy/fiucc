@@ -124,6 +124,20 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
     l'adresse universitaire, pour que le titulaire réel reprenne la main
     immédiatement même sur un compte harcelé) est prévu en ticket séparé, phase 2,
     avec le reste de l'infrastructure email.
+12. **« Connecté » n'est pas « membre validé »** — une adresse universitaire au
+    format prévisible suffit à créer un compte et à vérifier son email (OTP,
+    FIUCC-33/34) sans qu'aucun admin n'ait validé l'appartenance à la
+    communauté (`members.status = 'pending'`). `App\Middleware\AuthMiddleware`
+    (alias route `['auth']`) ne vérifie que la session ; il autorise donc un
+    membre `pending` à accéder à sa propre page profil, mais ne doit **jamais**
+    protéger une route qui expose d'autres membres. Ces routes utilisent
+    `App\Middleware\ValidatedMiddleware` (alias `['validated']`, `routes/web.php`
+    — annuaire, mentorat, et tout futur écran listant des profils d'autrui) :
+    il exige en plus `members.status = 'validated'` et redirige sinon vers
+    `/profile`. `['validated']` suffit seul, `['auth', 'validated']` n'est
+    jamais nécessaire (il regroupe la vérification de session). Sans cette
+    distinction, une simple adresse `@final.edu.tr` — jamais vérifiée par un
+    humain — donnerait accès à la liste complète de la communauté.
 
 ## Charte graphique
 

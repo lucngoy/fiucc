@@ -6,6 +6,7 @@ namespace App\Core;
 use App\Middleware\AdminMiddleware;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\CsrfMiddleware;
+use App\Middleware\ValidatedMiddleware;
 
 /**
  * Dispatch minimal : charge des fichiers de routes retournant des tableaux
@@ -16,8 +17,9 @@ use App\Middleware\CsrfMiddleware;
 final class Router
 {
     private const MIDDLEWARE_ALIASES = [
-        'auth'  => AuthMiddleware::class,
-        'admin' => AdminMiddleware::class,
+        'auth'      => AuthMiddleware::class,
+        'admin'     => AdminMiddleware::class,
+        'validated' => ValidatedMiddleware::class,
     ];
 
     private array $routes = [];
