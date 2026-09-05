@@ -154,4 +154,27 @@ final class Member extends Model
 
         return $row === false ? null : $row;
     }
+
+    /**
+     * Vue complète d'un membre pour sa propre page profil (FIUCC-37) : la
+     * restriction "ne jamais afficher publiquement" (section 15 du cahier —
+     * student_id, email, téléphone) ne s'applique qu'au profil PUBLIC
+     * (FIUCC-84, annuaire), pas ici — un membre voit toujours ses propres
+     * données. is_public/show_email/show_phone/mentor_* et photo (upload)
+     * appartiennent à l'édition du profil (FIUCC-38), pas à cet affichage.
+     */
+    public static function findFullByUserId(int $userId): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT id, membership_number, full_name, student_id, date_of_birth, gender,
+                    city_of_origin, faculty, department, year, arrival_year, graduation_year,
+                    phone, whatsapp, instagram, status_type, profession, company, city, country,
+                    status, rejection_reason, suspension_reason, email_verified_at, created_at
+             FROM members WHERE user_id = :user_id LIMIT 1'
+        );
+        $stmt->execute(['user_id' => $userId]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
 }
