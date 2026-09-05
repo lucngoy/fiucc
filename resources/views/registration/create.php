@@ -34,7 +34,7 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
     <?php endif; ?>
 
     <!-- Indicateur d'étapes -->
-    <div class="max-w-2xl mx-auto flex items-center justify-between mb-8" aria-hidden="true">
+    <div id="step-indicator" class="max-w-2xl mx-auto flex items-center justify-between mb-8" aria-hidden="true">
         <?php foreach ($steps as $index => $stepLabel): ?>
             <div class="flex flex-col items-center gap-2 flex-1">
                 <span data-step-indicator class="h-9 w-9 flex items-center justify-center rounded-full font-label-lg text-label-lg bg-surface text-muted border border-border">

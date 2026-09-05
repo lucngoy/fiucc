@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var steps = Array.prototype.slice.call(form.querySelectorAll('[data-step]'));
     var indicators = Array.prototype.slice.call(document.querySelectorAll('[data-step-indicator]'));
+    var stepIndicator = document.getElementById('step-indicator');
     var current = 0;
 
     function show(index) {
@@ -25,13 +26,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         current = index;
 
+        // On vise l'indicateur d'étapes (au-dessus du formulaire), pas le
+        // contenu de l'étape elle-même : sinon les numéros 1/2/3/4 sortent
+        // de l'écran par le haut et on perd le repère visuel de progression.
         // Décalage calculé à la main, pas scroll-margin-top + scrollIntoView :
         // ce dernier ignore scroll-margin-top en smooth scroll sur certains
-        // navigateurs (Safari), laissant le haut de l'étape sous le header
-        // sticky (72px). getBoundingClientRect() force un reflow, donc la
-        // position est à jour même juste après avoir démasqué l'étape.
+        // navigateurs (Safari). getBoundingClientRect() force un reflow,
+        // donc la position est à jour même juste après avoir démasqué l'étape.
+        var target = stepIndicator || steps[index];
         var headerOffset = 88;
-        var top = steps[index].getBoundingClientRect().top + window.pageYOffset - headerOffset;
+        var top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
         window.scrollTo({ top: top, behavior: 'smooth' });
     }
 
