@@ -20,3 +20,15 @@ if (!function_exists('component')) {
         return \App\Core\View::partial('partials.' . $name, $data);
     }
 }
+
+if (!function_exists('csrf_field')) {
+    /**
+     * Champ caché à inclure dans tout <form method="POST">. Vérifié sans
+     * exception par App\Core\Router (voir CsrfMiddleware) — aucune route
+     * POST ne peut l'omettre.
+     */
+    function csrf_field(): string
+    {
+        return '<input type="hidden" name="_csrf_token" value="' . e(\App\Core\Csrf::token()) . '">';
+    }
+}

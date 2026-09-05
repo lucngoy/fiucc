@@ -5,6 +5,7 @@ namespace App\Core;
 
 use App\Middleware\AdminMiddleware;
 use App\Middleware\AuthMiddleware;
+use App\Middleware\CsrfMiddleware;
 
 /**
  * Dispatch minimal : charge des fichiers de routes retournant des tableaux
@@ -62,7 +63,7 @@ final class Router
                 continue;
             }
 
-            if (!$this->runMiddleware($route['middleware'])) {
+            if (!$this->runMiddleware($route['middleware'], $method)) {
                 return;
             }
 
@@ -82,8 +83,14 @@ final class Router
     /**
      * @return bool false si un middleware a déjà produit la réponse (redirection, 403...)
      */
-    private function runMiddleware(array $middleware): bool
+    private function runMiddleware(array $middleware, string $method): bool
     {
+        // Systématique sur tout POST, sans opt-in par route : impossible à
+        // oublier en déclarant une nouvelle route (CLAUDE.md, règle 6).
+        if ($method === 'POST' && !(new CsrfMiddleware())->handle()) {
+            return false;
+        }
+
         foreach ($middleware as $name) {
             $fqcn = self::MIDDLEWARE_ALIASES[$name] ?? null;
 

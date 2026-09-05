@@ -15,6 +15,7 @@ $notice ??= null;
     <?php endif; ?>
 
     <form method="POST" action="/login" class="flex flex-col gap-6">
+        <?= csrf_field() ?>
         <?= component('form_field', [
             'name' => 'email',
             'label' => 'University email',
