@@ -36,7 +36,29 @@ $renderErrorPage = static function (string $detail) use (&$bootstrap): void {
         return;
     }
 
-    echo 'Something went wrong. Please try again later.';
+    // Page 500 volontairement autonome (pas de composant/layout) : ce handler
+    // peut s'exécuter à n'importe quel stade du bootstrap, y compris avant que
+    // Config/View soient fiables. Passer par le système de vues ici risquerait
+    // une seconde exception sans personne pour la rattraper.
+    echo <<<'HTML'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Something went wrong</title>
+<link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div class="max-w-layout mx-auto px-4 py-24 text-center">
+<p class="font-label-caps text-label-caps uppercase text-danger tracking-wider mb-4">Error 500</p>
+<h1 class="font-headline-lg text-headline-lg text-ink mb-4">Something went wrong</h1>
+<p class="text-body-md text-muted mb-8">Please try again in a moment. If the problem persists, contact the community administrators.</p>
+<a href="/" class="inline-flex items-center justify-center gap-2 h-11 md:h-10 px-6 rounded-control font-label-lg text-label-lg transition-colors bg-primary text-white hover:bg-primary-dark">Back to home</a>
+</div>
+</body>
+</html>
+HTML;
 };
 
 set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {

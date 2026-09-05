@@ -134,7 +134,11 @@ final class Router
     private function notFound(): void
     {
         http_response_code(404);
-        echo '404 — Page not found.';
+        // Sûr à ce stade : le dispatch n'est atteint qu'après un bootstrap
+        // réussi (Env/Config/session déjà chargés). Si le rendu échouait
+        // quand même, le handler d'exceptions global de public/index.php
+        // (déjà enregistré) prend le relais avec la page 500.
+        echo View::render('errors.404', ['title' => 'Page not found']);
     }
 
     private function methodNotAllowed(array $methods): void
