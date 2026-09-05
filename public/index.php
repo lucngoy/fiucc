@@ -107,7 +107,7 @@ session_start();
 // 5. Routing
 $router = new Router();
 $router->loadRoutes(BASE_PATH . '/routes/web.php');
-$router->loadRoutes(BASE_PATH . '/routes/admin.php');
+$router->loadRoutes(BASE_PATH . '/routes/admin.php', ['admin']);
 
 // Le script peut être servi depuis un sous-dossier (ex. /web/fiucc-portal/public
 // en dev sans vhost dédié) : on retire ce préfixe pour router sur le chemin réel.

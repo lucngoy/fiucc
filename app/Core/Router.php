@@ -3,23 +3,38 @@ declare(strict_types=1);
 
 namespace App\Core;
 
+use App\Middleware\AdminMiddleware;
+use App\Middleware\AuthMiddleware;
+
 /**
  * Dispatch minimal : charge des fichiers de routes retournant des tableaux
- * [méthode, chemin, "Controller@methode"], résout les paramètres {xxx} et
- * instancie le contrôleur. Tolère l'absence du contrôleur (404 propre) tant
- * que app/Controllers/ n'est pas encore rempli.
+ * [méthode, chemin, "Controller@methode", middleware?], résout les paramètres
+ * {xxx} et instancie le contrôleur. Tolère l'absence du contrôleur (404
+ * propre) tant que app/Controllers/ n'est pas encore rempli.
  */
 final class Router
 {
+    private const MIDDLEWARE_ALIASES = [
+        'auth'  => AuthMiddleware::class,
+        'admin' => AdminMiddleware::class,
+    ];
+
     private array $routes = [];
 
-    public function loadRoutes(string $file): void
+    /**
+     * @param array $defaultMiddleware Middleware appliqué à toutes les routes
+     *                                 de ce fichier (ex. ['admin'] pour routes/admin.php).
+     */
+    public function loadRoutes(string $file, array $defaultMiddleware = []): void
     {
-        foreach (require $file as [$method, $path, $handler]) {
+        foreach (require $file as $route) {
+            [$method, $path, $handler] = $route;
+
             $this->routes[] = [
-                'method'  => strtoupper($method),
-                'pattern' => $this->toPattern($path),
-                'handler' => $handler,
+                'method'     => strtoupper($method),
+                'pattern'    => $this->toPattern($path),
+                'handler'    => $handler,
+                'middleware' => array_merge($defaultMiddleware, $route[3] ?? []),
             ];
         }
     }
@@ -47,6 +62,10 @@ final class Router
                 continue;
             }
 
+            if (!$this->runMiddleware($route['middleware'])) {
+                return;
+            }
+
             $params = array_filter($matches, static fn ($key) => is_string($key), ARRAY_FILTER_USE_KEY);
             $this->callHandler($route['handler'], $params);
             return;
@@ -58,6 +77,26 @@ final class Router
         }
 
         $this->notFound();
+    }
+
+    /**
+     * @return bool false si un middleware a déjà produit la réponse (redirection, 403...)
+     */
+    private function runMiddleware(array $middleware): bool
+    {
+        foreach ($middleware as $name) {
+            $fqcn = self::MIDDLEWARE_ALIASES[$name] ?? null;
+
+            if ($fqcn === null || !class_exists($fqcn)) {
+                continue;
+            }
+
+            if (!(new $fqcn())->handle()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private function callHandler(string $handler, array $params): void

@@ -11,7 +11,13 @@ final class AuthController extends Controller
 {
     public function showLogin(): void
     {
-        $this->view('auth.login', ['title' => 'Sign in']);
+        $notice = null;
+
+        if (($_GET['notice'] ?? null) === 'auth_required') {
+            $notice = 'Please sign in to access this page.';
+        }
+
+        $this->view('auth.login', ['title' => 'Sign in', 'notice' => $notice]);
     }
 
     public function login(): void
