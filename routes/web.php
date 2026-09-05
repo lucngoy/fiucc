@@ -60,7 +60,4 @@ return [
     // Divers
     ['GET',  '/contact',                       'ContactController@index'],
     ['POST', '/contact',                       'ContactController@send'],
-
-    // TEMPORAIRE — FIUCC-21 : démo des composants, à retirer avec le contrôleur et la vue
-    ['GET',  '/__demo/components',             'ComponentsDemoController@index'],
 ];
