@@ -74,6 +74,25 @@ docs/          Documentation projet
 
 Le bleu domine. L'or et le rouge sont des accents, jamais des couleurs de fond.
 
+## Design system (Tailwind)
+
+Le CSS est **compilé en local et commité** dans `public/assets/css/app.css` — pas de
+CDN Tailwind en production (la prod n'a pas Node.js et ne doit lancer aucune étape de
+build). Node.js n'est requis que sur la machine de développement, jamais en prod.
+
+Les tokens (couleurs, typographie, rayons, ombres) sont définis dans
+`tailwind.config.js`, alignés sur la charte graphique ci-dessus.
+
+```bash
+npm install          # une fois, installe le CLI Tailwind (devDependency)
+npm run build:css    # à chaque fois qu'une vue utilise une nouvelle classe Tailwind
+```
+
+**Règle impérative :** toute nouvelle classe Tailwind ajoutée dans une vue doit être
+suivie d'un `npm run build:css` puis d'un commit du fichier compilé
+(`public/assets/css/app.css`). Sans ça, la classe n'existe pas en production — le
+fichier commité est la seule source de vérité, pas le `tailwind.config.js` seul.
+
 ## Phases
 
 Le développement suit six phases (voir Jira) : Foundation → Community → Content →

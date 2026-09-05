@@ -44,6 +44,10 @@ charges l'emporte. Signale la contradiction plutôt que de trancher seul.
   vraiment nécessaire. Pas de React, pas de Vue, pas de bundler obligatoire en production.
 - Le projet doit tourner sur un hébergement Apache/PHP/MySQL classique, **sans Node.js
   requis en production**.
+- Le CSS Tailwind est **compilé en local et commité** dans `public/assets/css/app.css`
+  (pas de CDN Tailwind). Node.js est un outil de dev uniquement (`npm run build:css`),
+  jamais requis en prod. **Toute nouvelle classe Tailwind ajoutée dans une vue doit être
+  suivie d'un rebuild et d'un commit du CSS compilé** — voir README.md.
 - N'ajoute aucune dépendance Composer sans la justifier et le signaler.
 
 ## Structure
@@ -139,6 +143,8 @@ Les stories vont de `FIUCC-13` à `FIUCC-90`, dans l'ordre du fichier
 - [ ] Requêtes préparées, sorties échappées, CSRF sur les POST
 - [ ] Testé manuellement dans le navigateur, y compris un cas d'erreur
 - [ ] Responsive vérifié à 390px et en desktop si le ticket touche à une vue
+- [ ] Si une vue utilise une nouvelle classe Tailwind : `npm run build:css` relancé et
+  `public/assets/css/app.css` commité
 - [ ] `php -l` passe
 - [ ] Commit avec la clé Jira
 
