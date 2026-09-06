@@ -23,10 +23,11 @@
  *   de faux téléchargement PDF vers un règlement qui n'existe pas
  *   (Documents, FIUCC-57/58, pas construit).
  *
- * Fonds de section : un seul fond distinct par bloc qui en a vraiment un
- * dans la maquette (l'en-tête, le conteneur de l'organigramme, la bande
- * "Rule of Law"), jamais une bande pleine largeur uniforme sur toute une
- * section — le reste de la page repose sur le fond par défaut du site.
+ * Fonds de section : le conteneur de l'organigramme, le bloc des mandats
+ * précédents et la bande "Rule of Law" portent chacun leur propre fond
+ * (bg-surface), contenu dans un bloc plutôt qu'en bande pleine largeur —
+ * pour que la page ne repose pas sur la même couleur partout. L'en-tête
+ * (bg-primary) reste une bande pleine largeur, comme dans code.html.
  *
  * Archive complète avec anciens membres : FIUCC-42, ticket séparé, route
  * déjà déclarée dans routes/web.php mais pas construite ici.
@@ -103,13 +104,9 @@ $renderOrgTier3Box = static function (array $item): string {
         . '</div>';
 };
 ?>
-<div class="max-w-layout mx-auto px-4 md:px-6 pt-8 md:pt-10">
-    <!-- Carte contenue (pas une bande pleine largeur) : reprend la structure
-         exacte de code.html — Section 1, un seul bloc bg-primary arrondi,
-         fil d'Ariane + badge, titre/sous-titre, puis le ruban de
-         statistiques imbriqué dans la même carte. -->
-    <div class="bg-primary text-white rounded-card shadow-card px-6 py-8 md:px-8 md:py-10">
-        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<div class="w-full bg-primary">
+    <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
+        <div class="flex items-center justify-between gap-4 mb-6">
             <nav aria-label="Breadcrumb" class="text-body-sm text-white/70">
                 <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
                 <span class="mx-2" aria-hidden="true">/</span>
@@ -123,15 +120,15 @@ $renderOrgTier3Box = static function (array $item): string {
                 </span>
             <?php endif; ?>
         </div>
-        <div class="max-w-2xl">
-            <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('government.title')) ?></h1>
-            <?php if ($government !== null): ?>
-                <p class="text-body-lg text-white/80"><?= e(t('government.subtitle', ['mandate' => $government['mandate']])) ?></p>
-            <?php endif; ?>
-        </div>
+        <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('government.title')) ?></h1>
+        <?php if ($government !== null): ?>
+            <p class="text-body-lg text-white/80 max-w-2xl"><?= e(t('government.subtitle', ['mandate' => $government['mandate']])) ?></p>
+        <?php endif; ?>
+    </div>
 
-        <?php if ($stats !== []): ?>
-            <div class="mt-6 bg-white/10 rounded-control p-4 md:p-5">
+    <?php if ($stats !== []): ?>
+        <div class="w-full bg-primary-dark/40">
+            <div class="max-w-layout mx-auto px-4 md:px-6 py-5">
                 <div class="grid grid-cols-3 gap-4 md:gap-8">
                     <?php foreach (array_values($stats) as $index => $stat): ?>
                         <div class="<?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
@@ -141,8 +138,8 @@ $renderOrgTier3Box = static function (array $item): string {
                     <?php endforeach; ?>
                 </div>
             </div>
-        <?php endif; ?>
-    </div>
+        </div>
+    <?php endif; ?>
 </div>
 
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
@@ -267,20 +264,23 @@ $renderOrgTier3Box = static function (array $item): string {
         <p class="text-body-md text-muted"><?= e(t('government.history.subtitle')) ?></p>
     </div>
 
-    <?php if ($pastMandates === []): ?>
-        <div class="max-w-xl mx-auto">
+    <!-- Fond distinct sur ce bloc, pas sur toute la section (même logique
+         que le conteneur de l'organigramme) — la page ne repose pas sur
+         une seule couleur uniforme partout. -->
+    <div class="bg-surface rounded-card p-6 md:p-8 max-w-xl mx-auto">
+        <?php if ($pastMandates === []): ?>
             <?= component('alert', ['type' => 'info', 'message' => t('government.history.empty')]) ?>
-        </div>
-    <?php else: ?>
-        <div class="max-w-xl mx-auto flex flex-col gap-3">
-            <?php foreach ($pastMandates as $mandate): ?>
-                <div class="bg-white rounded-card border border-border shadow-card p-4 flex items-center justify-between">
-                    <span class="font-label-lg text-label-lg text-ink"><?= e($mandate['mandate']) ?></span>
-                    <span class="text-body-sm text-muted"><?= e(local_date($mandate['start_date'])) ?> – <?= e(local_date($mandate['end_date'])) ?></span>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+        <?php else: ?>
+            <div class="flex flex-col gap-3">
+                <?php foreach ($pastMandates as $mandate): ?>
+                    <div class="bg-white rounded-card border border-border shadow-card p-4 flex items-center justify-between">
+                        <span class="font-label-lg text-label-lg text-ink"><?= e($mandate['mandate']) ?></span>
+                        <span class="text-body-sm text-muted"><?= e(local_date($mandate['start_date'])) ?> – <?= e(local_date($mandate['end_date'])) ?></span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
 </div>
 
 <div class="max-w-layout mx-auto px-4 md:px-6 pb-16 md:pb-20">
