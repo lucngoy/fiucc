@@ -7,10 +7,8 @@ use App\Core\Controller;
 use App\Models\Government;
 
 /**
- * Page Government du mandat en cours (FIUCC-41) — section 12 du cahier des
- * charges. archives() (mandats précédents, FIUCC-42) n'est volontairement
- * pas implémenté ici : la route existe déjà dans routes/web.php, 404 propre
- * en attendant ce ticket dédié.
+ * Page Government du mandat en cours (FIUCC-41) et archives des anciens
+ * gouvernements (FIUCC-42) — section 12 du cahier des charges.
  */
 final class GovernmentController extends Controller
 {
@@ -20,6 +18,14 @@ final class GovernmentController extends Controller
             'title'        => t('government.title'),
             'government'   => Government::currentWithMembers(),
             'pastMandates' => Government::pastMandates(),
+        ]);
+    }
+
+    public function archives(): void
+    {
+        $this->view('government.archives', [
+            'title'    => t('government.archives.title'),
+            'mandates' => Government::pastMandatesWithMembers(),
         ]);
     }
 }

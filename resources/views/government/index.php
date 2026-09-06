@@ -31,8 +31,8 @@
  * bande diffère de celle juste au-dessus et juste en dessous. L'en-tête
  * (bg-primary) reste à part, comme dans code.html.
  *
- * Archive complète avec anciens membres : FIUCC-42, ticket séparé, route
- * déjà déclarée dans routes/web.php mais pas construite ici.
+ * Archive complète avec anciens membres : /community/government/archives,
+ * App\Controllers\GovernmentController::archives() (FIUCC-42).
  */
 $government ??= null;
 $pastMandates ??= [];

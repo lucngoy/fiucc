@@ -291,4 +291,12 @@ return [
     'government.rule.title'   => 'Rule of Law & Statutory Safeguards',
     'government.rule.body'    => 'All executive actions are governed by the FIUCC Community Constitution and Internal Regulations, and every member of the bureau remains reachable to the community.',
     'government.rule.contact' => 'Contact the Bureau',
+
+    'government.archives.title'      => 'Historical Mandates',
+    'government.archives.subtitle'   => 'Every executive bureau that has served the Congolese Community since its founding at Final International University.',
+    'government.archives.stat_value'   => ':count Archived Mandates',
+    'government.archives.stat_caption' => 'Since the Founding Mandate',
+    'government.archives.empty'      => "This is FIUCC's founding mandate — there's no past mandate to look back on yet.",
+    'government.archives.back'       => 'Back to Current Government',
+    'government.archives.members_empty' => 'No roster was recorded for this mandate.',
 ];
