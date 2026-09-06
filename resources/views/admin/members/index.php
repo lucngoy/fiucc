@@ -294,10 +294,6 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                 <span id="bulk-selected-count" class="text-label-md font-label-md text-muted" data-template="<?= e(t('admin.members.bulk.selected', ['count' => '__COUNT__'])) ?>">
                     <?= e(t('admin.members.bulk.selected', ['count' => 0])) ?>
                 </span>
-                <textarea form="<?= e($bulkFormId) ?>" id="bulk-reason" name="reason" rows="1"
-                    placeholder="<?= e(t('admin.members.bulk.reason_placeholder')) ?>"
-                    aria-label="<?= e(t('admin.members.bulk.reason_label')) ?>"
-                    class="h-10 flex-1 min-w-[220px] rounded-control border border-border px-3 py-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50"></textarea>
                 <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-validate"
                     data-bulk-action="validate"
                     data-confirm-template="<?= e(t('admin.members.bulk.confirm_validate', ['count' => '__COUNT__'])) ?>"
@@ -306,20 +302,31 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                     class="h-9 px-4 rounded-control bg-success text-white text-label-md font-label-md hover:bg-success/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                     <?= e(t('admin.members.bulk.validate_count', ['count' => 0])) ?>
                 </button>
-                <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-reject"
+                <!-- Rejeter/suspendre en masse : pas de soumission directe — un
+                     clic ouvre tout de suite le dialogue avec le champ Raison
+                     (data-open-reason-dialog), plutôt que d'exiger de remplir
+                     un champ discret dans cette barre au préalable et de
+                     sanctionner l'oubli par un second dialogue d'erreur. -->
+                <button type="button"
                     data-bulk-action="reject"
-                    data-confirm-template="<?= e(t('admin.members.bulk.confirm_reject', ['count' => '__COUNT__'])) ?>"
+                    data-open-reason-dialog="1"
+                    data-reason-dialog-title-template="<?= e(t('admin.members.bulk.reason_dialog_reject', ['count' => '__COUNT__'])) ?>"
+                    data-reason-dialog-action="/admin/members/bulk-reject"
+                    data-reason-dialog-confirm-label="<?= e(t('admin.members.reason.confirm_reject')) ?>"
+                    data-reason-dialog-confirm-class="bg-danger hover:bg-danger/90"
                     data-label-template="<?= e(t('admin.members.bulk.reject_count', ['count' => '__COUNT__'])) ?>"
-                    data-requires-reason="1"
                     disabled
                     class="h-9 px-4 rounded-control bg-danger text-white text-label-md font-label-md hover:bg-danger/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                     <?= e(t('admin.members.bulk.reject_count', ['count' => 0])) ?>
                 </button>
-                <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-suspend"
+                <button type="button"
                     data-bulk-action="suspend"
-                    data-confirm-template="<?= e(t('admin.members.bulk.confirm_suspend', ['count' => '__COUNT__'])) ?>"
+                    data-open-reason-dialog="1"
+                    data-reason-dialog-title-template="<?= e(t('admin.members.bulk.reason_dialog_suspend', ['count' => '__COUNT__'])) ?>"
+                    data-reason-dialog-action="/admin/members/bulk-suspend"
+                    data-reason-dialog-confirm-label="<?= e(t('admin.members.reason.confirm_suspend')) ?>"
+                    data-reason-dialog-confirm-class="bg-ink hover:bg-ink/90"
                     data-label-template="<?= e(t('admin.members.bulk.suspend_count', ['count' => '__COUNT__'])) ?>"
-                    data-requires-reason="1"
                     disabled
                     class="h-9 px-4 rounded-control bg-ink text-white text-label-md font-label-md hover:bg-ink/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                     <?= e(t('admin.members.bulk.suspend_count', ['count' => 0])) ?>
@@ -331,5 +338,40 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
     <?= component('pagination', ['currentPage' => $currentPage, 'totalPages' => $totalPages, 'baseUrl' => $paginationBase]) ?>
 </div>
 
-<script>window.__bulkReasonMissingMessage = <?= json_encode(t('admin.members.bulk.reason_missing'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;</script>
+<!-- Modaux remplaçant window.confirm() pour les actions en masse (même
+     mécanique data-open-dialog/data-close-dialog que les dialogues de
+     raison par ligne ci-dessus) — un dialogue natif du navigateur ne peut
+     pas reprendre la charte graphique et coupe le flux visuel de la page. -->
+<dialog id="bulk-confirm-dialog" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
+    <div class="flex flex-col gap-3 p-4 text-left">
+        <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.members.bulk.confirm_title')) ?></h2>
+        <p id="bulk-confirm-message" class="text-body-sm text-muted"></p>
+        <div class="flex justify-end gap-2 mt-1">
+            <button type="button" data-close-dialog class="h-9 px-3 rounded-control text-ink text-label-md font-label-md hover:bg-surface transition-colors"><?= e(t('admin.members.action.cancel')) ?></button>
+            <button type="button" id="bulk-confirm-submit" class="h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors"><?= e(t('admin.members.action.confirm')) ?></button>
+        </div>
+    </div>
+</dialog>
+
+<!-- Un seul dialogue de saisie, réutilisé pour rejeter et suspendre en
+     masse : titre, action du formulaire et couleur du bouton de
+     confirmation sont réécrits par admin-members.js selon le bouton
+     cliqué. Le textarea est hors du <form> $bulkFormId mais lui reste
+     associé via l'attribut form="..." (comme les cases à cocher des
+     lignes) — sa valeur part avec la sélection à la soumission. -->
+<dialog id="bulk-reason-dialog" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
+    <div class="flex flex-col gap-2 p-4 text-left">
+        <h2 id="bulk-reason-dialog-title" class="font-label-lg text-label-lg text-ink"></h2>
+        <label for="bulk-reason-dialog-textarea" class="text-label-md font-label-md text-muted"><?= e(t('admin.members.bulk.reason_label')) ?></label>
+        <textarea id="bulk-reason-dialog-textarea" form="<?= e($bulkFormId) ?>" name="reason" rows="3"
+            placeholder="<?= e(t('admin.members.bulk.reason_placeholder')) ?>"
+            class="rounded-control border border-border p-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50"></textarea>
+        <div class="flex justify-end gap-2 mt-1">
+            <button type="button" data-close-dialog class="h-9 px-3 rounded-control text-ink text-label-md font-label-md hover:bg-surface transition-colors"><?= e(t('admin.members.action.cancel')) ?></button>
+            <button type="submit" id="bulk-reason-dialog-confirm" form="<?= e($bulkFormId) ?>"
+                class="h-9 px-4 rounded-control text-white text-label-md font-label-md transition-colors"></button>
+        </div>
+    </div>
+</dialog>
+
 <script src="/assets/js/admin-members.js" defer></script>

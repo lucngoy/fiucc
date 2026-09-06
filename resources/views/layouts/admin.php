@@ -22,67 +22,89 @@
  * fois, CLAUDE.md) ; elles rejoindront la navigation quand leur ticket
  * existera, plutôt que de simuler un back office plus complet qu'il ne
  * l'est.
+ *
+ * Sidebar fixe au scroll (md+) : logo officiel de la communauté (même
+ * asset que le header public, /assets/images/fiucc-seal.png) + nav, sans
+ * bloc profil — l'identité du compte et la déconnexion vivent dans la
+ * barre du haut (menu profil), pas ici, pour ne l'écrire qu'à un seul
+ * endroit. Pas de nom/rôle inventé (la maquette montre "Jonathan Mukendi /
+ * Executive President" mais `users` n'a ni display_name ni titre — seul
+ * l'email existe réellement, voir 001_initial_schema.sql).
+ *
+ * Notification : cloche décorative, aucun système de notifications construit
+ * (pas de ticket dédié) — pas de pastille "non lu" inventée, ça affirmerait
+ * un état qu'aucune donnée ne soutient.
  */
 $activeNav ??= null;
+$adminInitial = $adminEmail ?? '' ? mb_strtoupper(mb_substr((string) $adminEmail, 0, 1)) : '?';
 ?>
 <div class="flex flex-col md:flex-row min-h-screen">
-    <!-- Barre du haut sur mobile (< md), colonne latérale à partir de md —
-         un seul jeu de classes responsive plutôt que deux marquages
+    <!-- Barre du haut sur mobile (< md), colonne latérale fixe à partir de
+         md — un seul jeu de classes responsive plutôt que deux marquages
          séparés, pour ne pas désynchroniser mobile et desktop plus tard. -->
-    <aside class="w-full md:w-64 md:shrink-0 bg-primary text-white flex flex-col md:min-h-screen">
-        <div class="flex items-center justify-between gap-3 px-4 md:px-5 h-16 border-b border-white/10 shrink-0">
-            <div class="flex items-center gap-3 min-w-0">
-                <span class="h-9 w-9 rounded-full bg-white/15 flex items-center justify-center font-headline-sm text-headline-sm shrink-0" aria-hidden="true">F</span>
+    <aside class="w-full md:w-64 md:shrink-0 md:fixed md:inset-y-0 md:left-0 md:z-30 bg-primary text-white flex flex-col md:h-screen">
+        <div class="flex flex-col flex-1 md:overflow-y-auto">
+            <div class="flex items-center gap-3 px-4 md:px-5 h-16 bg-primary-dark/40 border-b border-white/10 shrink-0">
+                <img src="/assets/images/fiucc-seal.png" alt="<?= e(t('admin.brand.name')) ?>" class="h-9 w-9 object-contain shrink-0">
                 <div class="leading-tight min-w-0">
                     <p class="font-label-lg text-label-lg truncate"><?= e(t('admin.brand.name')) ?></p>
                     <p class="hidden sm:block text-label-caps font-label-caps uppercase text-white/60"><?= e(t('admin.brand.tagline')) ?></p>
                 </div>
             </div>
-            <form method="POST" action="/logout" class="md:hidden shrink-0">
-                <?= csrf_field() ?>
-                <button type="submit" aria-label="<?= e(t('admin.nav.logout')) ?>"
-                    class="h-9 w-9 flex items-center justify-center rounded-control text-white/70 hover:bg-white/10 hover:text-white transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
-                </button>
-            </form>
-        </div>
-        <p class="hidden md:block px-3 pt-3 pb-1 font-label-caps text-label-caps uppercase text-white/40 tracking-wider"><?= e(t('admin.nav.section_label')) ?></p>
-        <nav class="flex-1 py-2 md:py-1 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
-            <?php
-            // Item actif : pastille claire + liseré or à gauche (charte —
-            // l'or comme accent, jamais comme fond) sur md+ ; sur mobile
-            // (nav horizontale), juste la pastille, le liseré vertical
-            // n'aurait pas de sens dans une rangée.
-            $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:hidden md:before:block before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
-            $inactiveClasses = 'text-white/70 hover:bg-white/10 hover:text-white';
-            ?>
-            <a href="/admin/members"
-               class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? $activeClasses : $inactiveClasses ?>"
-               <?= $activeNav === 'members' ? 'aria-current="page"' : '' ?>>
-                <i class="fa-solid fa-users w-5 text-center" aria-hidden="true"></i>
-                <?= e(t('admin.nav.members')) ?>
-            </a>
-        </nav>
-        <div class="hidden md:block p-4 border-t border-white/10 shrink-0">
-            <p class="text-body-sm text-white/70 mb-3 truncate"><?= e($adminEmail ?? '') ?></p>
-            <form method="POST" action="/logout">
-                <?= csrf_field() ?>
-                <button type="submit" class="w-full flex items-center gap-2 h-9 px-3 rounded-control text-label-md font-label-md text-white/70 hover:bg-white/10 hover:text-white transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
-                    <?= e(t('admin.nav.logout')) ?>
-                </button>
-            </form>
+            <p class="hidden md:block px-3 pt-3 pb-1 font-label-caps text-label-caps uppercase text-white/40 tracking-wider"><?= e(t('admin.nav.section_label')) ?></p>
+            <nav class="flex-1 py-2 md:py-1 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
+                <?php
+                // Item actif : pastille claire + liseré or à gauche (charte —
+                // l'or comme accent, jamais comme fond) sur md+ ; sur mobile
+                // (nav horizontale), juste la pastille, le liseré vertical
+                // n'aurait pas de sens dans une rangée.
+                $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:hidden md:before:block before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
+                $inactiveClasses = 'text-white/70 hover:bg-white/10 hover:text-white';
+                ?>
+                <a href="/admin/members"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'members' ? 'aria-current="page"' : '' ?>>
+                    <i class="fa-solid fa-users w-5 text-center" aria-hidden="true"></i>
+                    <?= e(t('admin.nav.members')) ?>
+                </a>
+            </nav>
         </div>
     </aside>
 
-    <div class="flex-1 flex flex-col min-w-0">
-        <header class="h-14 md:h-16 bg-white border-b border-border flex items-center px-4 md:px-6 shrink-0">
+    <div class="flex-1 flex flex-col min-w-0 md:ml-64">
+        <header class="h-14 md:h-16 bg-white border-b border-border flex items-center justify-between px-4 md:px-6 shrink-0">
             <h1 class="font-headline-sm text-headline-sm text-ink"><?= e($title ?? '') ?></h1>
+            <div class="flex items-center gap-2 shrink-0">
+                <button type="button" title="<?= e(t('admin.header.notifications')) ?>" aria-label="<?= e(t('admin.header.notifications')) ?>"
+                    class="h-10 w-10 rounded-control flex items-center justify-center text-muted hover:bg-surface hover:text-ink transition-colors">
+                    <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                </button>
+                <details class="relative">
+                    <summary title="<?= e(t('admin.header.profile')) ?>" aria-label="<?= e(t('admin.header.profile')) ?>"
+                        class="cursor-pointer list-none h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-lg text-label-lg font-bold hover:bg-primary/20 transition-colors">
+                        <?= e($adminInitial) ?>
+                    </summary>
+                    <div class="absolute right-0 z-20 mt-2 w-56 bg-white border border-border rounded-card shadow-card overflow-hidden text-left">
+                        <div class="p-3 border-b border-border">
+                            <p class="text-label-md font-label-md text-ink truncate"><?= e($adminEmail ?? '') ?></p>
+                            <p class="text-label-caps font-label-caps text-muted uppercase"><?= e(t('common.role.admin')) ?></p>
+                        </div>
+                        <form method="POST" action="/logout">
+                            <?= csrf_field() ?>
+                            <button type="submit" class="w-full flex items-center gap-2 px-3 py-2.5 text-body-sm text-ink hover:bg-surface transition-colors">
+                                <i class="fa-solid fa-arrow-right-from-bracket text-muted" aria-hidden="true"></i>
+                                <?= e(t('admin.nav.logout')) ?>
+                            </button>
+                        </form>
+                    </div>
+                </details>
+            </div>
         </header>
         <main class="flex-1 p-4 md:p-8 overflow-x-auto">
             <?= $content ?>
         </main>
     </div>
 </div>
+<script src="/assets/js/admin-nav.js" defer></script>
 </body>
 </html>
