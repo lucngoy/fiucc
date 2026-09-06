@@ -19,6 +19,17 @@
  */
 $journey ??= [];
 
+// Contenu d'une entrée de chronologie — factorisé pour ne pas dupliquer le
+// balisage entre la mise en page mobile (colonne unique) et desktop
+// (alternée gauche/droite, comme la maquette).
+$renderJourneyEntry = static function (array $entry, string $align = 'left'): string {
+    $alignClass = $align === 'right' ? 'text-right' : 'text-left';
+
+    return '<p class="text-label-md font-label-md text-primary uppercase tracking-wider mb-1 ' . $alignClass . '">' . e(local_date($entry['start_date'])) . '</p>'
+        . '<h3 class="font-headline-sm text-headline-sm text-ink mb-1 ' . $alignClass . '">' . e($entry['title']) . '</h3>'
+        . (!empty($entry['location']) ? '<p class="text-body-sm text-muted ' . $alignClass . '">' . e($entry['location']) . '</p>' : '');
+};
+
 $storyPhotoPath = 'assets/images/community/founding-story.jpg';
 $hasStoryPhoto = is_file(BASE_PATH . '/public/' . $storyPhotoPath);
 
@@ -117,19 +128,30 @@ $values = [
         <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('community.journey.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('community.journey.subtitle')) ?></p>
     </div>
-    <div class="max-w-2xl mx-auto flex flex-col gap-8 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
+    <!-- Mobile : colonne unique, ligne à gauche -->
+    <div class="md:hidden max-w-2xl mx-auto flex flex-col gap-8 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
         <?php foreach ($journey as $entry): ?>
             <div class="flex gap-5 relative">
                 <span class="h-4 w-4 rounded-full bg-primary border-4 border-primary-light shrink-0 mt-1 relative z-10" aria-hidden="true"></span>
-                <div>
-                    <p class="text-label-md font-label-md text-primary uppercase tracking-wider mb-1"><?= e(local_date($entry['start_date'])) ?></p>
-                    <h3 class="font-headline-sm text-headline-sm text-ink mb-1"><?= e($entry['title']) ?></h3>
-                    <?php if (!empty($entry['location'])): ?>
-                        <p class="text-body-sm text-muted"><?= e($entry['location']) ?></p>
-                    <?php endif; ?>
-                </div>
+                <div><?= $renderJourneyEntry($entry) ?></div>
             </div>
         <?php endforeach; ?>
+    </div>
+
+    <!-- Desktop : alternée gauche/droite autour d'une ligne centrale, comme la maquette -->
+    <div class="hidden md:block max-w-3xl mx-auto relative">
+        <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2" aria-hidden="true"></div>
+        <div class="flex flex-col gap-2">
+            <?php foreach ($journey as $index => $entry): $isRight = $index % 2 === 1; ?>
+                <div class="grid grid-cols-[1fr_2rem_1fr] items-center py-4">
+                    <div class="pr-8"><?= !$isRight ? $renderJourneyEntry($entry, 'right') : '' ?></div>
+                    <div class="flex justify-center relative z-10">
+                        <span class="h-4 w-4 rounded-full bg-primary border-4 border-primary-light" aria-hidden="true"></span>
+                    </div>
+                    <div class="pl-8"><?= $isRight ? $renderJourneyEntry($entry, 'left') : '' ?></div>
+                </div>
+            <?php endforeach; ?>
+        </div>
     </div>
 </div>
 <?php endif; ?>
