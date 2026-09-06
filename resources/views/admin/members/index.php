@@ -258,7 +258,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                     </div>
                                 </div>
                             </td>
-                            <td class="p-3 text-body-sm text-ink font-mono"><?= e($member['student_id']) ?></td>
+                            <td class="p-3 text-body-sm text-ink"><?= e($member['student_id']) ?></td>
                             <td class="p-3">
                                 <p class="text-body-sm text-ink"><?= e($member['faculty'] ?? '—') ?></p>
                                 <?php if ($member['year'] !== null && isset($studyLevels[$member['year']])): ?>

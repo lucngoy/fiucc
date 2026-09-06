@@ -40,6 +40,12 @@
  */
 $activeNav ??= null;
 $adminInitial = $adminEmail ?? '' ? mb_strtoupper(mb_substr((string) $adminEmail, 0, 1)) : '?';
+// Même mécanique que resources/views/partials/header.php (public) : GET
+// /lang/{locale} (FIUCC-30) pose $_SESSION['locale'] et redirige vers la
+// page d'origine — rien de spécifique à l'admin à construire ici.
+$locale = \App\Core\Lang::locale();
+$enLocaleClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
+$frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 ?>
 <div class="flex flex-col md:flex-row min-h-screen">
     <!-- Barre du haut sur mobile (< md), colonne latérale fixe à partir de
@@ -94,6 +100,10 @@ $adminInitial = $adminEmail ?? '' ? mb_strtoupper(mb_substr((string) $adminEmail
         <header class="h-14 md:h-16 bg-white border-b border-border flex items-center justify-between px-4 md:px-6 shrink-0">
             <h1 class="font-headline-sm text-headline-sm text-ink"><?= e($title ?? '') ?></h1>
             <div class="flex items-center gap-2 shrink-0">
+                <div class="flex items-center gap-1 mr-1 text-label-md font-label-md">
+                    <a href="/lang/en" class="px-2 py-1 rounded-control transition-colors <?= e($enLocaleClasses) ?>">EN</a>
+                    <a href="/lang/fr" class="px-2 py-1 rounded-control transition-colors <?= e($frLocaleClasses) ?>">FR</a>
+                </div>
                 <button type="button" title="<?= e(t('admin.header.notifications')) ?>" aria-label="<?= e(t('admin.header.notifications')) ?>"
                     class="h-10 w-10 rounded-control flex items-center justify-center text-muted hover:bg-surface hover:text-ink transition-colors">
                     <i class="fa-solid fa-bell" aria-hidden="true"></i>
