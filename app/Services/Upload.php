@@ -14,6 +14,12 @@ use RuntimeException;
  *   envoyé ;
  * - nom de fichier aléatoire, jamais celui envoyé par l'utilisateur ;
  * - taille plafonnée (security.upload_max_size_mb) ;
+ * - dimensions d'entrée plafonnées (security.upload_max_input_dimension),
+ *   vérifiées via getimagesize() — lit seulement l'en-tête, jamais les pixels
+ *   — AVANT tout appel GD : une image bien compressée (8000x8000, quelques
+ *   centaines de Ko) passe le contrôle de taille en octets mais ferait
+ *   exploser la mémoire une fois décodée par imagecreatefromX (decompression
+ *   bomb) ;
  * - redimensionnée pour ne jamais stocker plus grand que nécessaire.
  *
  * Ne gère que les images (jpg/jpeg/png/webp) : les documents (pdf, section 30)
@@ -33,8 +39,13 @@ final class Upload
      * @return string Chemin relatif à public/uploads/ (ex. "members/ab12...ef.jpg")
      * @throws RuntimeException Message déjà adapté à l'affichage utilisateur.
      */
-    public static function storeImage(array $file, string $subdirectory, int $maxDimension, int $maxSizeBytes): string
-    {
+    public static function storeImage(
+        array $file,
+        string $subdirectory,
+        int $maxDimension,
+        int $maxSizeBytes,
+        int $maxInputDimension
+    ): string {
         self::assertUploadOk($file, $maxSizeBytes);
 
         $finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -42,6 +53,18 @@ final class Upload
 
         if ($realMime === false || !isset(self::ALLOWED_IMAGE_TYPES[$realMime])) {
             throw new RuntimeException(t('upload.invalid_type'));
+        }
+
+        // getimagesize() ne lit que l'en-tête (dimensions déclarées), jamais
+        // les pixels — sûr à appeler avant tout contrôle de mémoire.
+        $dimensions = @getimagesize((string) $file['tmp_name']);
+
+        if ($dimensions === false) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        if ($dimensions[0] > $maxInputDimension || $dimensions[1] > $maxInputDimension) {
+            throw new RuntimeException(t('upload.dimensions_too_large', ['max' => $maxInputDimension]));
         }
 
         $extension = self::ALLOWED_IMAGE_TYPES[$realMime];

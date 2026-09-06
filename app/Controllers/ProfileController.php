@@ -75,7 +75,8 @@ final class ProfileController extends Controller
                     $_FILES['photo'],
                     'members',
                     (int) Config::get('security.upload_photo_max_dimension', 800),
-                    (int) Config::get('security.upload_max_size_mb', 5) * 1024 * 1024
+                    (int) Config::get('security.upload_max_size_mb', 5) * 1024 * 1024,
+                    (int) Config::get('security.upload_max_input_dimension', 5000)
                 );
             } catch (RuntimeException $exception) {
                 $errors['photo'] = $exception->getMessage();

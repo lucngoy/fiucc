@@ -192,6 +192,7 @@ return [
     'upload.failed'        => 'Le fichier n\'a pas pu être envoyé.',
     'upload.too_large'     => 'Le fichier est trop volumineux.',
     'upload.processing_failed' => 'L\'image n\'a pas pu être traitée.',
+    'upload.dimensions_too_large' => 'Cette image est trop grande (:max px maximum par côté).',
 
     'mail.otp.subject' => 'Votre code de vérification',
     'mail.otp.heading' => 'Vérifiez votre email',

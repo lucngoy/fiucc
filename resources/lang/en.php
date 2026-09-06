@@ -189,6 +189,7 @@ return [
     'upload.failed'        => 'The file could not be uploaded.',
     'upload.too_large'     => 'The file is too large.',
     'upload.processing_failed' => 'The image could not be processed.',
+    'upload.dimensions_too_large' => 'This image is too large (:max px maximum per side).',
 
     'mail.otp.subject' => 'Your verification code',
     'mail.otp.heading' => 'Verify your email',

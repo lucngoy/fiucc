@@ -17,6 +17,11 @@ return [
     // Plus long côté, en pixels, après redimensionnement (FIUCC-38) — une
     // photo de profil n'a jamais besoin d'être plus grande que ça.
     'upload_photo_max_dimension' => (int) Env::get('UPLOAD_PHOTO_MAX_DIMENSION', 800),
+    // Plafond de dimensions AVANT chargement GD (decompression bomb) : une
+    // image bien compressée peut passer le contrôle de taille en octets tout
+    // en explosant la mémoire une fois décodée en pixels par GD. Vérifié via
+    // getimagesize() (lit l'en-tête, pas les pixels) avant tout appel GD.
+    'upload_max_input_dimension' => (int) Env::get('UPLOAD_MAX_INPUT_DIMENSION', 5000),
     // Verrouillage dur — comptes admin uniquement (voir CLAUDE.md : un
     // verrouillage par compte seul permettrait de priver un membre de vote).
     'login_max_attempts'   => (int) Env::get('LOGIN_MAX_ATTEMPTS', 5),
