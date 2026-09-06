@@ -24,10 +24,13 @@
  *   (Documents, FIUCC-57/58, pas construit).
  *
  * Fonds de section : le conteneur de l'organigramme, le bloc des mandats
- * précédents et la bande "Rule of Law" portent chacun leur propre fond
- * (bg-surface), contenu dans un bloc plutôt qu'en bande pleine largeur —
- * pour que la page ne repose pas sur la même couleur partout. L'en-tête
- * (bg-primary) reste une bande pleine largeur, comme dans code.html.
+ * précédents et la bande "Rule of Law" portent chacun leur propre carte
+ * (bg-white, comme les autres cartes de la page), contenue dans un bloc
+ * plutôt qu'en bande pleine largeur. bg-surface aurait été invisible ici :
+ * c'est déjà le fond par défaut de la page (body), un bloc bg-surface sur
+ * bg-surface ne se distingue de rien — d'où le "tout semble être dans la
+ * même section" signalé après la première passe. L'en-tête (bg-primary)
+ * reste une bande pleine largeur, comme dans code.html.
  *
  * Archive complète avec anciens membres : FIUCC-42, ticket séparé, route
  * déjà déclarée dans routes/web.php mais pas construite ici.
@@ -233,7 +236,7 @@ $renderOrgTier3Box = static function (array $item): string {
     <!-- Conteneur de l'arbre : seul ce bloc porte un fond distinct
          (bg-surface), pas toute la section — comme code.html, où
          bg-surface-container-low habille l'arbre, pas la page. -->
-    <div class="bg-surface rounded-card p-6 md:p-10 flex flex-col items-center gap-4">
+    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-10 flex flex-col items-center gap-4">
         <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
         <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
             <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
@@ -278,7 +281,7 @@ $renderOrgTier3Box = static function (array $item): string {
     <!-- Fond distinct sur ce bloc, pas sur toute la section (même logique
          que le conteneur de l'organigramme) — la page ne repose pas sur
          une seule couleur uniforme partout. -->
-    <div class="bg-surface rounded-card p-6 md:p-8 max-w-xl mx-auto">
+    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 max-w-xl mx-auto">
         <?php if ($pastMandates === []): ?>
             <?= component('alert', ['type' => 'info', 'message' => t('government.history.empty')]) ?>
         <?php else: ?>
@@ -297,7 +300,7 @@ $renderOrgTier3Box = static function (array $item): string {
 <div class="max-w-layout mx-auto px-4 md:px-6 pb-16 md:pb-20">
     <!-- Reprend Section 6 de code.html : un seul bloc contenu (bg-surface),
          pas une bande pleine largeur. -->
-    <div class="bg-surface rounded-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-4 text-center md:text-left">
             <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center text-headline-sm shrink-0" aria-hidden="true">&sect;</span>
             <div>
