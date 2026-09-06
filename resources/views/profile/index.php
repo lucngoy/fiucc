@@ -15,13 +15,7 @@ $statusReason = $member['status'] === 'rejected'
     ? $member['rejection_reason']
     : ($member['status'] === 'suspended' ? $member['suspension_reason'] : null);
 
-$initials = '';
-foreach (preg_split('/\s+/', trim($member['full_name'])) as $part) {
-    if ($part !== '') {
-        $initials .= mb_strtoupper(mb_substr($part, 0, 1));
-    }
-}
-$initials = mb_substr($initials, 0, 2);
+$initials = initials($member['full_name']);
 
 $studyLevel = $studyLevels[(int) $member['year']] ?? null;
 

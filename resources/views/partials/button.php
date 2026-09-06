@@ -1,7 +1,7 @@
 <?php
 /**
  * @param string $label       Texte du bouton
- * @param string $variant     primary|secondary|accent|destructive (défaut primary)
+ * @param string $variant     primary|secondary|accent|destructive|inverse (défaut primary)
  * @param string|null $href   Si fourni, rend un <a> ; sinon un <button>
  * @param string $type        Type du <button> (ignoré si $href est fourni)
  * @param string $attributes  Attributs HTML bruts ajoutés tels quels (ex.
@@ -22,6 +22,9 @@ $variants = [
     'secondary'   => 'bg-transparent border border-primary text-primary hover:bg-primary-light/10',
     'accent'      => 'bg-gold text-ink font-bold hover:bg-gold/90',
     'destructive' => 'bg-danger text-white hover:bg-danger/90',
+    // Bouton secondaire sur fond coloré (bande CTA sur bg-primary...) : le
+    // variant "secondary" (bordure/texte primary) y serait invisible.
+    'inverse'     => 'bg-transparent border border-white text-white hover:bg-white/10',
 ];
 $variantClasses = $variants[$variant] ?? $variants['primary'];
 

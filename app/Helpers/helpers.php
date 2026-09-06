@@ -77,3 +77,22 @@ if (!function_exists('local_date')) {
         return (int) date('j', $timestamp) . ' ' . $months[(int) date('n', $timestamp)] . ' ' . date('Y', $timestamp);
     }
 }
+
+if (!function_exists('initials')) {
+    /**
+     * Repli d'avatar quand aucune photo n'est disponible (profil, page
+     * gouvernement...) — deux lettres maximum par défaut.
+     */
+    function initials(string $fullName, int $max = 2): string
+    {
+        $result = '';
+
+        foreach (preg_split('/\s+/', trim($fullName)) as $part) {
+            if ($part !== '') {
+                $result .= mb_strtoupper(mb_substr($part, 0, 1));
+            }
+        }
+
+        return mb_substr($result, 0, $max);
+    }
+}
