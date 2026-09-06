@@ -40,10 +40,9 @@ final class Government extends Model
     }
 
     /**
-     * Mandats archivés (section "Historical Mandates") — FIUCC-42 (archive
-     * complète, avec anciens membres) reste un ticket séparé et n'est pas
-     * construit ici. Juste de quoi afficher honnêtement une liste vide
-     * plutôt qu'une section qui prétend exister sans rien avoir à montrer.
+     * Mandats archivés (résumé, section "Historical Mandates" de la page
+     * /community/government). Liste réelle plutôt qu'un historique inventé —
+     * vide tant qu'aucun mandat n'est clos.
      */
     public static function pastMandates(): array
     {
@@ -53,5 +52,38 @@ final class Government extends Model
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Mandats archivés avec leurs membres (FIUCC-42, page /community/
+     * government/archives) — même forme que currentWithMembers(), un
+     * mandat par entrée, triés du plus récent au plus ancien.
+     */
+    public static function pastMandatesWithMembers(): array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT id, mandate, start_date, end_date FROM governments WHERE is_current = 0 ORDER BY start_date DESC'
+        );
+        $stmt->execute();
+        $governments = $stmt->fetchAll();
+
+        if ($governments === []) {
+            return [];
+        }
+
+        $membersStmt = static::db()->prepare(
+            'SELECT role, faculty, display_name, photo, instagram
+             FROM government_members
+             WHERE government_id = :government_id
+             ORDER BY sort_order ASC'
+        );
+
+        foreach ($governments as &$government) {
+            $membersStmt->execute(['government_id' => $government['id']]);
+            $government['members'] = $membersStmt->fetchAll();
+        }
+        unset($government);
+
+        return $governments;
     }
 }

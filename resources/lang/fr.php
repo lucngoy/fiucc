@@ -294,4 +294,12 @@ return [
     'government.rule.title'   => 'État de droit et garde-fous statutaires',
     'government.rule.body'    => 'Toute action exécutive est encadrée par la Constitution de la communauté FIUCC et son règlement intérieur, et chaque membre du bureau reste joignable par la communauté.',
     'government.rule.contact' => 'Contacter le bureau',
+
+    'government.archives.title'      => 'Mandats historiques',
+    'government.archives.subtitle'   => 'Chaque bureau exécutif ayant servi la Communauté Congolaise depuis sa fondation à Final International University.',
+    'government.archives.stat_value'   => ':count mandats archivés',
+    'government.archives.stat_caption' => 'Depuis le mandat fondateur',
+    'government.archives.empty'      => "Il s'agit du mandat fondateur du FIUCC — aucun mandat précédent à retracer pour l'instant.",
+    'government.archives.back'       => 'Retour au gouvernement actuel',
+    'government.archives.members_empty' => "Aucun bureau n'a été enregistré pour ce mandat.",
 ];
