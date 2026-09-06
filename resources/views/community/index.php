@@ -18,6 +18,10 @@
  * pas une liste inventée. $journey vient de CommunityController::index().
  */
 $journey ??= [];
+// Entrées visibles avant "Voir plus" — au-delà, repliées derrière le bouton
+// (Event::timelineEntries() en récupère jusqu'à 12, pour qu'il y ait
+// réellement quelque chose à déplier une fois la chronologie plus longue).
+$journeyVisibleCount = 4;
 
 // Contenu d'une entrée de chronologie — factorisé pour ne pas dupliquer le
 // balisage entre la mise en page mobile (colonne unique) et desktop
@@ -84,13 +88,13 @@ $values = [
 
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div class="bg-white rounded-card border border-border border-l-4 border-l-primary shadow-card p-8">
+        <div class="bg-white rounded-card border border-border shadow-card p-8">
             <span class="inline-flex h-11 w-11 rounded-full bg-primary/15 text-primary items-center justify-center text-headline-sm mb-4" aria-hidden="true">&#9733;</span>
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('community.mission.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('community.mission.title')) ?></h2>
             <p class="text-body-md text-muted"><?= e(t('community.mission.body')) ?></p>
         </div>
-        <div class="bg-white rounded-card border border-border border-l-4 border-l-gold shadow-card p-8">
+        <div class="bg-white rounded-card border border-border shadow-card p-8">
             <span class="inline-flex h-11 w-11 rounded-full bg-gold/20 text-ink items-center justify-center text-headline-sm mb-4" aria-hidden="true">&#8594;</span>
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('community.vision.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('community.vision.title')) ?></h2>
@@ -130,8 +134,8 @@ $values = [
     </div>
     <!-- Mobile : colonne unique, ligne à gauche -->
     <div class="md:hidden max-w-2xl mx-auto flex flex-col gap-8 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-0.5 before:bg-border">
-        <?php foreach ($journey as $entry): ?>
-            <div class="flex gap-5 relative">
+        <?php foreach ($journey as $index => $entry): ?>
+            <div class="flex gap-5 relative <?= $index >= $journeyVisibleCount ? 'hidden' : '' ?>" <?= $index >= $journeyVisibleCount ? 'data-journey-more' : '' ?>>
                 <span class="h-4 w-4 rounded-full bg-primary border-4 border-primary-light shrink-0 mt-1 relative z-10" aria-hidden="true"></span>
                 <div><?= $renderJourneyEntry($entry) ?></div>
             </div>
@@ -143,7 +147,7 @@ $values = [
         <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2" aria-hidden="true"></div>
         <div class="flex flex-col gap-2">
             <?php foreach ($journey as $index => $entry): $isRight = $index % 2 === 1; ?>
-                <div class="grid grid-cols-[1fr_2rem_1fr] items-center py-4">
+                <div class="grid grid-cols-[1fr_2rem_1fr] items-center py-4 <?= $index >= $journeyVisibleCount ? 'hidden' : '' ?>" <?= $index >= $journeyVisibleCount ? 'data-journey-more' : '' ?>>
                     <div class="pr-8"><?= !$isRight ? $renderJourneyEntry($entry, 'right') : '' ?></div>
                     <div class="flex justify-center relative z-10">
                         <span class="h-4 w-4 rounded-full bg-primary border-4 border-primary-light" aria-hidden="true"></span>
@@ -153,6 +157,17 @@ $values = [
             <?php endforeach; ?>
         </div>
     </div>
+
+    <?php if (count($journey) > $journeyVisibleCount): ?>
+        <div class="text-center mt-10">
+            <button type="button" id="journey-toggle"
+                data-label-more="<?= e(t('community.journey.show_more')) ?>"
+                data-label-less="<?= e(t('community.journey.show_less')) ?>"
+                class="inline-flex items-center justify-center gap-2 h-10 px-6 rounded-control font-label-lg text-label-lg transition-colors bg-transparent border border-primary text-primary hover:bg-primary-light/10">
+                <?= e(t('community.journey.show_more')) ?>
+            </button>
+        </div>
+    <?php endif; ?>
 </div>
 <?php endif; ?>
 
@@ -166,3 +181,7 @@ $values = [
         </div>
     </div>
 </div>
+
+<?php if (count($journey) > $journeyVisibleCount): ?>
+    <script src="/assets/js/journey-toggle.js" defer></script>
+<?php endif; ?>

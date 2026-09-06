@@ -242,6 +242,8 @@ return [
     'community.journey.eyebrow'  => 'Notre parcours',
     'community.journey.title'    => 'La vie de la communauté',
     'community.journey.subtitle' => 'Un regard sur les moments qui nous rassemblent.',
+    'community.journey.show_more' => 'Voir plus',
+    'community.journey.show_less' => 'Voir moins',
     'community.cta.title'    => 'Faites partie de notre histoire',
     'community.cta.body'     => "Inscrivez-vous auprès de la communauté et découvrez l'équipe qui la dirige cette année.",
     'community.cta.register' => 'Rejoindre la communauté',

@@ -239,6 +239,8 @@ return [
     'community.journey.eyebrow'  => 'Our Journey',
     'community.journey.title'    => 'Life in the Community',
     'community.journey.subtitle' => 'A look back at the moments that bring us together.',
+    'community.journey.show_more' => 'Show more',
+    'community.journey.show_less' => 'Show less',
     'community.cta.title'    => 'Be part of our story',
     'community.cta.body'     => 'Register with the community and meet the team leading it this year.',
     'community.cta.register' => 'Join the Community',

@@ -17,7 +17,7 @@ final class Event extends Model
      * Chronologie de la vie de la communauté : événements publiés ou déjà
      * passés (archived), jamais les brouillons ni les annulés.
      */
-    public static function timelineEntries(int $limit = 6): array
+    public static function timelineEntries(int $limit = 12): array
     {
         $stmt = static::db()->prepare(
             "SELECT title, description, location, start_date
