@@ -5,19 +5,47 @@
  * (routes/web.php) mais volontairement pas construite ici.
  *
  * Mise en page rapprochée de la maquette fiucc_portal_community_government :
- * premier membre (sort_order) mis en avant séparément ("spotlight"), le
- * reste en grille avec photo carrée et badge de poste au-dessus du nom.
- * Écarté volontairement : bandeau de statistiques (quorum/turnout —
- * concepts du système d'élection, phase 4, pas de ce ticket ; les
- * fabriquer ici serait une fausse donnée sur une page publique), filtre
- * par département (aucune donnée de département sur government_members),
- * organigramme séparé (le spotlight + la grille donnent déjà la hiérarchie
- * visuelle), archive des mandats précédents (FIUCC-42).
+ * bandeau de statistiques, premier membre (sort_order) mis en avant
+ * séparément ("spotlight"), en-tête "Executive Bureau" + puces de filtre
+ * au-dessus de la grille.
+ *
+ * Statistiques : calculées à partir de données réelles (nombre de postes,
+ * facultés distinctes, durée du mandat), jamais un quorum/taux de
+ * participation inventé — ça viendra du système d'élection (phase 4),
+ * pas de ce ticket.
+ *
+ * Puces de filtre : rendues telles quelles, décoratives pour l'instant —
+ * aucune donnée de département n'existe pour filtrer réellement dessus.
+ * À dynamiser quand ce sera pertinent (demande explicite de l'utilisateur),
+ * pas anticipé plus loin ici.
  */
 $government ??= null;
 $members = $government['members'] ?? [];
 $spotlight = $members[0] ?? null;
 $rest = $members !== [] ? array_slice($members, 1) : [];
+
+$officesCount = count($members);
+$facultiesCount = count(array_unique(array_filter(array_column($members, 'faculty'))));
+$durationMonths = null;
+
+if ($government !== null && !empty($government['start_date']) && !empty($government['end_date'])) {
+    $durationMonths = (int) round(
+        (strtotime($government['end_date']) - strtotime($government['start_date'])) / (30.44 * 86400)
+    );
+}
+
+$renderSocialLink = static function (?string $instagram): string {
+    if (empty($instagram)) {
+        return '';
+    }
+
+    $handle = ltrim($instagram, '@');
+
+    return '<a href="' . e('https://www.instagram.com/' . $handle . '/') . '" target="_blank" rel="noopener noreferrer" '
+        . 'title="Instagram" aria-label="Instagram — @' . e($handle) . '" '
+        . 'class="inline-flex h-8 w-8 rounded-full bg-primary/15 text-primary items-center justify-center hover:bg-primary/25 transition-colors text-label-md font-label-md">'
+        . '@</a>';
+};
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-16 md:pt-10 md:pb-20">
@@ -28,7 +56,7 @@ $rest = $members !== [] ? array_slice($members, 1) : [];
             <span class="mx-2" aria-hidden="true">/</span>
             <span class="text-white"><?= e(t('government.title')) ?></span>
         </nav>
-        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-10">
             <div class="max-w-2xl">
                 <h1 class="font-headline-lg text-headline-lg text-white mb-4"><?= e(t('government.title')) ?></h1>
                 <?php if ($government !== null): ?>
@@ -41,6 +69,25 @@ $rest = $members !== [] ? array_slice($members, 1) : [];
                 </span>
             <?php endif; ?>
         </div>
+
+        <?php if ($members !== []): ?>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl">
+                <div class="bg-white/10 rounded-control px-4 py-3">
+                    <p class="font-headline-md text-headline-md text-white"><?= e((string) $officesCount) ?></p>
+                    <p class="text-label-md font-label-md text-white/70"><?= e(t('government.stat.offices')) ?></p>
+                </div>
+                <div class="bg-white/10 rounded-control px-4 py-3">
+                    <p class="font-headline-md text-headline-md text-white"><?= e((string) $facultiesCount) ?></p>
+                    <p class="text-label-md font-label-md text-white/70"><?= e(t('government.stat.faculties')) ?></p>
+                </div>
+                <?php if ($durationMonths !== null): ?>
+                    <div class="bg-white/10 rounded-control px-4 py-3">
+                        <p class="font-headline-md text-headline-md text-white"><?= e((string) $durationMonths) ?></p>
+                        <p class="text-label-md font-label-md text-white/70"><?= e(t('government.stat.duration')) ?></p>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div>
 
@@ -65,20 +112,31 @@ $rest = $members !== [] ? array_slice($members, 1) : [];
                         <span class="inline-flex items-center h-7 px-3 rounded-full bg-gold/20 text-ink text-label-md font-label-md mb-3">
                             <?= e($spotlight['role']) ?>
                         </span>
-                        <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e($spotlight['display_name']) ?></h2>
-                        <?php if (!empty($spotlight['instagram'])): ?>
-                            <a href="<?= e('https://www.instagram.com/' . ltrim($spotlight['instagram'], '@') . '/') ?>"
-                               target="_blank" rel="noopener noreferrer"
-                               class="text-body-sm text-primary hover:underline">
-                                @<?= e(ltrim($spotlight['instagram'], '@')) ?>
-                            </a>
+                        <h2 class="font-headline-md text-headline-md text-ink mb-1"><?= e($spotlight['display_name']) ?></h2>
+                        <?php if (!empty($spotlight['faculty'])): ?>
+                            <p class="text-body-sm text-muted mb-3"><?= e($spotlight['faculty']) ?></p>
                         <?php endif; ?>
+                        <?= $renderSocialLink($spotlight['instagram'] ?? null) ?>
                     </div>
                 </div>
             </div>
         <?php endif; ?>
 
         <?php if ($rest !== []): ?>
+            <div class="text-center max-w-2xl mx-auto mb-8">
+                <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.bureau.eyebrow')) ?></p>
+                <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.bureau.title')) ?></h2>
+                <p class="text-body-md text-muted"><?= e(t('government.bureau.subtitle')) ?></p>
+            </div>
+
+            <!-- Filtre décoratif pour l'instant : aucune donnée de département
+                 à filtrer dessus. À dynamiser plus tard, pas anticipé ici. -->
+            <div class="flex flex-wrap items-center justify-center gap-2 mb-8" role="group" aria-label="<?= e(t('government.bureau.title')) ?>">
+                <span class="inline-flex items-center h-8 px-4 rounded-full bg-primary text-white text-label-md font-label-md"><?= e(t('government.filter.all')) ?></span>
+                <span class="inline-flex items-center h-8 px-4 rounded-full bg-surface text-muted text-label-md font-label-md"><?= e(t('government.filter.welfare')) ?></span>
+                <span class="inline-flex items-center h-8 px-4 rounded-full bg-surface text-muted text-label-md font-label-md"><?= e(t('government.filter.academic')) ?></span>
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 <?php foreach ($rest as $member): ?>
                     <div class="bg-white rounded-card border border-border shadow-card overflow-hidden">
@@ -94,13 +152,10 @@ $rest = $members !== [] ? array_slice($members, 1) : [];
                                 <?= e($member['role']) ?>
                             </span>
                             <h3 class="font-headline-sm text-headline-sm text-ink mb-1"><?= e($member['display_name']) ?></h3>
-                            <?php if (!empty($member['instagram'])): ?>
-                                <a href="<?= e('https://www.instagram.com/' . ltrim($member['instagram'], '@') . '/') ?>"
-                                   target="_blank" rel="noopener noreferrer"
-                                   class="text-body-sm text-primary hover:underline">
-                                    @<?= e(ltrim($member['instagram'], '@')) ?>
-                                </a>
+                            <?php if (!empty($member['faculty'])): ?>
+                                <p class="text-body-sm text-muted mb-3"><?= e($member['faculty']) ?></p>
                             <?php endif; ?>
+                            <?= $renderSocialLink($member['instagram'] ?? null) ?>
                         </div>
                     </div>
                 <?php endforeach; ?>

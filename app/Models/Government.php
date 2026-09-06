@@ -27,7 +27,7 @@ final class Government extends Model
         }
 
         $membersStmt = static::db()->prepare(
-            'SELECT role, display_name, photo, instagram
+            'SELECT role, faculty, display_name, photo, instagram
              FROM government_members
              WHERE government_id = :government_id
              ORDER BY sort_order ASC'

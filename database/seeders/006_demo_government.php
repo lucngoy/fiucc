@@ -5,8 +5,8 @@ declare(strict_types=1);
  * Gouvernement actuel fictif (cahier des charges, section 12) : un mandat
  * marqué is_current, avec les postes types listés en exemple (President,
  * General Secretary, Vice President, Treasurer, Communication & Media...).
- * display_name/photo/instagram sont propres à government_members, jamais
- * liés à un compte membre réel ici — member_id reste NULL.
+ * display_name/photo/instagram/faculty sont propres à government_members,
+ * jamais liés à un compte membre réel ici — member_id reste NULL.
  */
 
 $mandate = '2025-2026';
@@ -31,40 +31,48 @@ $pdo->prepare('UPDATE governments SET is_current = 0 WHERE id != :id')
     ->execute(['id' => $governmentId]);
 
 $members = [
-    ['role' => 'President', 'display_name' => 'Jonathan Mukendi', 'instagram' => 'jon.mukendi', 'sort_order' => 1],
-    ['role' => 'Vice President', 'display_name' => 'Bénie Kanyinda', 'instagram' => 'benie.k', 'sort_order' => 2],
-    ['role' => 'General Secretary', 'display_name' => 'Arsène Makasi', 'instagram' => null, 'sort_order' => 3],
-    ['role' => 'Treasurer', 'display_name' => 'Christelle Kapinga', 'instagram' => 'christelle.kap', 'sort_order' => 4],
-    ['role' => 'Communication & Media', 'display_name' => 'Ephraïm Mutombo', 'instagram' => 'ephraim.mtb', 'sort_order' => 5],
-    ['role' => 'Social Affairs', 'display_name' => 'Naomie Tshilombo', 'instagram' => null, 'sort_order' => 6],
+    ['role' => 'President', 'faculty' => 'Faculty of Engineering', 'display_name' => 'Jonathan Mukendi', 'instagram' => 'jon.mukendi', 'sort_order' => 1],
+    ['role' => 'Vice President', 'faculty' => 'Faculty of Law', 'display_name' => 'Bénie Kanyinda', 'instagram' => 'benie.k', 'sort_order' => 2],
+    ['role' => 'General Secretary', 'faculty' => 'Faculty of Economics & Administrative Sciences', 'display_name' => 'Arsène Makasi', 'instagram' => null, 'sort_order' => 3],
+    ['role' => 'Treasurer', 'faculty' => 'Faculty of Economics & Administrative Sciences', 'display_name' => 'Christelle Kapinga', 'instagram' => 'christelle.kap', 'sort_order' => 4],
+    ['role' => 'Communication & Media', 'faculty' => 'Faculty of Architecture & Fine Arts', 'display_name' => 'Ephraïm Mutombo', 'instagram' => 'ephraim.mtb', 'sort_order' => 5],
+    ['role' => 'Social Affairs', 'faculty' => 'Faculty of Educational Sciences', 'display_name' => 'Naomie Tshilombo', 'instagram' => null, 'sort_order' => 6],
 ];
 
-$memberStmt = $pdo->prepare(
-    'INSERT INTO government_members (government_id, role, display_name, photo, instagram, sort_order)
-     VALUES (:government_id, :role, :display_name, NULL, :instagram, :sort_order)
-     ON DUPLICATE KEY UPDATE role = VALUES(role), sort_order = VALUES(sort_order)'
+$insertStmt = $pdo->prepare(
+    'INSERT INTO government_members (government_id, role, faculty, display_name, photo, instagram, sort_order)
+     VALUES (:government_id, :role, :faculty, :display_name, NULL, :instagram, :sort_order)'
+);
+$updateStmt = $pdo->prepare(
+    'UPDATE government_members
+     SET role = :role, faculty = :faculty, instagram = :instagram, sort_order = :sort_order
+     WHERE government_id = :government_id AND display_name = :display_name'
 );
 
 foreach ($members as $member) {
-    // Pas de contrainte d'unicité naturelle sur government_members : on évite
-    // les doublons à chaque ré-exécution du seeder en vérifiant nous-mêmes.
+    // Pas de contrainte d'unicité naturelle sur government_members : on
+    // distingue nous-mêmes création et mise à jour (ré-exécutable sans
+    // doublonner, et backfill les champs ajoutés après la première seed).
     $exists = $pdo->prepare(
         'SELECT 1 FROM government_members WHERE government_id = :government_id AND display_name = :display_name LIMIT 1'
     );
     $exists->execute(['government_id' => $governmentId, 'display_name' => $member['display_name']]);
 
-    if ($exists->fetchColumn() !== false) {
-        echo "SKIP {$member['display_name']} (déjà présent)\n";
-        continue;
-    }
-
-    $memberStmt->execute([
+    $params = [
         'government_id' => $governmentId,
         'role'          => $member['role'],
+        'faculty'       => $member['faculty'],
         'display_name'  => $member['display_name'],
         'instagram'     => $member['instagram'],
         'sort_order'    => $member['sort_order'],
-    ]);
+    ];
 
+    if ($exists->fetchColumn() !== false) {
+        $updateStmt->execute($params);
+        echo "UPDATE {$member['role']} — {$member['display_name']}\n";
+        continue;
+    }
+
+    $insertStmt->execute($params);
     echo "OK  {$member['role']} — {$member['display_name']}\n";
 }

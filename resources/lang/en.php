@@ -250,4 +250,13 @@ return [
     'government.subtitle' => 'Meet the team elected to lead and represent the Congolese Community for the :mandate academic year.',
     'government.mandate_badge' => 'Mandate :mandate',
     'government.empty'    => "The government roster hasn't been published yet. Check back soon.",
+    'government.stat.offices'   => 'Offices',
+    'government.stat.faculties' => 'Faculties Represented',
+    'government.stat.duration'  => 'Months in Office',
+    'government.bureau.eyebrow'  => 'Executive Leadership',
+    'government.bureau.title'    => 'Executive Bureau',
+    'government.bureau.subtitle' => 'The members elected to lead the community and represent it this year.',
+    'government.filter.all'      => 'All Departments',
+    'government.filter.welfare'  => 'Welfare',
+    'government.filter.academic' => 'Academic',
 ];

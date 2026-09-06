@@ -253,4 +253,13 @@ return [
     'government.subtitle' => "Découvrez l'équipe élue pour diriger et représenter la Communauté Congolaise pour l'année académique :mandate.",
     'government.mandate_badge' => 'Mandat :mandate',
     'government.empty'    => "La composition du gouvernement n'a pas encore été publiée. Revenez bientôt.",
+    'government.stat.offices'   => 'Postes',
+    'government.stat.faculties' => 'Facultés représentées',
+    'government.stat.duration'  => 'Mois de mandat',
+    'government.bureau.eyebrow'  => 'Direction exécutive',
+    'government.bureau.title'    => 'Bureau exécutif',
+    'government.bureau.subtitle' => 'Les membres élus pour diriger la communauté et la représenter cette année.',
+    'government.filter.all'      => 'Tous les départements',
+    'government.filter.welfare'  => 'Bien-être',
+    'government.filter.academic' => 'Académique',
 ];
