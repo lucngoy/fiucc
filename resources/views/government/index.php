@@ -30,11 +30,23 @@ $members = $government['members'] ?? [];
 $spotlight = $members[0] ?? null;
 $rest = $members !== [] ? array_slice($members, 1) : [];
 
-// Paliers de l'organigramme — déduits de sort_order (donnée réelle), pas de
-// niveau hiérarchique inventé : le président est déjà en spotlight, le
-// deuxième membre forme un "palier 2", le reste un "palier 3".
-$tier2 = $rest[0] ?? null;
-$tier3 = count($rest) > 1 ? array_slice($rest, 1) : [];
+// Organigramme : structure constitutionnelle (paliers 2 et 3), reprise
+// textuellement de la maquette — ce ne sont pas les 8 membres réels du
+// bureau (déjà montrés dans la grille au-dessus), mais les fonctions
+// prévues par la structure elle-même, indépendamment de qui les occupe.
+// Seul le nœud du haut (président) reste dynamique, avec les vraies
+// données du spotlight.
+$orgTier2 = [
+    ['eyebrow' => t('government.orgchart.pillar1_eyebrow'), 'title' => t('government.orgchart.pillar1_title'), 'subtitle' => t('government.orgchart.pillar1_subtitle')],
+    ['eyebrow' => t('government.orgchart.pillar2_eyebrow'), 'title' => t('government.orgchart.pillar2_title'), 'subtitle' => t('government.orgchart.pillar2_subtitle')],
+];
+$orgTier3 = [
+    ['title' => t('government.orgchart.bureau1_title'), 'subtitle' => t('government.orgchart.bureau1_subtitle')],
+    ['title' => t('government.orgchart.bureau2_title'), 'subtitle' => t('government.orgchart.bureau2_subtitle')],
+    ['title' => t('government.orgchart.bureau3_title'), 'subtitle' => t('government.orgchart.bureau3_subtitle')],
+    ['title' => t('government.orgchart.bureau4_title'), 'subtitle' => t('government.orgchart.bureau4_subtitle')],
+    ['title' => t('government.orgchart.bureau5_title'), 'subtitle' => t('government.orgchart.bureau5_subtitle')],
+];
 
 $officesCount = count($members);
 $facultiesCount = count(array_unique(array_filter(array_column($members, 'faculty'))));
@@ -69,13 +81,18 @@ $renderSocialLink = static function (?string $instagram, string $size = 'h-8 w-8
         . '@</a>';
 };
 
-$renderOrgBox = static function (array $member, string $size = 'normal') use ($renderSocialLink): string {
-    $isCompact = $size === 'compact';
-    $namePx = $isCompact ? 'text-body-sm font-label-md' : 'font-headline-sm text-headline-sm';
+$renderOrgTier2Box = static function (array $item): string {
+    return '<div class="bg-white rounded-card border border-border shadow-card px-4 py-3">'
+        . '<p class="text-label-caps font-label-caps uppercase text-muted mb-1">' . e($item['eyebrow']) . '</p>'
+        . '<p class="font-label-lg text-label-lg text-ink">' . e($item['title']) . '</p>'
+        . '<p class="text-body-sm text-muted">' . e($item['subtitle']) . '</p>'
+        . '</div>';
+};
 
-    return '<div class="bg-white rounded-card border border-border shadow-card px-4 py-3 text-center">'
-        . '<span class="inline-flex items-center h-5 px-2 mb-1 rounded-full bg-primary/15 text-primary text-label-caps font-label-caps uppercase">' . e($member['role']) . '</span>'
-        . '<p class="' . $namePx . ' text-ink">' . e($member['display_name']) . '</p>'
+$renderOrgTier3Box = static function (array $item): string {
+    return '<div class="bg-white rounded-card border border-border shadow-card px-3 py-3 text-center">'
+        . '<p class="text-label-md font-label-md text-ink">' . e($item['title']) . '</p>'
+        . '<p class="text-label-caps text-muted">' . e($item['subtitle']) . '</p>'
         . '</div>';
 };
 ?>
@@ -157,18 +174,15 @@ $renderOrgBox = static function (array $member, string $size = 'normal') use ($r
                 </div>
 
                 <?php if ($facultyFilters !== []): ?>
-                    <div class="flex flex-wrap items-center gap-2" id="government-filters">
-                        <span class="text-label-md font-label-md text-muted mr-1"><?= e(t('government.filter_by')) ?></span>
-                        <button type="button" data-filter-chip="all"
-                            class="inline-flex items-center h-8 px-4 rounded-full bg-primary text-white text-label-md font-label-md transition-colors">
-                            <?= e(t('government.filter.all')) ?>
-                        </button>
-                        <?php foreach ($facultyFilters as $faculty): ?>
-                            <button type="button" data-filter-chip="<?= e($faculty) ?>"
-                                class="inline-flex items-center h-8 px-4 rounded-full bg-surface text-muted text-label-md font-label-md transition-colors">
-                                <?= e($faculty) ?>
-                            </button>
-                        <?php endforeach; ?>
+                    <div class="flex items-center gap-2">
+                        <label for="government-filter" class="text-label-md font-label-md text-muted shrink-0"><?= e(t('government.filter_by')) ?></label>
+                        <select id="government-filter"
+                            class="h-9 rounded-control border border-border px-3 text-body-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-primary-light/50">
+                            <option value="all"><?= e(t('government.filter.all')) ?></option>
+                            <?php foreach ($facultyFilters as $faculty): ?>
+                                <option value="<?= e($faculty) ?>"><?= e($faculty) ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 <?php endif; ?>
             </div>
@@ -208,18 +222,27 @@ $renderOrgBox = static function (array $member, string $size = 'normal') use ($r
             <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.orgchart.title')) ?></h2>
             <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
         </div>
-        <div class="flex flex-col items-center gap-4 max-w-2xl mx-auto">
-            <div class="w-56"><?= $renderOrgBox($spotlight) ?></div>
-            <?php if ($tier2 !== null): ?>
-                <div class="w-56"><?= $renderOrgBox($tier2) ?></div>
-            <?php endif; ?>
-            <?php if ($tier3 !== []): ?>
-                <div class="flex flex-wrap justify-center gap-3 w-full">
-                    <?php foreach ($tier3 as $member): ?>
-                        <div class="w-40"><?= $renderOrgBox($member, 'compact') ?></div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
+        <div class="flex flex-col items-center gap-4 max-w-3xl mx-auto">
+            <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
+            <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
+                <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
+                <p class="font-label-lg text-label-lg"><?= e(t('government.orgchart.top_title')) ?></p>
+                <p class="text-body-sm text-white/80"><?= e(t('government.orgchart.top_subtitle', ['name' => $spotlight['display_name']])) ?></p>
+            </div>
+
+            <!-- Paliers 2 et 3 : structure constitutionnelle, reprise textuellement
+                 de la maquette (pas les membres réels, déjà montrés au-dessus). -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+                <?php foreach ($orgTier2 as $item): ?>
+                    <?= $renderOrgTier2Box($item) ?>
+                <?php endforeach; ?>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+                <?php foreach ($orgTier3 as $item): ?>
+                    <?= $renderOrgTier3Box($item) ?>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </div>
