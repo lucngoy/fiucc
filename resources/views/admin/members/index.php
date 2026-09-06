@@ -179,7 +179,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                             <?= e(t('admin.members.column.submitted')) ?> <?= $sortIcon('submitted') ?>
                         </a>
                     </th>
-                    <th class="p-3 text-label-caps font-label-caps uppercase"><?= e(t('admin.members.column.actions')) ?></th>
+                    <th class="p-3 text-label-caps font-label-caps uppercase text-right"><?= e(t('admin.members.column.actions')) ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -201,10 +201,21 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                     class="member-row-checkbox h-4 w-4 rounded border-border text-primary focus:outline-none focus:ring-2 focus:ring-primary-light/50">
                             </td>
                             <td class="p-3">
-                                <p class="font-label-lg text-label-lg text-ink"><?= e($member['full_name']) ?></p>
-                                <p class="text-body-sm text-muted"><?= e($member['email']) ?></p>
+                                <div class="flex items-center gap-3">
+                                    <?php if (!empty($member['photo'])): ?>
+                                        <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-9 w-9 rounded-full object-cover border border-border shrink-0">
+                                    <?php else: ?>
+                                        <span class="h-9 w-9 rounded-full bg-primary/15 text-primary flex items-center justify-center font-label-md text-label-md shrink-0">
+                                            <?= e(initials($member['full_name'])) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                    <div class="min-w-0">
+                                        <p class="font-label-lg text-label-lg text-ink truncate"><?= e($member['full_name']) ?></p>
+                                        <p class="text-body-sm text-muted truncate"><?= e($member['email']) ?></p>
+                                    </div>
+                                </div>
                             </td>
-                            <td class="p-3 text-body-sm text-ink"><?= e($member['student_id']) ?></td>
+                            <td class="p-3 text-body-sm text-ink font-mono"><?= e($member['student_id']) ?></td>
                             <td class="p-3">
                                 <p class="text-body-sm text-ink"><?= e($member['faculty'] ?? '—') ?></p>
                                 <?php if ($member['year'] !== null && isset($studyLevels[$member['year']])): ?>
@@ -214,20 +225,26 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                             <td class="p-3"><?= $statusBadge($member['status']) ?></td>
                             <td class="p-3 text-body-sm text-muted"><?= e(local_date($member['created_at'])) ?></td>
                             <td class="p-3">
-                                <div class="flex flex-wrap items-center gap-3">
+                                <div class="flex items-center justify-end gap-1.5">
                                     <?php if (in_array($member['status'], ['pending', 'rejected', 'suspended'], true)): ?>
                                         <form method="POST" action="<?= e($rowActionUrl('validate')) ?>">
                                             <?= csrf_field() ?>
                                             <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
-                                            <button type="submit" class="text-success text-label-md font-label-md hover:underline"><?= e(t('admin.members.action.validate')) ?></button>
+                                            <button type="submit" title="<?= e(t('admin.members.action.validate')) ?>" aria-label="<?= e(t('admin.members.action.validate')) ?>"
+                                                class="h-9 w-9 rounded-control bg-surface text-success hover:bg-success/15 flex items-center justify-center transition-colors">
+                                                <i class="fa-solid fa-check" aria-hidden="true"></i>
+                                            </button>
                                         </form>
                                     <?php endif; ?>
 
                                     <?php if ($member['status'] === 'pending'): ?>
                                         <details class="relative">
-                                            <summary class="cursor-pointer list-none text-danger text-label-md font-label-md hover:underline"><?= e(t('admin.members.action.reject')) ?></summary>
+                                            <summary title="<?= e(t('admin.members.action.reject')) ?>" aria-label="<?= e(t('admin.members.action.reject')) ?>"
+                                                class="cursor-pointer list-none h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
+                                                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                            </summary>
                                             <form method="POST" action="<?= e($rowActionUrl('reject')) ?>"
-                                                class="absolute right-0 z-10 mt-2 w-64 bg-white border border-border rounded-card shadow-card p-3 flex flex-col gap-2">
+                                                class="absolute right-0 z-10 mt-2 w-64 bg-white border border-border rounded-card shadow-card p-3 flex flex-col gap-2 text-left">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
                                                 <label for="reject-reason-<?= e((string) $memberId) ?>" class="text-label-md font-label-md text-ink"><?= e(t('admin.members.reason.label')) ?></label>
@@ -240,9 +257,12 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
 
                                     <?php if ($member['status'] === 'validated'): ?>
                                         <details class="relative">
-                                            <summary class="cursor-pointer list-none text-ink text-label-md font-label-md hover:underline"><?= e(t('admin.members.action.suspend')) ?></summary>
+                                            <summary title="<?= e(t('admin.members.action.suspend')) ?>" aria-label="<?= e(t('admin.members.action.suspend')) ?>"
+                                                class="cursor-pointer list-none h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
+                                                <i class="fa-solid fa-ban" aria-hidden="true"></i>
+                                            </summary>
                                             <form method="POST" action="<?= e($rowActionUrl('suspend')) ?>"
-                                                class="absolute right-0 z-10 mt-2 w-64 bg-white border border-border rounded-card shadow-card p-3 flex flex-col gap-2">
+                                                class="absolute right-0 z-10 mt-2 w-64 bg-white border border-border rounded-card shadow-card p-3 flex flex-col gap-2 text-left">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
                                                 <label for="suspend-reason-<?= e((string) $memberId) ?>" class="text-label-md font-label-md text-ink"><?= e(t('admin.members.reason.label')) ?></label>
@@ -271,24 +291,30 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                     aria-label="<?= e(t('admin.members.bulk.reason_label')) ?>"
                     class="h-10 flex-1 min-w-[220px] rounded-control border border-border px-3 py-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50"></textarea>
                 <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-validate"
-                    data-bulk-action="validate" data-confirm-template="<?= e(t('admin.members.bulk.confirm_validate', ['count' => '__COUNT__'])) ?>"
+                    data-bulk-action="validate"
+                    data-confirm-template="<?= e(t('admin.members.bulk.confirm_validate', ['count' => '__COUNT__'])) ?>"
+                    data-label-template="<?= e(t('admin.members.bulk.validate_count', ['count' => '__COUNT__'])) ?>"
                     disabled
                     class="h-9 px-4 rounded-control bg-success text-white text-label-md font-label-md hover:bg-success/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-                    <?= e(t('admin.members.bulk.validate')) ?>
+                    <?= e(t('admin.members.bulk.validate_count', ['count' => 0])) ?>
                 </button>
                 <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-reject"
-                    data-bulk-action="reject" data-confirm-template="<?= e(t('admin.members.bulk.confirm_reject', ['count' => '__COUNT__'])) ?>"
+                    data-bulk-action="reject"
+                    data-confirm-template="<?= e(t('admin.members.bulk.confirm_reject', ['count' => '__COUNT__'])) ?>"
+                    data-label-template="<?= e(t('admin.members.bulk.reject_count', ['count' => '__COUNT__'])) ?>"
                     data-requires-reason="1"
                     disabled
                     class="h-9 px-4 rounded-control bg-danger text-white text-label-md font-label-md hover:bg-danger/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-                    <?= e(t('admin.members.bulk.reject')) ?>
+                    <?= e(t('admin.members.bulk.reject_count', ['count' => 0])) ?>
                 </button>
                 <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-suspend"
-                    data-bulk-action="suspend" data-confirm-template="<?= e(t('admin.members.bulk.confirm_suspend', ['count' => '__COUNT__'])) ?>"
+                    data-bulk-action="suspend"
+                    data-confirm-template="<?= e(t('admin.members.bulk.confirm_suspend', ['count' => '__COUNT__'])) ?>"
+                    data-label-template="<?= e(t('admin.members.bulk.suspend_count', ['count' => '__COUNT__'])) ?>"
                     data-requires-reason="1"
                     disabled
                     class="h-9 px-4 rounded-control bg-ink text-white text-label-md font-label-md hover:bg-ink/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
-                    <?= e(t('admin.members.bulk.suspend')) ?>
+                    <?= e(t('admin.members.bulk.suspend_count', ['count' => 0])) ?>
                 </button>
             </div>
         <?php endif; ?>

@@ -36,6 +36,10 @@
 
         bulkButtons.forEach(function (button) {
             button.disabled = count === 0;
+
+            if (button.dataset.labelTemplate) {
+                button.textContent = button.dataset.labelTemplate.replace('__COUNT__', String(count));
+            }
         });
 
         if (selectAll) {

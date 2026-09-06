@@ -308,6 +308,7 @@ return [
 
     'admin.brand.name'    => 'FIUCC Admin',
     'admin.brand.tagline' => 'Centre de contrôle',
+    'admin.nav.section_label' => 'Navigation',
     'admin.nav.members'   => 'Membres',
     'admin.nav.logout'    => 'Se déconnecter',
 
@@ -345,9 +346,9 @@ return [
     'admin.members.total' => ':count membres trouvés',
     'admin.members.bulk.select_all' => 'Tout sélectionner',
     'admin.members.bulk.selected'   => ':count sélectionné(s)',
-    'admin.members.bulk.validate'   => 'Valider la sélection',
-    'admin.members.bulk.reject'     => 'Rejeter la sélection',
-    'admin.members.bulk.suspend'    => 'Suspendre la sélection',
+    'admin.members.bulk.validate_count' => 'Valider la sélection (:count)',
+    'admin.members.bulk.reject_count'   => 'Rejeter la sélection (:count)',
+    'admin.members.bulk.suspend_count'  => 'Suspendre la sélection (:count)',
     'admin.members.bulk.reason_label'       => 'Raison pour les membres sélectionnés',
     'admin.members.bulk.reason_placeholder' => 'Obligatoire pour rejeter ou suspendre la sélection…',
     'admin.members.bulk.confirm_validate' => 'Valider :count membre(s) sélectionné(s) ? Chacun recevra l\'email d\'adhésion approuvée.',

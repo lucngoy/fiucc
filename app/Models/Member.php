@@ -285,7 +285,7 @@ final class Member extends Model
         // jamais une valeur brute de la query string.
         $offset = ($page - 1) * $perPage;
         $stmt = static::db()->prepare(
-            "SELECT m.id, m.membership_number, m.full_name, m.student_id, m.faculty, m.year,
+            "SELECT m.id, m.membership_number, m.full_name, m.student_id, m.faculty, m.year, m.photo,
                     m.status_type, m.status, m.created_at, u.email
              FROM members m
              JOIN users u ON u.id = m.user_id

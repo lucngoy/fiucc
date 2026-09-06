@@ -305,6 +305,7 @@ return [
 
     'admin.brand.name'    => 'FIUCC Admin',
     'admin.brand.tagline' => 'Control Center',
+    'admin.nav.section_label' => 'Navigation',
     'admin.nav.members'   => 'Members',
     'admin.nav.logout'    => 'Log out',
 
@@ -342,9 +343,9 @@ return [
     'admin.members.total' => ':count members found',
     'admin.members.bulk.select_all' => 'Select all',
     'admin.members.bulk.selected'   => ':count selected',
-    'admin.members.bulk.validate'   => 'Validate selected',
-    'admin.members.bulk.reject'     => 'Reject selected',
-    'admin.members.bulk.suspend'    => 'Suspend selected',
+    'admin.members.bulk.validate_count' => 'Validate selected (:count)',
+    'admin.members.bulk.reject_count'   => 'Reject selected (:count)',
+    'admin.members.bulk.suspend_count'  => 'Suspend selected (:count)',
     'admin.members.bulk.reason_label'       => 'Reason for the selected members',
     'admin.members.bulk.reason_placeholder' => 'Required to reject or suspend the selection…',
     'admin.members.bulk.confirm_validate' => 'Validate :count selected member(s)? Each one will receive the membership-approved email.',

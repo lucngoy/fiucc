@@ -46,9 +46,18 @@ $activeNav ??= null;
                 </button>
             </form>
         </div>
-        <nav class="flex-1 py-2 md:py-4 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
+        <p class="hidden md:block px-3 pt-3 pb-1 font-label-caps text-label-caps uppercase text-white/40 tracking-wider"><?= e(t('admin.nav.section_label')) ?></p>
+        <nav class="flex-1 py-2 md:py-1 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
+            <?php
+            // Item actif : pastille claire + liseré or à gauche (charte —
+            // l'or comme accent, jamais comme fond) sur md+ ; sur mobile
+            // (nav horizontale), juste la pastille, le liseré vertical
+            // n'aurait pas de sens dans une rangée.
+            $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:hidden md:before:block before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
+            $inactiveClasses = 'text-white/70 hover:bg-white/10 hover:text-white';
+            ?>
             <a href="/admin/members"
-               class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? 'bg-white/15 text-white' : 'text-white/70 hover:bg-white/10 hover:text-white' ?>"
+               class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? $activeClasses : $inactiveClasses ?>"
                <?= $activeNav === 'members' ? 'aria-current="page"' : '' ?>>
                 <i class="fa-solid fa-users w-5 text-center" aria-hidden="true"></i>
                 <?= e(t('admin.nav.members')) ?>
