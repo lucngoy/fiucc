@@ -9,8 +9,8 @@ use App\Models\User;
 /**
  * Emails transactionnels du recensement (section 31 du cahier des charges) :
  * "Registration received" et "Your membership has been approved". Contenu
- * en anglais en dur, comme App\Services\Otp — l'i18n (FIUCC-30) couvre le
- * chrome de l'interface, pas le contenu des emails.
+ * traduit via resources/lang/{fr,en}.php (clés mail.*), comme le reste de
+ * l'interface (français par défaut, cahier des charges §38).
  *
  * "Registration received" est envoyé à la vérification de l'email (pas à
  * la soumission du formulaire), une fois l'adresse prouvée — pas avant,
@@ -39,11 +39,9 @@ final class MemberNotifier
         Mail::send(
             $email,
             $fullName,
-            'Registration received',
-            'Registration received',
-            '<p>Thank you for registering with the Congolese Community of Final International University.</p>'
-                . '<p>Your registration is now awaiting review by a community administrator. '
-                . 'We will send you another email as soon as it has been processed.</p>'
+            t('mail.registration_received.subject'),
+            t('mail.registration_received.heading'),
+            t('mail.registration_received.body')
         );
     }
 
@@ -60,10 +58,9 @@ final class MemberNotifier
         Mail::send(
             $email,
             $fullName,
-            'Your membership has been approved',
-            'Welcome to the community',
-            '<p>Good news — your membership has been approved.</p>'
-                . '<p>You can now sign in to access your member profile and the rest of the community platform.</p>'
+            t('mail.approved.subject'),
+            t('mail.approved.heading'),
+            t('mail.approved.body')
         );
     }
 

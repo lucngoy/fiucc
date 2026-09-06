@@ -35,12 +35,45 @@ if (!function_exists('csrf_field')) {
 
 if (!function_exists('t')) {
     /**
-     * Traduction (App\Core\Lang) — anglais par défaut, français si choisi
-     * via le switch de langue. Ne jamais écrire de texte d'interface en dur
-     * dans une vue (CLAUDE.md) : passer par t().
+     * Traduction (App\Core\Lang) — français par défaut (cahier des charges
+     * §38), anglais si choisi via le switch de langue. Ne jamais écrire de
+     * texte d'interface en dur dans une vue (CLAUDE.md) : passer par t().
      */
     function t(string $key, array $replace = []): string
     {
         return \App\Core\Lang::get($key, $replace);
+    }
+}
+
+if (!function_exists('local_date')) {
+    /**
+     * Date lisible dans la langue active — App\Core\Lang::locale(). Pas
+     * d'extension intl sur cet environnement : mois français via une table
+     * fixe plutôt que strftime() (déprécié depuis PHP 8.1, dépendant de la
+     * locale système, peu fiable d'un serveur à l'autre).
+     */
+    function local_date(?string $value): string
+    {
+        if ($value === null || $value === '') {
+            return '';
+        }
+
+        $timestamp = strtotime($value);
+
+        if ($timestamp === false) {
+            return '';
+        }
+
+        if (\App\Core\Lang::locale() !== 'fr') {
+            return date('F j, Y', $timestamp);
+        }
+
+        $months = [
+            1 => 'janvier', 2 => 'février', 3 => 'mars', 4 => 'avril',
+            5 => 'mai', 6 => 'juin', 7 => 'juillet', 8 => 'août',
+            9 => 'septembre', 10 => 'octobre', 11 => 'novembre', 12 => 'décembre',
+        ];
+
+        return (int) date('j', $timestamp) . ' ' . $months[(int) date('n', $timestamp)] . ' ' . date('Y', $timestamp);
     }
 }

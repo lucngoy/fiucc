@@ -41,7 +41,7 @@ final class Upload
         $realMime = $finfo->file((string) $file['tmp_name']);
 
         if ($realMime === false || !isset(self::ALLOWED_IMAGE_TYPES[$realMime])) {
-            throw new RuntimeException('Only JPG, PNG or WEBP images are allowed.');
+            throw new RuntimeException(t('upload.invalid_type'));
         }
 
         $extension = self::ALLOWED_IMAGE_TYPES[$realMime];
@@ -50,7 +50,7 @@ final class Upload
         $destinationDir = BASE_PATH . '/public/uploads/' . $relativeDirectory;
 
         if (!is_dir($destinationDir)) {
-            throw new RuntimeException('The image could not be processed.');
+            throw new RuntimeException(t('upload.processing_failed'));
         }
 
         $image = self::readImage((string) $file['tmp_name'], $realMime);
@@ -72,21 +72,21 @@ final class Upload
         $error = $file['error'] ?? UPLOAD_ERR_NO_FILE;
 
         if (in_array($error, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true)) {
-            throw new RuntimeException('The file is too large.');
+            throw new RuntimeException(t('upload.too_large'));
         }
 
         if ($error !== UPLOAD_ERR_OK) {
-            throw new RuntimeException('The file could not be uploaded.');
+            throw new RuntimeException(t('upload.failed'));
         }
 
         // Défense en profondeur : ne jamais traiter un fichier qui n'est pas
         // réellement passé par le mécanisme d'upload HTTP de PHP.
         if (!is_uploaded_file((string) $file['tmp_name'])) {
-            throw new RuntimeException('The file could not be uploaded.');
+            throw new RuntimeException(t('upload.failed'));
         }
 
         if ((int) $file['size'] > $maxSizeBytes) {
-            throw new RuntimeException('The file is too large.');
+            throw new RuntimeException(t('upload.too_large'));
         }
     }
 
@@ -100,7 +100,7 @@ final class Upload
         };
 
         if (!$image instanceof GdImage) {
-            throw new RuntimeException('The image could not be processed.');
+            throw new RuntimeException(t('upload.processing_failed'));
         }
 
         return $image;
@@ -138,7 +138,7 @@ final class Upload
         };
 
         if (!$ok) {
-            throw new RuntimeException('The image could not be processed.');
+            throw new RuntimeException(t('upload.processing_failed'));
         }
     }
 }

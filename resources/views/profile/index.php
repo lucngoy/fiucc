@@ -5,10 +5,10 @@
 $notice ??= null;
 
 $statusCopy = [
-    'validated' => ['type' => 'success', 'message' => 'Your membership is validated. Welcome to the community!'],
-    'pending'   => ['type' => 'info', 'message' => 'Your registration is awaiting review by a community administrator. We will email you once it has been processed.'],
-    'rejected'  => ['type' => 'error', 'message' => 'Your registration was not approved.'],
-    'suspended' => ['type' => 'error', 'message' => 'Your account has been suspended.'],
+    'validated' => ['type' => 'success', 'message' => t('profile.status.validated')],
+    'pending'   => ['type' => 'info', 'message' => t('profile.status.pending')],
+    'rejected'  => ['type' => 'error', 'message' => t('profile.status.rejected')],
+    'suspended' => ['type' => 'error', 'message' => t('profile.status.suspended')],
 ];
 $status = $statusCopy[$member['status']] ?? $statusCopy['pending'];
 $statusReason = $member['status'] === 'rejected'
@@ -25,29 +25,26 @@ $initials = mb_substr($initials, 0, 2);
 
 $studyLevel = $studyLevels[(int) $member['year']] ?? null;
 
-$formatDate = static fn (?string $value, string $format = 'F j, Y'): ?string =>
-    $value !== null ? date($format, (int) strtotime($value)) : null;
-
 $details = array_filter([
-    'Student ID'      => $member['student_id'],
-    'Faculty'         => $member['faculty'],
-    'Department'      => $member['department'],
-    'Year'            => $studyLevel,
-    'Date of birth'   => $formatDate($member['date_of_birth']),
-    'City of origin'  => $member['city_of_origin'],
-    'Phone'           => $member['phone'],
-    'WhatsApp'        => $member['whatsapp'],
-    'Instagram'       => $member['instagram'] !== null && $member['instagram'] !== '' ? '@' . ltrim($member['instagram'], '@') : null,
+    t('profile.detail.student_id')     => $member['student_id'],
+    t('profile.detail.faculty')        => $member['faculty'],
+    t('profile.detail.department')     => $member['department'],
+    t('profile.detail.year')           => $studyLevel,
+    t('profile.detail.date_of_birth')  => local_date($member['date_of_birth']),
+    t('profile.detail.city_of_origin') => $member['city_of_origin'],
+    t('profile.detail.phone')          => $member['phone'],
+    t('profile.detail.whatsapp')       => $member['whatsapp'],
+    t('profile.detail.instagram')      => $member['instagram'] !== null && $member['instagram'] !== '' ? '@' . ltrim($member['instagram'], '@') : null,
 ], static fn ($value) => $value !== null && $value !== '');
 
 if ($member['status_type'] !== 'student') {
     $details = array_merge($details, array_filter([
-        'Profession'       => $member['profession'],
-        'Company'          => $member['company'],
-        'City'             => $member['city'],
-        'Country'          => $member['country'],
-        'Arrival year'     => $member['arrival_year'],
-        'Graduation year'  => $member['graduation_year'],
+        t('profile.detail.profession')      => $member['profession'],
+        t('profile.detail.company')         => $member['company'],
+        t('profile.detail.city')            => $member['city'],
+        t('profile.detail.country')         => $member['country'],
+        t('profile.detail.arrival_year')    => $member['arrival_year'],
+        t('profile.detail.graduation_year') => $member['graduation_year'],
     ], static fn ($value) => $value !== null && $value !== ''));
 }
 ?>
@@ -71,18 +68,18 @@ if ($member['status_type'] !== 'student') {
                 <span class="text-body-sm text-muted"><?= e($member['membership_number']) ?></span>
             </div>
         </div>
-        <?= component('button', ['label' => 'Edit profile', 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
+        <?= component('button', ['label' => t('profile.edit_profile'), 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
     </div>
 
     <?= component('alert', ['type' => $status['type'], 'message' => $status['message']]) ?>
 
     <?php if ($statusReason !== null && $statusReason !== ''): ?>
-        <div class="-mt-3 pl-4 text-body-sm text-muted">Reason: <?= e($statusReason) ?></div>
+        <div class="-mt-3 pl-4 text-body-sm text-muted"><?= e(t('profile.status.reason', ['reason' => $statusReason])) ?></div>
     <?php endif; ?>
 
     <?php if ($details !== []): ?>
         <div class="bg-white rounded-card border border-border shadow-card p-6">
-            <h2 class="font-headline-sm text-headline-sm text-ink mb-4">Your information</h2>
+            <h2 class="font-headline-sm text-headline-sm text-ink mb-4"><?= e(t('profile.info_title')) ?></h2>
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                 <?php foreach ($details as $label => $value): ?>
                     <div>
@@ -95,6 +92,6 @@ if ($member['status_type'] !== 'student') {
     <?php endif; ?>
 
     <p class="text-body-sm text-muted">
-        Member since <?= e($formatDate($member['created_at']) ?? '') ?>
+        <?= e(t('profile.member_since', ['date' => local_date($member['created_at'])])) ?>
     </p>
 </div>

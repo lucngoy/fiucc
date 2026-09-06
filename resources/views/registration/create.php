@@ -19,17 +19,17 @@ $errors ??= [];
 $field = static fn (string $name) => $old[$name] ?? '';
 $error = static fn (string $name) => $errors[$name] ?? null;
 
-$steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
+$steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.contact'), t('census.step.confirm')];
 ?>
 <div class="max-w-layout mx-auto px-4 py-12 md:py-16">
     <div class="max-w-2xl mx-auto text-center mb-10">
-        <h1 class="font-headline-lg text-headline-lg text-ink mb-3">Join the Community</h1>
-        <p class="text-body-md text-muted">Register as a member of the Congolese Community of Final International University.</p>
+        <h1 class="font-headline-lg text-headline-lg text-ink mb-3"><?= e(t('census.title')) ?></h1>
+        <p class="text-body-md text-muted"><?= e(t('census.subtitle')) ?></p>
     </div>
 
     <?php if ($errors !== []): ?>
         <div class="max-w-2xl mx-auto mb-8">
-            <?= component('alert', ['type' => 'error', 'message' => 'Please correct the errors below before submitting again.']) ?>
+            <?= component('alert', ['type' => 'error', 'message' => t('form.error_banner')]) ?>
         </div>
     <?php endif; ?>
 
@@ -51,23 +51,23 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
         <!-- Étape 1 : Identité -->
         <div data-step="1" class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
-                <h2 class="font-headline-sm text-headline-sm text-ink">Personal Identity</h2>
+                <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.identity')) ?></h2>
 
                 <?= component('form_field', [
-                    'name' => 'full_name', 'label' => 'Full Name', 'required' => true,
+                    'name' => 'full_name', 'label' => t('census.field.full_name'), 'required' => true,
                     'value' => $field('full_name'), 'error' => $error('full_name'),
-                    'placeholder' => 'e.g., Jonathan Mukendi',
+                    'placeholder' => t('census.field.full_name_placeholder'),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'date_of_birth', 'label' => 'Date of Birth', 'type' => 'date',
+                    'name' => 'date_of_birth', 'label' => t('census.field.date_of_birth'), 'type' => 'date',
                     'value' => $field('date_of_birth'), 'error' => $error('date_of_birth'),
                 ]) ?>
 
                 <div class="flex flex-col gap-1.5">
-                    <span class="font-label-lg text-label-lg text-ink">Gender</span>
+                    <span class="font-label-lg text-label-lg text-ink"><?= e(t('census.field.gender')) ?></span>
                     <div class="flex gap-4">
-                        <?php foreach (['male' => 'Male', 'female' => 'Female', 'other' => 'Prefer not to say'] as $genderValue => $genderLabel): ?>
+                        <?php foreach (['male' => t('census.gender.male'), 'female' => t('census.gender.female'), 'other' => t('census.gender.other')] as $genderValue => $genderLabel): ?>
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="radio" name="gender" value="<?= e($genderValue) ?>" <?= $field('gender') === $genderValue ? 'checked' : '' ?> class="h-4 w-4 border-border text-primary focus:outline-none focus:ring-2 focus:ring-primary-light/50">
                                 <span class="text-body-sm text-ink"><?= e($genderLabel) ?></span>
@@ -77,133 +77,133 @@ $steps = ['Identity', 'Studies', 'Contact', 'Confirm'];
                 </div>
 
                 <?= component('form_field', [
-                    'name' => 'city_of_origin', 'label' => 'City / Province of Origin',
+                    'name' => 'city_of_origin', 'label' => t('census.field.city_of_origin'),
                     'value' => $field('city_of_origin'), 'error' => $error('city_of_origin'),
-                    'placeholder' => 'e.g., Kinshasa',
+                    'placeholder' => t('census.field.city_of_origin_placeholder'),
                 ]) ?>
             </div>
 
             <div class="flex justify-end pt-6">
-                <?= component('button', ['label' => 'Next: Studies', 'variant' => 'primary', 'attributes' => 'data-next']) ?>
+                <?= component('button', ['label' => t('census.next_studies'), 'variant' => 'primary', 'attributes' => 'data-next']) ?>
             </div>
         </div>
 
         <!-- Étape 2 : Études -->
         <div data-step="2" hidden class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
-                <h2 class="font-headline-sm text-headline-sm text-ink">Academic Studies at Final</h2>
+                <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.studies')) ?></h2>
 
                 <?= component('select_field', [
-                    'name' => 'faculty', 'label' => 'University Faculty', 'required' => true,
+                    'name' => 'faculty', 'label' => t('census.field.faculty'), 'required' => true,
                     'options' => $faculties, 'value' => $field('faculty'), 'error' => $error('faculty'),
-                    'placeholder' => 'Select faculty',
+                    'placeholder' => t('census.field.faculty_placeholder'),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'department', 'label' => 'Department / Degree Program', 'required' => true,
+                    'name' => 'department', 'label' => t('census.field.department'), 'required' => true,
                     'value' => $field('department'), 'error' => $error('department'),
-                    'placeholder' => 'e.g., Computer Engineering',
+                    'placeholder' => t('census.field.department_placeholder'),
                 ]) ?>
 
                 <?= component('select_field', [
-                    'name' => 'year', 'label' => 'Current Year of Study', 'required' => true,
+                    'name' => 'year', 'label' => t('census.field.year'), 'required' => true,
                     'options' => $studyLevels, 'value' => $field('year'), 'error' => $error('year'),
-                    'placeholder' => 'Select current academic level',
+                    'placeholder' => t('census.field.year_placeholder'),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'student_id', 'label' => 'Student ID Number at FIU', 'required' => true,
+                    'name' => 'student_id', 'label' => t('census.field.student_id'), 'required' => true,
                     'value' => $field('student_id'), 'error' => $error('student_id'),
-                    'placeholder' => 'e.g., 20241890',
+                    'placeholder' => t('census.field.student_id_placeholder'),
                 ]) ?>
             </div>
 
             <div class="flex justify-between pt-6">
-                <?= component('button', ['label' => 'Back', 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
-                <?= component('button', ['label' => 'Next: Contact', 'variant' => 'primary', 'attributes' => 'data-next']) ?>
+                <?= component('button', ['label' => t('census.back'), 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
+                <?= component('button', ['label' => t('census.next_contact'), 'variant' => 'primary', 'attributes' => 'data-next']) ?>
             </div>
         </div>
 
         <!-- Étape 3 : Contact et compte -->
         <div data-step="3" hidden class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
-                <h2 class="font-headline-sm text-headline-sm text-ink">Contact Details</h2>
+                <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.contact')) ?></h2>
 
                 <?= component('form_field', [
-                    'name' => 'email', 'label' => 'University Email', 'type' => 'email', 'required' => true,
+                    'name' => 'email', 'label' => t('census.field.email'), 'type' => 'email', 'required' => true,
                     'value' => $field('email'), 'error' => $error('email'),
                     'placeholder' => 'jonathan.mukendi@final.edu.tr',
-                    'help' => 'A verification code will be sent to this address after you register.',
+                    'help' => t('census.field.email_help'),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'password', 'label' => 'Password', 'type' => 'password', 'required' => true,
+                    'name' => 'password', 'label' => t('census.field.password'), 'type' => 'password', 'required' => true,
                     'error' => $error('password'),
-                    'help' => 'At least ' . $passwordMinLength . ' characters.',
+                    'help' => t('census.field.password_help', ['min' => $passwordMinLength]),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'password_confirmation', 'label' => 'Confirm Password', 'type' => 'password', 'required' => true,
+                    'name' => 'password_confirmation', 'label' => t('census.field.password_confirmation'), 'type' => 'password', 'required' => true,
                     'error' => $error('password_confirmation'),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'phone', 'label' => 'Mobile Phone Number', 'type' => 'tel', 'required' => true,
+                    'name' => 'phone', 'label' => t('census.field.phone'), 'type' => 'tel', 'required' => true,
                     'value' => $field('phone'), 'error' => $error('phone'),
                     'placeholder' => '+90 533 800 00 00',
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'whatsapp', 'label' => 'WhatsApp Number', 'type' => 'tel',
+                    'name' => 'whatsapp', 'label' => t('census.field.whatsapp'), 'type' => 'tel',
                     'value' => $field('whatsapp'), 'error' => $error('whatsapp'),
-                    'placeholder' => 'Optional, if different from phone',
+                    'placeholder' => t('census.field.whatsapp_placeholder'),
                 ]) ?>
 
                 <?= component('form_field', [
-                    'name' => 'instagram', 'label' => 'Instagram Handle',
+                    'name' => 'instagram', 'label' => t('census.field.instagram'),
                     'value' => $field('instagram'), 'error' => $error('instagram'),
-                    'placeholder' => '@username (optional)',
+                    'placeholder' => t('census.field.instagram_placeholder'),
                 ]) ?>
 
                 <div class="flex flex-col gap-4 bg-surface rounded-control p-4 border border-border">
-                    <h3 class="font-label-lg text-label-lg text-ink">Directory & Privacy Settings</h3>
+                    <h3 class="font-label-lg text-label-lg text-ink"><?= e(t('census.privacy.title')) ?></h3>
                     <?= component('checkbox_field', [
-                        'name' => 'is_public', 'label' => 'Show my profile in the member directory',
-                        'description' => 'Allows other Congolese members to find your faculty and year of study.',
+                        'name' => 'is_public', 'label' => t('census.privacy.is_public'),
+                        'description' => t('census.privacy.is_public_description'),
                         'checked' => $old === [] ? true : ($field('is_public') === '1'),
                     ]) ?>
                     <?= component('checkbox_field', [
-                        'name' => 'show_email', 'label' => 'Show my email to other registered members',
+                        'name' => 'show_email', 'label' => t('census.privacy.show_email'),
                         'checked' => $field('show_email') === '1',
                     ]) ?>
                     <?= component('checkbox_field', [
-                        'name' => 'show_phone', 'label' => 'Show my phone number to other registered members',
+                        'name' => 'show_phone', 'label' => t('census.privacy.show_phone'),
                         'checked' => $field('show_phone') === '1',
                     ]) ?>
                 </div>
             </div>
 
             <div class="flex justify-between pt-6">
-                <?= component('button', ['label' => 'Back', 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
-                <?= component('button', ['label' => 'Next: Confirm', 'variant' => 'primary', 'attributes' => 'data-next']) ?>
+                <?= component('button', ['label' => t('census.back'), 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
+                <?= component('button', ['label' => t('census.next_confirm'), 'variant' => 'primary', 'attributes' => 'data-next']) ?>
             </div>
         </div>
 
         <!-- Étape 4 : Confirmation -->
         <div data-step="4" hidden class="scroll-mt-[88px]">
             <div class="flex flex-col gap-5">
-                <h2 class="font-headline-sm text-headline-sm text-ink">Confirm your registration</h2>
-                <p class="text-body-sm text-muted">Please review your information on the previous steps before submitting.</p>
+                <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.confirm')) ?></h2>
+                <p class="text-body-sm text-muted"><?= e(t('census.confirm_notice')) ?></p>
 
                 <?= component('checkbox_field', [
-                    'name' => 'consent', 'label' => 'I certify that I am a current Congolese student at Final International University and agree to the Community Charter and Data Protection Policy.',
+                    'name' => 'consent', 'label' => t('census.consent'),
                     'required' => true, 'checked' => $field('consent') === '1', 'error' => $error('consent'),
                 ]) ?>
             </div>
 
             <div class="flex justify-between pt-6">
-                <?= component('button', ['label' => 'Back', 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
-                <?= component('button', ['label' => 'Submit my registration', 'variant' => 'primary', 'type' => 'submit']) ?>
+                <?= component('button', ['label' => t('census.back'), 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
+                <?= component('button', ['label' => t('census.submit'), 'variant' => 'primary', 'type' => 'submit']) ?>
             </div>
         </div>
     </form>

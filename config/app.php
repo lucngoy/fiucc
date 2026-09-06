@@ -8,7 +8,8 @@ return [
     'env'      => Env::get('APP_ENV', 'production'),
     'debug'    => Env::get('APP_DEBUG', false),
     'url'      => Env::get('APP_URL', 'http://localhost'),
-    'locale'   => Env::get('APP_LOCALE', 'en'),
+    // Français par défaut (cahier des charges §38), anglais via i18n.
+    'locale'   => Env::get('APP_LOCALE', 'fr'),
     // Utilisé en phase 4 comme sel de vote_hash — pas encore obligatoire.
     'key'      => Env::get('APP_KEY'),
     'timezone' => 'Europe/Istanbul',

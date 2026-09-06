@@ -11,13 +11,13 @@ $resendWaitSeconds ??= 0;
     <?php if ($verified): ?>
         <div class="flex flex-col items-center gap-4">
             <span class="h-16 w-16 rounded-full bg-success/15 text-success flex items-center justify-center text-3xl font-bold">&#10003;</span>
-            <h1 class="font-headline-lg text-headline-lg text-ink">Email Verified</h1>
-            <p class="text-body-md text-muted">Your registration is now awaiting administrator approval. You'll be notified once your membership is validated.</p>
-            <?= component('button', ['label' => 'Back to home', 'variant' => 'primary', 'href' => '/']) ?>
+            <h1 class="font-headline-lg text-headline-lg text-ink"><?= e(t('verify.verified_title')) ?></h1>
+            <p class="text-body-md text-muted"><?= e(t('verify.verified_body')) ?></p>
+            <?= component('button', ['label' => t('common.back_home'), 'variant' => 'primary', 'href' => '/']) ?>
         </div>
     <?php else: ?>
-        <h1 class="font-headline-lg text-headline-lg text-ink mb-3">Verify your email</h1>
-        <p class="text-body-md text-muted mb-8">Enter the 6-digit verification code we sent to your university email.</p>
+        <h1 class="font-headline-lg text-headline-lg text-ink mb-3"><?= e(t('verify.title')) ?></h1>
+        <p class="text-body-md text-muted mb-8"><?= e(t('verify.subtitle')) ?></p>
 
         <?php if ($notice !== null): ?>
             <div class="mb-6 text-left"><?= component('alert', ['type' => 'success', 'message' => $notice]) ?></div>
@@ -29,22 +29,24 @@ $resendWaitSeconds ??= 0;
         <form method="POST" action="/verify-email" id="verify-form" class="flex flex-col gap-6 text-left">
             <?= csrf_field() ?>
             <?= component('form_field', [
-                'name' => 'code', 'label' => 'Verification code', 'required' => true,
+                'name' => 'code', 'label' => t('verify.field.code'), 'required' => true,
                 'placeholder' => '••••••',
             ]) ?>
         </form>
 
         <div class="mt-4 flex justify-center gap-3">
             <?= component('button', [
-                'label' => 'Verify', 'variant' => 'primary', 'type' => 'submit',
+                'label' => t('verify.verify_button'), 'variant' => 'primary', 'type' => 'submit',
                 'attributes' => 'form="verify-form"',
             ]) ?>
 
             <form method="POST" action="/verify-email/resend">
                 <?= csrf_field() ?>
                 <?= component('button', [
-                    'label' => 'Resend code', 'variant' => 'secondary', 'type' => 'submit',
+                    'label' => t('verify.resend_button'), 'variant' => 'secondary', 'type' => 'submit',
                     'attributes' => 'id="resend-button" data-wait="' . (int) $resendWaitSeconds . '"'
+                        . ' data-label-resend="' . e(t('verify.resend_button')) . '"'
+                        . ' data-label-countdown="' . e(t('verify.resend_button_countdown')) . '"'
                         . ($resendWaitSeconds > 0 ? ' disabled' : ''),
                 ]) ?>
             </form>

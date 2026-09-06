@@ -217,8 +217,13 @@ Les stories vont de `FIUCC-13` à `FIUCC-90`, dans l'ordre du fichier
 - Créer des fichiers dans `Projet_Docs_Ref/` : c'est de la documentation de référence,
   en lecture seule.
 - Anticiper sur une phase ultérieure « tant qu'on y est ».
-- Écrire du texte d'interface en français : l'interface est en anglais, avec traduction
-  française via le système i18n. Le code et les commentaires sont en français.
+- Écrire du texte d'interface en dur dans une vue ou un contrôleur, dans une langue ou
+  l'autre : **toute** chaîne visible par l'utilisateur passe par `t()`
+  (`resources/lang/fr.php` / `en.php`), y compris le contenu des emails
+  (`App\Services\Mail`/`Otp`/`MemberNotifier`) et les libellés lus par du JS via des
+  attributs `data-*`. Le français est la langue par défaut de l'interface (cahier des
+  charges §38 : « Version initiale : Français »), l'anglais une traduction — dans ce sens,
+  pas l'inverse. Le code et les commentaires restent en français, eux, dans tous les cas.
 - Commiter `.env`, `vendor/`, ou un fichier `.DS_Store`.
 
 ## Environnement local

@@ -11,10 +11,13 @@
         return;
     }
 
+    var labelResend = button.dataset.labelResend || 'Resend code';
+    var labelCountdown = button.dataset.labelCountdown || 'Resend code (%ds)';
+
     button.disabled = true;
 
     var render = function () {
-        button.textContent = 'Resend code (' + remaining + 's)';
+        button.textContent = labelCountdown.replace('%d', String(remaining));
     };
     render();
 
@@ -24,7 +27,7 @@
         if (remaining <= 0) {
             clearInterval(interval);
             button.disabled = false;
-            button.textContent = 'Resend code';
+            button.textContent = labelResend;
             return;
         }
 

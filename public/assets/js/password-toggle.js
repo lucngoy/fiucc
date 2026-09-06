@@ -10,11 +10,14 @@
                 return;
             }
 
+            var labelShow = button.dataset.labelShow || 'Show password';
+            var labelHide = button.dataset.labelHide || 'Hide password';
+
             var willShow = input.type === 'password';
             input.type = willShow ? 'text' : 'password';
             showIcon.classList.toggle('hidden', willShow);
             hideIcon.classList.toggle('hidden', !willShow);
-            button.setAttribute('aria-label', willShow ? 'Hide password' : 'Show password');
+            button.setAttribute('aria-label', willShow ? labelHide : labelShow);
             button.setAttribute('aria-pressed', willShow ? 'true' : 'false');
         });
     });

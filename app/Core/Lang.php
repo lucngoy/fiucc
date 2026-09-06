@@ -10,12 +10,14 @@ namespace App\Core;
  * d'erreur visible pour une traduction manquante.
  *
  * Locale active : session (choix explicite via le switch de langue) sinon
- * config/app.php (app.locale, depuis APP_LOCALE). L'anglais est la langue
- * par défaut de l'interface (CLAUDE.md) ; le français est une traduction.
+ * config/app.php (app.locale, depuis APP_LOCALE). Le français est la langue
+ * par défaut de l'interface (cahier des charges §38 : "Version initiale :
+ * Français" — prime sur toute autre indication) ; l'anglais est prévu dès
+ * cette version initiale, pas ajouté après coup.
  */
 final class Lang
 {
-    private const DEFAULT_LOCALE = 'en';
+    private const DEFAULT_LOCALE = 'fr';
     private const SUPPORTED = ['en', 'fr'];
 
     private static array $strings = [];

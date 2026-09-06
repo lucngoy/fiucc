@@ -15,10 +15,10 @@ $variants = [
     'admin'   => 'bg-danger/15 text-danger',
 ];
 $defaultLabels = [
-    'student' => 'Student',
-    'alumni'  => 'Alumni',
-    'mentor'  => 'Mentor',
-    'admin'   => 'Admin',
+    'student' => t('common.role.student'),
+    'alumni'  => t('common.role.alumni'),
+    'mentor'  => t('common.role.mentor'),
+    'admin'   => t('common.role.admin'),
 ];
 
 $key = strtolower((string) $status);

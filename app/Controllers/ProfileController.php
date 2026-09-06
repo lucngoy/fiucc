@@ -31,11 +31,11 @@ final class ProfileController extends Controller
         }
 
         $notice = ($_GET['notice'] ?? null) === 'validation_required'
-            ? 'That page requires a validated membership. Here is the status of your own registration in the meantime.'
+            ? t('profile.notice_validation_required')
             : null;
 
         $this->view('profile.index', [
-            'title'       => 'My Profile',
+            'title'       => t('profile.title'),
             'member'      => $member,
             'studyLevels' => Config::get('registration.study_levels', []),
             'notice'      => $notice,
@@ -121,7 +121,7 @@ final class ProfileController extends Controller
     private function showForm(array $member, array $input, array $errors): void
     {
         $this->view('profile.edit', [
-            'title'       => 'Edit profile',
+            'title'       => t('profile.edit_title'),
             'member'      => $member,
             'faculties'   => Config::get('registration.faculties', []),
             'studyLevels' => Config::get('registration.study_levels', []),
@@ -174,49 +174,49 @@ final class ProfileController extends Controller
         $studyLevels = Config::get('registration.study_levels', []);
 
         if ($input['full_name'] === '') {
-            $errors['full_name'] = 'Full name is required.';
+            $errors['full_name'] = t('validation.full_name_required');
         } elseif (mb_strlen($input['full_name']) > 150) {
-            $errors['full_name'] = 'Full name is too long.';
+            $errors['full_name'] = t('validation.full_name_too_long');
         }
 
         if ($input['date_of_birth'] !== '' && !$this->isValidDate($input['date_of_birth'])) {
-            $errors['date_of_birth'] = 'Please enter a valid date.';
+            $errors['date_of_birth'] = t('validation.date_invalid');
         }
 
         if ($input['gender'] !== '' && !in_array($input['gender'], ['male', 'female', 'other'], true)) {
-            $errors['gender'] = 'Please select a valid option.';
+            $errors['gender'] = t('validation.option_invalid');
         }
 
         if (mb_strlen($input['city_of_origin']) > 100) {
-            $errors['city_of_origin'] = 'This value is too long.';
+            $errors['city_of_origin'] = t('validation.value_too_long');
         }
 
         if ($input['faculty'] === '' || !array_key_exists($input['faculty'], $faculties)) {
-            $errors['faculty'] = 'Please select your faculty.';
+            $errors['faculty'] = t('validation.faculty_required');
         }
 
         if ($input['department'] === '') {
-            $errors['department'] = 'Department is required.';
+            $errors['department'] = t('validation.department_required');
         } elseif (mb_strlen($input['department']) > 120) {
-            $errors['department'] = 'Department is too long.';
+            $errors['department'] = t('validation.department_too_long');
         }
 
         if ($input['year'] === '' || !array_key_exists((int) $input['year'], $studyLevels)) {
-            $errors['year'] = 'Please select your current year of study.';
+            $errors['year'] = t('validation.year_required');
         }
 
         if ($input['phone'] === '') {
-            $errors['phone'] = 'Phone number is required.';
+            $errors['phone'] = t('validation.phone_required');
         } elseif (mb_strlen($input['phone']) > 30) {
-            $errors['phone'] = 'Phone number is too long.';
+            $errors['phone'] = t('validation.phone_too_long');
         }
 
         if (mb_strlen($input['whatsapp']) > 30) {
-            $errors['whatsapp'] = 'WhatsApp number is too long.';
+            $errors['whatsapp'] = t('validation.whatsapp_too_long');
         }
 
         if (mb_strlen($input['instagram']) > 60) {
-            $errors['instagram'] = 'Instagram handle is too long.';
+            $errors['instagram'] = t('validation.instagram_too_long');
         }
 
         return $errors;

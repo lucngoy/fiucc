@@ -84,7 +84,7 @@ final class VerificationController extends Controller
         }
 
         $this->render(
-            $result['ok'] ? 'A new verification code has been sent to your email.' : null,
+            $result['ok'] ? t('verify.resend_notice_sent') : null,
             $result['ok'] ? null : $result['error']
         );
     }
@@ -101,7 +101,7 @@ final class VerificationController extends Controller
         $userId = $this->pendingUserId();
 
         $this->view('registration.verify', [
-            'title'             => 'Verify your email',
+            'title'             => t('verify.title'),
             'notice'            => $notice,
             'error'             => $error,
             'verified'          => $verified,

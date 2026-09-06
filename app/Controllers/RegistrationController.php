@@ -40,7 +40,7 @@ final class RegistrationController extends Controller
             // d'attribuer l'erreur à un champ précis à partir du message
             // SQL, driver-dépendant — un message générique suffit ici.
             if ($exception->getCode() === '23000') {
-                $this->showForm($input, ['email' => 'This email or student ID is already registered.']);
+                $this->showForm($input, ['email' => t('validation.duplicate_registration')]);
                 return;
             }
 
@@ -105,7 +105,7 @@ final class RegistrationController extends Controller
     private function showForm(array $old, array $errors): void
     {
         $this->view('registration.create', [
-            'title'             => 'Join the Community',
+            'title'             => t('census.title'),
             'faculties'         => Config::get('registration.faculties', []),
             'studyLevels'       => Config::get('registration.study_levels', []),
             'passwordMinLength' => Config::get('security.password_min_length', 10),
@@ -148,81 +148,81 @@ final class RegistrationController extends Controller
         $passwordMinLength = (int) Config::get('security.password_min_length', 10);
 
         if ($input['full_name'] === '') {
-            $errors['full_name'] = 'Full name is required.';
+            $errors['full_name'] = t('validation.full_name_required');
         } elseif (mb_strlen($input['full_name']) > 150) {
-            $errors['full_name'] = 'Full name is too long.';
+            $errors['full_name'] = t('validation.full_name_too_long');
         }
 
         if ($input['date_of_birth'] !== '' && !$this->isValidDate($input['date_of_birth'])) {
-            $errors['date_of_birth'] = 'Please enter a valid date.';
+            $errors['date_of_birth'] = t('validation.date_invalid');
         }
 
         if ($input['gender'] !== '' && !in_array($input['gender'], ['male', 'female', 'other'], true)) {
-            $errors['gender'] = 'Please select a valid option.';
+            $errors['gender'] = t('validation.option_invalid');
         }
 
         if (mb_strlen($input['city_of_origin']) > 100) {
-            $errors['city_of_origin'] = 'This value is too long.';
+            $errors['city_of_origin'] = t('validation.value_too_long');
         }
 
         if ($input['faculty'] === '' || !array_key_exists($input['faculty'], $faculties)) {
-            $errors['faculty'] = 'Please select your faculty.';
+            $errors['faculty'] = t('validation.faculty_required');
         }
 
         if ($input['department'] === '') {
-            $errors['department'] = 'Department is required.';
+            $errors['department'] = t('validation.department_required');
         } elseif (mb_strlen($input['department']) > 120) {
-            $errors['department'] = 'Department is too long.';
+            $errors['department'] = t('validation.department_too_long');
         }
 
         if ($input['year'] === '' || !array_key_exists((int) $input['year'], $studyLevels)) {
-            $errors['year'] = 'Please select your current year of study.';
+            $errors['year'] = t('validation.year_required');
         }
 
         if ($input['student_id'] === '') {
-            $errors['student_id'] = 'Student ID is required.';
+            $errors['student_id'] = t('validation.student_id_required');
         } elseif (mb_strlen($input['student_id']) > 50) {
-            $errors['student_id'] = 'Student ID is too long.';
+            $errors['student_id'] = t('validation.student_id_too_long');
         } elseif (Member::studentIdExists($input['student_id'])) {
-            $errors['student_id'] = 'This student ID is already registered.';
+            $errors['student_id'] = t('validation.student_id_taken');
         }
 
         if ($input['email'] === '' || filter_var($input['email'], FILTER_VALIDATE_EMAIL) === false) {
-            $errors['email'] = 'Please enter a valid email address.';
+            $errors['email'] = t('validation.email_invalid');
         } elseif (!$this->hasAllowedDomain($input['email'], $allowedDomains)) {
-            $errors['email'] = 'Registration is only open to ' . implode(' or ', $allowedDomains) . ' addresses.';
+            $errors['email'] = t('validation.email_domain_restricted', ['domains' => implode(' ' . t('common.or') . ' ', $allowedDomains)]);
         } elseif (User::emailExists($input['email'])) {
-            $errors['email'] = 'This email is already registered.';
+            $errors['email'] = t('validation.email_taken');
         }
 
         if ($input['password'] === '') {
-            $errors['password'] = 'Password is required.';
+            $errors['password'] = t('validation.password_required');
         } elseif (mb_strlen($input['password']) < $passwordMinLength) {
-            $errors['password'] = "Password must be at least {$passwordMinLength} characters.";
+            $errors['password'] = t('validation.password_too_short', ['min' => $passwordMinLength]);
         }
 
         if ($input['password_confirmation'] === '') {
-            $errors['password_confirmation'] = 'Please confirm your password.';
+            $errors['password_confirmation'] = t('validation.password_confirmation_required');
         } elseif ($input['password'] !== $input['password_confirmation']) {
-            $errors['password_confirmation'] = 'Passwords do not match.';
+            $errors['password_confirmation'] = t('validation.password_mismatch');
         }
 
         if ($input['phone'] === '') {
-            $errors['phone'] = 'Phone number is required.';
+            $errors['phone'] = t('validation.phone_required');
         } elseif (mb_strlen($input['phone']) > 30) {
-            $errors['phone'] = 'Phone number is too long.';
+            $errors['phone'] = t('validation.phone_too_long');
         }
 
         if (mb_strlen($input['whatsapp']) > 30) {
-            $errors['whatsapp'] = 'WhatsApp number is too long.';
+            $errors['whatsapp'] = t('validation.whatsapp_too_long');
         }
 
         if (mb_strlen($input['instagram']) > 60) {
-            $errors['instagram'] = 'Instagram handle is too long.';
+            $errors['instagram'] = t('validation.instagram_too_long');
         }
 
         if ($input['consent'] !== '1') {
-            $errors['consent'] = 'You must accept the charter and data protection policy to register.';
+            $errors['consent'] = t('validation.consent_required');
         }
 
         return $errors;
