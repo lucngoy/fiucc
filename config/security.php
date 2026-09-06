@@ -14,6 +14,9 @@ return [
     'otp_max_resends_per_hour'    => (int) Env::get('OTP_MAX_RESENDS_PER_HOUR', 5),
     'vote_token_ttl_hours' => (int) Env::get('VOTE_TOKEN_TTL_HOURS', 72),
     'upload_max_size_mb'   => (int) Env::get('UPLOAD_MAX_SIZE_MB', 5),
+    // Plus long côté, en pixels, après redimensionnement (FIUCC-38) — une
+    // photo de profil n'a jamais besoin d'être plus grande que ça.
+    'upload_photo_max_dimension' => (int) Env::get('UPLOAD_PHOTO_MAX_DIMENSION', 800),
     // Verrouillage dur — comptes admin uniquement (voir CLAUDE.md : un
     // verrouillage par compte seul permettrait de priver un membre de vote).
     'login_max_attempts'   => (int) Env::get('LOGIN_MAX_ATTEMPTS', 5),

@@ -57,16 +57,21 @@ if ($member['status_type'] !== 'student') {
     <?php endif; ?>
 
     <div class="bg-white rounded-card border border-border shadow-card p-6 flex items-center gap-5">
-        <span class="h-16 w-16 shrink-0 rounded-full bg-primary/15 text-primary flex items-center justify-center font-headline-sm text-headline-sm">
-            <?= e($initials) ?>
-        </span>
-        <div class="min-w-0">
+        <?php if (!empty($member['photo'])): ?>
+            <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 shrink-0 rounded-full object-cover border border-border">
+        <?php else: ?>
+            <span class="h-16 w-16 shrink-0 rounded-full bg-primary/15 text-primary flex items-center justify-center font-headline-sm text-headline-sm">
+                <?= e($initials) ?>
+            </span>
+        <?php endif; ?>
+        <div class="min-w-0 flex-1">
             <h1 class="font-headline-lg text-headline-lg text-ink truncate"><?= e($member['full_name']) ?></h1>
             <div class="mt-1 flex flex-wrap items-center gap-2">
                 <?= component('status_badge', ['status' => $member['status_type']]) ?>
                 <span class="text-body-sm text-muted"><?= e($member['membership_number']) ?></span>
             </div>
         </div>
+        <?= component('button', ['label' => 'Edit profile', 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
     </div>
 
     <?= component('alert', ['type' => $status['type'], 'message' => $status['message']]) ?>

@@ -168,7 +168,7 @@ final class Member extends Model
         $stmt = static::db()->prepare(
             'SELECT id, membership_number, full_name, student_id, date_of_birth, gender,
                     city_of_origin, faculty, department, year, arrival_year, graduation_year,
-                    phone, whatsapp, instagram, status_type, profession, company, city, country,
+                    phone, whatsapp, instagram, photo, status_type, profession, company, city, country,
                     status, rejection_reason, suspension_reason, email_verified_at, created_at
              FROM members WHERE user_id = :user_id LIMIT 1'
         );
@@ -176,5 +176,43 @@ final class Member extends Model
         $row = $stmt->fetch();
 
         return $row === false ? null : $row;
+    }
+
+    /**
+     * Édition du profil (FIUCC-38) : uniquement les champs de contact et
+     * d'affiliation académique. student_id, email et le cycle de statut
+     * restent hors de portée — les changer soi-même contournerait la
+     * validation admin (section 24) ou l'ancrage d'identité du recensement.
+     * is_public/show_email/show_phone (confidentialité) et mentor_* restent
+     * pour FIUCC-83/87, pas cette édition générale.
+     */
+    public static function updateProfile(int $memberId, array $data): void
+    {
+        $stmt = static::db()->prepare(
+            'UPDATE members SET
+                full_name = :full_name, date_of_birth = :date_of_birth, gender = :gender,
+                city_of_origin = :city_of_origin, faculty = :faculty, department = :department,
+                year = :year, phone = :phone, whatsapp = :whatsapp, instagram = :instagram
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            'full_name'      => $data['full_name'],
+            'date_of_birth'  => $data['date_of_birth'],
+            'gender'         => $data['gender'],
+            'city_of_origin' => $data['city_of_origin'],
+            'faculty'        => $data['faculty'],
+            'department'     => $data['department'],
+            'year'           => $data['year'],
+            'phone'          => $data['phone'],
+            'whatsapp'       => $data['whatsapp'],
+            'instagram'      => $data['instagram'],
+            'id'             => $memberId,
+        ]);
+    }
+
+    public static function updatePhoto(int $memberId, string $photoPath): void
+    {
+        $stmt = static::db()->prepare('UPDATE members SET photo = :photo WHERE id = :id');
+        $stmt->execute(['photo' => $photoPath, 'id' => $memberId]);
     }
 }
