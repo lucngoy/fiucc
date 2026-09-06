@@ -16,7 +16,7 @@ $pageUrl = static fn (int $page): string => str_replace('{page}', (string) $page
 <nav class="flex items-center justify-center gap-1" aria-label="Pagination">
     <?php if ($currentPage > 1): ?>
         <a href="<?= e($pageUrl($currentPage - 1)) ?>"
-           class="h-9 px-3 flex items-center justify-center rounded-control border border-border text-muted hover:text-ink hover:border-primary transition-colors">Previous</a>
+           class="h-9 px-3 flex items-center justify-center rounded-control border border-border text-muted hover:text-ink hover:border-primary transition-colors"><?= e(t('pagination.previous')) ?></a>
     <?php endif; ?>
 
     <?php for ($page = 1; $page <= $totalPages; $page++): ?>
@@ -30,6 +30,6 @@ $pageUrl = static fn (int $page): string => str_replace('{page}', (string) $page
 
     <?php if ($currentPage < $totalPages): ?>
         <a href="<?= e($pageUrl($currentPage + 1)) ?>"
-           class="h-9 px-3 flex items-center justify-center rounded-control border border-border text-muted hover:text-ink hover:border-primary transition-colors">Next</a>
+           class="h-9 px-3 flex items-center justify-center rounded-control border border-border text-muted hover:text-ink hover:border-primary transition-colors"><?= e(t('pagination.next')) ?></a>
     <?php endif; ?>
 </nav>

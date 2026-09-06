@@ -215,4 +215,144 @@ final class Member extends Model
         $stmt = static::db()->prepare('UPDATE members SET photo = :photo WHERE id = :id');
         $stmt->execute(['photo' => $photoPath, 'id' => $memberId]);
     }
+
+    /**
+     * Colonnes de tri autorisées pour l'admin (section 24 du cahier des
+     * charges) — whitelist plutôt qu'une colonne prise telle quelle dans la
+     * query string, qui permettrait d'injecter n'importe quoi dans l'ORDER BY.
+     */
+    private const ADMIN_SORT_COLUMNS = [
+        'name'      => 'm.full_name',
+        'faculty'   => 'm.faculty',
+        'year'      => 'm.year',
+        'status'    => 'm.status',
+        'submitted' => 'm.created_at',
+    ];
+
+    /**
+     * Liste admin (FIUCC-43, section 24 du cahier des charges) : recherche,
+     * filtres (status/faculty/year), tri, pagination. Jointure users pour
+     * l'email — pas dupliqué dans members.
+     *
+     * @param array{search?: string, status?: string, faculty?: string, year?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function adminSearch(array $filters, string $sort, string $dir, int $page, int $perPage): array
+    {
+        $conditions = [];
+        $params = [];
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $conditions[] = '(m.full_name LIKE :search1 OR m.student_id LIKE :search2 OR m.membership_number LIKE :search3 OR u.email LIKE :search4)';
+            $like = '%' . $search . '%';
+            $params['search1'] = $like;
+            $params['search2'] = $like;
+            $params['search3'] = $like;
+            $params['search4'] = $like;
+        }
+
+        $status = trim((string) ($filters['status'] ?? ''));
+        if ($status !== '') {
+            $conditions[] = 'm.status = :status';
+            $params['status'] = $status;
+        }
+
+        $faculty = trim((string) ($filters['faculty'] ?? ''));
+        if ($faculty !== '') {
+            $conditions[] = 'm.faculty = :faculty';
+            $params['faculty'] = $faculty;
+        }
+
+        $year = trim((string) ($filters['year'] ?? ''));
+        if ($year !== '') {
+            $conditions[] = 'm.year = :year';
+            $params['year'] = (int) $year;
+        }
+
+        $where = $conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions);
+        $orderColumn = self::ADMIN_SORT_COLUMNS[$sort] ?? self::ADMIN_SORT_COLUMNS['submitted'];
+        $orderDir = strtoupper($dir) === 'ASC' ? 'ASC' : 'DESC';
+
+        $countStmt = static::db()->prepare("SELECT COUNT(*) FROM members m JOIN users u ON u.id = m.user_id {$where}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        // LIMIT/OFFSET interpolés, pas liés : avec PDO::ATTR_EMULATE_PREPARES
+        // à false (préparation native, voir App\Core\Database), MySQL rejette
+        // des valeurs liées comme chaînes à cet endroit. Sûr ici parce que
+        // $page/$perPage sont typés int dans la signature (strict_types=1) —
+        // jamais une valeur brute de la query string.
+        $offset = ($page - 1) * $perPage;
+        $stmt = static::db()->prepare(
+            "SELECT m.id, m.membership_number, m.full_name, m.student_id, m.faculty, m.year,
+                    m.status_type, m.status, m.created_at, u.email
+             FROM members m
+             JOIN users u ON u.id = m.user_id
+             {$where}
+             ORDER BY {$orderColumn} {$orderDir}
+             LIMIT {$perPage} OFFSET {$offset}"
+        );
+        $stmt->execute($params);
+
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
+    }
+
+    /**
+     * Facultés distinctes réellement présentes dans les données (comme le
+     * filtre de /community/government) — pas une liste figée qui pourrait ne
+     * correspondre à aucun membre.
+     */
+    public static function distinctFaculties(): array
+    {
+        $stmt = static::db()->query(
+            "SELECT DISTINCT faculty FROM members WHERE faculty IS NOT NULL AND faculty != '' ORDER BY faculty ASC"
+        );
+
+        return $stmt->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Fiche minimale pour une action admin unitaire (validate/reject/suspend,
+     * FIUCC-44) — juste de quoi vérifier le statut courant, empêcher
+     * l'auto-action et notifier le bon compte.
+     */
+    public static function findById(int $id): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT id, user_id, full_name, status FROM members WHERE id = :id LIMIT 1'
+        );
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    /**
+     * Sous-ensemble des ids demandés réellement dans le statut source attendu
+     * (FIUCC-44, action groupée) — une validation groupée mal ciblée ne doit
+     * jamais faire entrer un membre rejeté/suspendu dans le corps électoral
+     * en silence : on ne touche qu'aux lignes qui sont vraiment dans l'état
+     * de départ attendu, le reste est ignoré et compté séparément par
+     * l'appelant (nombre demandé vs. nombre réellement affecté).
+     *
+     * @param int[] $ids
+     * @return array<int, array{id: int, user_id: int, full_name: string}>
+     */
+    public static function findManyByIdsAndStatus(array $ids, string $status): array
+    {
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids), static fn (int $id) => $id > 0)));
+
+        if ($ids === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = static::db()->prepare(
+            "SELECT id, user_id, full_name FROM members WHERE status = ? AND id IN ({$placeholders})"
+        );
+        $stmt->execute(array_merge([$status], $ids));
+
+        return $stmt->fetchAll();
+    }
 }
