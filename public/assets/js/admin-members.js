@@ -1,4 +1,46 @@
 (function () {
+    // Raison de rejet/suspension par ligne : <dialog> plutôt qu'un panneau
+    // en position absolute — un panneau absolu à l'intérieur du conteneur
+    // overflow-x-auto de la table se fait couper (le CSS force overflow-y
+    // à auto dès qu'overflow-x l'est), invisible ou inutilisable selon la
+    // ligne. <dialog> s'affiche dans le top layer, jamais rogné par un
+    // ancêtre, et ferme au clic en dehors — natif via showModal().
+    document.addEventListener('click', function (event) {
+        var opener = event.target.closest('[data-open-dialog]');
+
+        if (opener) {
+            var dialog = document.getElementById(opener.dataset.openDialog);
+
+            if (dialog && typeof dialog.showModal === 'function') {
+                dialog.showModal();
+            }
+
+            return;
+        }
+
+        var closer = event.target.closest('[data-close-dialog]');
+
+        if (closer) {
+            var openDialog = closer.closest('dialog');
+
+            if (openDialog) {
+                openDialog.close();
+            }
+        }
+    });
+
+    document.querySelectorAll('dialog').forEach(function (dialog) {
+        dialog.addEventListener('click', function (event) {
+            var rect = dialog.getBoundingClientRect();
+            var inside = event.clientX >= rect.left && event.clientX <= rect.right
+                && event.clientY >= rect.top && event.clientY <= rect.bottom;
+
+            if (!inside) {
+                dialog.close();
+            }
+        });
+    });
+
     var selectAll = document.getElementById('member-select-all');
     var rowCheckboxes = document.querySelectorAll('.member-row-checkbox');
     var countLabel = document.getElementById('bulk-selected-count');

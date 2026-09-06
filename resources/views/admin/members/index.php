@@ -238,39 +238,47 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                     <?php endif; ?>
 
                                     <?php if ($member['status'] === 'pending'): ?>
-                                        <details class="relative">
-                                            <summary title="<?= e(t('admin.members.action.reject')) ?>" aria-label="<?= e(t('admin.members.action.reject')) ?>"
-                                                class="cursor-pointer list-none h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                                            </summary>
-                                            <form method="POST" action="<?= e($rowActionUrl('reject')) ?>"
-                                                class="absolute right-0 z-10 mt-2 w-64 bg-white border border-border rounded-card shadow-card p-3 flex flex-col gap-2 text-left">
+                                        <button type="button" data-open-dialog="reason-dialog-reject-<?= e((string) $memberId) ?>"
+                                            title="<?= e(t('admin.members.action.reject')) ?>" aria-label="<?= e(t('admin.members.action.reject')) ?>"
+                                            class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
+                                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                        </button>
+                                        <dialog id="reason-dialog-reject-<?= e((string) $memberId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
+                                            <form method="POST" action="<?= e($rowActionUrl('reject')) ?>" class="flex flex-col gap-2 p-4 text-left">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
-                                                <label for="reject-reason-<?= e((string) $memberId) ?>" class="text-label-md font-label-md text-ink"><?= e(t('admin.members.reason.label')) ?></label>
+                                                <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.members.reason.confirm_reject')) ?></h2>
+                                                <label for="reject-reason-<?= e((string) $memberId) ?>" class="text-label-md font-label-md text-muted"><?= e(t('admin.members.reason.label')) ?></label>
                                                 <textarea id="reject-reason-<?= e((string) $memberId) ?>" name="reason" required rows="3"
                                                     class="rounded-control border border-border p-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50"></textarea>
-                                                <button type="submit" class="h-9 rounded-control bg-danger text-white text-label-md font-label-md hover:bg-danger/90 transition-colors"><?= e(t('admin.members.reason.confirm_reject')) ?></button>
+                                                <div class="flex justify-end gap-2 mt-1">
+                                                    <button type="button" data-close-dialog class="h-9 px-3 rounded-control text-ink text-label-md font-label-md hover:bg-surface transition-colors"><?= e(t('admin.members.action.cancel')) ?></button>
+                                                    <button type="submit" class="h-9 px-4 rounded-control bg-danger text-white text-label-md font-label-md hover:bg-danger/90 transition-colors"><?= e(t('admin.members.reason.confirm_reject')) ?></button>
+                                                </div>
                                             </form>
-                                        </details>
+                                        </dialog>
                                     <?php endif; ?>
 
                                     <?php if ($member['status'] === 'validated'): ?>
-                                        <details class="relative">
-                                            <summary title="<?= e(t('admin.members.action.suspend')) ?>" aria-label="<?= e(t('admin.members.action.suspend')) ?>"
-                                                class="cursor-pointer list-none h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-ban" aria-hidden="true"></i>
-                                            </summary>
-                                            <form method="POST" action="<?= e($rowActionUrl('suspend')) ?>"
-                                                class="absolute right-0 z-10 mt-2 w-64 bg-white border border-border rounded-card shadow-card p-3 flex flex-col gap-2 text-left">
+                                        <button type="button" data-open-dialog="reason-dialog-suspend-<?= e((string) $memberId) ?>"
+                                            title="<?= e(t('admin.members.action.suspend')) ?>" aria-label="<?= e(t('admin.members.action.suspend')) ?>"
+                                            class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
+                                            <i class="fa-solid fa-ban" aria-hidden="true"></i>
+                                        </button>
+                                        <dialog id="reason-dialog-suspend-<?= e((string) $memberId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
+                                            <form method="POST" action="<?= e($rowActionUrl('suspend')) ?>" class="flex flex-col gap-2 p-4 text-left">
                                                 <?= csrf_field() ?>
                                                 <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
-                                                <label for="suspend-reason-<?= e((string) $memberId) ?>" class="text-label-md font-label-md text-ink"><?= e(t('admin.members.reason.label')) ?></label>
+                                                <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.members.reason.confirm_suspend')) ?></h2>
+                                                <label for="suspend-reason-<?= e((string) $memberId) ?>" class="text-label-md font-label-md text-muted"><?= e(t('admin.members.reason.label')) ?></label>
                                                 <textarea id="suspend-reason-<?= e((string) $memberId) ?>" name="reason" required rows="3"
                                                     class="rounded-control border border-border p-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50"></textarea>
-                                                <button type="submit" class="h-9 rounded-control bg-ink text-white text-label-md font-label-md hover:bg-ink/90 transition-colors"><?= e(t('admin.members.reason.confirm_suspend')) ?></button>
+                                                <div class="flex justify-end gap-2 mt-1">
+                                                    <button type="button" data-close-dialog class="h-9 px-3 rounded-control text-ink text-label-md font-label-md hover:bg-surface transition-colors"><?= e(t('admin.members.action.cancel')) ?></button>
+                                                    <button type="submit" class="h-9 px-4 rounded-control bg-ink text-white text-label-md font-label-md hover:bg-ink/90 transition-colors"><?= e(t('admin.members.reason.confirm_suspend')) ?></button>
+                                                </div>
                                             </form>
-                                        </details>
+                                        </dialog>
                                     <?php endif; ?>
                                 </div>
                             </td>
