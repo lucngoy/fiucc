@@ -11,11 +11,9 @@ use App\Models\User;
 use App\Services\MemberNotifier;
 
 /**
- * Gestion des membres côté admin (FIUCC-43/44, section 24 du cahier des
- * charges) : liste/recherche/filtres/tri/pagination, puis validation, rejet
- * et suspension — unitaires et en masse. export() (FIUCC-45) n'est
- * volontairement pas implémenté ici : la route existe déjà dans
- * routes/admin.php, 404 propre en attendant ce ticket dédié.
+ * Gestion des membres côté admin (FIUCC-43/44/45, section 24 du cahier des
+ * charges) : liste/recherche/filtres/tri/pagination, validation/rejet/
+ * suspension — unitaires et en masse —, et export CSV.
  */
 final class MemberController extends Controller
 {
@@ -23,12 +21,7 @@ final class MemberController extends Controller
 
     public function index(): void
     {
-        $filters = [
-            'search'  => (string) ($_GET['search'] ?? ''),
-            'status'  => (string) ($_GET['status'] ?? ''),
-            'faculty' => (string) ($_GET['faculty'] ?? ''),
-            'year'    => (string) ($_GET['year'] ?? ''),
-        ];
+        $filters = $this->filtersFromQuery();
         $sort = (string) ($_GET['sort'] ?? 'submitted');
         $dir = strtolower((string) ($_GET['dir'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
         $page = max(1, (int) ($_GET['page'] ?? 1));
@@ -53,6 +46,82 @@ final class MemberController extends Controller
             'requested'   => (int) ($_GET['requested'] ?? 0),
             'applied'     => (int) ($_GET['applied'] ?? 0),
         ], 'layouts.admin');
+    }
+
+    /**
+     * Export CSV (FIUCC-45) — mêmes filtres que la liste à l'écran (recherche/
+     * statut/faculté/année), export.csv() plutôt que la page en cours : pas
+     * de pagination, tout ce qui correspond part dans le fichier.
+     */
+    public function export(): void
+    {
+        $rows = Member::adminExportRows($this->filtersFromQuery());
+        $studyLevels = Config::get('registration.study_levels', []);
+
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . t('admin.members.export.filename', ['date' => date('Y-m-d')]) . '"');
+
+        $output = fopen('php://output', 'w');
+
+        // BOM UTF-8 : Excel affiche mal les accents sans lui sur un CSV sans BOM.
+        fwrite($output, "\xEF\xBB\xBF");
+
+        fputcsv($output, [
+            t('admin.members.export.column.number'),
+            t('admin.members.export.column.name'),
+            t('admin.members.export.column.student_id'),
+            t('admin.members.export.column.email'),
+            t('admin.members.export.column.faculty'),
+            t('admin.members.export.column.department'),
+            t('admin.members.export.column.year'),
+            t('admin.members.export.column.status'),
+            t('admin.members.export.column.submitted'),
+        ]);
+
+        foreach ($rows as $row) {
+            fputcsv($output, [
+                self::csvSafe($row['membership_number']),
+                self::csvSafe($row['full_name']),
+                self::csvSafe($row['student_id']),
+                self::csvSafe($row['email']),
+                self::csvSafe((string) ($row['faculty'] ?? '')),
+                self::csvSafe((string) ($row['department'] ?? '')),
+                $row['year'] !== null ? self::csvSafe((string) ($studyLevels[$row['year']] ?? '')) : '',
+                t('admin.members.status.' . $row['status']),
+                $row['created_at'],
+            ]);
+        }
+
+        fclose($output);
+    }
+
+    /**
+     * @return array{search: string, status: string, faculty: string, year: string}
+     */
+    private function filtersFromQuery(): array
+    {
+        return [
+            'search'  => (string) ($_GET['search'] ?? ''),
+            'status'  => (string) ($_GET['status'] ?? ''),
+            'faculty' => (string) ($_GET['faculty'] ?? ''),
+            'year'    => (string) ($_GET['year'] ?? ''),
+        ];
+    }
+
+    /**
+     * Neutralise l'injection de formule CSV (OWASP) : un champ commençant
+     * par =, +, -, @ ou une tabulation est interprété comme une formule par
+     * Excel/Sheets à l'ouverture. full_name/faculty/department viennent de
+     * saisies libres au recensement — un guillemet devant désamorce sans
+     * changer la valeur affichée.
+     */
+    private static function csvSafe(string $value): string
+    {
+        if ($value !== '' && in_array($value[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
+            return "'" . $value;
+        }
+
+        return $value;
     }
 
     public function validate(array $params): void

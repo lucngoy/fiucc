@@ -24,12 +24,15 @@
  * l'est.
  *
  * Sidebar fixe au scroll (md+) : logo officiel de la communauté (même
- * asset que le header public, /assets/images/fiucc-seal.png) + nav, sans
- * bloc profil — l'identité du compte et la déconnexion vivent dans la
- * barre du haut (menu profil), pas ici, pour ne l'écrire qu'à un seul
- * endroit. Pas de nom/rôle inventé (la maquette montre "Jonathan Mukendi /
- * Executive President" mais `users` n'a ni display_name ni titre — seul
- * l'email existe réellement, voir 001_initial_schema.sql).
+ * asset que le header public, /assets/images/fiucc-seal.png) + nav + pied
+ * de compte (email, déconnexion) — dupliqué avec le menu profil de la
+ * barre du haut par choix : les deux restent accessibles, l'un visible en
+ * permanence en bas de la colonne latérale (desktop), l'autre présent
+ * même sur mobile où la sidebar passe en rangée horizontale. Pas de nom/
+ * rôle inventé (la maquette montre "Jonathan Mukendi / Executive
+ * President" mais `users` n'a ni display_name ni titre — seul l'email
+ * existe réellement, voir 001_initial_schema.sql) : le rôle affiché est
+ * "Admin" (common.role.admin), pas un intitulé de poste fictif.
  *
  * Notification : cloche décorative, aucun système de notifications construit
  * (pas de ticket dédié) — pas de pastille "non lu" inventée, ça affirmerait
@@ -68,6 +71,22 @@ $adminInitial = $adminEmail ?? '' ? mb_strtoupper(mb_substr((string) $adminEmail
                     <?= e(t('admin.nav.members')) ?>
                 </a>
             </nav>
+        </div>
+        <div class="hidden md:flex items-center gap-3 p-4 bg-primary-dark/40 border-t border-white/10 shrink-0">
+            <span class="h-10 w-10 rounded-full bg-white/15 flex items-center justify-center font-label-lg text-label-lg font-bold shrink-0" aria-hidden="true">
+                <?= e($adminInitial) ?>
+            </span>
+            <div class="leading-tight min-w-0 flex-1">
+                <p class="text-label-md font-label-md text-white truncate"><?= e($adminEmail ?? '') ?></p>
+                <p class="text-label-caps font-label-caps text-white/60 uppercase truncate"><?= e(t('common.role.admin')) ?></p>
+            </div>
+            <form method="POST" action="/logout" class="shrink-0">
+                <?= csrf_field() ?>
+                <button type="submit" title="<?= e(t('admin.nav.logout')) ?>" aria-label="<?= e(t('admin.nav.logout')) ?>"
+                    class="h-8 w-8 flex items-center justify-center rounded-control text-white/70 hover:bg-white/10 hover:text-white transition-colors">
+                    <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                </button>
+            </form>
         </div>
     </aside>
 

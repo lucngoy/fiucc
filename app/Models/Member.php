@@ -230,14 +230,14 @@ final class Member extends Model
     ];
 
     /**
-     * Liste admin (FIUCC-43, section 24 du cahier des charges) : recherche,
-     * filtres (status/faculty/year), tri, pagination. Jointure users pour
-     * l'email — pas dupliqué dans members.
+     * Conditions WHERE partagées entre adminSearch() (FIUCC-43) et
+     * adminExportRows() (FIUCC-45) — un export doit filtrer exactement comme
+     * la liste à l'écran, jamais une logique dupliquée qui pourrait diverger.
      *
      * @param array{search?: string, status?: string, faculty?: string, year?: string} $filters
-     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     * @return array{0: string, 1: array<string, mixed>} [clause WHERE (ou ''), params liés]
      */
-    public static function adminSearch(array $filters, string $sort, string $dir, int $page, int $perPage): array
+    private static function adminFilterClause(array $filters): array
     {
         $conditions = [];
         $params = [];
@@ -271,6 +271,21 @@ final class Member extends Model
         }
 
         $where = $conditions === [] ? '' : 'WHERE ' . implode(' AND ', $conditions);
+
+        return [$where, $params];
+    }
+
+    /**
+     * Liste admin (FIUCC-43, section 24 du cahier des charges) : recherche,
+     * filtres (status/faculty/year), tri, pagination. Jointure users pour
+     * l'email — pas dupliqué dans members.
+     *
+     * @param array{search?: string, status?: string, faculty?: string, year?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function adminSearch(array $filters, string $sort, string $dir, int $page, int $perPage): array
+    {
+        [$where, $params] = self::adminFilterClause($filters);
         $orderColumn = self::ADMIN_SORT_COLUMNS[$sort] ?? self::ADMIN_SORT_COLUMNS['submitted'];
         $orderDir = strtoupper($dir) === 'ASC' ? 'ASC' : 'DESC';
 
@@ -296,6 +311,32 @@ final class Member extends Model
         $stmt->execute($params);
 
         return ['rows' => $stmt->fetchAll(), 'total' => $total];
+    }
+
+    /**
+     * Export CSV admin (FIUCC-45) : mêmes filtres que adminSearch() (recherche,
+     * statut, faculté, année), sans pagination — l'export porte sur tout ce
+     * qui correspond, pas seulement la page affichée à l'écran. Ordre stable
+     * (date d'inscription) plutôt que le tri courant de l'écran, qui n'a pas
+     * de sens pour un fichier consommé hors de la page.
+     *
+     * @param array{search?: string, status?: string, faculty?: string, year?: string} $filters
+     */
+    public static function adminExportRows(array $filters): array
+    {
+        [$where, $params] = self::adminFilterClause($filters);
+
+        $stmt = static::db()->prepare(
+            "SELECT m.membership_number, m.full_name, m.student_id, m.faculty, m.department, m.year,
+                    m.status, m.created_at, u.email
+             FROM members m
+             JOIN users u ON u.id = m.user_id
+             {$where}
+             ORDER BY m.created_at DESC"
+        );
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
     }
 
     /**

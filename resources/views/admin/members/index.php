@@ -74,6 +74,39 @@ $statusBadge = static function (string $status): string {
         . e(t('admin.members.status.' . $status)) . '</span>';
 };
 
+/**
+ * Info-bulle des boutons icône de la colonne Actions — le titre natif
+ * (attribut title) fonctionne mais son délai d'apparition varie d'un
+ * navigateur à l'autre et son style n'est jamais celui de la charte ; ce
+ * <span> en CSS pur (group-hover, pas de JS) s'affiche immédiatement,
+ * dans le bon style. Ancré à droite (right-0), pas centré : dernière
+ * colonne du tableau, un centrage déborderait du bord droit sur les
+ * boutons proches du bord.
+ */
+$actionTooltip = static function (string $label): string {
+    return '<span role="tooltip" class="pointer-events-none absolute right-0 top-full mt-1.5 whitespace-nowrap rounded bg-ink text-white text-label-caps font-label-caps px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">'
+        . e($label) . '</span>';
+};
+
+/**
+ * Bannière bulk_* : le compteur seul ("0 sur 2") ne dit pas pourquoi —
+ * l'action groupée ne touche que les membres réellement dans le statut
+ * source attendu (pending pour valider/rejeter, validated pour suspendre,
+ * voir Admin\MemberController), la sélection peut très bien viser des
+ * membres déjà traités entre-temps. En dessous du nombre demandé, on
+ * complète le message plutôt que de laisser deviner, et on bascule sur le
+ * jaune (pas vert) dès qu'au moins un élément a été ignoré.
+ */
+$bulkNotice = static function (string $messageKey, string $sourceStatus) use ($applied, $requested): array {
+    $message = t($messageKey, ['applied' => $applied, 'requested' => $requested]);
+
+    if ($requested > 0 && $applied < $requested) {
+        $message .= ' ' . t('admin.members.notice.bulk_skipped', ['status' => $sourceStatus]);
+    }
+
+    return ['type' => $requested > 0 && $applied < $requested ? 'warning' : 'success', 'message' => $message];
+};
+
 $noticeMap = [
     'validated'          => ['type' => 'success', 'message' => t('admin.members.notice.validated')],
     'rejected'           => ['type' => 'success', 'message' => t('admin.members.notice.rejected')],
@@ -81,9 +114,9 @@ $noticeMap = [
     'reason_required'    => ['type' => 'error',   'message' => t('admin.members.notice.reason_required')],
     'self_action_denied' => ['type' => 'error',   'message' => t('admin.members.notice.self_action_denied')],
     'bulk_none_selected' => ['type' => 'warning', 'message' => t('admin.members.notice.bulk_none_selected')],
-    'bulk_validated'      => ['type' => 'success', 'message' => t('admin.members.notice.bulk_validated', ['applied' => $applied, 'requested' => $requested])],
-    'bulk_rejected'       => ['type' => 'success', 'message' => t('admin.members.notice.bulk_rejected', ['applied' => $applied, 'requested' => $requested])],
-    'bulk_suspended'      => ['type' => 'success', 'message' => t('admin.members.notice.bulk_suspended', ['applied' => $applied, 'requested' => $requested])],
+    'bulk_validated'      => $bulkNotice('admin.members.notice.bulk_validated', mb_strtolower(t('admin.members.status.pending'))),
+    'bulk_rejected'       => $bulkNotice('admin.members.notice.bulk_rejected', mb_strtolower(t('admin.members.status.pending'))),
+    'bulk_suspended'      => $bulkNotice('admin.members.notice.bulk_suspended', mb_strtolower(t('admin.members.status.validated'))),
 ];
 
 $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 'submitted' || $dir !== 'desc'
@@ -97,7 +130,17 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
 
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
         <p class="text-body-md text-muted"><?= e(t('admin.members.subtitle')) ?></p>
-        <p class="text-body-sm text-muted"><?= e(t('admin.members.total', ['count' => $total])) ?></p>
+        <div class="flex items-center gap-3">
+            <p class="text-body-sm text-muted"><?= e(t('admin.members.total', ['count' => $total])) ?></p>
+            <!-- L'export reprend les filtres actifs (mêmes conditions que
+                 Member::adminExportRows(), FIUCC-45) — pas de pagination,
+                 tout ce qui correspond part dans le fichier. -->
+            <a href="/admin/members/export<?= $activeFilterQuery !== [] ? '?' . http_build_query($activeFilterQuery) : '' ?>"
+               class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-white border border-border text-ink text-label-md font-label-md hover:bg-surface transition-colors">
+                <i class="fa-solid fa-download" aria-hidden="true"></i>
+                <?= e(t('admin.members.export.button')) ?>
+            </a>
+        </div>
     </div>
 
     <form method="GET" action="/admin/members" class="bg-white rounded-card border border-border p-4 flex flex-wrap items-end gap-3">
@@ -227,22 +270,28 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                             <td class="p-3">
                                 <div class="flex items-center justify-end gap-1.5">
                                     <?php if (in_array($member['status'], ['pending', 'rejected', 'suspended'], true)): ?>
-                                        <form method="POST" action="<?= e($rowActionUrl('validate')) ?>">
-                                            <?= csrf_field() ?>
-                                            <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
-                                            <button type="submit" title="<?= e(t('admin.members.action.validate')) ?>" aria-label="<?= e(t('admin.members.action.validate')) ?>"
-                                                class="h-9 w-9 rounded-control bg-surface text-success hover:bg-success/15 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-check" aria-hidden="true"></i>
-                                            </button>
-                                        </form>
+                                        <div class="relative group">
+                                            <form method="POST" action="<?= e($rowActionUrl('validate')) ?>">
+                                                <?= csrf_field() ?>
+                                                <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
+                                                <button type="submit" aria-label="<?= e(t('admin.members.action.validate')) ?>"
+                                                    class="h-9 w-9 rounded-control bg-surface text-success hover:bg-success/15 flex items-center justify-center transition-colors">
+                                                    <i class="fa-solid fa-check" aria-hidden="true"></i>
+                                                </button>
+                                            </form>
+                                            <?= $actionTooltip(t('admin.members.action.validate')) ?>
+                                        </div>
                                     <?php endif; ?>
 
                                     <?php if ($member['status'] === 'pending'): ?>
-                                        <button type="button" data-open-dialog="reason-dialog-reject-<?= e((string) $memberId) ?>"
-                                            title="<?= e(t('admin.members.action.reject')) ?>" aria-label="<?= e(t('admin.members.action.reject')) ?>"
-                                            class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                                        </button>
+                                        <div class="relative group">
+                                            <button type="button" data-open-dialog="reason-dialog-reject-<?= e((string) $memberId) ?>"
+                                                aria-label="<?= e(t('admin.members.action.reject')) ?>"
+                                                class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
+                                                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                            </button>
+                                            <?= $actionTooltip(t('admin.members.action.reject')) ?>
+                                        </div>
                                         <dialog id="reason-dialog-reject-<?= e((string) $memberId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
                                             <form method="POST" action="<?= e($rowActionUrl('reject')) ?>" class="flex flex-col gap-2 p-4 text-left">
                                                 <?= csrf_field() ?>
@@ -260,11 +309,14 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                     <?php endif; ?>
 
                                     <?php if ($member['status'] === 'validated'): ?>
-                                        <button type="button" data-open-dialog="reason-dialog-suspend-<?= e((string) $memberId) ?>"
-                                            title="<?= e(t('admin.members.action.suspend')) ?>" aria-label="<?= e(t('admin.members.action.suspend')) ?>"
-                                            class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-ban" aria-hidden="true"></i>
-                                        </button>
+                                        <div class="relative group">
+                                            <button type="button" data-open-dialog="reason-dialog-suspend-<?= e((string) $memberId) ?>"
+                                                aria-label="<?= e(t('admin.members.action.suspend')) ?>"
+                                                class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
+                                                <i class="fa-solid fa-ban" aria-hidden="true"></i>
+                                            </button>
+                                            <?= $actionTooltip(t('admin.members.action.suspend')) ?>
+                                        </div>
                                         <dialog id="reason-dialog-suspend-<?= e((string) $memberId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
                                             <form method="POST" action="<?= e($rowActionUrl('suspend')) ?>" class="flex flex-col gap-2 p-4 text-left">
                                                 <?= csrf_field() ?>
