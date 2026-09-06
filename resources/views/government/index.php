@@ -7,7 +7,7 @@
  * - statistiques (postes, facultés représentées, mois de mandat) calculées,
  *   jamais de quorum/taux de participation inventé (système d'élection,
  *   phase 4, pas de ce ticket) ;
- * - filtre par faculté réellement fonctionnel (JS, gouvernment-filter.js),
+ * - filtre par faculté réellement fonctionnel (JS, government-filter.js),
  *   généré à partir des facultés distinctes présentes dans les données —
  *   pas les catégories "Welfare/Academic" de la maquette, qui ne
  *   correspondent à aucune donnée ;
@@ -23,14 +23,13 @@
  *   de faux téléchargement PDF vers un règlement qui n'existe pas
  *   (Documents, FIUCC-57/58, pas construit).
  *
- * Fonds de section : le conteneur de l'organigramme, le bloc des mandats
- * précédents et la bande "Rule of Law" portent chacun leur propre carte
- * (bg-white, comme les autres cartes de la page), contenue dans un bloc
- * plutôt qu'en bande pleine largeur. bg-surface aurait été invisible ici :
- * c'est déjà le fond par défaut de la page (body), un bloc bg-surface sur
- * bg-surface ne se distingue de rien — d'où le "tout semble être dans la
- * même section" signalé après la première passe. L'en-tête (bg-primary)
- * reste une bande pleine largeur, comme dans code.html.
+ * Fonds de section : chaque section est une bande pleine largeur qui
+ * alterne bg-white / bg-surface avec sa voisine — même patron que
+ * /community, pas des cartes flottant sur le fond par défaut de la page.
+ * Deux couleurs identiques ne se distinguent jamais l'une de l'autre,
+ * qu'elles soient en bande ou en carte : ce qui compte, c'est que chaque
+ * bande diffère de celle juste au-dessus et juste en dessous. L'en-tête
+ * (bg-primary) reste à part, comme dans code.html.
  *
  * Archive complète avec anciens membres : FIUCC-42, ticket séparé, route
  * déjà déclarée dans routes/web.php mais pas construite ici.
@@ -145,6 +144,7 @@ $renderOrgTier3Box = static function (array $item): string {
     <?php endif; ?>
 </div>
 
+<div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <?php if ($government === null || $members === []): ?>
         <div class="max-w-xl mx-auto">
@@ -152,7 +152,7 @@ $renderOrgTier3Box = static function (array $item): string {
         </div>
     <?php else: ?>
         <?php if ($spotlight !== null): ?>
-            <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 mb-10">
+            <div class="bg-surface rounded-card border border-border p-6 md:p-8 mb-10">
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 text-center md:text-left">
                     <?php if (!empty($spotlight['photo'])): ?>
                         <img src="<?= e('/uploads/' . $spotlight['photo']) ?>" alt=""
@@ -200,7 +200,7 @@ $renderOrgTier3Box = static function (array $item): string {
 
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php foreach ($rest as $member): ?>
-                    <div data-faculty="<?= e($member['faculty'] ?? '') ?>" class="bg-white rounded-card border border-border shadow-card overflow-hidden">
+                    <div data-faculty="<?= e($member['faculty'] ?? '') ?>" class="bg-surface rounded-card border border-border overflow-hidden">
                         <?php if (!empty($member['photo'])): ?>
                             <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="w-full aspect-square object-cover">
                         <?php else: ?>
@@ -224,8 +224,10 @@ $renderOrgTier3Box = static function (array $item): string {
         <?php endif; ?>
     <?php endif; ?>
 </div>
+</div>
 
 <?php if ($spotlight !== null): ?>
+<div class="w-full bg-surface">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <!-- En-tête de section aligné à gauche, comme code.html (pas centré). -->
     <div class="mb-8">
@@ -233,10 +235,7 @@ $renderOrgTier3Box = static function (array $item): string {
         <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.orgchart.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
     </div>
-    <!-- Conteneur de l'arbre : seul ce bloc porte un fond distinct
-         (bg-surface), pas toute la section — comme code.html, où
-         bg-surface-container-low habille l'arbre, pas la page. -->
-    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-10 flex flex-col items-center gap-4">
+    <div class="flex flex-col items-center gap-4">
         <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
         <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
             <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
@@ -259,8 +258,10 @@ $renderOrgTier3Box = static function (array $item): string {
         </div>
     </div>
 </div>
+</div>
 <?php endif; ?>
 
+<div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <!-- En-tête aligné à gauche avec l'action à droite, comme code.html —
          lien vers l'archive complète (FIUCC-42) seulement s'il y a
@@ -278,16 +279,13 @@ $renderOrgTier3Box = static function (array $item): string {
         <?php endif; ?>
     </div>
 
-    <!-- Fond distinct sur ce bloc, pas sur toute la section (même logique
-         que le conteneur de l'organigramme) — la page ne repose pas sur
-         une seule couleur uniforme partout. -->
-    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 max-w-xl mx-auto">
+    <div class="max-w-xl mx-auto">
         <?php if ($pastMandates === []): ?>
             <?= component('alert', ['type' => 'info', 'message' => t('government.history.empty')]) ?>
         <?php else: ?>
             <div class="flex flex-col gap-3">
                 <?php foreach ($pastMandates as $mandate): ?>
-                    <div class="bg-white rounded-card border border-border shadow-card p-4 flex items-center justify-between">
+                    <div class="bg-surface rounded-card border border-border p-4 flex items-center justify-between">
                         <span class="font-label-lg text-label-lg text-ink"><?= e($mandate['mandate']) ?></span>
                         <span class="text-body-sm text-muted"><?= e(local_date($mandate['start_date'])) ?> – <?= e(local_date($mandate['end_date'])) ?></span>
                     </div>
@@ -296,11 +294,11 @@ $renderOrgTier3Box = static function (array $item): string {
         <?php endif; ?>
     </div>
 </div>
+</div>
 
-<div class="max-w-layout mx-auto px-4 md:px-6 pb-16 md:pb-20">
-    <!-- Reprend Section 6 de code.html : un seul bloc contenu (bg-surface),
-         pas une bande pleine largeur. -->
-    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+<div class="w-full bg-surface">
+<div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-4 text-center md:text-left">
             <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center text-headline-sm shrink-0" aria-hidden="true">&sect;</span>
             <div>
@@ -312,6 +310,7 @@ $renderOrgTier3Box = static function (array $item): string {
             <?= component('button', ['label' => t('government.rule.contact'), 'variant' => 'primary', 'href' => '/contact']) ?>
         </div>
     </div>
+</div>
 </div>
 
 <?php if ($facultyFilters !== []): ?>
