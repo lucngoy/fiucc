@@ -56,7 +56,8 @@ $values = [
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div class="max-w-2xl">
                 <h1 class="font-headline-lg text-headline-lg text-white mb-4"><?= e(t('community.title')) ?></h1>
-                <p class="text-body-lg text-white/80"><?= e(t('community.intro')) ?></p>
+                <p class="text-body-lg text-white/80 mb-6"><?= e(t('community.intro')) ?></p>
+                <?= component('button', ['label' => t('community.cta.meet_government'), 'variant' => 'inverse', 'href' => '/community/government']) ?>
             </div>
             <span class="inline-flex items-center h-9 px-4 rounded-full bg-white/15 text-white text-label-md font-label-md shrink-0">
                 <?= e(t('community.founded_badge')) ?>
