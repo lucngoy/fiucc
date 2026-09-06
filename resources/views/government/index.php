@@ -224,9 +224,10 @@ $renderOrgTier3Box = static function (array $item): string {
 
 <?php if ($spotlight !== null): ?>
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
-    <div class="text-center max-w-2xl mx-auto mb-10">
+    <!-- En-tête de section aligné à gauche, comme code.html (pas centré). -->
+    <div class="mb-8">
         <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.orgchart.eyebrow')) ?></p>
-        <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.orgchart.title')) ?></h2>
+        <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.orgchart.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
     </div>
     <!-- Conteneur de l'arbre : seul ce bloc porte un fond distinct
@@ -258,10 +259,20 @@ $renderOrgTier3Box = static function (array $item): string {
 <?php endif; ?>
 
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
-    <div class="text-center max-w-2xl mx-auto mb-10">
-        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.history.eyebrow')) ?></p>
-        <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.history.title')) ?></h2>
-        <p class="text-body-md text-muted"><?= e(t('government.history.subtitle')) ?></p>
+    <!-- En-tête aligné à gauche avec l'action à droite, comme code.html —
+         lien vers l'archive complète (FIUCC-42) seulement s'il y a
+         réellement quelque chose à y voir. -->
+    <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+        <div>
+            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.history.eyebrow')) ?></p>
+            <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.history.title')) ?></h2>
+            <p class="text-body-md text-muted max-w-xl"><?= e(t('government.history.subtitle')) ?></p>
+        </div>
+        <?php if ($pastMandates !== []): ?>
+            <a href="/community/government/archives" class="inline-flex items-center gap-2 text-primary font-label-lg text-label-lg font-semibold hover:underline shrink-0">
+                <?= e(t('government.history.view_all')) ?>
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Fond distinct sur ce bloc, pas sur toute la section (même logique
