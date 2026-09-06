@@ -68,10 +68,24 @@ if ($government !== null && !empty($government['start_date']) && !empty($governm
     );
 }
 
+// Format "6 Offices / Constitutional Pillars" de la maquette : une ligne
+// principale (valeur + mot), une légende en dessous — pas juste un nombre nu.
 $stats = array_filter([
-    ['value' => (string) $officesCount, 'label' => t('government.stat.offices')],
-    ['value' => (string) $facultiesCount, 'label' => t('government.stat.faculties')],
-    $durationMonths !== null ? ['value' => (string) $durationMonths, 'label' => t('government.stat.duration')] : null,
+    [
+        'icon'    => 'fa-solid fa-building-columns',
+        'primary' => t('government.stat.offices_value', ['count' => $officesCount]),
+        'caption' => t('government.stat.offices_caption'),
+    ],
+    [
+        'icon'    => 'fa-solid fa-graduation-cap',
+        'primary' => t('government.stat.faculties_value', ['count' => $facultiesCount]),
+        'caption' => t('government.stat.faculties_caption'),
+    ],
+    $durationMonths !== null ? [
+        'icon'    => 'fa-solid fa-calendar-check',
+        'primary' => t('government.stat.duration_value', ['count' => $durationMonths]),
+        'caption' => t('government.stat.duration_caption'),
+    ] : null,
 ]);
 
 // Filtre par faculté — réellement fonctionnel (government-filter.js),
@@ -87,8 +101,8 @@ $renderSocialLink = static function (?string $instagram, string $size = 'h-8 w-8
 
     return '<a href="' . e('https://www.instagram.com/' . $handle . '/') . '" target="_blank" rel="noopener noreferrer" '
         . 'title="Instagram" aria-label="Instagram — @' . e($handle) . '" '
-        . 'class="inline-flex ' . $size . ' rounded-full bg-primary/15 text-primary items-center justify-center hover:bg-primary/25 transition-colors text-label-md font-label-md">'
-        . '@</a>';
+        . 'class="inline-flex ' . $size . ' rounded-full bg-primary/15 text-primary items-center justify-center hover:bg-primary/25 transition-colors">'
+        . '<i class="fa-brands fa-instagram" aria-hidden="true"></i></a>';
 };
 
 $renderOrgTier2Box = static function (array $item): string {
@@ -133,9 +147,12 @@ $renderOrgTier3Box = static function (array $item): string {
             <div class="max-w-layout mx-auto px-4 md:px-6 py-5">
                 <div class="grid grid-cols-3 gap-4 md:gap-8">
                     <?php foreach (array_values($stats) as $index => $stat): ?>
-                        <div class="<?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
-                            <p class="font-headline-sm text-headline-sm text-white"><?= e($stat['value']) ?></p>
-                            <p class="text-label-md font-label-md text-white/70"><?= e($stat['label']) ?></p>
+                        <div class="flex items-center gap-3 <?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
+                            <i class="<?= e($stat['icon']) ?> text-white/70 text-xl" aria-hidden="true"></i>
+                            <div>
+                                <p class="font-headline-sm text-headline-sm text-white"><?= e($stat['primary']) ?></p>
+                                <p class="text-label-md font-label-md text-white/70"><?= e($stat['caption']) ?></p>
+                            </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -179,7 +196,7 @@ $renderOrgTier3Box = static function (array $item): string {
         <?php if ($rest !== []): ?>
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
                 <div>
-                    <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.bureau.eyebrow')) ?></p>
+                    <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><i class="fa-solid fa-shield-halved mr-1.5" aria-hidden="true"></i><?= e(t('government.bureau.eyebrow')) ?></p>
                     <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.bureau.title')) ?></h2>
                     <p class="text-body-md text-muted max-w-xl"><?= e(t('government.bureau.subtitle')) ?></p>
                 </div>
@@ -231,7 +248,7 @@ $renderOrgTier3Box = static function (array $item): string {
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <!-- En-tête de section aligné à gauche, comme code.html (pas centré). -->
     <div class="mb-8">
-        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.orgchart.eyebrow')) ?></p>
+        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><i class="fa-solid fa-sitemap mr-1.5" aria-hidden="true"></i><?= e(t('government.orgchart.eyebrow')) ?></p>
         <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.orgchart.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
     </div>
@@ -268,7 +285,7 @@ $renderOrgTier3Box = static function (array $item): string {
          réellement quelque chose à y voir. -->
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.history.eyebrow')) ?></p>
+            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><i class="fa-solid fa-clock-rotate-left mr-1.5" aria-hidden="true"></i><?= e(t('government.history.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.history.title')) ?></h2>
             <p class="text-body-md text-muted max-w-xl"><?= e(t('government.history.subtitle')) ?></p>
         </div>
@@ -300,7 +317,7 @@ $renderOrgTier3Box = static function (array $item): string {
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-4 text-center md:text-left">
-            <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center text-headline-sm shrink-0" aria-hidden="true">&sect;</span>
+            <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center shrink-0" aria-hidden="true"><i class="fa-solid fa-scale-balanced text-xl"></i></span>
             <div>
                 <p class="font-label-caps text-label-caps uppercase text-primary mb-1"><?= e(t('government.rule.title')) ?></p>
                 <p class="text-body-sm text-ink max-w-2xl"><?= e(t('government.rule.body')) ?></p>
