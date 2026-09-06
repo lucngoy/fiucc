@@ -38,4 +38,20 @@ final class Government extends Model
 
         return $government;
     }
+
+    /**
+     * Mandats archivés (section "Historical Mandates") — FIUCC-42 (archive
+     * complète, avec anciens membres) reste un ticket séparé et n'est pas
+     * construit ici. Juste de quoi afficher honnêtement une liste vide
+     * plutôt qu'une section qui prétend exister sans rien avoir à montrer.
+     */
+    public static function pastMandates(): array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT mandate, start_date, end_date FROM governments WHERE is_current = 0 ORDER BY start_date DESC'
+        );
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
 }

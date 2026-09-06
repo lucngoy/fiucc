@@ -17,8 +17,9 @@ final class GovernmentController extends Controller
     public function index(): void
     {
         $this->view('government.index', [
-            'title'      => t('government.title'),
-            'government' => Government::currentWithMembers(),
+            'title'        => t('government.title'),
+            'government'   => Government::currentWithMembers(),
+            'pastMandates' => Government::pastMandates(),
         ]);
     }
 }
