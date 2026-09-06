@@ -11,15 +11,22 @@
  *   généré à partir des facultés distinctes présentes dans les données —
  *   pas les catégories "Welfare/Academic" de la maquette, qui ne
  *   correspondent à aucune donnée ;
- * - organigramme simplifié (paliers déduits de sort_order : le président
- *   déjà en spotlight, puis le reste), sans lignes de connexion dessinées
- *   (risque de tracés SVG non vérifiés pour un gain purement décoratif) ;
+ * - organigramme : nœud du haut dynamique (spotlight), paliers 2 et 3 repris
+ *   textuellement du texte de la maquette (structure constitutionnelle, pas
+ *   les 8 membres réels déjà montrés dans la grille) ; sans lignes de
+ *   connexion dessinées (risque de tracés SVG non vérifiés) ;
  * - mandats précédents : liste réelle (App\Models\Government::pastMandates())
  *   plutôt qu'un historique inventé — vide aujourd'hui, FIUCC étant à son
  *   mandat fondateur, affiché honnêtement comme tel plutôt que masqué ;
- * - bande "Rule of Law" simplifiée en repère de contact (/contact, route
- *   déjà déclarée) : pas de faux lien de téléchargement vers un règlement
- *   PDF qui n'existe pas (Documents, FIUCC-57/58, pas construit).
+ * - "Rule of Law & Statutory Safeguards" : titre et structure repris de la
+ *   maquette, mais un seul vrai lien (/contact, route déjà déclarée) — pas
+ *   de faux téléchargement PDF vers un règlement qui n'existe pas
+ *   (Documents, FIUCC-57/58, pas construit).
+ *
+ * Fonds de section : un seul fond distinct par bloc qui en a vraiment un
+ * dans la maquette (l'en-tête, le conteneur de l'organigramme, la bande
+ * "Rule of Law"), jamais une bande pleine largeur uniforme sur toute une
+ * section — le reste de la page repose sur le fond par défaut du site.
  *
  * Archive complète avec anciens membres : FIUCC-42, ticket séparé, route
  * déjà déclarée dans routes/web.php mais pas construite ici.
@@ -96,9 +103,13 @@ $renderOrgTier3Box = static function (array $item): string {
         . '</div>';
 };
 ?>
-<div class="w-full bg-primary">
-    <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <div class="flex items-center justify-between gap-4 mb-6">
+<div class="max-w-layout mx-auto px-4 md:px-6 pt-8 md:pt-10">
+    <!-- Carte contenue (pas une bande pleine largeur) : reprend la structure
+         exacte de code.html — Section 1, un seul bloc bg-primary arrondi,
+         fil d'Ariane + badge, titre/sous-titre, puis le ruban de
+         statistiques imbriqué dans la même carte. -->
+    <div class="bg-primary text-white rounded-card shadow-card px-6 py-8 md:px-8 md:py-10">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
             <nav aria-label="Breadcrumb" class="text-body-sm text-white/70">
                 <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
                 <span class="mx-2" aria-hidden="true">/</span>
@@ -112,15 +123,15 @@ $renderOrgTier3Box = static function (array $item): string {
                 </span>
             <?php endif; ?>
         </div>
-        <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('government.title')) ?></h1>
-        <?php if ($government !== null): ?>
-            <p class="text-body-lg text-white/80 max-w-2xl"><?= e(t('government.subtitle', ['mandate' => $government['mandate']])) ?></p>
-        <?php endif; ?>
-    </div>
+        <div class="max-w-2xl">
+            <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('government.title')) ?></h1>
+            <?php if ($government !== null): ?>
+                <p class="text-body-lg text-white/80"><?= e(t('government.subtitle', ['mandate' => $government['mandate']])) ?></p>
+            <?php endif; ?>
+        </div>
 
-    <?php if ($stats !== []): ?>
-        <div class="w-full bg-primary-dark/40">
-            <div class="max-w-layout mx-auto px-4 md:px-6 py-5">
+        <?php if ($stats !== []): ?>
+            <div class="mt-6 bg-white/10 rounded-control p-4 md:p-5">
                 <div class="grid grid-cols-3 gap-4 md:gap-8">
                     <?php foreach (array_values($stats) as $index => $stat): ?>
                         <div class="<?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
@@ -130,8 +141,8 @@ $renderOrgTier3Box = static function (array $item): string {
                     <?php endforeach; ?>
                 </div>
             </div>
-        </div>
-    <?php endif; ?>
+        <?php endif; ?>
+    </div>
 </div>
 
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
@@ -215,34 +226,35 @@ $renderOrgTier3Box = static function (array $item): string {
 </div>
 
 <?php if ($spotlight !== null): ?>
-<div class="w-full bg-surface">
-    <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
-        <div class="text-center max-w-2xl mx-auto mb-10">
-            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.orgchart.eyebrow')) ?></p>
-            <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.orgchart.title')) ?></h2>
-            <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
+<div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('government.orgchart.eyebrow')) ?></p>
+        <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.orgchart.title')) ?></h2>
+        <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
+    </div>
+    <!-- Conteneur de l'arbre : seul ce bloc porte un fond distinct
+         (bg-surface), pas toute la section — comme code.html, où
+         bg-surface-container-low habille l'arbre, pas la page. -->
+    <div class="bg-surface rounded-card p-6 md:p-10 flex flex-col items-center gap-4">
+        <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
+        <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
+            <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
+            <p class="font-label-lg text-label-lg"><?= e(t('government.orgchart.top_title')) ?></p>
+            <p class="text-body-sm text-white/80"><?= e(t('government.orgchart.top_subtitle', ['name' => $spotlight['display_name']])) ?></p>
         </div>
-        <div class="flex flex-col items-center gap-4 max-w-3xl mx-auto">
-            <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
-            <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
-                <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
-                <p class="font-label-lg text-label-lg"><?= e(t('government.orgchart.top_title')) ?></p>
-                <p class="text-body-sm text-white/80"><?= e(t('government.orgchart.top_subtitle', ['name' => $spotlight['display_name']])) ?></p>
-            </div>
 
-            <!-- Paliers 2 et 3 : structure constitutionnelle, reprise textuellement
-                 de la maquette (pas les membres réels, déjà montrés au-dessus). -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
-                <?php foreach ($orgTier2 as $item): ?>
-                    <?= $renderOrgTier2Box($item) ?>
-                <?php endforeach; ?>
-            </div>
+        <!-- Paliers 2 et 3 : structure constitutionnelle, reprise textuellement
+             de la maquette (pas les membres réels, déjà montrés au-dessus). -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
+            <?php foreach ($orgTier2 as $item): ?>
+                <?= $renderOrgTier2Box($item) ?>
+            <?php endforeach; ?>
+        </div>
 
-            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 w-full">
-                <?php foreach ($orgTier3 as $item): ?>
-                    <?= $renderOrgTier3Box($item) ?>
-                <?php endforeach; ?>
-            </div>
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+            <?php foreach ($orgTier3 as $item): ?>
+                <?= $renderOrgTier3Box($item) ?>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
@@ -271,11 +283,20 @@ $renderOrgTier3Box = static function (array $item): string {
     <?php endif; ?>
 </div>
 
-<div class="w-full bg-surface">
-    <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20 text-center">
-        <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('government.rule.title')) ?></h2>
-        <p class="text-body-md text-muted mb-8 max-w-xl mx-auto"><?= e(t('government.rule.body')) ?></p>
-        <?= component('button', ['label' => t('government.rule.contact'), 'variant' => 'primary', 'href' => '/contact']) ?>
+<div class="max-w-layout mx-auto px-4 md:px-6 pb-16 md:pb-20">
+    <!-- Reprend Section 6 de code.html : un seul bloc contenu (bg-surface),
+         pas une bande pleine largeur. -->
+    <div class="bg-surface rounded-card p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div class="flex items-center gap-4 text-center md:text-left">
+            <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center text-headline-sm shrink-0" aria-hidden="true">&sect;</span>
+            <div>
+                <p class="font-label-caps text-label-caps uppercase text-primary mb-1"><?= e(t('government.rule.title')) ?></p>
+                <p class="text-body-sm text-ink max-w-2xl"><?= e(t('government.rule.body')) ?></p>
+            </div>
+        </div>
+        <div class="shrink-0">
+            <?= component('button', ['label' => t('government.rule.contact'), 'variant' => 'primary', 'href' => '/contact']) ?>
+        </div>
     </div>
 </div>
 

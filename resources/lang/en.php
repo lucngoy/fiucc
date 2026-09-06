@@ -284,7 +284,7 @@ return [
     'government.history.title'    => 'Past Mandates',
     'government.history.subtitle' => "A record of the community's previous governments.",
     'government.history.empty'    => "This is FIUCC's founding mandate — there's no past mandate to look back on yet.",
-    'government.rule.title'   => 'Open to the Community',
-    'government.rule.body'    => 'Every member of the bureau is reachable. Questions, concerns, or ideas for the community are always welcome.',
+    'government.rule.title'   => 'Rule of Law & Statutory Safeguards',
+    'government.rule.body'    => 'All executive actions are governed by the FIUCC Community Constitution and Internal Regulations, and every member of the bureau remains reachable to the community.',
     'government.rule.contact' => 'Contact the Bureau',
 ];

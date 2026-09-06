@@ -287,7 +287,7 @@ return [
     'government.history.title'    => 'Mandats précédents',
     'government.history.subtitle' => 'Un aperçu des précédents gouvernements de la communauté.',
     'government.history.empty'    => "Il s'agit du mandat fondateur du FIUCC — aucun mandat précédent à retracer pour l'instant.",
-    'government.rule.title'   => 'À l\'écoute de la communauté',
-    'government.rule.body'    => 'Chaque membre du bureau est joignable. Questions, préoccupations ou idées pour la communauté sont toujours les bienvenues.',
+    'government.rule.title'   => 'État de droit et garde-fous statutaires',
+    'government.rule.body'    => 'Toute action exécutive est encadrée par la Constitution de la communauté FIUCC et son règlement intérieur, et chaque membre du bureau reste joignable par la communauté.',
     'government.rule.contact' => 'Contacter le bureau',
 ];
