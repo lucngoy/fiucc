@@ -50,12 +50,19 @@ final class MemberController extends Controller
 
     /**
      * Export CSV (FIUCC-45) — mêmes filtres que la liste à l'écran (recherche/
-     * statut/faculté/année), export.csv() plutôt que la page en cours : pas
-     * de pagination, tout ce qui correspond part dans le fichier.
+     * statut/faculté/année), pas de pagination : tout ce qui correspond part
+     * dans le fichier. Réservé aux admins (AdminMiddleware, routes/admin.php)
+     * et journalisé : le fichier contient des données personnelles (email,
+     * téléphone via student_id/faculté/département), qui a extrait quoi et
+     * quand doit rester traçable comme toute action sensible (CLAUDE.md §48).
      */
     public function export(): void
     {
+        $adminId = (int) $_SESSION['user_id'];
         $rows = Member::adminExportRows($this->filtersFromQuery());
+
+        ActivityLog::record($adminId, 'members.exported', 'member', null);
+
         $studyLevels = Config::get('registration.study_levels', []);
 
         header('Content-Type: text/csv; charset=UTF-8');
