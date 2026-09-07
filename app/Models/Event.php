@@ -514,10 +514,11 @@ final class Event extends Model
     }
 
     /**
-     * Changement de statut seul (FIUCC-51, action rapide "Archiver" de la
-     * liste admin) — sans repasser par tout le formulaire d'édition, comme
-     * Member::validate()/suspend() pour les membres. Restreint aux 4 valeurs
-     * réellement stockées, même filet de sécurité que la colonne ENUM.
+     * Changement de statut seul (FIUCC-51, actions rapides "Archiver"/
+     * "Désarchiver" de la liste admin) — sans repasser par tout le
+     * formulaire d'édition, comme Member::validate()/suspend() pour les
+     * membres. Restreint aux 4 valeurs réellement stockées, même filet de
+     * sécurité que la colonne ENUM.
      */
     public static function updateStatus(int $id, string $status): void
     {

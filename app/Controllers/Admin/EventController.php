@@ -189,6 +189,30 @@ final class EventController extends Controller
         $this->redirect('/admin/events?notice=archived');
     }
 
+    /**
+     * Action rapide "Désarchiver" — symétrique de archive(). Ramène à
+     * 'published' plutôt qu'à 'draft' : un événement archivé était visible
+     * publiquement avant de l'être, le désarchiver doit le remettre dans le
+     * même état, pas le renvoyer en préparation.
+     */
+    public function unarchive(array $params): void
+    {
+        $event = Event::find((int) ($params['id'] ?? 0));
+
+        if ($event === null) {
+            $this->redirect('/admin/events?notice=not_found');
+            return;
+        }
+
+        $adminId = (int) $_SESSION['user_id'];
+        $eventId = (int) $event['id'];
+
+        Event::updateStatus($eventId, 'published');
+        ActivityLog::record($adminId, 'event.unarchived', 'event', $eventId);
+
+        $this->redirect('/admin/events?notice=unarchived');
+    }
+
     public function delete(array $params): void
     {
         $event = Event::find((int) ($params['id'] ?? 0));

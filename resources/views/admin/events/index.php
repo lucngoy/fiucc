@@ -35,12 +35,24 @@ $statusBadge = static function (string $status): string {
 };
 
 $noticeMap = [
-    'created'   => ['type' => 'success', 'message' => t('admin.events.notice.created')],
-    'updated'   => ['type' => 'success', 'message' => t('admin.events.notice.updated')],
-    'archived'  => ['type' => 'success', 'message' => t('admin.events.notice.archived')],
-    'deleted'   => ['type' => 'success', 'message' => t('admin.events.notice.deleted')],
-    'not_found' => ['type' => 'error',   'message' => t('admin.events.notice.not_found')],
+    'created'    => ['type' => 'success', 'message' => t('admin.events.notice.created')],
+    'updated'    => ['type' => 'success', 'message' => t('admin.events.notice.updated')],
+    'archived'   => ['type' => 'success', 'message' => t('admin.events.notice.archived')],
+    'unarchived' => ['type' => 'success', 'message' => t('admin.events.notice.unarchived')],
+    'deleted'    => ['type' => 'success', 'message' => t('admin.events.notice.deleted')],
+    'not_found'  => ['type' => 'error',   'message' => t('admin.events.notice.not_found')],
 ];
+
+/**
+ * Info-bulle des boutons icône de la colonne Actions — même mécanique que
+ * admin/members/index.php ($actionTooltip) : un <span> en CSS pur
+ * (group-hover, pas de JS), plus rapide et plus cohérent avec la charte que
+ * l'attribut title natif du navigateur.
+ */
+$actionTooltip = static function (string $label): string {
+    return '<span role="tooltip" class="pointer-events-none absolute right-0 top-full mt-1.5 whitespace-nowrap rounded bg-ink text-white text-label-caps font-label-caps px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">'
+        . e($label) . '</span>';
+};
 
 $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
     ? http_build_query($activeFilterQuery) . '&'
@@ -131,24 +143,44 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                             </td>
                             <td class="p-3">
                                 <div class="flex items-center justify-end gap-1.5">
-                                    <a href="/admin/events/<?= e((string) $eventId) ?>/edit" aria-label="<?= e(t('admin.events.action.edit')) ?>"
-                                        class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
-                                        <i class="fa-solid fa-pen" aria-hidden="true"></i>
-                                    </a>
-                                    <?php if ($event['status'] !== 'archived'): ?>
-                                        <form method="POST" action="/admin/events/<?= e((string) $eventId) ?>/archive" class="contents">
-                                            <?= csrf_field() ?>
-                                            <button type="submit" aria-label="<?= e(t('admin.events.action.archive')) ?>"
-                                                class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
-                                            </button>
-                                        </form>
+                                    <div class="relative group">
+                                        <a href="/admin/events/<?= e((string) $eventId) ?>/edit" aria-label="<?= e(t('admin.events.action.edit')) ?>"
+                                            class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
+                                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                        </a>
+                                        <?= $actionTooltip(t('admin.events.action.edit')) ?>
+                                    </div>
+                                    <?php if ($event['status'] === 'archived'): ?>
+                                        <div class="relative group">
+                                            <form method="POST" action="/admin/events/<?= e((string) $eventId) ?>/unarchive">
+                                                <?= csrf_field() ?>
+                                                <button type="submit" aria-label="<?= e(t('admin.events.action.unarchive')) ?>"
+                                                    class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
+                                                    <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                                                </button>
+                                            </form>
+                                            <?= $actionTooltip(t('admin.events.action.unarchive')) ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="relative group">
+                                            <form method="POST" action="/admin/events/<?= e((string) $eventId) ?>/archive">
+                                                <?= csrf_field() ?>
+                                                <button type="submit" aria-label="<?= e(t('admin.events.action.archive')) ?>"
+                                                    class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
+                                                    <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+                                                </button>
+                                            </form>
+                                            <?= $actionTooltip(t('admin.events.action.archive')) ?>
+                                        </div>
                                     <?php endif; ?>
-                                    <button type="button" data-open-dialog="delete-dialog-<?= e((string) $eventId) ?>"
-                                        aria-label="<?= e(t('admin.events.action.delete')) ?>"
-                                        class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                        <i class="fa-solid fa-trash" aria-hidden="true"></i>
-                                    </button>
+                                    <div class="relative group">
+                                        <button type="button" data-open-dialog="delete-dialog-<?= e((string) $eventId) ?>"
+                                            aria-label="<?= e(t('admin.events.action.delete')) ?>"
+                                            class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
+                                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                        </button>
+                                        <?= $actionTooltip(t('admin.events.action.delete')) ?>
+                                    </div>
                                 </div>
                                 <dialog id="delete-dialog-<?= e((string) $eventId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
                                     <form method="POST" action="/admin/events/<?= e((string) $eventId) ?>/delete" class="flex flex-col gap-2 p-4 text-left">
