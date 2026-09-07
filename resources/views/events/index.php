@@ -129,7 +129,7 @@ $registrationLine = static function (array $event, int $registered): string {
             <?php endif; ?>
             <button type="submit" class="h-10 px-5 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors"><?= e(t('events.filter.apply')) ?></button>
             <?php if ($filters['search'] !== '' || $filters['category'] !== ''): ?>
-                <a href="<?= e($tabUrl($when)) ?>" class="h-10 px-2 flex items-center text-label-lg font-label-lg text-muted hover:text-ink transition-colors"><?= e(t('events.filter.reset')) ?></a>
+                <a href="/events?when=<?= e($when) ?>" class="h-10 px-2 flex items-center text-label-lg font-label-lg text-muted hover:text-ink transition-colors"><?= e(t('events.filter.reset')) ?></a>
             <?php endif; ?>
         </form>
     </div>
@@ -175,13 +175,11 @@ $registrationLine = static function (array $event, int $registered): string {
     <?php endif; ?>
 
     <?php if ($events === [] && $featured === null): ?>
-        <div class="max-w-xl mx-auto">
-            <?php if ($filters['search'] !== '' || $filters['category'] !== ''): ?>
-                <?= component('alert', ['type' => 'info', 'message' => t('events.empty.filtered')]) ?>
-            <?php else: ?>
-                <?= component('alert', ['type' => 'info', 'message' => t($when === 'past' ? 'events.empty.past' : 'events.empty.upcoming')]) ?>
-            <?php endif; ?>
-        </div>
+        <?php if ($filters['search'] !== '' || $filters['category'] !== ''): ?>
+            <?= component('alert', ['type' => 'info', 'message' => t('events.empty.filtered')]) ?>
+        <?php else: ?>
+            <?= component('alert', ['type' => 'info', 'message' => t($when === 'past' ? 'events.empty.past' : 'events.empty.upcoming')]) ?>
+        <?php endif; ?>
     <?php else: ?>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($events as $event): ?>
