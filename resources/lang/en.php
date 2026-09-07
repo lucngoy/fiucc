@@ -571,4 +571,13 @@ return [
     'events.detail.notice.full'               => 'Sorry, this event just reached capacity.',
     'events.detail.notice.unregistered'       => "You've been unregistered from this event.",
     'events.detail.notice.not_found'          => 'This event could not be found.',
+
+    'gallery.title'    => 'Gallery',
+    'gallery.subtitle' => 'The visual memories of the community — gatherings, celebrations, and shared moments across mandates.',
+    'gallery.empty'    => "No album has been published yet — the community's first photos will appear here once events are documented.",
+    'gallery.total'    => ':count albums',
+    'gallery.album.photo_count' => ':count photo(s)',
+    'gallery.detail.back'        => 'Back to gallery',
+    'gallery.detail.photo_count' => ':count photo(s)',
+    'gallery.detail.empty'       => 'No photos have been added to this album yet.',
 ];

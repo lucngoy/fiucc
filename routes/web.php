@@ -29,6 +29,7 @@ return [
     ['GET',  '/news',                          'NewsController@index'],
     ['GET',  '/news/{slug}',                   'NewsController@show'],
     ['GET',  '/gallery',                       'GalleryController@index'],
+    ['GET',  '/gallery/{slug}',                'GalleryController@show'],
     ['GET',  '/documents',                     'DocumentController@index'],
 
     // Recensement et authentification

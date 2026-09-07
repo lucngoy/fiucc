@@ -569,4 +569,13 @@ return [
     'events.detail.notice.full'               => 'Désolé, cet événement vient d\'atteindre sa capacité maximale.',
     'events.detail.notice.unregistered'       => 'Votre inscription a été annulée.',
     'events.detail.notice.not_found'          => 'Cet événement est introuvable.',
+
+    'gallery.title'    => 'Galerie',
+    'gallery.subtitle' => "Les souvenirs visuels de la communauté — rassemblements, célébrations et moments partagés au fil des mandats.",
+    'gallery.empty'    => "Aucun album n'a encore été publié — les premières photos de la communauté apparaîtront ici une fois les événements documentés.",
+    'gallery.total'    => ':count albums',
+    'gallery.album.photo_count' => ':count photo(s)',
+    'gallery.detail.back'        => 'Retour à la galerie',
+    'gallery.detail.photo_count' => ':count photo(s)',
+    'gallery.detail.empty'       => "Aucune photo n'a encore été ajoutée à cet album.",
 ];
