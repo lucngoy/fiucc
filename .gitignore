@@ -15,6 +15,11 @@
 /storage/logs/*
 /storage/cache/*
 /storage/backups/*
+# storage/documents (FIUCC-57/58) : fichiers hors public/, jamais servis
+# directement par Apache — un document en visibilité members/admin ne doit
+# jamais être un fichier statique atteignable, seulement streamé par
+# DocumentController::download() après vérification des droits.
+/storage/documents/*
 !/storage/**/.gitkeep
 
 # Build

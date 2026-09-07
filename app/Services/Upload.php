@@ -6,14 +6,16 @@ namespace App\Services;
 use finfo;
 use GdImage;
 use RuntimeException;
+use ZipArchive;
 
 /**
- * Upload sécurisé d'images (section 34/35 du cahier des charges) :
+ * Upload sécurisé (section 34/35 du cahier des charges) :
  * - type MIME réel vérifié avec finfo sur le contenu du fichier — jamais
  *   $_FILES['type'] (fourni par le client, pas fiable) ni l'extension du nom
  *   envoyé ;
  * - nom de fichier aléatoire, jamais celui envoyé par l'utilisateur ;
- * - taille plafonnée (security.upload_max_size_mb) ;
+ * - taille plafonnée (security.upload_max_size_mb pour les images,
+ *   security.upload_document_max_size_mb pour les documents) ;
  * - dimensions d'entrée plafonnées (security.upload_max_input_dimension),
  *   vérifiées via getimagesize() — lit seulement l'en-tête, jamais les pixels
  *   — AVANT tout appel GD : une image bien compressée (8000x8000, quelques
@@ -22,9 +24,13 @@ use RuntimeException;
  *   bomb) ;
  * - redimensionnée pour ne jamais stocker plus grand que nécessaire.
  *
- * Ne gère que les images (jpg/jpeg/png/webp) : les documents (pdf, section 30)
- * n'ont pas besoin de redimensionnement et n'ont pas encore de ticket qui les
- * upload — à ajouter ici le jour où c'est réellement nécessaire.
+ * storeImage()/storeImageWithThumbnail() écrivent sous public/uploads/
+ * (servi par Apache, protection par obscurité du nom aléatoire seulement).
+ * storeDocument() (FIUCC-58) écrit sous storage/ (jamais servi par Apache) —
+ * un document en visibilité members/admin n'a aucune protection tant qu'il
+ * reste un fichier statique atteignable ; seul App\Controllers\
+ * DocumentController::download() y donne accès, après avoir vérifié les
+ * droits sur la ligne en base à chaque requête.
  */
 final class Upload
 {
@@ -169,6 +175,126 @@ final class Upload
             'path'           => $relativeDirectory . '/' . $filename,
             'thumbnail_path' => $relativeDirectory . '/thumbs/' . $filename,
         ];
+    }
+
+    private const ALLOWED_DOCUMENT_TYPES = [
+        'application/pdf' => 'pdf',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation' => 'pptx',
+        'application/vnd.oasis.opendocument.text' => 'odt',
+    ];
+
+    /**
+     * Documents bureautiques (FIUCC-58, section 30 du cahier des charges) —
+     * PDF, Word/Excel/PowerPoint (OOXML) et OpenDocument Text. Écrit sous
+     * storage/, jamais public/uploads/ : voir le commentaire de classe.
+     *
+     * @param array $file Une entrée de $_FILES (ex. $_FILES['file'])
+     * @param string $subdirectory Relatif à storage/ (ex. "documents")
+     * @return array{path: string, mime_type: string, size: int} path relatif
+     *         à storage/ (ex. "documents/ab12...ef.pdf")
+     * @throws RuntimeException Message déjà adapté à l'affichage utilisateur.
+     */
+    public static function storeDocument(array $file, string $subdirectory, int $maxSizeBytes): array
+    {
+        self::assertUploadOk($file, $maxSizeBytes);
+
+        $tmpPath = (string) $file['tmp_name'];
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $detectedMime = $finfo->file($tmpPath);
+
+        $match = $detectedMime !== false ? self::resolveDocumentType($detectedMime, $tmpPath) : null;
+
+        if ($match === null) {
+            throw new RuntimeException(t('upload.invalid_type'));
+        }
+
+        [$realMime, $extension] = $match;
+
+        $relativeDirectory = trim($subdirectory, '/');
+        $filename = bin2hex(random_bytes(16)) . '.' . $extension;
+        $destinationDir = rtrim(BASE_PATH, '/') . '/storage/' . $relativeDirectory;
+
+        if (!is_dir($destinationDir)) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        $destination = $destinationDir . '/' . $filename;
+
+        if (!move_uploaded_file($tmpPath, $destination)) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        $size = @filesize($destination);
+
+        return [
+            'path'      => $relativeDirectory . '/' . $filename,
+            'mime_type' => $realMime,
+            'size'      => $size !== false ? $size : (int) $file['size'],
+        ];
+    }
+
+    /**
+     * Les formats Office (docx/xlsx/pptx) et OpenDocument (odt) sont des
+     * archives ZIP : selon la version de libmagic installée sur le serveur,
+     * finfo peut renvoyer le type spécifique (constaté en local) OU se
+     * rabattre sur "application/zip" générique. Dans ce second cas, on
+     * n'accepte PAS le fichier sur la seule foi de son extension déclarée —
+     * on ouvre l'archive et on vérifie la présence d'un marqueur
+     * structurellement obligatoire pour le format prétendu :
+     * - ODF : le fichier "mimetype" (obligatoire, premier de l'archive,
+     *   non compressé) contient littéralement le type MIME — une convention
+     *   du format, pas une déduction ;
+     * - OOXML : un chemin interne précis existe pour chaque sous-format
+     *   (word/document.xml, xl/workbook.xml, ppt/presentation.xml) — un zip
+     *   quelconque renommé en .docx ne les contient pas.
+     * Un zip qui ne correspond à aucun de ces marqueurs est rejeté : c'est
+     * un zip, pas un document bureautique, quelle que soit son extension.
+     *
+     * @return array{0: string, 1: string}|null [mime_type, extension]
+     */
+    private static function resolveDocumentType(string $detectedMime, string $path): ?array
+    {
+        if (isset(self::ALLOWED_DOCUMENT_TYPES[$detectedMime])) {
+            return [$detectedMime, self::ALLOWED_DOCUMENT_TYPES[$detectedMime]];
+        }
+
+        if ($detectedMime !== 'application/zip') {
+            return null;
+        }
+
+        $zip = new ZipArchive();
+
+        if ($zip->open($path) !== true) {
+            return null;
+        }
+
+        $mimetypeEntry = $zip->getFromName('mimetype');
+
+        if ($mimetypeEntry === 'application/vnd.oasis.opendocument.text') {
+            $zip->close();
+
+            return ['application/vnd.oasis.opendocument.text', 'odt'];
+        }
+
+        $officeMarkers = [
+            'word/document.xml'    => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'xl/workbook.xml'      => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'ppt/presentation.xml' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        ];
+
+        foreach ($officeMarkers as $marker => $mime) {
+            if ($zip->locateName($marker) !== false) {
+                $zip->close();
+
+                return [$mime, self::ALLOWED_DOCUMENT_TYPES[$mime]];
+            }
+        }
+
+        $zip->close();
+
+        return null;
     }
 
     private static function assertUploadOk(array $file, int $maxSizeBytes): void

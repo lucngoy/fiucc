@@ -41,6 +41,11 @@ return [
     ['POST', '/admin/gallery/{id}/delete',      'Admin\GalleryController@delete'],
 
     ['GET',  '/admin/documents',                'Admin\DocumentController@index'],
+    ['GET',  '/admin/documents/create',         'Admin\DocumentController@create'],
+    ['POST', '/admin/documents',                'Admin\DocumentController@store'],
+    ['GET',  '/admin/documents/{id}/edit',      'Admin\DocumentController@edit'],
+    ['POST', '/admin/documents/{id}',           'Admin\DocumentController@update'],
+    ['POST', '/admin/documents/{id}/delete',    'Admin\DocumentController@delete'],
 
     ['GET',  '/admin/elections',                'Admin\ElectionController@index'],
     ['GET',  '/admin/elections/{id}',           'Admin\ElectionController@show'],

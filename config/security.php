@@ -32,6 +32,9 @@ return [
     // couverture d'événement — affichée en pleine largeur sur la page
     // détail d'un article.
     'upload_news_cover_max_dimension' => (int) Env::get('UPLOAD_NEWS_COVER_MAX_DIMENSION', 1600),
+    // Documents (FIUCC-58) : plafond séparé de upload_max_size_mb (images,
+    // 5 Mo) — un règlement ou un rapport scanné dépasse facilement 5 Mo.
+    'upload_document_max_size_mb' => (int) Env::get('UPLOAD_DOCUMENT_MAX_SIZE_MB', 15),
     // Plafond de dimensions AVANT chargement GD (decompression bomb) : une
     // image bien compressée peut passer le contrôle de taille en octets tout
     // en explosant la mémoire une fois décodée en pixels par GD. Vérifié via

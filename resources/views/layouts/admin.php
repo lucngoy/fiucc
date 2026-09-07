@@ -17,8 +17,8 @@
  * Coquille du back office (FIUCC-43) — maquette fiucc_portal_admin_dashboard/
  * code.html pour le style (sidebar bleu marine, cartes blanches arrondies).
  * Barre latérale volontairement minimale : seuls "Membres", "Événements",
- * "Galerie" et "Actualités" mènent à une page réelle aujourd'hui. Pas de
- * lien mort vers Dashboard/Documents/... — ces sections n'ont ni
+ * "Galerie", "Actualités" et "Documents" mènent à une page réelle
+ * aujourd'hui. Pas de lien mort vers Dashboard/... — ces sections n'ont ni
  * contrôleur ni ticket construits (une phase à la fois, CLAUDE.md) ; elles
  * rejoindront la navigation quand leur ticket existera, plutôt que de
  * simuler un back office plus complet qu'il ne l'est.
@@ -93,6 +93,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                    <?= $activeNav === 'news' ? 'aria-current="page"' : '' ?>>
                     <i class="fa-solid fa-newspaper w-5 text-center" aria-hidden="true"></i>
                     <?= e(t('admin.nav.news')) ?>
+                </a>
+                <a href="/admin/documents"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'documents' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'documents' ? 'aria-current="page"' : '' ?>>
+                    <i class="fa-solid fa-folder-open w-5 text-center" aria-hidden="true"></i>
+                    <?= e(t('admin.nav.documents')) ?>
                 </a>
             </nav>
         </div>

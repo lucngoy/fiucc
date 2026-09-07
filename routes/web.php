@@ -31,6 +31,9 @@ return [
     ['GET',  '/gallery',                       'GalleryController@index'],
     ['GET',  '/gallery/{slug}',                'GalleryController@show'],
     ['GET',  '/documents',                     'DocumentController@index'],
+    // Pas de middleware fixe : l'autorisation dépend de documents.visibility
+    // (par ligne), pas de la route — voir DocumentController::download().
+    ['GET',  '/documents/{id}/download',       'DocumentController@download'],
 
     // Recensement et authentification
     ['GET',  '/register',                      'RegistrationController@create'],
