@@ -20,6 +20,14 @@ return [
     // Couverture d'événement (FIUCC-51) : affichée en pleine largeur de
     // bande (jusqu'à ~1200px), plus grande qu'une photo de profil carrée.
     'upload_event_cover_max_dimension' => (int) Env::get('UPLOAD_EVENT_COVER_MAX_DIMENSION', 1600),
+    // Galerie (FIUCC-54) : taille "grande" servie par la visionneuse
+    // (FIUCC-53) — même ordre de grandeur qu'une couverture d'événement.
+    'upload_gallery_photo_max_dimension' => (int) Env::get('UPLOAD_GALLERY_PHOTO_MAX_DIMENSION', 1600),
+    // Miniature générée en même temps que la photo, un seul décodage —
+    // sert la grille d'albums/photos, jamais l'original redimensionné en
+    // CSS (inutilisable sur une grille de plusieurs dizaines de photos en
+    // 4G).
+    'upload_gallery_thumbnail_dimension' => (int) Env::get('UPLOAD_GALLERY_THUMBNAIL_DIMENSION', 400),
     // Plafond de dimensions AVANT chargement GD (decompression bomb) : une
     // image bien compressée peut passer le contrôle de taille en octets tout
     // en explosant la mémoire une fois décodée en pixels par GD. Vérifié via

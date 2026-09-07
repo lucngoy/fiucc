@@ -145,8 +145,9 @@ $mapsUrl = !empty($event['location'])
                 <?php else: ?>
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <?php foreach ($photos as $photo): ?>
+                            <?php $thumb = $photo['thumbnail_path'] ?: $photo['image_path']; ?>
                             <div class="aspect-square rounded-control overflow-hidden bg-white group relative">
-                                <img src="<?= e('/uploads/' . $photo['image_path']) ?>" alt="<?= e($photo['caption'] ?? '') ?>"
+                                <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e($photo['caption'] ?? '') ?>"
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                             </div>
                         <?php endforeach; ?>

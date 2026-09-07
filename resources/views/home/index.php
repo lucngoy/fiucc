@@ -344,8 +344,9 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         <?php else: ?>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
                 <?php foreach ($photos as $photo): ?>
+                    <?php $thumb = $photo['thumbnail_path'] ?: $photo['image_path']; ?>
                     <div class="group relative aspect-square rounded-card shadow-card overflow-hidden bg-surface">
-                        <img src="<?= e('/uploads/' . $photo['image_path']) ?>" alt="<?= e($photo['caption'] ?? $photo['event_title']) ?>"
+                        <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e($photo['caption'] ?? $photo['event_title']) ?>"
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <i class="fa-solid fa-expand text-white text-2xl" aria-hidden="true"></i>

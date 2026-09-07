@@ -14,6 +14,11 @@
  * est rattaché à un événement lui-même visible publiquement
  * (Album::findBySlug() ne renseigne event_slug que dans ce cas — jamais un
  * lien mort vers un brouillon).
+ *
+ * Grille : thumbnail_path (miniature générée à l'upload, FIUCC-54) avec
+ * repli sur image_path quand elle est vide (migration 008, colonne
+ * nullable). Le lien d'ouverture ("voir l'original") pointe toujours sur
+ * image_path (la dérivée pleine taille), jamais la miniature.
  */
 $album ??= [];
 $photos ??= [];
@@ -56,9 +61,10 @@ $photos ??= [];
     <?php else: ?>
         <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 md:gap-6 [column-fill:_balance]">
             <?php foreach ($photos as $photo): ?>
+                <?php $thumb = $photo['thumbnail_path'] ?: $photo['image_path']; ?>
                 <a href="<?= e('/uploads/' . $photo['image_path']) ?>" target="_blank" rel="noopener"
                    class="group block mb-4 md:mb-6 break-inside-avoid rounded-card overflow-hidden bg-surface border border-border hover:shadow-card transition-shadow">
-                    <img src="<?= e('/uploads/' . $photo['image_path']) ?>" alt="<?= e((string) ($photo['caption'] ?? '')) ?>"
+                    <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e((string) ($photo['caption'] ?? '')) ?>"
                          class="w-full h-auto group-hover:scale-[1.02] transition-transform duration-300">
                     <?php if (!empty($photo['caption'])): ?>
                         <p class="p-3 text-body-sm text-muted"><?= e($photo['caption']) ?></p>

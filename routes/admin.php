@@ -25,7 +25,16 @@ return [
     ['POST', '/admin/events/{id}/delete',       'Admin\EventController@delete'],
 
     ['GET',  '/admin/news',                     'Admin\NewsController@index'],
+
     ['GET',  '/admin/gallery',                  'Admin\GalleryController@index'],
+    ['GET',  '/admin/gallery/create',           'Admin\GalleryController@create'],
+    ['POST', '/admin/gallery',                  'Admin\GalleryController@store'],
+    ['GET',  '/admin/gallery/{id}/edit',        'Admin\GalleryController@edit'],
+    ['POST', '/admin/gallery/{id}',             'Admin\GalleryController@update'],
+    ['POST', '/admin/gallery/{id}/photos',      'Admin\GalleryController@uploadPhotos'],
+    ['POST', '/admin/gallery/{id}/photos/manage', 'Admin\GalleryController@managePhotos'],
+    ['POST', '/admin/gallery/{id}/delete',      'Admin\GalleryController@delete'],
+
     ['GET',  '/admin/documents',                'Admin\DocumentController@index'],
 
     ['GET',  '/admin/elections',                'Admin\ElectionController@index'],

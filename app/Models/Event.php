@@ -154,11 +154,14 @@ final class Event extends Model
      * événement n'a pas de photos propres, il a au plus un album
      * (albums.event_id). Album non 'published' (encore en
      * préparation) : aucune photo affichée, comme un album inexistant.
+     * thumbnail_path (miniature générée à l'upload, FIUCC-54) peut être
+     * NULL — la vue retombe sur image_path (migration 008, colonne
+     * nullable).
      */
     public static function images(int $eventId): array
     {
         $stmt = static::db()->prepare(
-            "SELECT ap.image_path, ap.caption
+            "SELECT ap.image_path, ap.thumbnail_path, ap.caption
              FROM album_photos ap
              INNER JOIN albums a ON a.id = ap.album_id
              WHERE a.event_id = :event_id AND a.status = 'published'
@@ -190,6 +193,19 @@ final class Event extends Model
         }
 
         return $now >= $start ? 'ongoing' : 'upcoming';
+    }
+
+    /**
+     * Options du menu déroulant "événement lié" (FIUCC-54, formulaire admin
+     * d'un album) — tous les statuts, y compris 'draft' : c'est un outil
+     * interne à l'admin, pas une liste publique, aucune raison d'exclure un
+     * événement pas encore publié.
+     */
+    public static function optionsForSelect(): array
+    {
+        return static::db()
+            ->query('SELECT id, title, start_date FROM events ORDER BY start_date DESC')
+            ->fetchAll();
     }
 
     /**
@@ -272,7 +288,7 @@ final class Event extends Model
     public static function recentPhotos(int $limit = 6): array
     {
         $stmt = static::db()->prepare(
-            "SELECT ap.image_path, ap.caption, e.title AS event_title
+            "SELECT ap.image_path, ap.thumbnail_path, ap.caption, e.title AS event_title
              FROM album_photos ap
              INNER JOIN albums a ON a.id = ap.album_id
              INNER JOIN events e ON e.id = a.event_id

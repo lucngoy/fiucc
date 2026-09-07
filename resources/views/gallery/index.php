@@ -11,10 +11,12 @@
  * Un album n'apparaît que 'published' ET avec au moins une photo
  * (Album::publicList()) : pas de lien vers un album vide, rien à y voir.
  *
- * État vide : aucun album n'est créé par le seeder de démonstration — le
- * CRUD admin avec upload (FIUCC-54) n'existe pas encore, donc aucune photo
- * réelle ne peut exister avant. Soigné plutôt que générique, comme
- * events.empty.upcoming/past.
+ * État vide : aucun album de démonstration — soigné plutôt que générique,
+ * comme events.empty.upcoming/past.
+ *
+ * Couverture : cover_thumbnail (miniature générée à l'upload, FIUCC-54)
+ * avec repli sur cover_image (fichier pleine taille) quand elle est vide —
+ * migration 008, thumbnail_path est nullable.
  */
 $albums ??= [];
 $total ??= 0;
@@ -51,9 +53,10 @@ $imagePlaceholder = static function (): string {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <?php foreach ($albums as $album): ?>
                 <a href="<?= e('/gallery/' . $album['slug']) ?>" class="group flex flex-col bg-white rounded-card border border-border hover:shadow-card transition-shadow overflow-hidden">
+                    <?php $cover = $album['cover_thumbnail'] ?: $album['cover_image']; ?>
                     <div class="relative h-52 w-full overflow-hidden bg-surface">
-                        <?php if (!empty($album['cover_image'])): ?>
-                            <img src="<?= e('/uploads/' . $album['cover_image']) ?>" alt=""
+                        <?php if (!empty($cover)): ?>
+                            <img src="<?= e('/uploads/' . $cover) ?>" alt=""
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <?php else: ?>
                             <?= $imagePlaceholder() ?>
