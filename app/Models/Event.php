@@ -7,12 +7,185 @@ use App\Core\Model;
 use PDO;
 
 /**
- * Modèle minimal — CRUD complet et /events (FIUCC-48, phase 3) ne sont pas
- * construits ici, volontairement. Sert la chronologie "Our Journey" de la
- * page Community (FIUCC-40) et la page d'accueil (FIUCC-46/47).
+ * CRUD admin (FIUCC-51) et l'inscription à un événement (FIUCC-50,
+ * event_registrations en écriture) ne sont pas construits ici,
+ * volontairement — seulement la lecture publique : chronologie "Our
+ * Journey" de /community (FIUCC-40), page d'accueil (FIUCC-46/47), liste
+ * (FIUCC-48) et détail (FIUCC-49) des événements.
  */
 final class Event extends Model
 {
+    private const PUBLIC_PER_PAGE = 9;
+
+    /**
+     * Bascule à venir/passé (section 26/27 du cahier des charges) : jamais
+     * un statut stocké séparément, toujours recalculée à partir des dates —
+     * un événement bascule seul à l'heure dite, sans qu'un admin ait à
+     * changer quoi que ce soit. COALESCE(end_date, start_date) plutôt que
+     * seulement start_date : un événement encore en cours (start_date passée,
+     * end_date pas encore atteinte) ne doit pas basculer "passé" avant sa fin
+     * réelle. 'archived' est toujours passé (décision éditoriale explicite de
+     * l'admin, indépendante de la date) ; 'draft' n'apparaît jamais
+     * publiquement, dans aucun des deux cas.
+     */
+    private static function whenClause(string $when): string
+    {
+        return $when === 'past'
+            ? "(status = 'archived' OR (status IN ('published', 'cancelled') AND COALESCE(end_date, start_date) < NOW()))"
+            : "(status IN ('published', 'cancelled') AND COALESCE(end_date, start_date) >= NOW())";
+    }
+
+    /**
+     * Liste publique (FIUCC-48) : recherche, filtre catégorie, pagination.
+     * $when vaut 'upcoming' ou 'past' — voir whenClause().
+     *
+     * @param array{search?: string, category?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function publicList(string $when, array $filters, int $page, int $perPage = self::PUBLIC_PER_PAGE): array
+    {
+        $conditions = [self::whenClause($when)];
+        $params = [];
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $conditions[] = '(title LIKE :search1 OR description LIKE :search2 OR location LIKE :search3)';
+            $like = '%' . $search . '%';
+            $params['search1'] = $like;
+            $params['search2'] = $like;
+            $params['search3'] = $like;
+        }
+
+        $category = trim((string) ($filters['category'] ?? ''));
+        if ($category !== '') {
+            $conditions[] = 'category = :category';
+            $params['category'] = $category;
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+        $orderDir = $when === 'past' ? 'DESC' : 'ASC';
+
+        $countStmt = static::db()->prepare("SELECT COUNT(*) FROM events {$where}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        // LIMIT/OFFSET interpolés, pas liés — même raison que
+        // Member::adminSearch() : PDO::ATTR_EMULATE_PREPARES à false
+        // n'accepte pas de valeur liée à cet endroit, sûr ici parce que
+        // $page/$perPage sont typés int (strict_types=1).
+        $offset = ($page - 1) * $perPage;
+        $stmt = static::db()->prepare(
+            "SELECT id, title, slug, description, category, location, cover_image, start_date, end_date, status, capacity
+             FROM events
+             {$where}
+             ORDER BY start_date {$orderDir}
+             LIMIT {$perPage} OFFSET {$offset}"
+        );
+        $stmt->execute($params);
+
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
+    }
+
+    /**
+     * Compte des onglets Upcoming/Past — toujours sans filtre (recherche/
+     * catégorie), pour que le nombre affiché sur l'onglet reste stable
+     * pendant qu'on filtre à l'intérieur.
+     */
+    public static function countByWhen(string $when): int
+    {
+        return (int) static::db()
+            ->query('SELECT COUNT(*) FROM events WHERE ' . self::whenClause($when))
+            ->fetchColumn();
+    }
+
+    /**
+     * Catégories réellement représentées parmi les événements visibles
+     * publiquement (jamais un brouillon) — même principe que
+     * Member::distinctFaculties()/activityCategoriesCount() ci-dessous.
+     */
+    public static function publicCategories(): array
+    {
+        $stmt = static::db()->query(
+            "SELECT DISTINCT category FROM events
+             WHERE status IN ('published', 'archived', 'cancelled') AND category IS NOT NULL AND category != ''
+             ORDER BY category ASC"
+        );
+
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Détail d'un événement (FIUCC-49) — jamais un brouillon, même avec le
+     * bon slug : un brouillon n'est pas prêt à être vu, peu importe qui a
+     * le lien.
+     */
+    public static function findBySlug(string $slug): ?array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT id, title, slug, description, category, location, cover_image, start_date, end_date, capacity, status
+             FROM events
+             WHERE slug = :slug AND status IN ('published', 'archived', 'cancelled')
+             LIMIT 1"
+        );
+        $stmt->execute(['slug' => $slug]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    /**
+     * "N inscrits" sur la page détail — 'going' et 'attended' comptent,
+     * 'cancelled' non. Vaut 0 aujourd'hui pour tous les événements :
+     * l'écriture dans event_registrations est FIUCC-50, pas construite ici.
+     */
+    public static function registeredCount(int $eventId): int
+    {
+        $stmt = static::db()->prepare(
+            "SELECT COUNT(*) FROM event_registrations WHERE event_id = :id AND status IN ('going', 'attended')"
+        );
+        $stmt->execute(['id' => $eventId]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Photos d'un événement précis (FIUCC-49, "Photos from past editions")
+     * — pas Event::recentPhotos() ci-dessous, qui mélange tous les
+     * événements pour la page d'accueil.
+     */
+    public static function images(int $eventId): array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT image_path, caption FROM event_images WHERE event_id = :id ORDER BY sort_order ASC, created_at ASC'
+        );
+        $stmt->execute(['id' => $eventId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * État affiché (upcoming/ongoing/completed/cancelled) — jamais stocké,
+     * toujours recalculé depuis start_date/end_date/status au moment de
+     * l'affichage (même logique que whenClause(), en PHP pour un event
+     * déjà chargé plutôt qu'en SQL pour une liste).
+     */
+    public static function displayState(array $event): string
+    {
+        if ($event['status'] === 'cancelled') {
+            return 'cancelled';
+        }
+
+        $now = time();
+        $start = strtotime((string) $event['start_date']);
+        $end = strtotime((string) ($event['end_date'] ?? $event['start_date']));
+
+        if ($event['status'] === 'archived' || $now > $end) {
+            return 'completed';
+        }
+
+        return $now >= $start ? 'ongoing' : 'upcoming';
+    }
+
     /**
      * Chronologie de la vie de la communauté : événements publiés ou déjà
      * passés (archived), jamais les brouillons ni les annulés.
