@@ -364,33 +364,12 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
     </div>
 
     <?php if ($photos !== []): ?>
-        <?php // Même visionneuse que gallery/show.php (FIUCC-53) — gallery-lightbox.js
-        // est générique, cherche #lightbox + [data-lightbox-trigger] sur
-        // n'importe quelle page. Le hover "expand" promettait déjà un
-        // agrandissement au clic ; jusqu'ici rien ne l'ouvrait vraiment. ?>
-        <dialog id="lightbox" class="rounded-card border-0 bg-transparent p-0 max-w-[95vw] w-full sm:max-w-4xl backdrop:bg-ink/90">
-            <div class="relative flex flex-col items-center gap-3 p-2 sm:p-4">
-                <button type="button" id="lightbox-close" aria-label="<?= e(t('gallery.lightbox.close')) ?>"
-                    class="absolute -top-3 -right-3 sm:-top-2 sm:-right-2 z-20 h-10 w-10 rounded-full bg-ink/70 hover:bg-ink text-white flex items-center justify-center transition-colors">
-                    <i class="fa-solid fa-xmark" aria-hidden="true"></i>
-                </button>
-                <div class="relative w-full flex items-center justify-center">
-                    <button type="button" id="lightbox-prev" aria-label="<?= e(t('gallery.lightbox.previous')) ?>"
-                        class="absolute left-1 sm:left-2 z-10 h-10 w-10 rounded-full bg-ink/50 hover:bg-ink/70 text-white flex items-center justify-center transition-colors">
-                        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-                    </button>
-                    <img id="lightbox-image" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-control object-contain">
-                    <button type="button" id="lightbox-next" aria-label="<?= e(t('gallery.lightbox.next')) ?>"
-                        class="absolute right-1 sm:right-2 z-10 h-10 w-10 rounded-full bg-ink/50 hover:bg-ink/70 text-white flex items-center justify-center transition-colors">
-                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-                    </button>
-                </div>
-                <div class="flex flex-col items-center gap-1 text-center px-8">
-                    <p id="lightbox-caption" class="text-white text-body-sm max-w-xl" hidden></p>
-                    <p id="lightbox-counter" class="text-white/60 text-label-caps font-label-caps uppercase"></p>
-                </div>
-            </div>
-        </dialog>
+        <?php // Même visionneuse que gallery/show.php (FIUCC-53, resources/views/
+        // partials/lightbox.php) — gallery-lightbox.js est générique, cherche
+        // #lightbox + [data-lightbox-trigger] sur n'importe quelle page. Le
+        // hover "expand" promettait déjà un agrandissement au clic ;
+        // jusqu'ici rien ne l'ouvrait vraiment. ?>
+        <?= component('lightbox') ?>
         <script src="/assets/js/gallery-lightbox.js" defer></script>
     <?php endif; ?>
 </div>

@@ -146,12 +146,17 @@ $mapsUrl = !empty($event['location'])
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                         <?php foreach ($photos as $photo): ?>
                             <?php $thumb = $photo['thumbnail_path'] ?: $photo['image_path']; ?>
-                            <div class="aspect-square rounded-control overflow-hidden bg-white group relative">
+                            <a href="<?= e('/uploads/' . $photo['image_path']) ?>" target="_blank" rel="noopener"
+                               data-lightbox-trigger data-full="<?= e('/uploads/' . $photo['image_path']) ?>" data-caption="<?= e((string) ($photo['caption'] ?? '')) ?>"
+                               class="aspect-square rounded-control overflow-hidden bg-white group relative block cursor-zoom-in">
                                 <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e($photo['caption'] ?? '') ?>"
                                      class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                            </div>
+                            </a>
                         <?php endforeach; ?>
                     </div>
+
+                    <?= component('lightbox') ?>
+                    <script src="/assets/js/gallery-lightbox.js" defer></script>
                 <?php endif; ?>
             </div>
 
