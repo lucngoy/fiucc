@@ -28,6 +28,10 @@ return [
     // CSS (inutilisable sur une grille de plusieurs dizaines de photos en
     // 4G).
     'upload_gallery_thumbnail_dimension' => (int) Env::get('UPLOAD_GALLERY_THUMBNAIL_DIMENSION', 400),
+    // Couverture d'article (FIUCC-56) : même ordre de grandeur qu'une
+    // couverture d'événement — affichée en pleine largeur sur la page
+    // détail d'un article.
+    'upload_news_cover_max_dimension' => (int) Env::get('UPLOAD_NEWS_COVER_MAX_DIMENSION', 1600),
     // Plafond de dimensions AVANT chargement GD (decompression bomb) : une
     // image bien compressée peut passer le contrôle de taille en octets tout
     // en explosant la mémoire une fois décodée en pixels par GD. Vérifié via

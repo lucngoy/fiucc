@@ -25,6 +25,11 @@ return [
     ['POST', '/admin/events/{id}/delete',       'Admin\EventController@delete'],
 
     ['GET',  '/admin/news',                     'Admin\NewsController@index'],
+    ['GET',  '/admin/news/create',              'Admin\NewsController@create'],
+    ['POST', '/admin/news',                     'Admin\NewsController@store'],
+    ['GET',  '/admin/news/{id}/edit',           'Admin\NewsController@edit'],
+    ['POST', '/admin/news/{id}',                'Admin\NewsController@update'],
+    ['POST', '/admin/news/{id}/delete',         'Admin\NewsController@delete'],
 
     ['GET',  '/admin/gallery',                  'Admin\GalleryController@index'],
     ['GET',  '/admin/gallery/create',           'Admin\GalleryController@create'],
