@@ -39,7 +39,7 @@ $categoryBadge = static function (string $category): string {
 
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12">
-    <div class="max-w-3xl mx-auto flex flex-col gap-8">
+    <div class="mx-auto flex flex-col gap-8">
         <a href="/news" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors self-start">
             <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
             <?= e(t('news.detail.back')) ?>
@@ -58,7 +58,7 @@ $categoryBadge = static function (string $category): string {
     </div>
 
     <?php if ($related !== []): ?>
-        <div class="max-w-4xl mx-auto mt-16 pt-10 border-t border-border">
+        <div class="mx-auto mt-16 pt-10 border-t border-border">
             <h2 class="font-headline-md text-headline-md text-ink mb-6"><?= e(t('news.detail.related')) ?></h2>
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <?php foreach ($related as $item): ?>
