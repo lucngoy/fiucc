@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var steps = Array.prototype.slice.call(form.querySelectorAll('[data-step]'));
     var indicators = Array.prototype.slice.call(document.querySelectorAll('[data-step-indicator]'));
     var stepIndicator = document.getElementById('step-indicator');
+    var progressFill = document.getElementById('step-progress');
     var current = 0;
 
     function show(index) {
@@ -24,7 +25,27 @@ document.addEventListener('DOMContentLoaded', function () {
             indicator.classList.toggle('text-muted', !reached);
         });
 
+        // Ligne reliant les cercles : le remplissage suit la même
+        // progression que les cercles ci-dessus (0% à l'étape 1, 100% à la
+        // dernière), pas un calcul séparé à resynchroniser.
+        if (progressFill && steps.length > 1) {
+            progressFill.style.width = ((index / (steps.length - 1)) * 100) + '%';
+        }
+
         current = index;
+
+        // Pas de scroll vers l'étape 1 : au premier chargement (le seul
+        // moyen d'y être, "Précédent" n'existe pas avant l'étape 2),
+        // l'utilisateur est déjà en haut du formulaire — un scroll y serait
+        // un mouvement parasite, pas un repère utile.
+        //
+        // Pas de scroll non plus en lg+ (>= 1024px, seuil Tailwind "lg" —
+        // même utilisé pour la carte d'information à gauche du formulaire) :
+        // à cette largeur le formulaire tient dans une colonne à côté de la
+        // carte, sans dépasser assez pour justifier un repositionnement.
+        if (index === 0 || window.matchMedia('(min-width: 1024px)').matches) {
+            return;
+        }
 
         // On vise l'indicateur d'étapes (au-dessus du formulaire), pas le
         // contenu de l'étape elle-même : sinon les numéros 1/2/3/4 sortent
@@ -33,8 +54,12 @@ document.addEventListener('DOMContentLoaded', function () {
         // ce dernier ignore scroll-margin-top en smooth scroll sur certains
         // navigateurs (Safari). getBoundingClientRect() force un reflow,
         // donc la position est à jour même juste après avoir démasqué l'étape.
+        // Hauteur du header lue en direct (pas une valeur fixe) : opérationnel
+        // sur petits écrans aussi, où le menu mobile déplié change sa hauteur
+        // réelle.
         var target = stepIndicator || steps[index];
-        var headerOffset = 88;
+        var header = document.querySelector('header');
+        var headerOffset = (header ? header.offsetHeight : 72) + 16;
         var top = target.getBoundingClientRect().top + window.pageYOffset - headerOffset;
         window.scrollTo({ top: top, behavior: 'smooth' });
     }

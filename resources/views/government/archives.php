@@ -42,9 +42,7 @@ $mandates ??= [];
 <?php if ($mandates === []): ?>
     <div class="w-full bg-white">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
-        <div class="max-w-xl mx-auto">
-            <?= component('alert', ['type' => 'info', 'message' => t('government.archives.empty')]) ?>
-        </div>
+        <?= component('alert', ['type' => 'info', 'message' => t('government.archives.empty')]) ?>
     </div>
     </div>
 <?php else: ?>

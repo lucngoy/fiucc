@@ -174,9 +174,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <?php if ($government === null || $members === []): ?>
-        <div class="max-w-xl mx-auto">
-            <?= component('alert', ['type' => 'info', 'message' => t('government.empty')]) ?>
-        </div>
+        <?= component('alert', ['type' => 'info', 'message' => t('government.empty')]) ?>
     <?php else: ?>
         <?php if ($spotlight !== null): ?>
             <div class="bg-surface rounded-card border border-border p-6 md:p-8 mb-10">
@@ -323,20 +321,18 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
         <?php endif; ?>
     </div>
 
-    <div class="max-w-xl mx-auto">
-        <?php if ($pastMandates === []): ?>
-            <?= component('alert', ['type' => 'info', 'message' => t('government.history.empty')]) ?>
-        <?php else: ?>
-            <div class="flex flex-col gap-3">
-                <?php foreach ($pastMandates as $mandate): ?>
-                    <div class="bg-surface rounded-card border border-border p-4 flex items-center justify-between">
-                        <span class="font-label-lg text-label-lg text-ink"><?= e($mandate['mandate']) ?></span>
-                        <span class="text-body-sm text-muted"><?= e(local_date($mandate['start_date'])) ?> – <?= e(local_date($mandate['end_date'])) ?></span>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </div>
+    <?php if ($pastMandates === []): ?>
+        <?= component('alert', ['type' => 'info', 'message' => t('government.history.empty')]) ?>
+    <?php else: ?>
+        <div class="max-w-xl mx-auto flex flex-col gap-3">
+            <?php foreach ($pastMandates as $mandate): ?>
+                <div class="bg-surface rounded-card border border-border p-4 flex items-center justify-between">
+                    <span class="font-label-lg text-label-lg text-ink"><?= e($mandate['mandate']) ?></span>
+                    <span class="text-body-sm text-muted"><?= e(local_date($mandate['start_date'])) ?> – <?= e(local_date($mandate['end_date'])) ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 </div>
 

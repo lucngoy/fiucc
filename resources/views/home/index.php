@@ -193,9 +193,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         </div>
 
         <?php if ($upcomingEvents === []): ?>
-            <div class="max-w-xl mx-auto">
-                <?= component('alert', ['type' => 'info', 'message' => t('home.events.empty')]) ?>
-            </div>
+            <?= component('alert', ['type' => 'info', 'message' => t('home.events.empty')]) ?>
         <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <?php foreach ($upcomingEvents as $event): ?>
@@ -274,9 +272,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         </div>
 
         <?php if ($latestNews === []): ?>
-            <div class="max-w-xl mx-auto">
-                <?= component('alert', ['type' => 'info', 'message' => t('home.news.empty')]) ?>
-            </div>
+            <?= component('alert', ['type' => 'info', 'message' => t('home.news.empty')]) ?>
         <?php else: ?>
             <?php
             // Article vedette (le plus récent) + liste compacte pour les
@@ -342,7 +338,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         </div>
 
         <?php if ($photos === []): ?>
-            <div class="max-w-xl mx-auto mb-8">
+            <div class="mb-8">
                 <?= component('alert', ['type' => 'info', 'message' => t('home.gallery.empty')]) ?>
             </div>
         <?php else: ?>
