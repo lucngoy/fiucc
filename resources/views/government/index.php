@@ -13,8 +13,10 @@
  *   correspondent à aucune donnée ;
  * - organigramme : nœud du haut dynamique (spotlight), paliers 2 et 3 repris
  *   textuellement du texte de la maquette (structure constitutionnelle, pas
- *   les 8 membres réels déjà montrés dans la grille) ; sans lignes de
- *   connexion dessinées (risque de tracés SVG non vérifiés) ;
+ *   les 8 membres réels déjà montrés dans la grille) ; branches reliant les
+ *   paliers reprises de code.html avec le même procédé (des div positionnées
+ *   — trait vertical, point, trait horizontal en absolute), jamais un tracé
+ *   SVG ;
  * - mandats précédents : liste réelle (App\Models\Government::pastMandates())
  *   plutôt qu'un historique inventé — vide aujourd'hui, FIUCC étant à son
  *   mandat fondateur, affiché honnêtement comme tel plutôt que masqué ;
@@ -105,16 +107,24 @@ $renderSocialLink = static function (?string $instagram, string $size = 'h-8 w-8
         . '<i class="fa-brands fa-instagram" aria-hidden="true"></i></a>';
 };
 
-$renderOrgTier2Box = static function (array $item): string {
-    return '<div class="bg-white rounded-card border border-border shadow-card px-4 py-3">'
+// Branche verticale au-dessus d'une carte de palier — même procédé que
+// code.html (div positionnées en absolute), pas de tracé SVG.
+$renderOrgBranch = static function (string $visibility = ''): string {
+    return '<div class="' . ($visibility !== '' ? $visibility . ' ' : '') . 'absolute -top-4 left-1/2 -translate-x-1/2 w-0.5 h-4 bg-border" aria-hidden="true"></div>';
+};
+
+$renderOrgTier2Box = static function (array $item) use ($renderOrgBranch): string {
+    return '<div class="relative bg-white rounded-card border border-border shadow-card px-4 py-3">'
+        . $renderOrgBranch('hidden sm:block')
         . '<p class="text-label-caps font-label-caps uppercase text-muted mb-1">' . e($item['eyebrow']) . '</p>'
         . '<p class="font-label-lg text-label-lg text-ink">' . e($item['title']) . '</p>'
         . '<p class="text-body-sm text-muted">' . e($item['subtitle']) . '</p>'
         . '</div>';
 };
 
-$renderOrgTier3Box = static function (array $item): string {
-    return '<div class="bg-white rounded-card border border-border shadow-card px-3 py-3 text-center">'
+$renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): string {
+    return '<div class="relative bg-white rounded-card border border-border shadow-card px-3 py-3 text-center">'
+        . $renderOrgBranch('hidden lg:block')
         . '<p class="text-label-md font-label-md text-ink">' . e($item['title']) . '</p>'
         . '<p class="text-label-caps text-muted">' . e($item['subtitle']) . '</p>'
         . '</div>';
@@ -205,7 +215,8 @@ $renderOrgTier3Box = static function (array $item): string {
                     <div class="flex items-center gap-2">
                         <label for="government-filter" class="text-label-md font-label-md text-muted shrink-0"><?= e(t('government.filter_by')) ?></label>
                         <select id="government-filter"
-                            class="h-9 rounded-control border border-border px-3 text-body-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-primary-light/50">
+                            style="max-width: 200px;"
+                            class="h-9 w-full rounded-control border border-border px-3 text-body-sm text-ink bg-white focus:outline-none focus:ring-2 focus:ring-primary-light/50">
                             <option value="all"><?= e(t('government.filter.all')) ?></option>
                             <?php foreach ($facultyFilters as $faculty): ?>
                                 <option value="<?= e($faculty) ?>"><?= e($faculty) ?></option>
@@ -252,7 +263,7 @@ $renderOrgTier3Box = static function (array $item): string {
         <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.orgchart.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
     </div>
-    <div class="flex flex-col items-center gap-4">
+    <div class="flex flex-col items-center">
         <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
         <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
             <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
@@ -260,18 +271,34 @@ $renderOrgTier3Box = static function (array $item): string {
             <p class="text-body-sm text-white/80"><?= e(t('government.orgchart.top_subtitle', ['name' => $spotlight['display_name']])) ?></p>
         </div>
 
+        <!-- Branche président → palier 2. -->
+        <div class="w-0.5 h-6 bg-border" aria-hidden="true"></div>
+        <div class="w-3 h-3 rounded-full bg-primary -mt-1.5 mb-1" aria-hidden="true"></div>
+
         <!-- Paliers 2 et 3 : structure constitutionnelle, reprise textuellement
-             de la maquette (pas les membres réels, déjà montrés au-dessus). -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-xl">
-            <?php foreach ($orgTier2 as $item): ?>
-                <?= $renderOrgTier2Box($item) ?>
-            <?php endforeach; ?>
+             de la maquette (pas les membres réels, déjà montrés au-dessus).
+             Branches en div positionnées, même procédé que code.html — pas
+             de tracé SVG. -->
+        <div class="relative w-full max-w-xl pt-4">
+            <div class="hidden sm:block absolute top-0 left-1/4 right-1/4 h-0.5 bg-border" aria-hidden="true"></div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+                <?php foreach ($orgTier2 as $item): ?>
+                    <?= $renderOrgTier2Box($item) ?>
+                <?php endforeach; ?>
+            </div>
         </div>
 
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 w-full">
-            <?php foreach ($orgTier3 as $item): ?>
-                <?= $renderOrgTier3Box($item) ?>
-            <?php endforeach; ?>
+        <!-- Branche palier 2 → palier 3. -->
+        <div class="w-0.5 h-6 bg-border" aria-hidden="true"></div>
+        <div class="w-3 h-3 rounded-full bg-primary -mt-1.5 mb-1" aria-hidden="true"></div>
+
+        <div class="relative w-full pt-4">
+            <div class="hidden lg:block absolute top-0 left-[10%] right-[10%] h-0.5 bg-border" aria-hidden="true"></div>
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 w-full">
+                <?php foreach ($orgTier3 as $item): ?>
+                    <?= $renderOrgTier3Box($item) ?>
+                <?php endforeach; ?>
+            </div>
         </div>
     </div>
 </div>
