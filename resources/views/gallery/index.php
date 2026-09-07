@@ -42,7 +42,7 @@ $imagePlaceholder = static function (): string {
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12">
     <?php if ($albums === []): ?>
-        <div class="max-w-xl mx-auto">
+        <div class="mx-auto">
             <?= component('alert', ['type' => 'info', 'message' => t('gallery.empty')]) ?>
         </div>
     <?php else: ?>
