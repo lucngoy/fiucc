@@ -48,8 +48,15 @@ $newsCategoryLabel = static function (string $category): string {
     return t('home.news.category.' . $category);
 };
 
-$aboutPhotoPath = 'assets/images/home/about.jpg';
-$hasAboutPhoto = is_file(BASE_PATH . '/public/' . $aboutPhotoPath);
+$aboutPhotoCandidates = ['assets/images/home/about.jpg', 'assets/images/home/about.jpeg', 'assets/images/home/about.png', 'assets/images/home/about.heic'];
+$aboutPhotoPath = null;
+foreach ($aboutPhotoCandidates as $candidate) {
+    if (is_file(BASE_PATH . '/public/' . $candidate)) {
+        $aboutPhotoPath = $candidate;
+        break;
+    }
+}
+$hasAboutPhoto = $aboutPhotoPath !== null;
 
 $journeySteps = [
     ['icon' => 'fa-solid fa-compass', 'label' => t('home.journey.step1_label'), 'title' => t('home.journey.step1_title'), 'body' => t('home.journey.step1_body')],
