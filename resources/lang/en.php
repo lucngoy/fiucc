@@ -579,5 +579,6 @@ return [
     'gallery.album.photo_count' => ':count photo(s)',
     'gallery.detail.back'        => 'Back to gallery',
     'gallery.detail.photo_count' => ':count photo(s)',
+    'gallery.detail.view_event'  => 'View the event ":title"',
     'gallery.detail.empty'       => 'No photos have been added to this album yet.',
 ];

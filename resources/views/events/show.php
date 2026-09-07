@@ -9,7 +9,8 @@
  * d'affichage sur users). Gardé uniquement ce que le schéma porte
  * réellement : titre/description/catégorie/lieu/dates/capacité (events),
  * inscrits (event_registrations, à 0 tant que FIUCC-50 n'écrit rien),
- * photos (event_images, vide tant qu'aucune n'est déposée).
+ * photos (album lié via albums.event_id, migration 007 — vide tant qu'aucun
+ * album n'est créé et rempli, FIUCC-54).
  *
  * "Program & Timeline" du cahier (§27) : pas de table dédiée pour une liste
  * d'horaires structurée (event_program_items) — décision prise, pas un

@@ -9,6 +9,9 @@ use App\Core\Model;
  * Galerie photo par albums (FIUCC-52, section 28 du cahier des charges) —
  * lecture publique ici. CRUD admin (upload multiple, réorganisation,
  * suppression) : FIUCC-54, pas construit dans ce modèle pour l'instant.
+ * Un album peut être rattaché à un événement (albums.event_id, migration
+ * 007) — les photos d'un événement précis sont son album, pas une table
+ * séparée : voir Event::images()/recentPhotos().
  */
 final class Album extends Model
 {
@@ -52,14 +55,20 @@ final class Album extends Model
 
     /**
      * Détail d'un album (FIUCC-52) — jamais un brouillon, même avec le bon
-     * slug, même principe qu'Event::findBySlug().
+     * slug, même principe qu'Event::findBySlug(). event_title/event_slug
+     * : renseignés seulement si l'événement lié est lui-même visible
+     * publiquement (même condition que Event::findBySlug — jamais un
+     * brouillon) ; sinon NULL, pour ne jamais afficher de lien mort "voir
+     * l'événement" vers une fiche que le visiteur ne pourrait pas ouvrir.
      */
     public static function findBySlug(string $slug): ?array
     {
         $stmt = static::db()->prepare(
-            "SELECT id, title, slug, description, created_at
-             FROM albums
-             WHERE slug = :slug AND status = 'published'
+            "SELECT a.id, a.title, a.slug, a.description, a.created_at,
+                    e.title AS event_title, e.slug AS event_slug
+             FROM albums a
+             LEFT JOIN events e ON e.id = a.event_id AND e.status IN ('published', 'archived', 'cancelled')
+             WHERE a.slug = :slug AND a.status = 'published'
              LIMIT 1"
         );
         $stmt->execute(['slug' => $slug]);

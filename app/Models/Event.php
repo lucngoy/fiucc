@@ -149,14 +149,22 @@ final class Event extends Model
     /**
      * Photos d'un événement précis (FIUCC-49, "Photos from past editions")
      * — pas Event::recentPhotos() ci-dessous, qui mélange tous les
-     * événements pour la page d'accueil.
+     * événements pour la page d'accueil. Lit l'album lié à l'événement
+     * (migration 007, décision FIUCC-52/54) : plus de table event_images
+     * séparée, un événement n'a pas de photos propres, il a au plus un
+     * album (albums.event_id). Album non 'published' (encore en
+     * préparation) : aucune photo affichée, comme un album inexistant.
      */
     public static function images(int $eventId): array
     {
         $stmt = static::db()->prepare(
-            'SELECT image_path, caption FROM event_images WHERE event_id = :id ORDER BY sort_order ASC, created_at ASC'
+            "SELECT ap.image_path, ap.caption
+             FROM album_photos ap
+             INNER JOIN albums a ON a.id = ap.album_id
+             WHERE a.event_id = :event_id AND a.status = 'published'
+             ORDER BY ap.sort_order ASC, ap.created_at ASC"
         );
-        $stmt->execute(['id' => $eventId]);
+        $stmt->execute(['event_id' => $eventId]);
 
         return $stmt->fetchAll();
     }
@@ -252,20 +260,24 @@ final class Event extends Model
 
     /**
      * "Memories" (section 9 du cahier des charges, page d'accueil) : photos
-     * réellement déposées sur des événements publiés/archivés — event_images
-     * est la seule table de photos du schéma, il n'existe pas de table
-     * "gallery" séparée. Vide tant qu'aucune photo n'est réellement
-     * uploadée (aucun seeder n'en crée) : affiché honnêtement comme tel côté
-     * vue, jamais masqué derrière des images inventées.
+     * réellement déposées sur l'album lié à un événement publié/archivé
+     * (migration 007 — album_photos, via albums.event_id, plus de table
+     * event_images séparée). Une photo d'un album autonome, sans event_id
+     * (ex. "Football Match"), n'apparaît pas ici : ce widget reste "les
+     * souvenirs DES événements", la galerie générale (/gallery) montre
+     * tous les albums, liés ou non. Vide tant qu'aucune photo n'est
+     * réellement uploadée : affiché honnêtement comme tel côté vue, jamais
+     * masqué derrière des images inventées.
      */
     public static function recentPhotos(int $limit = 6): array
     {
         $stmt = static::db()->prepare(
-            "SELECT ei.image_path, ei.caption, e.title AS event_title
-             FROM event_images ei
-             JOIN events e ON e.id = ei.event_id
-             WHERE e.status IN ('published', 'archived')
-             ORDER BY ei.created_at DESC
+            "SELECT ap.image_path, ap.caption, e.title AS event_title
+             FROM album_photos ap
+             INNER JOIN albums a ON a.id = ap.album_id
+             INNER JOIN events e ON e.id = a.event_id
+             WHERE e.status IN ('published', 'archived') AND a.status = 'published'
+             ORDER BY ap.created_at DESC
              LIMIT :limit"
         );
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -531,11 +543,16 @@ final class Event extends Model
     }
 
     /**
-     * Suppression définitive (FIUCC-51) — sûre au niveau base : event_images
-     * et event_registrations portent ON DELETE CASCADE (001_initial_schema.sql).
-     * Le fichier de couverture, lui, n'est pas géré par une contrainte SQL —
-     * à supprimer séparément par l'appelant (voir Admin\EventController::delete(),
-     * même best-effort qu'un ancien fichier remplacé).
+     * Suppression définitive (FIUCC-51) — sûre au niveau base :
+     * event_registrations porte ON DELETE CASCADE (001_initial_schema.sql).
+     * L'album lié, lui, n'est PAS supprimé : albums.event_id passe à NULL
+     * (ON DELETE SET NULL, migration 007) — les photos de l'événement
+     * survivent à la suppression de sa fiche, l'album redevient un album
+     * autonome dans la galerie générale. Le fichier de couverture de
+     * l'événement, séparé de l'album, n'est pas géré par une contrainte
+     * SQL — à supprimer séparément par l'appelant (voir
+     * Admin\EventController::delete(), même best-effort qu'un ancien
+     * fichier remplacé).
      */
     public static function delete(int $id): void
     {

@@ -9,6 +9,11 @@
  * Chaque photo ouvre son fichier original dans un nouvel onglet — pas de
  * visionneuse plein écran avec navigation précédent/suivant pour l'instant
  * (lightbox : FIUCC-53, ticket suivant).
+ *
+ * Lien "Voir l'événement" (migration 007) : affiché seulement si l'album
+ * est rattaché à un événement lui-même visible publiquement
+ * (Album::findBySlug() ne renseigne event_slug que dans ce cas — jamais un
+ * lien mort vers un brouillon).
  */
 $album ??= [];
 $photos ??= [];
@@ -27,6 +32,13 @@ $photos ??= [];
             <p class="text-body-lg text-white/80 max-w-2xl whitespace-pre-line"><?= e($album['description']) ?></p>
         <?php endif; ?>
         <p class="text-body-md text-white/70 mt-3"><?= e(t('gallery.detail.photo_count', ['count' => count($photos)])) ?></p>
+        <?php if (!empty($album['event_slug'])): ?>
+            <a href="<?= e('/events/' . $album['event_slug']) ?>"
+               class="inline-flex items-center gap-2 mt-4 text-body-sm text-white/80 hover:text-white transition-colors">
+                <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                <?= e(t('gallery.detail.view_event', ['title' => $album['event_title']])) ?>
+            </a>
+        <?php endif; ?>
     </div>
 </div>
 

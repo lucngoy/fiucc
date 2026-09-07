@@ -577,5 +577,6 @@ return [
     'gallery.album.photo_count' => ':count photo(s)',
     'gallery.detail.back'        => 'Retour à la galerie',
     'gallery.detail.photo_count' => ':count photo(s)',
+    'gallery.detail.view_event'  => "Voir l'événement « :title »",
     'gallery.detail.empty'       => "Aucune photo n'a encore été ajoutée à cet album.",
 ];
