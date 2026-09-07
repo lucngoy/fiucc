@@ -392,10 +392,12 @@ return [
 
     'home.hero.badge' => 'Final International University',
 
-    'home.about.eyebrow' => 'À propos',
-    'home.about.title'   => 'À propos de la communauté',
-    'home.about.body'    => 'La Communauté Congolaise de Final rassemble les étudiants congolais de Final International University autour de la solidarité, de la culture, du leadership et du développement.',
-    'home.about.cta'     => 'Découvrir la communauté',
+    'home.about.eyebrow' => 'Notre mission et notre identité',
+    'home.about.title'   => 'Unis loin de chez nous, unis dans l\'excellence',
+    'home.about.body_1'  => "Fondée pour accompagner des étudiants loin de chez eux, la Communauté Congolaise de Final (FIUCC) est un repère de résilience académique, d'engagement civique et de fraternité authentique à travers Chypre du Nord. Nous veillons à ce que chaque nouvel étudiant s'intègre en douceur à la vie universitaire.",
+    'home.about.body_2'  => "À travers des cercles de mentorat ciblés, une représentation consulaire institutionnelle, des journées culturelles vibrantes et une entraide étudiante bienveillante, notre communauté donne aux intellectuels congolais les moyens de diriger avec intégrité, d'exceller académiquement et de préserver une fierté ancestrale profonde.",
+    'home.about.cta'          => 'Lire notre histoire',
+    'home.about.constitution' => 'Notre constitution et nos statuts',
     'home.about.photo_pending' => 'Photo de la communauté à venir',
 
     'home.journey.eyebrow'  => 'Notre parcours ensemble',

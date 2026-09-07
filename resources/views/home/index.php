@@ -99,7 +99,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
             <?= component('button', ['label' => t('home.hero.cta_discover'), 'variant' => 'inverse', 'href' => '#events']) ?>
         </div>
-        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/80 text-label-md font-label-md pt-6 border-t border-white/15">
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/80 text-label-md font-label-md pt-6">
             <span class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
                 <?= e(t('home.stats.students', ['count' => $stats['students']])) ?>
@@ -128,7 +128,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             ];
             ?>
             <?php foreach ($statItems as $stat): ?>
-                <div class="flex flex-col items-center text-center gap-2 p-4 rounded-card bg-surface">
+                <div class="flex flex-col border border-border items-center text-center gap-2 p-4 rounded-card bg-surface">
                     <i class="<?= e($stat['icon']) ?> text-primary text-2xl" aria-hidden="true"></i>
                     <span class="font-headline-lg text-headline-lg text-primary"><?= e($stat['value']) ?></span>
                     <span class="text-label-md font-label-md text-muted"><?= e($stat['caption']) ?></span>
@@ -150,10 +150,24 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
                 </div>
             <?php endif; ?>
             <div>
-                <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-3"><?= e(t('home.about.eyebrow')) ?></p>
-                <h2 class="font-headline-md text-headline-md text-ink mb-4"><?= e(t('home.about.title')) ?></h2>
-                <p class="text-body-md text-muted mb-8"><?= e(t('home.about.body')) ?></p>
-                <?= component('button', ['label' => t('home.about.cta'), 'variant' => 'primary', 'href' => '/community']) ?>
+                <p class="inline-flex items-center gap-2 font-label-caps text-label-caps uppercase text-primary tracking-wider mb-4">
+                    <i class="fa-solid fa-flag text-xs" aria-hidden="true"></i>
+                    <?= e(t('home.about.eyebrow')) ?>
+                </p>
+                <h2 class="font-headline-md text-headline-md text-ink mb-5"><?= e(t('home.about.title')) ?></h2>
+                <p class="text-body-md text-muted leading-relaxed mb-4"><?= e(t('home.about.body_1')) ?></p>
+                <p class="text-body-md text-muted leading-relaxed mb-6"><?= e(t('home.about.body_2')) ?></p>
+                <div class="flex flex-wrap items-center gap-6">
+                    <a href="/community" class="group inline-flex items-center gap-2 text-primary font-label-lg text-label-lg font-semibold hover:underline">
+                        <span><?= e(t('home.about.cta')) ?></span>
+                        <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" aria-hidden="true"></i>
+                    </a>
+                    <span class="text-border" aria-hidden="true">•</span>
+                    <a href="/community/government" class="inline-flex items-center gap-2 text-muted hover:text-ink font-label-lg text-label-lg transition-colors">
+                        <i class="fa-solid fa-gavel text-xs" aria-hidden="true"></i>
+                        <span><?= e(t('home.about.constitution')) ?></span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -178,7 +192,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <?php foreach ($upcomingEvents as $event): ?>
-                    <div class="group flex flex-col bg-white rounded-card border border-border shadow-card hover:shadow-lg transition-shadow overflow-hidden relative">
+                    <div class="group flex flex-col bg-white rounded-card border border-border hover:shadow-card transition-shadow overflow-hidden relative">
                         <div class="relative h-44 w-full overflow-hidden bg-surface">
                             <?php if (!empty($event['cover_image'])): ?>
                                 <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt=""
@@ -227,7 +241,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             <?php foreach ($journeySteps as $step): ?>
-                <div class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border shadow-card">
+                <div class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border">
                     <span class="h-12 w-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
                         <i class="<?= e($step['icon']) ?> text-lg" aria-hidden="true"></i>
                     </span>
@@ -266,7 +280,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             $compactNews = array_slice($latestNews, 1);
             ?>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <a href="<?= e('/news/' . $featuredNews['slug']) ?>" class="group lg:col-span-7 flex flex-col bg-white rounded-card border border-border shadow-card hover:shadow-lg transition-shadow p-6">
+                <a href="<?= e('/news/' . $featuredNews['slug']) ?>" class="group lg:col-span-7 flex flex-col bg-white rounded-card border border-border hover:shadow-card transition-shadow p-6">
                     <div class="relative aspect-video w-full rounded-control overflow-hidden mb-5">
                         <?php if (!empty($featuredNews['cover_image'])): ?>
                             <img src="<?= e('/uploads/' . $featuredNews['cover_image']) ?>" alt=""
@@ -288,7 +302,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
                 </a>
                 <div class="lg:col-span-5 flex flex-col gap-4">
                     <?php foreach ($compactNews as $news): ?>
-                        <a href="<?= e('/news/' . $news['slug']) ?>" class="group p-4 rounded-card bg-white border border-border shadow-card hover:shadow-lg transition-shadow flex gap-4 items-start">
+                        <a href="<?= e('/news/' . $news['slug']) ?>" class="group p-4 rounded-card bg-white border border-border hover:shadow-card transition-shadow flex gap-4 items-start">
                             <div class="relative h-20 w-20 rounded-control overflow-hidden shrink-0">
                                 <?php if (!empty($news['cover_image'])): ?>
                                     <img src="<?= e('/uploads/' . $news['cover_image']) ?>" alt=""

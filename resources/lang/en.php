@@ -389,10 +389,12 @@ return [
 
     'home.hero.badge' => 'Final International University',
 
-    'home.about.eyebrow' => 'About Us',
-    'home.about.title'   => 'About the Community',
-    'home.about.body'    => 'The Congolese Community of Final brings together Congolese students at Final International University around solidarity, culture, leadership, and development.',
-    'home.about.cta'     => 'Discover the Community',
+    'home.about.eyebrow' => 'Our Mission & Identity',
+    'home.about.title'   => 'United Abroad, Excelling Together',
+    'home.about.body_1'  => 'Founded to support scholars venturing far from home, the Congolese Community of Final (FIUCC) stands as a beacon of academic resilience, diplomatic civic engagement, and genuine fraternity across North Cyprus. We ensure every incoming student transitions seamlessly into university life.',
+    'home.about.body_2'  => 'Through targeted mentorship circles, institutional consular representation, vibrant cultural days, and benevolent student assistance, our community empowers Congolese intellectuals to lead with integrity, achieve honor grades, and maintain deep ancestral pride.',
+    'home.about.cta'          => 'Read our story',
+    'home.about.constitution' => 'Our Constitution & Bylaws',
     'home.about.photo_pending' => 'Community photo coming soon',
 
     'home.journey.eyebrow'  => 'Our Journey Together',
