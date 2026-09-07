@@ -37,6 +37,7 @@ $statusBadge = static function (string $status): string {
 $noticeMap = [
     'created'   => ['type' => 'success', 'message' => t('admin.events.notice.created')],
     'updated'   => ['type' => 'success', 'message' => t('admin.events.notice.updated')],
+    'archived'  => ['type' => 'success', 'message' => t('admin.events.notice.archived')],
     'deleted'   => ['type' => 'success', 'message' => t('admin.events.notice.deleted')],
     'not_found' => ['type' => 'error',   'message' => t('admin.events.notice.not_found')],
 ];
@@ -134,6 +135,15 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                                         class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
                                         <i class="fa-solid fa-pen" aria-hidden="true"></i>
                                     </a>
+                                    <?php if ($event['status'] !== 'archived'): ?>
+                                        <form method="POST" action="/admin/events/<?= e((string) $eventId) ?>/archive" class="contents">
+                                            <?= csrf_field() ?>
+                                            <button type="submit" aria-label="<?= e(t('admin.events.action.archive')) ?>"
+                                                class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
+                                                <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
                                     <button type="button" data-open-dialog="delete-dialog-<?= e((string) $eventId) ?>"
                                         aria-label="<?= e(t('admin.events.action.delete')) ?>"
                                         class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">

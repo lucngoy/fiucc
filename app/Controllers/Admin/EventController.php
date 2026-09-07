@@ -164,6 +164,31 @@ final class EventController extends Controller
         $this->redirect('/admin/events?notice=updated');
     }
 
+    /**
+     * Action rapide "Archiver" (liste admin) — même principe que
+     * MemberController::validate() : un clic, sans passer par le
+     * formulaire d'édition complet. Réversible (l'admin peut rouvrir
+     * l'événement en édition et repasser à un autre statut), donc pas de
+     * confirmation <dialog> nécessaire, contrairement à delete().
+     */
+    public function archive(array $params): void
+    {
+        $event = Event::find((int) ($params['id'] ?? 0));
+
+        if ($event === null) {
+            $this->redirect('/admin/events?notice=not_found');
+            return;
+        }
+
+        $adminId = (int) $_SESSION['user_id'];
+        $eventId = (int) $event['id'];
+
+        Event::updateStatus($eventId, 'archived');
+        ActivityLog::record($adminId, 'event.archived', 'event', $eventId);
+
+        $this->redirect('/admin/events?notice=archived');
+    }
+
     public function delete(array $params): void
     {
         $event = Event::find((int) ($params['id'] ?? 0));

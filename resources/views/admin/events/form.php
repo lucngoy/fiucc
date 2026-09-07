@@ -22,7 +22,7 @@ $inputClasses = static function (?string $errorMessage): string {
             : 'border-border focus:border-primary focus:ring-primary-light/50');
 };
 ?>
-<div class="max-w-2xl mx-auto">
+<div>
     <a href="/admin/events" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-6">
         <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
         <?= e(t('admin.events.title')) ?>
@@ -34,7 +34,7 @@ $inputClasses = static function (?string $errorMessage): string {
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="<?= e($action) ?>" enctype="multipart/form-data" class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col gap-6">
+    <form method="POST" action="<?= e($action) ?>" enctype="multipart/form-data" class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-6">
         <?= csrf_field() ?>
 
         <?= component('form_field', [
@@ -53,7 +53,7 @@ $inputClasses = static function (?string $errorMessage): string {
             <?php endif; ?>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <?= component('form_field', [
                 'name' => 'category', 'label' => t('admin.events.field.category'),
                 'value' => $field('category'), 'error' => $error('category'),
@@ -64,9 +64,14 @@ $inputClasses = static function (?string $errorMessage): string {
                 'name' => 'location', 'label' => t('admin.events.field.location'),
                 'value' => $field('location'), 'error' => $error('location'),
             ]) ?>
+
+            <?= component('form_field', [
+                'name' => 'capacity', 'label' => t('admin.events.field.capacity'), 'type' => 'number',
+                'value' => $field('capacity'), 'error' => $error('capacity'), 'help' => t('admin.events.field.capacity_help'),
+            ]) ?>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <?= component('form_field', [
                 'name' => 'start_date', 'label' => t('admin.events.field.start_date'), 'type' => 'datetime-local', 'required' => true,
                 'value' => $field('start_date'), 'error' => $error('start_date'),
@@ -76,27 +81,22 @@ $inputClasses = static function (?string $errorMessage): string {
                 'name' => 'end_date', 'label' => t('admin.events.field.end_date'), 'type' => 'datetime-local',
                 'value' => $field('end_date'), 'error' => $error('end_date'), 'help' => t('admin.events.field.end_date_help'),
             ]) ?>
-        </div>
 
-        <?= component('form_field', [
-            'name' => 'capacity', 'label' => t('admin.events.field.capacity'), 'type' => 'number',
-            'value' => $field('capacity'), 'error' => $error('capacity'), 'help' => t('admin.events.field.capacity_help'),
-        ]) ?>
-
-        <div class="flex flex-col gap-1.5">
-            <label for="field-status" class="font-label-lg text-label-lg text-ink"><?= e(t('admin.events.field.status')) ?></label>
-            <select id="field-status" name="status" class="<?= e($inputClasses($error('status'))) ?> bg-white">
-                <?php foreach ($statuses as $statusOption): ?>
-                    <option value="<?= e($statusOption) ?>" <?= $field('status') === $statusOption ? 'selected' : '' ?>>
-                        <?= e(t('admin.events.status.' . $statusOption)) ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-            <?php if ($error('status') !== null): ?>
-                <p class="text-body-sm text-danger" role="alert"><?= e($error('status')) ?></p>
-            <?php else: ?>
-                <p class="text-body-sm text-muted"><?= e(t('admin.events.field.status_help.' . ($field('status') ?: 'draft'))) ?></p>
-            <?php endif; ?>
+            <div class="flex flex-col gap-1.5">
+                <label for="field-status" class="font-label-lg text-label-lg text-ink"><?= e(t('admin.events.field.status')) ?></label>
+                <select id="field-status" name="status" class="<?= e($inputClasses($error('status'))) ?> bg-white">
+                    <?php foreach ($statuses as $statusOption): ?>
+                        <option value="<?= e($statusOption) ?>" <?= $field('status') === $statusOption ? 'selected' : '' ?>>
+                            <?= e(t('admin.events.status.' . $statusOption)) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <?php if ($error('status') !== null): ?>
+                    <p class="text-body-sm text-danger" role="alert"><?= e($error('status')) ?></p>
+                <?php else: ?>
+                    <p class="text-body-sm text-muted"><?= e(t('admin.events.field.status_help.' . ($field('status') ?: 'draft'))) ?></p>
+                <?php endif; ?>
+            </div>
         </div>
 
         <div class="flex flex-col gap-5 pt-2 border-t border-border">

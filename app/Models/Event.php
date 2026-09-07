@@ -514,6 +514,22 @@ final class Event extends Model
     }
 
     /**
+     * Changement de statut seul (FIUCC-51, action rapide "Archiver" de la
+     * liste admin) — sans repasser par tout le formulaire d'édition, comme
+     * Member::validate()/suspend() pour les membres. Restreint aux 4 valeurs
+     * réellement stockées, même filet de sécurité que la colonne ENUM.
+     */
+    public static function updateStatus(int $id, string $status): void
+    {
+        if (!in_array($status, ['draft', 'published', 'archived', 'cancelled'], true)) {
+            return;
+        }
+
+        $stmt = static::db()->prepare('UPDATE events SET status = :status WHERE id = :id');
+        $stmt->execute(['status' => $status, 'id' => $id]);
+    }
+
+    /**
      * Suppression définitive (FIUCC-51) — sûre au niveau base : event_images
      * et event_registrations portent ON DELETE CASCADE (001_initial_schema.sql).
      * Le fichier de couverture, lui, n'est pas géré par une contrainte SQL —
