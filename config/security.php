@@ -13,7 +13,7 @@ return [
     'otp_resend_cooldown_seconds' => (int) Env::get('OTP_RESEND_COOLDOWN_SECONDS', 60),
     'otp_max_resends_per_hour'    => (int) Env::get('OTP_MAX_RESENDS_PER_HOUR', 5),
     'vote_token_ttl_hours' => (int) Env::get('VOTE_TOKEN_TTL_HOURS', 72),
-    'upload_max_size_mb'   => (int) Env::get('UPLOAD_MAX_SIZE_MB', 5),
+    'upload_max_size_mb'   => (int) Env::get('UPLOAD_MAX_SIZE_MB', 15),
     // Plus long côté, en pixels, après redimensionnement (FIUCC-38) — une
     // photo de profil n'a jamais besoin d'être plus grande que ça.
     'upload_photo_max_dimension' => (int) Env::get('UPLOAD_PHOTO_MAX_DIMENSION', 800),
@@ -32,8 +32,9 @@ return [
     // couverture d'événement — affichée en pleine largeur sur la page
     // détail d'un article.
     'upload_news_cover_max_dimension' => (int) Env::get('UPLOAD_NEWS_COVER_MAX_DIMENSION', 1600),
-    // Documents (FIUCC-58) : plafond séparé de upload_max_size_mb (images,
-    // 5 Mo) — un règlement ou un rapport scanné dépasse facilement 5 Mo.
+    // Documents (FIUCC-58) : plafond distinct de upload_max_size_mb, même
+    // valeur ici — un règlement ou un rapport scanné a les mêmes contraintes
+    // de taille qu'une photo (envoi mobile, mémoire du script).
     'upload_document_max_size_mb' => (int) Env::get('UPLOAD_DOCUMENT_MAX_SIZE_MB', 15),
     // Plafond de dimensions AVANT chargement GD (decompression bomb) : une
     // image bien compressée peut passer le contrôle de taille en octets tout

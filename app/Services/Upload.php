@@ -322,10 +322,19 @@ final class Upload
 
     private static function readImage(string $path, string $mime): GdImage
     {
+        // @ : ces fonctions GD peuvent émettre un warning PHP sur une image
+        // par ailleurs valide et bien décodée (ex. "iCCP: known incorrect
+        // sRGB profile" — un PNG exporté par un éditeur d'image avec un
+        // profil ICC mal formé ; libpng le corrige et continue). Le handler
+        // global (public/index.php) transforme tout warning en exception, ce
+        // qui ferait échouer un upload par ailleurs valide pour un simple
+        // avertissement de métadonnées. Le résultat reste vérifié juste
+        // après (même principe que @getimagesize()/@exif_read_data()
+        // ci-dessus/dessous).
         $image = match ($mime) {
-            'image/jpeg' => imagecreatefromjpeg($path),
-            'image/png'  => imagecreatefrompng($path),
-            'image/webp' => imagecreatefromwebp($path),
+            'image/jpeg' => @imagecreatefromjpeg($path),
+            'image/png'  => @imagecreatefrompng($path),
+            'image/webp' => @imagecreatefromwebp($path),
             default      => false,
         };
 

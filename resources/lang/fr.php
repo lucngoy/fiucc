@@ -460,7 +460,7 @@ return [
     'admin.events.field.status_help.cancelled' => 'Visible publiquement, marqué comme annulé.',
     'admin.events.field.cover_image'      => 'Image de couverture',
     'admin.events.field.cover_image_new'  => 'Remplacer l\'image',
-    'admin.events.field.cover_image_help' => 'JPEG, PNG ou WebP, 5 Mo maximum.',
+    'admin.events.field.cover_image_help' => 'JPEG, PNG ou WebP, 15 Mo maximum.',
     'admin.events.submit.create' => "Créer l'événement",
     'admin.events.submit.update' => 'Enregistrer les modifications',
 
@@ -615,7 +615,7 @@ return [
     'admin.gallery.submit.create' => "Créer l'album",
     'admin.gallery.submit.update' => 'Enregistrer les modifications',
     'admin.gallery.upload.title' => 'Ajouter des photos',
-    'admin.gallery.upload.help'  => 'JPEG, PNG ou WebP, 5 Mo maximum par fichier. Plusieurs fichiers à la fois.',
+    'admin.gallery.upload.help'  => 'JPEG, PNG ou WebP, 15 Mo maximum par fichier. Plusieurs fichiers à la fois.',
     'admin.gallery.upload.submit' => 'Uploader',
     'admin.gallery.upload.succeeded' => ':count photo(s) ajoutée(s).',
     'admin.gallery.upload.failed'    => ':count photo(s) en échec :',
@@ -703,7 +703,7 @@ return [
     'admin.news.field.published_at_help' => "Vide = brouillon, non publié. Une date passée publie immédiatement ; une date future programme la publication (apparaît seule, sans action supplémentaire, une fois la date atteinte).",
     'admin.news.field.cover_image'      => 'Image de couverture',
     'admin.news.field.cover_image_new'  => "Remplacer l'image",
-    'admin.news.field.cover_image_help' => 'JPEG, PNG ou WebP, 5 Mo maximum.',
+    'admin.news.field.cover_image_help' => 'JPEG, PNG ou WebP, 15 Mo maximum.',
     'admin.news.submit.create' => "Créer l'article",
     'admin.news.submit.update' => 'Enregistrer les modifications',
 

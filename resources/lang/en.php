@@ -462,7 +462,7 @@ return [
     'admin.events.field.status_help.cancelled' => 'Publicly visible, marked as cancelled.',
     'admin.events.field.cover_image'      => 'Cover image',
     'admin.events.field.cover_image_new'  => 'Replace image',
-    'admin.events.field.cover_image_help' => 'JPEG, PNG, or WebP, 5 MB maximum.',
+    'admin.events.field.cover_image_help' => 'JPEG, PNG, or WebP, 15 MB maximum.',
     'admin.events.submit.create' => 'Create event',
     'admin.events.submit.update' => 'Save changes',
 
@@ -617,7 +617,7 @@ return [
     'admin.gallery.submit.create' => 'Create album',
     'admin.gallery.submit.update' => 'Save changes',
     'admin.gallery.upload.title' => 'Add photos',
-    'admin.gallery.upload.help'  => 'JPEG, PNG, or WebP, 5 MB maximum per file. Multiple files at once.',
+    'admin.gallery.upload.help'  => 'JPEG, PNG, or WebP, 15 MB maximum per file. Multiple files at once.',
     'admin.gallery.upload.submit' => 'Upload',
     'admin.gallery.upload.succeeded' => ':count photo(s) added.',
     'admin.gallery.upload.failed'    => ':count photo(s) failed:',
@@ -705,7 +705,7 @@ return [
     'admin.news.field.published_at_help' => 'Empty = draft, not published. A past date publishes immediately; a future date schedules publication (appears on its own, no further action, once the date is reached).',
     'admin.news.field.cover_image'      => 'Cover image',
     'admin.news.field.cover_image_new'  => 'Replace image',
-    'admin.news.field.cover_image_help' => 'JPEG, PNG, or WebP, 5 MB maximum.',
+    'admin.news.field.cover_image_help' => 'JPEG, PNG, or WebP, 15 MB maximum.',
     'admin.news.submit.create' => 'Create article',
     'admin.news.submit.update' => 'Save changes',
 
