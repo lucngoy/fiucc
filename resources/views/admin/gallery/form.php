@@ -71,7 +71,7 @@ $noticeMap = [
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="<?= e($action) ?>" class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col gap-6 mb-8">
+    <form method="POST" action="<?= e($action) ?>" class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-6 mb-8">
         <?= csrf_field() ?>
 
         <?= component('form_field', [
@@ -135,7 +135,7 @@ $noticeMap = [
     </form>
 
     <?php if ($isEdit): ?>
-        <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col gap-4 mb-8">
+        <div class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-4 mb-8">
             <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('admin.gallery.upload.title')) ?></h2>
             <p class="text-body-sm text-muted"><?= e(t('admin.gallery.upload.help')) ?></p>
             <form method="POST" action="/admin/gallery/<?= e((string) $albumId) ?>/photos" enctype="multipart/form-data" class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -148,7 +148,7 @@ $noticeMap = [
             </form>
         </div>
 
-        <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col gap-5">
+        <div class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-5">
             <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('admin.gallery.manage.title')) ?></h2>
 
             <?php if ($photos === []): ?>
