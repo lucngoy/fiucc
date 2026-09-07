@@ -52,7 +52,11 @@ $visibilityBadge = static function (string $visibility): string {
         return '';
     }
 
-    $label = $visibility === 'admin' ? t('documents.visibility.admin') : t('documents.visibility.members');
+    $label = match ($visibility) {
+        'admin'      => t('documents.visibility.admin'),
+        'government' => t('documents.visibility.government'),
+        default      => t('documents.visibility.members'),
+    };
 
     return '<span class="inline-flex items-center h-6 px-2.5 rounded-full bg-gold/20 text-ink text-label-md font-label-md">'
         . '<i class="fa-solid fa-lock text-xs mr-1.5" aria-hidden="true"></i>' . e($label) . '</span>';

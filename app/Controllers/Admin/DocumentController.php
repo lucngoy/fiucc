@@ -22,7 +22,7 @@ use RuntimeException;
 final class DocumentController extends Controller
 {
     private const PER_PAGE = 20;
-    private const VISIBILITIES = ['public', 'members', 'admin'];
+    private const VISIBILITIES = ['public', 'members', 'government', 'admin'];
 
     public function index(): void
     {

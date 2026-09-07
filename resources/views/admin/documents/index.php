@@ -31,9 +31,10 @@ $fileIcon = static function (string $mimeType): string {
 
 $visibilityBadge = static function (string $visibility): string {
     $variants = [
-        'public'  => 'bg-success/15 text-success',
-        'members' => 'bg-gold/20 text-ink',
-        'admin'   => 'bg-danger/10 text-danger',
+        'public'     => 'bg-success/15 text-success',
+        'members'    => 'bg-gold/20 text-ink',
+        'government' => 'bg-primary/10 text-primary',
+        'admin'      => 'bg-danger/10 text-danger',
     ];
     $classes = $variants[$visibility] ?? $variants['members'];
 
@@ -82,7 +83,7 @@ $paginationBase = '/admin/documents?' . ($activeFilterQuery !== []
             <label for="doc-visibility" class="block text-label-md font-label-md text-muted mb-1"><?= e(t('admin.documents.filter.visibility')) ?></label>
             <select id="doc-visibility" name="visibility" class="h-10 rounded-control border border-border px-3 text-body-sm text-ink bg-white">
                 <option value=""><?= e(t('admin.documents.filter.visibility_all')) ?></option>
-                <?php foreach (['public', 'members', 'admin'] as $visibilityOption): ?>
+                <?php foreach (['public', 'members', 'government', 'admin'] as $visibilityOption): ?>
                     <option value="<?= e($visibilityOption) ?>" <?= $filters['visibility'] === $visibilityOption ? 'selected' : '' ?>>
                         <?= e(t('admin.documents.visibility.' . $visibilityOption)) ?>
                     </option>

@@ -88,6 +88,24 @@ final class Government extends Model
     }
 
     /**
+     * Le membre (members.id, pas users.id) fait-il partie du gouvernement en
+     * cours (FIUCC-57/58, visibilité "government" des documents) ? Un poste
+     * archivé ou lié à un mandat passé ne compte pas — seul is_current = 1
+     * donne accès aux documents réservés au gouvernement en place.
+     */
+    public static function isCurrentMember(int $memberId): bool
+    {
+        $stmt = static::db()->prepare(
+            'SELECT COUNT(*) FROM government_members gm
+             INNER JOIN governments g ON g.id = gm.government_id
+             WHERE gm.member_id = :member_id AND g.is_current = 1'
+        );
+        $stmt->execute(['member_id' => $memberId]);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
+
+    /**
      * Statistique "Years of Community" de la page d'accueil (section 10 du
      * cahier des charges, FIUCC-47) : aucune table ne porte de date de
      * fondation dédiée, mais governments.start_date le fait déjà — le

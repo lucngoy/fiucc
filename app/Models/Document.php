@@ -8,9 +8,9 @@ use PDO;
 
 /**
  * Espace documents (FIUCC-57/58, section 30 du cahier des charges).
- * documents.visibility (public/members/admin, 001_initial_schema.sql) est
- * une vraie barrière, pas un filtre d'affichage : le fichier lui-même vit
- * hors de public/ (storage/documents/, voir App\Services\Upload::
+ * documents.visibility (public/members/government/admin, migration 010)
+ * est une vraie barrière, pas un filtre d'affichage : le fichier lui-même
+ * vit hors de public/ (storage/documents/, voir App\Services\Upload::
  * storeDocument()) et n'est jamais atteignable sans repasser par
  * App\Controllers\DocumentController::download(), qui revérifie
  * `visibility` à chaque requête — publicList()/adminList() ci-dessous ne
@@ -22,20 +22,24 @@ final class Document extends Model
     private const ADMIN_PER_PAGE = 20;
 
     /**
-     * Fragment WHERE selon le niveau d'accès du visiteur — même trois
-     * niveaux que la vérification de téléchargement (DocumentController),
-     * pour que la liste n'affiche jamais un document que le clic
-     * suivant refuserait :
+     * Fragment WHERE selon le niveau d'accès du visiteur — mêmes niveaux
+     * que la vérification de téléchargement (DocumentController), pour que
+     * la liste n'affiche jamais un document que le clic suivant refuserait :
      * - 'admin' : aucun filtre, tout est visible ;
+     * - 'government' : membre validé ET membre du gouvernement en cours
+     *   (Government::isCurrentMember()) — 'public' + 'members' +
+     *   'government', un membre du gouvernement reste un membre ordinaire
+     *   par ailleurs ;
      * - 'member' : 'public' + 'members' ;
      * - 'public' (ou toute autre valeur) : 'public' seulement.
      */
     private static function visibilityClause(string $accessLevel): string
     {
         return match ($accessLevel) {
-            'admin'  => '1=1',
-            'member' => "visibility IN ('public', 'members')",
-            default  => "visibility = 'public'",
+            'admin'      => '1=1',
+            'government' => "visibility IN ('public', 'members', 'government')",
+            'member'     => "visibility IN ('public', 'members')",
+            default      => "visibility = 'public'",
         };
     }
 
@@ -146,7 +150,7 @@ final class Document extends Model
         }
 
         $visibility = trim((string) ($filters['visibility'] ?? ''));
-        if (in_array($visibility, ['public', 'members', 'admin'], true)) {
+        if (in_array($visibility, ['public', 'members', 'government', 'admin'], true)) {
             $conditions[] = 'visibility = :visibility';
             $params['visibility'] = $visibility;
         }

@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Core\View;
 use App\Models\ActivityLog;
 use App\Models\Document;
+use App\Models\Government;
 use App\Models\Member;
 
 /**
@@ -14,11 +15,12 @@ use App\Models\Member;
  * publique + téléchargement contrôlé. CRUD admin : FIUCC-58,
  * App\Controllers\Admin\DocumentController.
  *
- * documents.visibility (public/members/admin) est une vraie barrière : le
- * fichier vit hors de public/ (storage/documents/), jamais atteignable par
- * une URL statique devinée. download() revérifie les droits à chaque
- * requête à partir de la ligne en base — jamais un contrôle fait une fois
- * puis mis en cache, jamais déduit de ce que la liste a affiché.
+ * documents.visibility (public/members/government/admin, migration 010)
+ * est une vraie barrière : le fichier vit hors de public/
+ * (storage/documents/), jamais atteignable par une URL statique devinée.
+ * download() revérifie les droits à chaque requête à partir de la ligne en
+ * base — jamais un contrôle fait une fois puis mis en cache, jamais déduit
+ * de ce que la liste a affiché.
  */
 final class DocumentController extends Controller
 {
@@ -88,7 +90,7 @@ final class DocumentController extends Controller
     }
 
     /**
-     * @return 'admin'|'member'|'public'
+     * @return 'admin'|'government'|'member'|'public'
      */
     private function currentAccessLevel(): string
     {
@@ -104,7 +106,15 @@ final class DocumentController extends Controller
         // pending/rejected/suspended reste au niveau 'public', pas 'member'.
         $member = Member::findByUserIdWithStatus((int) $_SESSION['user_id']);
 
-        return ($member !== null && $member['status'] === 'validated') ? 'member' : 'public';
+        if ($member === null || $member['status'] !== 'validated') {
+            return 'public';
+        }
+
+        // Un membre du gouvernement en cours reste un membre validé par
+        // ailleurs — 'government' est un niveau de plus, jamais un
+        // remplacement (voir canAccess() : 'government' donne aussi accès
+        // à 'members').
+        return Government::isCurrentMember((int) $member['id']) ? 'government' : 'member';
     }
 
     private function canAccess(string $visibility, string $accessLevel): bool
@@ -114,9 +124,10 @@ final class DocumentController extends Controller
         }
 
         return match ($visibility) {
-            'public'  => true,
-            'members' => $accessLevel === 'member',
-            default   => false,
+            'public'     => true,
+            'members'    => in_array($accessLevel, ['member', 'government'], true),
+            'government' => $accessLevel === 'government',
+            default      => false,
         };
     }
 
