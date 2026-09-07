@@ -150,9 +150,9 @@ final class Event extends Model
      * Photos d'un événement précis (FIUCC-49, "Photos from past editions")
      * — pas Event::recentPhotos() ci-dessous, qui mélange tous les
      * événements pour la page d'accueil. Lit l'album lié à l'événement
-     * (migration 007, décision FIUCC-52/54) : plus de table event_images
-     * séparée, un événement n'a pas de photos propres, il a au plus un
-     * album (albums.event_id). Album non 'published' (encore en
+     * (migration 007, décision CLAUDE.md — un seul système de photos) : un
+     * événement n'a pas de photos propres, il a au plus un album
+     * (albums.event_id). Album non 'published' (encore en
      * préparation) : aucune photo affichée, comme un album inexistant.
      */
     public static function images(int $eventId): array
@@ -261,8 +261,8 @@ final class Event extends Model
     /**
      * "Memories" (section 9 du cahier des charges, page d'accueil) : photos
      * réellement déposées sur l'album lié à un événement publié/archivé
-     * (migration 007 — album_photos, via albums.event_id, plus de table
-     * event_images séparée). Une photo d'un album autonome, sans event_id
+     * (migration 007 — album_photos, via albums.event_id, décision
+     * CLAUDE.md). Une photo d'un album autonome, sans event_id
      * (ex. "Football Match"), n'apparaît pas ici : ce widget reste "les
      * souvenirs DES événements", la galerie générale (/gallery) montre
      * tous les albums, liés ou non. Vide tant qu'aucune photo n'est

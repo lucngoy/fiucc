@@ -42,6 +42,24 @@ table imposerait une saisie ligne par ligne au bureau pour un gain purement visu
 timeline plutôt qu'un paragraphe). À reconsidérer après quelques événements réels si le
 besoin de structuration se confirme dans l'usage — pas avant, et pas par anticipation.
 
+**Photos d'un événement (§26-28 du cahier) : un seul système, pas deux.** Le cahier ne
+décrit pas une table de photos par événement (`event_images`) séparée d'une galerie par
+albums : §26 liste `Gallery` comme un champ de l'événement, §27 affiche "Photos après
+l'événement" sur sa page, et les exemples d'albums du §28 (`Congolese Day 2026`,
+`Summer Escape 2026`...) sont des noms d'événements. Les photos d'un événement **sont**
+son album, jamais autre chose — `events` n'a pas de table de photos propre. Concrètement :
+- Un événement a au plus un album (`albums.event_id`, `UNIQUE`, migration 007). Le bureau
+  crée/choisit cet album une seule fois ; les photos uploadées y apparaissent à la fois
+  sur la page de l'événement (`Event::images()`) et dans la galerie générale (`/gallery`).
+- Un album peut aussi exister sans événement (`event_id NULL`) — utile pour un souvenir
+  sans event formel ("Football Match" improvisé, jamais créé comme `Event`).
+- Supprimer un événement ne supprime jamais ses photos : `ON DELETE SET NULL` détache
+  l'album (qui redevient autonome dans la galerie) au lieu de les emporter avec lui.
+- La table `event_images` (001_initial_schema.sql) a été **supprimée** en migration 007 :
+  elle n'a jamais eu de chemin d'écriture réel (aucun seeder, aucun CRUD admin construit
+  avant cette décision), la retirer n'a perdu aucune photo réelle. **Ne pas la recréer** —
+  toute nouvelle photo liée à un événement passe par un album (`album_photos`), point.
+
 ## Stack — contraintes fermes
 
 - **PHP 8.2+**, architecture MVC légère écrite à la main. **Aucun framework** : ni Laravel,

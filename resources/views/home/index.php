@@ -25,8 +25,8 @@
  * - événements et actualités : Event::upcoming()/News::latest(), vides
  *   honnêtement si rien à montrer, pas de contenu inventé ;
  * - "Memories" : Event::recentPhotos() (album_photos, via l'album lié à un
- *   événement — plus de table event_images séparée, migration 007) — vide
- *   aujourd'hui, aucune photo n'a encore été déposée.
+ *   événement — migration 007, décision CLAUDE.md) — vide aujourd'hui,
+ *   aucune photo n'a encore été déposée.
  *
  * Photo "à propos" : même principe que /community (FIUCC-40) — espace
  * réservé tant que public/assets/images/home/about.jpg n'existe pas,

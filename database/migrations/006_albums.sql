@@ -8,12 +8,11 @@ SET NAMES utf8mb4;
 
 -- ---------------------------------------------------------------------
 -- albums : l'admin crée librement un album ("Congolese Day 2026",
--- "Football Match"...), sans lien obligatoire à un event précis — le
--- cahier les présente comme une fonctionnalité distincte des événements,
--- pas comme "les photos de l'événement X" (déjà couvert par
--- event_images, rattaché à un event_id obligatoire). status suit le même
--- principe que events.status : un album reste 'draft' pendant l'upload,
--- publié quand l'admin est prêt à le montrer.
+-- "Football Match"...), sans lien obligatoire à un event précis au moment
+-- de cette migration (le lien optionnel event_id arrive en 007, une fois
+-- la question tranchée avec l'équipe — voir CLAUDE.md). status suit le
+-- même principe que events.status : un album reste 'draft' pendant
+-- l'upload, publié quand l'admin est prêt à le montrer.
 -- ---------------------------------------------------------------------
 CREATE TABLE albums (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -31,12 +30,11 @@ CREATE TABLE albums (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ---------------------------------------------------------------------
--- album_photos : mêmes colonnes qu'event_images (image_path, caption,
--- sort_order) — même principe de tri manuel par l'admin (FIUCC-54), pas
--- de colonne "cover" séparée sur albums : la couverture d'un album est sa
--- première photo par sort_order (comme events.cover_image, mais dérivé
--- plutôt que dupliqué, puisqu'une photo de couverture EST déjà une photo
--- de l'album).
+-- album_photos : image_path/caption/sort_order — tri manuel par l'admin
+-- (FIUCC-54). Pas de colonne "cover" séparée sur albums : la couverture
+-- d'un album est sa première photo par sort_order (comme
+-- events.cover_image, mais dérivé plutôt que dupliqué, puisqu'une photo
+-- de couverture EST déjà une photo de l'album).
 -- ---------------------------------------------------------------------
 CREATE TABLE album_photos (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
