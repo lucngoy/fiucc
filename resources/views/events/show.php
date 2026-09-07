@@ -11,16 +11,11 @@
  * inscrits (event_registrations, à 0 tant que FIUCC-50 n'écrit rien),
  * photos (event_images, vide tant qu'aucune n'est déposée).
  *
- * "Program & Timeline" du cahier (§27) : pas de table dédiée pour une
- * liste d'horaires structurée — l'admin peut décrire un programme dans
- * description (multi-lignes, rendu avec les retours à la ligne respectés)
- * tant qu'aucun champ dédié n'existe. Signalé à l'utilisateur, pas résolu
- * ici par une migration décidée seul.
- *
- * Bouton d'inscription : POST vers /events/{slug}/register, route déjà
- * déclarée (routes/web.php, middleware ['auth']) mais FIUCC-50 n'a pas
- * encore de contrôleur — 404 propre en attendant, même principe que
- * partout ailleurs dans ce projet.
+ * "Program & Timeline" du cahier (§27) : pas de table dédiée pour une liste
+ * d'horaires structurée (event_program_items) — décision prise, pas un
+ * manque (voir CLAUDE.md, "Documents de référence"). description en texte
+ * libre porte le déroulé quand il y en a un, rendu ci-dessous avec les
+ * retours à la ligne respectés.
  */
 $event ??= [];
 $displayState ??= 'upcoming';

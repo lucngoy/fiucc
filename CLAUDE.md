@@ -34,6 +34,14 @@ Lis-les avant de coder, dans cet ordre :
 En cas de contradiction entre un de ces fichiers et une consigne de chat, le cahier des
 charges l'emporte. Signale la contradiction plutôt que de trancher seul.
 
+**Programme d'un événement (§27 du cahier) : décision prise, pas un manque.** Pas de
+table dédiée (type `event_program_items`, un horaire par ligne) pour le déroulé —
+`events.description` en texte libre suffit, rendu avec les retours à la ligne respectés
+(FIUCC-49). Le déroulé d'un événement communautaire change jusqu'au dernier moment ; une
+table imposerait une saisie ligne par ligne au bureau pour un gain purement visuel (une
+timeline plutôt qu'un paragraphe). À reconsidérer après quelques événements réels si le
+besoin de structuration se confirme dans l'usage — pas avant, et pas par anticipation.
+
 ## Stack — contraintes fermes
 
 - **PHP 8.2+**, architecture MVC légère écrite à la main. **Aucun framework** : ni Laravel,
