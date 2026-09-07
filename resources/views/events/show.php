@@ -21,6 +21,9 @@ $event ??= [];
 $displayState ??= 'upcoming';
 $registeredCount ??= 0;
 $photos ??= [];
+$memberEligibility ??= 'not_signed_in';
+$registrationStatus ??= null;
+$notice ??= '';
 
 $statusBadgeClasses = [
     'upcoming'  => 'bg-primary/15 text-primary',
@@ -32,7 +35,17 @@ $statusBadgeClasses = [
 $hasCapacity = $event['capacity'] !== null;
 $capacity = $hasCapacity ? (int) $event['capacity'] : null;
 $isFull = $hasCapacity && $registeredCount >= $capacity;
-$canRegister = in_array($displayState, ['upcoming', 'ongoing'], true) && !$isFull;
+$isOpenForRegistration = in_array($displayState, ['upcoming', 'ongoing'], true);
+$isRegistered = in_array($registrationStatus, ['going', 'attended'], true);
+$canRegister = $isOpenForRegistration && !$isFull && !$isRegistered && $memberEligibility === 'eligible';
+
+$noticeMap = [
+    'registered'         => ['type' => 'success', 'message' => t('events.detail.notice.registered')],
+    'already_registered' => ['type' => 'info',    'message' => t('events.detail.notice.already_registered')],
+    'full'               => ['type' => 'warning', 'message' => t('events.detail.notice.full')],
+    'not_found'          => ['type' => 'error',   'message' => t('events.detail.notice.not_found')],
+    'unregistered'       => ['type' => 'info',    'message' => t('events.detail.notice.unregistered')],
+];
 
 $startTimestamp = strtotime((string) $event['start_date']);
 $endTimestamp = !empty($event['end_date']) ? strtotime((string) $event['end_date']) : null;
@@ -94,6 +107,11 @@ $mapsUrl = !empty($event['location'])
 
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
+    <?php if ($notice !== '' && isset($noticeMap[$notice])): ?>
+        <div class="mb-8">
+            <?= component('alert', $noticeMap[$notice]) ?>
+        </div>
+    <?php endif; ?>
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8 flex flex-col gap-8">
             <?php if (!empty($event['description'])): ?>
@@ -142,7 +160,7 @@ $mapsUrl = !empty($event['location'])
         </div>
 
         <aside class="lg:col-span-4">
-            <div class="bg-white rounded-card border border-border shadow-card p-6 flex flex-col gap-5 lg:sticky lg:top-24">
+            <div class="bg-white rounded-card border border-border p-6 flex flex-col gap-5 lg:sticky lg:top-24">
                 <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('events.detail.registration')) ?></h2>
                 <div class="flex items-center gap-2 text-body-md text-ink">
                     <i class="fa-solid fa-users text-primary" aria-hidden="true"></i>
@@ -154,7 +172,19 @@ $mapsUrl = !empty($event['location'])
                     </p>
                 <?php endif; ?>
 
-                <?php if ($canRegister): ?>
+                <?php if ($isRegistered): ?>
+                    <p class="flex items-center gap-2 text-success font-label-lg text-label-lg font-semibold">
+                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        <?= e(t('events.detail.you_are_registered')) ?>
+                    </p>
+                    <form method="POST" action="<?= e('/events/' . $event['slug'] . '/unregister') ?>">
+                        <?= csrf_field() ?>
+                        <button type="submit" class="w-full h-11 rounded-control border border-danger text-danger text-label-lg font-label-lg font-semibold hover:bg-danger/10 transition-colors flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                            <?= e(t('events.detail.unregister_cta')) ?>
+                        </button>
+                    </form>
+                <?php elseif ($canRegister): ?>
                     <form method="POST" action="<?= e('/events/' . $event['slug'] . '/register') ?>">
                         <?= csrf_field() ?>
                         <button type="submit" class="w-full h-11 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors flex items-center justify-center gap-2">
@@ -162,8 +192,16 @@ $mapsUrl = !empty($event['location'])
                             <?= e(t('events.detail.register_cta')) ?>
                         </button>
                     </form>
-                <?php else: ?>
+                <?php elseif (!$isOpenForRegistration): ?>
                     <p class="text-body-sm text-muted"><?= e(t('events.detail.register_closed')) ?></p>
+                <?php elseif ($isFull): ?>
+                    <!-- Rien de plus à afficher : la ligne "Full" juste au-dessus l'explique déjà. -->
+                <?php elseif ($memberEligibility === 'not_validated'): ?>
+                    <p class="text-body-sm text-muted"><?= e(t('events.detail.must_be_validated')) ?></p>
+                    <a href="/profile" class="inline-flex items-center justify-center h-11 rounded-control border border-border text-ink text-label-lg font-label-lg font-semibold hover:bg-surface transition-colors"><?= e(t('profile.title')) ?></a>
+                <?php else: ?>
+                    <p class="text-body-sm text-muted"><?= e(t('events.detail.must_sign_in')) ?></p>
+                    <a href="/login" class="inline-flex items-center justify-center h-11 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors"><?= e(t('auth.sign_in')) ?></a>
                 <?php endif; ?>
             </div>
         </aside>

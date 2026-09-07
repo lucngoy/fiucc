@@ -7,11 +7,9 @@ use App\Core\Model;
 use PDO;
 
 /**
- * CRUD admin (FIUCC-51) et l'inscription à un événement (FIUCC-50,
- * event_registrations en écriture) ne sont pas construits ici,
- * volontairement — seulement la lecture publique : chronologie "Our
- * Journey" de /community (FIUCC-40), page d'accueil (FIUCC-46/47), liste
- * (FIUCC-48) et détail (FIUCC-49) des événements.
+ * Lecture publique (chronologie "Our Journey" de /community FIUCC-40, page
+ * d'accueil FIUCC-46/47, liste FIUCC-48 et détail FIUCC-49 des événements),
+ * inscription (FIUCC-50) et CRUD admin (FIUCC-51).
  */
 final class Event extends Model
 {
@@ -274,5 +272,110 @@ final class Event extends Model
         $stmt->execute();
 
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Statut d'inscription d'un membre précis — null si aucune ligne
+     * n'existe encore pour ce couple (event_id, member_id).
+     */
+    public static function registrationStatus(int $eventId, int $memberId): ?string
+    {
+        $stmt = static::db()->prepare(
+            'SELECT status FROM event_registrations WHERE event_id = :event_id AND member_id = :member_id LIMIT 1'
+        );
+        $stmt->execute(['event_id' => $eventId, 'member_id' => $memberId]);
+        $status = $stmt->fetchColumn();
+
+        return $status === false ? null : $status;
+    }
+
+    /**
+     * Inscription (FIUCC-50) — transactionnelle. SELECT ... FOR UPDATE
+     * verrouille la ligne events le temps de la transaction : deux
+     * inscriptions concurrentes sur le même événement se sérialisent, la
+     * seconde ne relit le compte qu'après que la première a validé ou
+     * annulé la sienne — jamais deux personnes ne peuvent prendre le
+     * dernier siège en même temps. Une ligne déjà 'cancelled' (désinscrit
+     * puis re-inscrit) est réactivée par UPDATE plutôt que dupliquée : la
+     * contrainte unique (event_id, member_id) interdirait de toute façon un
+     * second INSERT.
+     *
+     * @return string 'registered'|'already_registered'|'full'|'not_found'
+     */
+    public static function register(int $eventId, int $memberId): string
+    {
+        $pdo = static::db();
+        $pdo->beginTransaction();
+
+        try {
+            $lockStmt = $pdo->prepare('SELECT capacity FROM events WHERE id = :id FOR UPDATE');
+            $lockStmt->execute(['id' => $eventId]);
+            $event = $lockStmt->fetch();
+
+            if ($event === false) {
+                $pdo->rollBack();
+
+                return 'not_found';
+            }
+
+            $existingStmt = $pdo->prepare(
+                'SELECT status FROM event_registrations WHERE event_id = :event_id AND member_id = :member_id LIMIT 1'
+            );
+            $existingStmt->execute(['event_id' => $eventId, 'member_id' => $memberId]);
+            $existingStatus = $existingStmt->fetchColumn();
+
+            if ($existingStatus !== false && in_array($existingStatus, ['going', 'attended'], true)) {
+                $pdo->rollBack();
+
+                return 'already_registered';
+            }
+
+            if ($event['capacity'] !== null) {
+                $countStmt = $pdo->prepare(
+                    "SELECT COUNT(*) FROM event_registrations WHERE event_id = :event_id AND status IN ('going', 'attended')"
+                );
+                $countStmt->execute(['event_id' => $eventId]);
+
+                if ((int) $countStmt->fetchColumn() >= (int) $event['capacity']) {
+                    $pdo->rollBack();
+
+                    return 'full';
+                }
+            }
+
+            if ($existingStatus !== false) {
+                $reactivateStmt = $pdo->prepare(
+                    "UPDATE event_registrations SET status = 'going' WHERE event_id = :event_id AND member_id = :member_id"
+                );
+                $reactivateStmt->execute(['event_id' => $eventId, 'member_id' => $memberId]);
+            } else {
+                $insertStmt = $pdo->prepare(
+                    "INSERT INTO event_registrations (event_id, member_id, status) VALUES (:event_id, :member_id, 'going')"
+                );
+                $insertStmt->execute(['event_id' => $eventId, 'member_id' => $memberId]);
+            }
+
+            $pdo->commit();
+
+            return 'registered';
+        } catch (\Throwable $exception) {
+            $pdo->rollBack();
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * Désinscription (FIUCC-50) — passe à 'cancelled', ne supprime jamais
+     * la ligne : garde l'historique (et permet une réinscription ultérieure
+     * via register(), qui réactive plutôt que dupliquer).
+     */
+    public static function unregister(int $eventId, int $memberId): void
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE event_registrations SET status = 'cancelled'
+             WHERE event_id = :event_id AND member_id = :member_id AND status IN ('going', 'attended')"
+        );
+        $stmt->execute(['event_id' => $eventId, 'member_id' => $memberId]);
     }
 }

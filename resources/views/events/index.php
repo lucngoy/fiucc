@@ -190,7 +190,7 @@ $registrationLine = static function (array $event, int $registered): string {
                 $registered = $event['registered_count'];
                 $isPast = $state === 'completed';
                 ?>
-                <a href="<?= e('/events/' . $event['slug']) ?>" class="group flex flex-col bg-white rounded-card border border-border shadow-card hover:shadow-lg transition-shadow overflow-hidden">
+                <a href="<?= e('/events/' . $event['slug']) ?>" class="group flex flex-col bg-white rounded-card border border-border hover:shadow-card transition-shadow overflow-hidden">
                     <div class="relative h-44 w-full overflow-hidden bg-surface">
                         <?php if (!empty($event['cover_image'])): ?>
                             <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt=""

@@ -24,7 +24,8 @@ return [
     // Contenu
     ['GET',  '/events',                        'EventController@index'],
     ['GET',  '/events/{slug}',                 'EventController@show'],
-    ['POST', '/events/{slug}/register',        'EventController@register',        ['auth']],
+    ['POST', '/events/{slug}/register',        'EventController@register',        ['validated']],
+    ['POST', '/events/{slug}/unregister',      'EventController@unregister',      ['validated']],
     ['GET',  '/news',                          'NewsController@index'],
     ['GET',  '/news/{slug}',                   'NewsController@show'],
     ['GET',  '/gallery',                       'GalleryController@index'],

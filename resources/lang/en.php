@@ -132,6 +132,24 @@ return [
     'census.consent' => 'I certify that I am a current Congolese student at Final International University and agree to the Community Charter and Data Protection Policy.',
     'census.submit'  => 'Submit my registration',
 
+    // Carte d'information à gauche du formulaire (lg+ uniquement) — reprise
+    // de la maquette fiucc_portal_member_registration_census/code.html,
+    // mais seulement des avantages réellement construits (annuaire, événements,
+    // élections — toutes des routes existantes), pas de citation ou de contact
+    // inventés.
+    'census.info.eyebrow'         => 'Official Community Census',
+    'census.info.title'           => 'Join the Community',
+    'census.info.subtitle'        => 'Official census for Congolese students and scholars at Final International University. Register to secure representation, welfare, and collegiate accreditation.',
+    'census.info.benefit1_title'  => 'Events & Community Life',
+    'census.info.benefit1_body'   => 'Get invited to cultural galas, welcome events, and community gatherings.',
+    'census.info.benefit2_title'  => 'Verified Member Directory',
+    'census.info.benefit2_body'   => 'Connect with Congolese peers across every faculty once your registration is validated.',
+    'census.info.benefit3_title'  => 'Civic Voice & Elections',
+    'census.info.benefit3_body'   => 'Take part in the community\'s elections and student governance.',
+    'census.info.privacy'         => 'Your data stays inside the community and is handled under our Data Protection Policy.',
+    'census.info.help_title'      => 'Need help registering?',
+    'census.info.help_body'       => 'Reach out to the community through the contact page.',
+
     'verify.title'    => 'Verify your email',
     'verify.subtitle' => 'Enter the 6-digit verification code we sent to your university email.',
     'verify.field.code' => 'Verification code',
@@ -200,6 +218,9 @@ return [
     'mail.approved.subject' => 'Your membership has been approved',
     'mail.approved.heading' => 'Welcome to the community',
     'mail.approved.body'    => '<p>Good news — your membership has been approved.</p><p>You can now sign in to access your member profile and the rest of the community platform.</p>',
+    'mail.event_registration.subject' => "You're registered: :event",
+    'mail.event_registration.heading' => "You're all set!",
+    'mail.event_registration.body'    => '<p>You are registered for <strong>:event</strong>.</p><p>:date &middot; :location</p><p>See you there!</p>',
 
     'community.title'    => 'Our Community',
     'community.intro'    => 'A home away from home for Congolese students at Final International University.',
@@ -477,4 +498,13 @@ return [
     'events.detail.photos'          => 'Photos',
     'events.detail.photos_empty'    => 'No photos from this event have been added yet.',
     'events.detail.back'            => 'Back to Events',
+    'events.detail.you_are_registered' => "You're registered for this event.",
+    'events.detail.unregister_cta'     => 'Cancel my registration',
+    'events.detail.must_be_validated'  => 'Only validated members can register for events.',
+    'events.detail.must_sign_in'       => 'Sign in to register for this event.',
+    'events.detail.notice.registered'         => "You're registered! A confirmation email is on its way.",
+    'events.detail.notice.already_registered' => "You're already registered for this event.",
+    'events.detail.notice.full'               => 'Sorry, this event just reached capacity.',
+    'events.detail.notice.unregistered'       => "You've been unregistered from this event.",
+    'events.detail.notice.not_found'          => 'This event could not be found.',
 ];
