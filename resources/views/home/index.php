@@ -70,6 +70,18 @@ $eventDateBadge = static function (string $startDate): string {
         . '<span class="block font-headline-sm text-headline-sm leading-tight">' . e(date('d', $timestamp)) . '</span>'
         . '</div>';
 };
+
+/**
+ * Image par défaut des cartes (événement, actualité) quand cover_image est
+ * vide — sceau officiel de la communauté en filigrane plutôt qu'une icône
+ * nue sur fond plat : un vrai visuel de remplacement, pas juste une case
+ * vide, et sur la charte (même sceau que le header public).
+ */
+$imagePlaceholder = static function (string $sealSize = 'h-10 w-10'): string {
+    return '<div class="w-full h-full bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
+        . '<img src="/assets/images/fiucc-seal.png" alt="" class="' . e($sealSize) . ' object-contain opacity-30">'
+        . '</div>';
+};
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-24 text-center flex flex-col items-center">
@@ -79,7 +91,7 @@ $eventDateBadge = static function (string $startDate): string {
         </span>
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-4"><?= e(t('home.hero.title')) ?></h1>
         <p class="text-body-lg text-white/80 max-w-2xl mb-8"><?= e(t('home.hero.tagline')) ?></p>
-        <div class="flex flex-col sm:flex-row items-center gap-4 mb-10">
+        <div class="flex flex-row sm:flex-row items-center gap-4 mb-10">
             <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
             <?= component('button', ['label' => t('home.hero.cta_discover'), 'variant' => 'inverse', 'href' => '#events']) ?>
         </div>
@@ -162,30 +174,36 @@ $eventDateBadge = static function (string $startDate): string {
         <?php else: ?>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <?php foreach ($upcomingEvents as $event): ?>
-                    <div class="flex flex-col bg-surface rounded-card border border-border overflow-hidden">
-                        <div class="relative h-40 w-full bg-primary/10">
+                    <div class="group flex flex-col bg-white rounded-card border border-border shadow-card hover:shadow-lg transition-shadow overflow-hidden relative">
+                        <div class="relative h-44 w-full overflow-hidden bg-surface">
                             <?php if (!empty($event['cover_image'])): ?>
-                                <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt="" class="w-full h-full object-cover">
+                                <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt=""
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <?php else: ?>
-                                <div class="w-full h-full flex items-center justify-center">
-                                    <i class="fa-solid fa-calendar-days text-primary/40 text-3xl" aria-hidden="true"></i>
-                                </div>
+                                <?= $imagePlaceholder('h-12 w-12') ?>
                             <?php endif; ?>
                             <?= $eventDateBadge($event['start_date']) ?>
+                            <?php if (!empty($event['category'])): ?>
+                                <div class="absolute top-3 right-3 bg-ink/75 text-white text-label-caps font-label-caps uppercase px-2.5 py-1 rounded-control backdrop-blur-sm">
+                                    <?= e($event['category']) ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
-                        <div class="p-5 flex flex-col flex-1">
+                        <div class="p-6 flex flex-col flex-grow">
                             <?php if (!empty($event['location'])): ?>
-                                <p class="flex items-center gap-1.5 text-label-md font-label-md text-muted mb-2">
-                                    <i class="fa-solid fa-location-dot text-primary" aria-hidden="true"></i>
-                                    <?= e($event['location']) ?>
-                                </p>
+                                <div class="flex items-center gap-1.5 text-muted text-label-md font-label-md mb-2">
+                                    <i class="fa-solid fa-location-dot text-primary text-xs" aria-hidden="true"></i>
+                                    <span><?= e($event['location']) ?></span>
+                                </div>
                             <?php endif; ?>
-                            <h3 class="font-headline-sm text-headline-sm text-ink mb-2"><?= e($event['title']) ?></h3>
+                            <h3 class="font-headline-sm text-headline-sm text-ink mb-2 group-hover:text-primary transition-colors">
+                                <?= e($event['title']) ?>
+                            </h3>
                             <?php if (!empty($event['description'])): ?>
-                                <p class="text-body-sm text-muted mb-4 flex-1"><?= e(mb_strimwidth($event['description'], 0, 120, '…')) ?></p>
+                                <p class="text-body-sm text-muted line-clamp-2 mb-5 flex-grow"><?= e($event['description']) ?></p>
                             <?php endif; ?>
-                            <a href="<?= e('/events/' . $event['slug']) ?>" class="inline-flex items-center gap-1.5 text-primary font-label-lg text-label-lg font-semibold hover:underline mt-auto">
-                                <?= e(t('home.events.view')) ?>
+                            <a href="<?= e('/events/' . $event['slug']) ?>" class="inline-flex items-center gap-1 text-primary font-label-lg text-label-lg font-semibold group-hover:underline mt-auto">
+                                <span><?= e(t('home.events.view')) ?></span>
                                 <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -244,39 +262,43 @@ $eventDateBadge = static function (string $startDate): string {
             $compactNews = array_slice($latestNews, 1);
             ?>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <a href="<?= e('/news/' . $featuredNews['slug']) ?>" class="lg:col-span-7 flex flex-col bg-white rounded-card border border-border overflow-hidden hover:shadow-card transition-shadow">
-                    <div class="aspect-video w-full bg-primary/10 flex items-center justify-center">
+                <a href="<?= e('/news/' . $featuredNews['slug']) ?>" class="group lg:col-span-7 flex flex-col bg-white rounded-card border border-border shadow-card hover:shadow-lg transition-shadow p-6">
+                    <div class="relative aspect-video w-full rounded-control overflow-hidden mb-5">
                         <?php if (!empty($featuredNews['cover_image'])): ?>
-                            <img src="<?= e('/uploads/' . $featuredNews['cover_image']) ?>" alt="" class="w-full h-full object-cover">
+                            <img src="<?= e('/uploads/' . $featuredNews['cover_image']) ?>" alt=""
+                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <?php else: ?>
-                            <i class="fa-solid fa-newspaper text-primary/40 text-4xl" aria-hidden="true"></i>
+                            <?= $imagePlaceholder('h-16 w-16') ?>
                         <?php endif; ?>
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span class="inline-flex items-center h-6 px-2.5 mb-3 rounded-full bg-primary/15 text-primary text-label-caps font-label-caps uppercase self-start">
+                        <span class="absolute top-3 left-3 px-2.5 py-1 rounded-control bg-primary text-white text-label-caps font-label-caps uppercase tracking-wider">
                             <?= e($newsCategoryLabel($featuredNews['category'])) ?>
                         </span>
-                        <h3 class="font-headline-md text-headline-md text-ink mb-2"><?= e($featuredNews['title']) ?></h3>
-                        <?php if (!empty($featuredNews['excerpt'])): ?>
-                            <p class="text-body-md text-muted mb-4"><?= e($featuredNews['excerpt']) ?></p>
-                        <?php endif; ?>
-                        <p class="text-label-md font-label-md text-muted mt-auto"><?= e(local_date($featuredNews['published_at'])) ?></p>
                     </div>
+                    <p class="text-label-md font-label-md text-muted mb-2"><?= e(local_date($featuredNews['published_at'])) ?></p>
+                    <h3 class="font-headline-md text-headline-md text-ink mb-3 group-hover:text-primary transition-colors">
+                        <?= e($featuredNews['title']) ?>
+                    </h3>
+                    <?php if (!empty($featuredNews['excerpt'])): ?>
+                        <p class="text-body-md text-muted leading-relaxed"><?= e($featuredNews['excerpt']) ?></p>
+                    <?php endif; ?>
                 </a>
                 <div class="lg:col-span-5 flex flex-col gap-4">
                     <?php foreach ($compactNews as $news): ?>
-                        <a href="<?= e('/news/' . $news['slug']) ?>" class="flex gap-4 items-start p-4 rounded-card bg-white border border-border hover:shadow-card transition-shadow">
-                            <span class="h-14 w-14 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0 overflow-hidden">
+                        <a href="<?= e('/news/' . $news['slug']) ?>" class="group p-4 rounded-card bg-white border border-border shadow-card hover:shadow-lg transition-shadow flex gap-4 items-start">
+                            <div class="h-20 w-20 rounded-control overflow-hidden shrink-0">
                                 <?php if (!empty($news['cover_image'])): ?>
-                                    <img src="<?= e('/uploads/' . $news['cover_image']) ?>" alt="" class="w-full h-full object-cover">
+                                    <img src="<?= e('/uploads/' . $news['cover_image']) ?>" alt=""
+                                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <?php else: ?>
-                                    <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+                                    <?= $imagePlaceholder('h-8 w-8') ?>
                                 <?php endif; ?>
-                            </span>
-                            <div class="min-w-0">
-                                <span class="text-label-caps font-label-caps uppercase text-primary"><?= e($newsCategoryLabel($news['category'])) ?></span>
-                                <h4 class="font-label-lg text-label-lg text-ink line-clamp-2"><?= e($news['title']) ?></h4>
-                                <span class="text-label-caps font-label-caps text-muted"><?= e(local_date($news['published_at'])) ?></span>
+                            </div>
+                            <div class="flex flex-col min-w-0">
+                                <span class="text-label-caps font-label-caps uppercase text-primary font-bold mb-1"><?= e($newsCategoryLabel($news['category'])) ?></span>
+                                <h4 class="font-headline-sm text-headline-sm text-ink group-hover:text-primary transition-colors line-clamp-2 mb-1">
+                                    <?= e($news['title']) ?>
+                                </h4>
+                                <span class="text-muted text-label-md font-label-md"><?= e(local_date($news['published_at'])) ?></span>
                             </div>
                         </a>
                     <?php endforeach; ?>
@@ -301,7 +323,7 @@ $eventDateBadge = static function (string $startDate): string {
         <?php else: ?>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
                 <?php foreach ($photos as $photo): ?>
-                    <div class="group relative aspect-square rounded-card overflow-hidden bg-surface">
+                    <div class="group relative aspect-square rounded-card shadow-card overflow-hidden bg-surface">
                         <img src="<?= e('/uploads/' . $photo['image_path']) ?>" alt="<?= e($photo['caption'] ?? $photo['event_title']) ?>"
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
