@@ -114,7 +114,7 @@ $renderOrgBranch = static function (string $visibility = ''): string {
 };
 
 $renderOrgTier2Box = static function (array $item) use ($renderOrgBranch): string {
-    return '<div class="relative bg-white rounded-card border border-border shadow-card px-4 py-3">'
+    return '<div class="relative bg-white rounded-card border border-border px-4 py-3">'
         . $renderOrgBranch('hidden sm:block')
         . '<p class="text-label-caps font-label-caps uppercase text-muted mb-1">' . e($item['eyebrow']) . '</p>'
         . '<p class="font-label-lg text-label-lg text-ink">' . e($item['title']) . '</p>'
@@ -123,7 +123,7 @@ $renderOrgTier2Box = static function (array $item) use ($renderOrgBranch): strin
 };
 
 $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): string {
-    return '<div class="relative bg-white rounded-card border border-border shadow-card px-3 py-3 text-center">'
+    return '<div class="relative bg-white rounded-card border border-border px-3 py-3 text-center">'
         . $renderOrgBranch('hidden lg:block')
         . '<p class="text-label-md font-label-md text-ink">' . e($item['title']) . '</p>'
         . '<p class="text-label-caps text-muted">' . e($item['subtitle']) . '</p>'
