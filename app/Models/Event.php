@@ -378,4 +378,197 @@ final class Event extends Model
         );
         $stmt->execute(['event_id' => $eventId, 'member_id' => $memberId]);
     }
+
+    private const ADMIN_PER_PAGE = 20;
+
+    /**
+     * Liste admin (FIUCC-51) : tous les statuts, y compris 'draft' — jamais
+     * filtré publiquement comme publicList()/whenClause(). Recherche +
+     * filtre statut, pas de bascule à venir/passé (l'admin gère le cycle de
+     * vie éditorial, pas la chronologie affichée au public).
+     *
+     * @param array{search?: string, status?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function adminList(array $filters, int $page, int $perPage = self::ADMIN_PER_PAGE): array
+    {
+        $conditions = [];
+        $params = [];
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $conditions[] = '(title LIKE :search1 OR location LIKE :search2)';
+            $like = '%' . $search . '%';
+            $params['search1'] = $like;
+            $params['search2'] = $like;
+        }
+
+        $status = trim((string) ($filters['status'] ?? ''));
+        if ($status !== '' && in_array($status, ['draft', 'published', 'archived', 'cancelled'], true)) {
+            $conditions[] = 'status = :status';
+            $params['status'] = $status;
+        }
+
+        $where = $conditions !== [] ? 'WHERE ' . implode(' AND ', $conditions) : '';
+
+        $countStmt = static::db()->prepare("SELECT COUNT(*) FROM events {$where}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        // LIMIT/OFFSET interpolés — même raison que publicList() ci-dessus.
+        $offset = ($page - 1) * $perPage;
+        $stmt = static::db()->prepare(
+            "SELECT id, title, slug, category, location, cover_image, start_date, end_date, capacity, status
+             FROM events
+             {$where}
+             ORDER BY start_date DESC
+             LIMIT {$perPage} OFFSET {$offset}"
+        );
+        $stmt->execute($params);
+
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
+    }
+
+    /**
+     * Un événement, tous champs, quel que soit son statut — pour le
+     * formulaire d'édition admin. Distinct de findBySlug() (public, jamais
+     * un brouillon) : ici l'admin doit voir/modifier ses brouillons.
+     */
+    public static function find(int $id): ?array
+    {
+        $stmt = static::db()->prepare('SELECT * FROM events WHERE id = :id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    /**
+     * Création (FIUCC-51). Le slug se déduit du titre et n'est jamais saisi
+     * par l'admin (le cahier ne le liste pas parmi les champs du formulaire) ;
+     * uniqueSlug() garantit qu'il ne collisionne jamais avec un événement
+     * existant.
+     *
+     * @param array{title: string, description: ?string, category: ?string, location: ?string,
+     *              start_date: string, end_date: ?string, cover_image: ?string, capacity: ?int,
+     *              status: string, created_by: ?int} $data
+     */
+    public static function create(array $data): int
+    {
+        $stmt = static::db()->prepare(
+            'INSERT INTO events (title, slug, description, category, location, start_date, end_date, cover_image, capacity, status, created_by)
+             VALUES (:title, :slug, :description, :category, :location, :start_date, :end_date, :cover_image, :capacity, :status, :created_by)'
+        );
+        $stmt->execute([
+            'title'       => $data['title'],
+            'slug'        => self::uniqueSlug($data['title']),
+            'description' => $data['description'],
+            'category'    => $data['category'],
+            'location'    => $data['location'],
+            'start_date'  => $data['start_date'],
+            'end_date'    => $data['end_date'],
+            'cover_image' => $data['cover_image'],
+            'capacity'    => $data['capacity'],
+            'status'      => $data['status'],
+            'created_by'  => $data['created_by'],
+        ]);
+
+        return (int) static::db()->lastInsertId();
+    }
+
+    /**
+     * Mise à jour (FIUCC-51) — ne touche jamais au slug, même si le titre
+     * change : un lien d'inscription déjà partagé (email de confirmation,
+     * réseaux sociaux) ne doit pas casser après une simple correction de
+     * titre. La couverture se change via updateCoverImage() seulement,
+     * jamais ici (même principe que Member::updateProfile()/updatePhoto()).
+     *
+     * @param array{title: string, description: ?string, category: ?string, location: ?string,
+     *              start_date: string, end_date: ?string, capacity: ?int, status: string} $data
+     */
+    public static function update(int $id, array $data): void
+    {
+        $stmt = static::db()->prepare(
+            'UPDATE events SET title = :title, description = :description, category = :category,
+             location = :location, start_date = :start_date, end_date = :end_date,
+             capacity = :capacity, status = :status
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            'title'       => $data['title'],
+            'description' => $data['description'],
+            'category'    => $data['category'],
+            'location'    => $data['location'],
+            'start_date'  => $data['start_date'],
+            'end_date'    => $data['end_date'],
+            'capacity'    => $data['capacity'],
+            'status'      => $data['status'],
+            'id'          => $id,
+        ]);
+    }
+
+    public static function updateCoverImage(int $id, string $path): void
+    {
+        $stmt = static::db()->prepare('UPDATE events SET cover_image = :cover_image WHERE id = :id');
+        $stmt->execute(['cover_image' => $path, 'id' => $id]);
+    }
+
+    /**
+     * Suppression définitive (FIUCC-51) — sûre au niveau base : event_images
+     * et event_registrations portent ON DELETE CASCADE (001_initial_schema.sql).
+     * Le fichier de couverture, lui, n'est pas géré par une contrainte SQL —
+     * à supprimer séparément par l'appelant (voir Admin\EventController::delete(),
+     * même best-effort qu'un ancien fichier remplacé).
+     */
+    public static function delete(int $id): void
+    {
+        $stmt = static::db()->prepare('DELETE FROM events WHERE id = :id');
+        $stmt->execute(['id' => $id]);
+    }
+
+    /**
+     * Slug unique dérivé du titre — base ASCII (translittération des
+     * accents), suffixé -2/-3/... en cas de collision plutôt que de refuser
+     * la création : deux événements peuvent légitimement partager un titre
+     * ("Soirée culturelle" d'une année sur l'autre).
+     */
+    private static function uniqueSlug(string $title, ?int $excludeId = null): string
+    {
+        $base = self::slugify($title);
+        $slug = $base;
+        $suffix = 2;
+
+        while (self::slugExists($slug, $excludeId)) {
+            $slug = $base . '-' . $suffix;
+            $suffix++;
+        }
+
+        return $slug;
+    }
+
+    private static function slugify(string $title): string
+    {
+        $ascii = iconv('UTF-8', 'ASCII//TRANSLIT', $title);
+        $ascii = $ascii !== false ? $ascii : $title;
+        $slug = strtolower((string) preg_replace('/[^a-zA-Z0-9]+/', '-', $ascii));
+        $slug = trim($slug, '-');
+
+        return $slug !== '' ? $slug : 'evenement';
+    }
+
+    private static function slugExists(string $slug, ?int $excludeId): bool
+    {
+        $sql = 'SELECT COUNT(*) FROM events WHERE slug = :slug';
+        $params = ['slug' => $slug];
+
+        if ($excludeId !== null) {
+            $sql .= ' AND id != :exclude_id';
+            $params['exclude_id'] = $excludeId;
+        }
+
+        $stmt = static::db()->prepare($sql);
+        $stmt->execute($params);
+
+        return (int) $stmt->fetchColumn() > 0;
+    }
 }

@@ -18,7 +18,9 @@ return [
     ['GET',  '/admin/events',                   'Admin\EventController@index'],
     ['GET',  '/admin/events/create',            'Admin\EventController@create'],
     ['POST', '/admin/events',                   'Admin\EventController@store'],
+    ['GET',  '/admin/events/{id}/edit',         'Admin\EventController@edit'],
     ['POST', '/admin/events/{id}',              'Admin\EventController@update'],
+    ['POST', '/admin/events/{id}/delete',       'Admin\EventController@delete'],
 
     ['GET',  '/admin/news',                     'Admin\NewsController@index'],
     ['GET',  '/admin/gallery',                  'Admin\GalleryController@index'],

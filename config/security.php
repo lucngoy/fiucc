@@ -17,6 +17,9 @@ return [
     // Plus long côté, en pixels, après redimensionnement (FIUCC-38) — une
     // photo de profil n'a jamais besoin d'être plus grande que ça.
     'upload_photo_max_dimension' => (int) Env::get('UPLOAD_PHOTO_MAX_DIMENSION', 800),
+    // Couverture d'événement (FIUCC-51) : affichée en pleine largeur de
+    // bande (jusqu'à ~1200px), plus grande qu'une photo de profil carrée.
+    'upload_event_cover_max_dimension' => (int) Env::get('UPLOAD_EVENT_COVER_MAX_DIMENSION', 1600),
     // Plafond de dimensions AVANT chargement GD (decompression bomb) : une
     // image bien compressée peut passer le contrôle de taille en octets tout
     // en explosant la mémoire une fois décodée en pixels par GD. Vérifié via
