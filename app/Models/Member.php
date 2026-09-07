@@ -133,6 +133,22 @@ final class Member extends Model
     }
 
     /**
+     * Statistique "Registered Students" de la page d'accueil (section 10 du
+     * cahier des charges, FIUCC-47) : membres validés par un admin, jamais
+     * les pending/rejected/suspended — une inscription non confirmée ou
+     * refusée ne fait pas partie de la communauté affichée publiquement.
+     * status_type='student' précisément parce que le libellé dit
+     * "Students", pas "Members" — les alumni ont leur propre décompte
+     * ailleurs (phase 6, pas construit ici).
+     */
+    public static function registeredStudentsCount(): int
+    {
+        return (int) static::db()
+            ->query("SELECT COUNT(*) FROM members WHERE status = 'validated' AND status_type = 'student'")
+            ->fetchColumn();
+    }
+
+    /**
      * Droit de vote (CLAUDE.md, règle non négociable) : status='validated'
      * ET status_type='student' — un alumni reste membre sans être électeur.
      * Point d'entrée unique pour ne pas réimplémenter cette règle ailleurs

@@ -86,4 +86,28 @@ final class Government extends Model
 
         return $governments;
     }
+
+    /**
+     * Statistique "Years of Community" de la page d'accueil (section 10 du
+     * cahier des charges, FIUCC-47) : aucune table ne porte de date de
+     * fondation dédiée, mais governments.start_date le fait déjà — le
+     * mandat fondateur (2025-2026, database/seeders/006_demo_government.php)
+     * est le seul repère réel de "depuis quand" la communauté existe
+     * (cohérent avec le badge "Founded 2025" de /community, FIUCC-40).
+     * MIN() reste correct une fois des mandats plus anciens archivés
+     * (FIUCC-42). L'année fondatrice compte comme la première (min 1),
+     * plutôt que "0 Years" au lendemain de la fondation.
+     */
+    public static function yearsSinceFounding(): int
+    {
+        $founded = static::db()->query('SELECT MIN(start_date) FROM governments')->fetchColumn();
+
+        if ($founded === false || $founded === null) {
+            return 0;
+        }
+
+        $years = (int) floor((time() - strtotime((string) $founded)) / (365.25 * 86400));
+
+        return max(1, $years);
+    }
 }

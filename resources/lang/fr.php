@@ -380,4 +380,40 @@ return [
     'admin.members.notice.bulk_rejected'      => ':applied membre(s) rejeté(s) sur :requested sélectionné(s).',
     'admin.members.notice.bulk_suspended'     => ':applied membre(s) suspendu(s) sur :requested sélectionné(s).',
     'admin.members.notice.bulk_skipped'       => "Les autres n'ont pas été modifiés — cette action ne s'applique qu'aux membres actuellement :status.",
+
+    'home.hero.title'       => 'Communauté Congolaise de Final',
+    'home.hero.tagline'     => "Unis par nos racines, poussés par l'avenir.",
+    'home.hero.cta_discover' => 'Découvrir nos activités',
+
+    'home.stats.students'   => ':count étudiants inscrits',
+    'home.stats.events'     => ':count événements',
+    'home.stats.activities' => ':count activités',
+    'home.stats.years'      => ":count ans d'existence",
+
+    'home.about.eyebrow' => 'À propos',
+    'home.about.title'   => 'À propos de la communauté',
+    'home.about.body'    => 'La Communauté Congolaise de Final rassemble les étudiants congolais de Final International University autour de la solidarité, de la culture, du leadership et du développement.',
+    'home.about.cta'     => 'Découvrir la communauté',
+
+    'home.events.eyebrow' => 'Calendrier du campus',
+    'home.events.title'   => 'Prochains événements',
+    'home.events.see_all' => 'Voir tous les événements',
+    'home.events.view'    => "Voir l'événement",
+    'home.events.empty'   => "Aucun événement à venir n'est programmé pour l'instant. Revenez bientôt.",
+
+    'home.news.eyebrow'   => 'Communiqués officiels',
+    'home.news.title'     => 'Dernières actualités',
+    'home.news.see_all'   => 'Toutes les publications',
+    'home.news.read_more' => 'Lire la suite',
+    'home.news.empty'     => "Aucune actualité n'a encore été publiée.",
+    'home.news.category.announcement' => 'Annonce',
+    'home.news.category.event'        => 'Événement',
+    'home.news.category.urgent'       => 'Urgent',
+    'home.news.category.general'      => 'Général',
+
+    'home.gallery.eyebrow'  => 'Archives visuelles',
+    'home.gallery.title'    => 'Souvenirs',
+    'home.gallery.subtitle' => 'Nos moments de campus et nos étapes marquantes.',
+    'home.gallery.cta'      => 'Voir la galerie',
+    'home.gallery.empty'    => "Aucune photo n'a encore été ajoutée — elles apparaîtront ici une fois les événements documentés.",
 ];

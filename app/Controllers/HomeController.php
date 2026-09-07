@@ -5,28 +5,31 @@ namespace App\Controllers;
 
 use App\Core\Config;
 use App\Core\Controller;
-use App\Core\Database;
-use Throwable;
+use App\Models\Event;
+use App\Models\Government;
+use App\Models\Member;
+use App\Models\News;
 
 /**
- * Page d'accueil temporaire — point de vérification visuel jusqu'à la vraie
- * page d'accueil (phase 3, FIUCC-9). À supprimer à ce moment-là.
+ * Page d'accueil (FIUCC-46, sections 6 à 10 du cahier des charges) et ses
+ * statistiques dynamiques (FIUCC-47) — remplace la page témoin temporaire
+ * de FIUCC-17 ("Database connection: OK").
  */
 final class HomeController extends Controller
 {
     public function index(): void
     {
-        try {
-            Database::connection();
-            $dbConnected = true;
-        } catch (Throwable) {
-            $dbConnected = false;
-        }
-
         $this->view('home.index', [
-            'title'       => Config::get('app.name'),
-            'siteName'    => Config::get('app.name'),
-            'dbConnected' => $dbConnected,
+            'title' => (string) Config::get('app.name'),
+            'stats' => [
+                'students'   => Member::registeredStudentsCount(),
+                'events'     => Event::organizedCount(),
+                'activities' => Event::activityCategoriesCount(),
+                'years'      => Government::yearsSinceFounding(),
+            ],
+            'upcomingEvents' => Event::upcoming(3),
+            'latestNews'     => News::latest(4),
+            'photos'         => Event::recentPhotos(6),
         ]);
     }
 }

@@ -377,4 +377,40 @@ return [
     'admin.members.notice.bulk_rejected'      => ':applied of :requested selected members were rejected.',
     'admin.members.notice.bulk_suspended'     => ':applied of :requested selected members were suspended.',
     'admin.members.notice.bulk_skipped'       => 'The rest were left unchanged — this action only applies to members currently :status.',
+
+    'home.hero.title'       => 'Congolese Community of Final',
+    'home.hero.tagline'     => 'United by our roots, driven by the future.',
+    'home.hero.cta_discover' => 'Discover our Activities',
+
+    'home.stats.students'   => ':count Registered Students',
+    'home.stats.events'     => ':count Events',
+    'home.stats.activities' => ':count Activities',
+    'home.stats.years'      => ':count Years of Community',
+
+    'home.about.eyebrow' => 'About Us',
+    'home.about.title'   => 'About the Community',
+    'home.about.body'    => 'The Congolese Community of Final brings together Congolese students at Final International University around solidarity, culture, leadership, and development.',
+    'home.about.cta'     => 'Discover the Community',
+
+    'home.events.eyebrow' => 'Campus Calendar',
+    'home.events.title'   => 'Upcoming Events',
+    'home.events.see_all' => 'See all events',
+    'home.events.view'    => 'View Event',
+    'home.events.empty'   => 'No upcoming events are scheduled yet. Check back soon.',
+
+    'home.news.eyebrow'   => 'Official Dispatches',
+    'home.news.title'     => 'Latest Updates',
+    'home.news.see_all'   => 'All publications',
+    'home.news.read_more' => 'Read more',
+    'home.news.empty'     => 'No news has been published yet.',
+    'home.news.category.announcement' => 'Announcement',
+    'home.news.category.event'        => 'Event',
+    'home.news.category.urgent'       => 'Urgent',
+    'home.news.category.general'      => 'General',
+
+    'home.gallery.eyebrow'  => 'Visual Archives',
+    'home.gallery.title'    => 'Memories',
+    'home.gallery.subtitle' => 'Capturing our campus moments and milestones.',
+    'home.gallery.cta'      => 'View Gallery',
+    'home.gallery.empty'    => 'No photos have been added yet — they will appear here once events are documented.',
 ];
