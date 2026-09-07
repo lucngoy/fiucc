@@ -73,13 +73,17 @@ $eventDateBadge = static function (string $startDate): string {
 
 /**
  * Image par défaut des cartes (événement, actualité) quand cover_image est
- * vide — sceau officiel de la communauté en filigrane plutôt qu'une icône
- * nue sur fond plat : un vrai visuel de remplacement, pas juste une case
- * vide, et sur la charte (même sceau que le header public).
+ * vide — une icône, pas le sceau de la communauté (pas un logo à cette
+ * échelle répétée sur autant de cartes). "absolute inset-0" plutôt que
+ * "w-full h-full" : rattaché au bord du conteneur positionné (relative)
+ * plutôt qu'à la hauteur du contenu, la case occupe systématiquement tout
+ * l'espace réservé à l'image — jamais la hauteur de l'icône elle-même.
+ * Chaque appelant doit donc être "relative" (déjà le cas partout où c'est
+ * utilisé ci-dessous).
  */
-$imagePlaceholder = static function (string $sealSize = 'h-10 w-10'): string {
-    return '<div class="w-full h-full bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
-        . '<img src="/assets/images/fiucc-seal.png" alt="" class="' . e($sealSize) . ' object-contain opacity-30">'
+$imagePlaceholder = static function (string $iconClass, string $iconSize = 'text-3xl'): string {
+    return '<div class="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
+        . '<i class="' . e($iconClass) . ' ' . e($iconSize) . ' text-primary/30" aria-hidden="true"></i>'
         . '</div>';
 };
 ?>
@@ -180,7 +184,7 @@ $imagePlaceholder = static function (string $sealSize = 'h-10 w-10'): string {
                                 <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt=""
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <?php else: ?>
-                                <?= $imagePlaceholder('h-12 w-12') ?>
+                                <?= $imagePlaceholder('fa-solid fa-calendar-days', 'text-4xl') ?>
                             <?php endif; ?>
                             <?= $eventDateBadge($event['start_date']) ?>
                             <?php if (!empty($event['category'])): ?>
@@ -268,7 +272,7 @@ $imagePlaceholder = static function (string $sealSize = 'h-10 w-10'): string {
                             <img src="<?= e('/uploads/' . $featuredNews['cover_image']) ?>" alt=""
                                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                         <?php else: ?>
-                            <?= $imagePlaceholder('h-16 w-16') ?>
+                            <?= $imagePlaceholder('fa-solid fa-newspaper', 'text-5xl') ?>
                         <?php endif; ?>
                         <span class="absolute top-3 left-3 px-2.5 py-1 rounded-control bg-primary text-white text-label-caps font-label-caps uppercase tracking-wider">
                             <?= e($newsCategoryLabel($featuredNews['category'])) ?>
@@ -285,12 +289,12 @@ $imagePlaceholder = static function (string $sealSize = 'h-10 w-10'): string {
                 <div class="lg:col-span-5 flex flex-col gap-4">
                     <?php foreach ($compactNews as $news): ?>
                         <a href="<?= e('/news/' . $news['slug']) ?>" class="group p-4 rounded-card bg-white border border-border shadow-card hover:shadow-lg transition-shadow flex gap-4 items-start">
-                            <div class="h-20 w-20 rounded-control overflow-hidden shrink-0">
+                            <div class="relative h-20 w-20 rounded-control overflow-hidden shrink-0">
                                 <?php if (!empty($news['cover_image'])): ?>
                                     <img src="<?= e('/uploads/' . $news['cover_image']) ?>" alt=""
                                          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                 <?php else: ?>
-                                    <?= $imagePlaceholder('h-8 w-8') ?>
+                                    <?= $imagePlaceholder('fa-solid fa-newspaper', 'text-xl') ?>
                                 <?php endif; ?>
                             </div>
                             <div class="flex flex-col min-w-0">
