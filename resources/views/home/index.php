@@ -2,28 +2,42 @@
 /**
  * Page d'accueil (FIUCC-46, sections 6 à 10 du cahier des charges) et ses
  * statistiques dynamiques (FIUCC-47, section 10) — remplace la page témoin
- * temporaire de FIUCC-17. Style rapproché de la maquette
- * fiucc_portal_home_page/code.html, mais sur les tokens du projet (bg-primary,
- * bg-surface, bg-white en bandes alternées — pas la palette Material isolée
- * de la maquette) et strictement borné aux sections 6-10 : pas de "Community
- * Lifecycle Strip" ni de bandeau CTA de clôture, qui n'existent pas dans le
- * cahier des charges.
+ * temporaire de FIUCC-17. Structure rapprochée de la maquette
+ * fiucc_portal_home_page/code.html (hero, bande stats, à propos, événements,
+ * parcours du membre, actualités, souvenirs, bandeau d'inscription), sur les
+ * tokens du projet (bg-primary/bg-surface/bg-white en bandes alternées —
+ * pas la palette Material isolée de la maquette, Font Awesome pas Material
+ * Symbols).
  *
- * Toutes les données sont réelles (App\Controllers\HomeController) :
+ * "The FIUCC Member Journey" (section maquette absente du cahier §6-10) :
+ * pas un texte générique repris tel quel — adapté au cycle de vie du membre
+ * réellement décrit en tête de CLAUDE.md (arrivée → découverte → recensement
+ * → événements → élections → alumni/mentor), avec les vraies routes du site
+ * quand elles existent.
+ *
+ * Toutes les données dynamiques restent réelles (App\Controllers\HomeController) :
  * - statistiques (FIUCC-47) : Member::registeredStudentsCount(),
  *   Event::organizedCount()/activityCategoriesCount(),
- *   Government::yearsSinceFounding() — jamais une valeur écrite en dur ;
+ *   Government::yearsSinceFounding() — jamais une valeur écrite en dur,
+ *   y compris dans la rangée compacte du hero et le bandeau d'inscription
+ *   final, qui réutilisent les mêmes chiffres plutôt que d'en inventer
+ *   d'autres comme la maquette ("450+") ;
  * - événements et actualités : Event::upcoming()/News::latest(), vides
  *   honnêtement si rien à montrer, pas de contenu inventé ;
  * - "Memories" : Event::recentPhotos() (event_images, seule table de
  *   photos du schéma) — vide aujourd'hui, aucune photo n'a encore été
  *   déposée.
  *
- * Les liens vers /events, /events/{slug}, /news, /news/{slug} et /gallery
- * pointent vers des routes déjà déclarées (routes/web.php) dont les
- * contrôleurs ne sont pas encore construits (FIUCC-48/49 et tickets
- * séparés) : 404 propre en attendant, même principe que partout ailleurs
- * dans ce projet (ex. l'archive Government avant FIUCC-42).
+ * Photo "à propos" : même principe que /community (FIUCC-40) — espace
+ * réservé tant que public/assets/images/home/about.jpg n'existe pas,
+ * bascule automatique dès qu'il est déposé, sans retoucher le code.
+ *
+ * Les liens vers /events, /events/{slug}, /news, /news/{slug}, /gallery,
+ * /new-at-final, /elections et /alumni pointent vers des routes déjà
+ * déclarées (routes/web.php) dont les contrôleurs ne sont pas encore
+ * construits (FIUCC-48/49 et tickets séparés) : 404 propre en attendant,
+ * même principe que partout ailleurs dans ce projet (ex. l'archive
+ * Government avant FIUCC-42).
  */
 $stats ??= ['students' => 0, 'events' => 0, 'activities' => 0, 'years' => 0];
 $upcomingEvents ??= [];
@@ -33,6 +47,17 @@ $photos ??= [];
 $newsCategoryLabel = static function (string $category): string {
     return t('home.news.category.' . $category);
 };
+
+$aboutPhotoPath = 'assets/images/home/about.jpg';
+$hasAboutPhoto = is_file(BASE_PATH . '/public/' . $aboutPhotoPath);
+
+$journeySteps = [
+    ['icon' => 'fa-solid fa-compass', 'label' => t('home.journey.step1_label'), 'title' => t('home.journey.step1_title'), 'body' => t('home.journey.step1_body')],
+    ['icon' => 'fa-solid fa-user-plus', 'label' => t('home.journey.step2_label'), 'title' => t('home.journey.step2_title'), 'body' => t('home.journey.step2_body')],
+    ['icon' => 'fa-solid fa-people-group', 'label' => t('home.journey.step3_label'), 'title' => t('home.journey.step3_title'), 'body' => t('home.journey.step3_body')],
+    ['icon' => 'fa-solid fa-square-check', 'label' => t('home.journey.step4_label'), 'title' => t('home.journey.step4_title'), 'body' => t('home.journey.step4_body')],
+    ['icon' => 'fa-solid fa-hands-holding-circle', 'label' => t('home.journey.step5_label'), 'title' => t('home.journey.step5_title'), 'body' => t('home.journey.step5_body')],
+];
 
 $eventDateBadge = static function (string $startDate): string {
     $timestamp = strtotime($startDate);
@@ -48,11 +73,29 @@ $eventDateBadge = static function (string $startDate): string {
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-24 text-center flex flex-col items-center">
+        <span class="inline-flex items-center gap-2 h-8 px-4 rounded-full bg-gold text-ink text-label-md font-label-md mb-6">
+            <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+            <?= e(t('home.hero.badge')) ?>
+        </span>
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-4"><?= e(t('home.hero.title')) ?></h1>
         <p class="text-body-lg text-white/80 max-w-2xl mb-8"><?= e(t('home.hero.tagline')) ?></p>
-        <div class="flex flex-col sm:flex-row items-center gap-4">
+        <div class="flex flex-col sm:flex-row items-center gap-4 mb-10">
             <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
             <?= component('button', ['label' => t('home.hero.cta_discover'), 'variant' => 'inverse', 'href' => '#events']) ?>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/80 text-label-md font-label-md pt-6 border-t border-white/15">
+            <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
+                <?= e(t('home.stats.students', ['count' => $stats['students']])) ?>
+            </span>
+            <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-primary-light" aria-hidden="true"></span>
+                <?= e(t('home.stats.events', ['count' => $stats['events']])) ?>
+            </span>
+            <span class="flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
+                <?= e(t('home.stats.years', ['count' => $stats['years']])) ?>
+            </span>
         </div>
     </div>
 </div>
@@ -79,13 +122,23 @@ $eventDateBadge = static function (string $startDate): string {
     </div>
 </div>
 
-<div class="w-full bg-surface">
+<div class="w-full bg-surface" id="about">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
-        <div class="max-w-2xl mx-auto text-center">
-            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-3"><?= e(t('home.about.eyebrow')) ?></p>
-            <h2 class="font-headline-md text-headline-md text-ink mb-4"><?= e(t('home.about.title')) ?></h2>
-            <p class="text-body-md text-muted mb-8"><?= e(t('home.about.body')) ?></p>
-            <?= component('button', ['label' => t('home.about.cta'), 'variant' => 'primary', 'href' => '/community']) ?>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+            <?php if ($hasAboutPhoto): ?>
+                <img src="<?= e('/' . $aboutPhotoPath) ?>" alt="<?= e(t('home.about.title')) ?>"
+                     class="w-full h-72 md:h-96 object-cover rounded-card border border-border shadow-card">
+            <?php else: ?>
+                <div class="w-full h-72 md:h-96 rounded-card border border-dashed border-border bg-white flex items-center justify-center">
+                    <span class="text-body-sm text-muted"><?= e(t('home.about.photo_pending')) ?></span>
+                </div>
+            <?php endif; ?>
+            <div>
+                <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-3"><?= e(t('home.about.eyebrow')) ?></p>
+                <h2 class="font-headline-md text-headline-md text-ink mb-4"><?= e(t('home.about.title')) ?></h2>
+                <p class="text-body-md text-muted mb-8"><?= e(t('home.about.body')) ?></p>
+                <?= component('button', ['label' => t('home.about.cta'), 'variant' => 'primary', 'href' => '/community']) ?>
+            </div>
         </div>
     </div>
 </div>
@@ -143,6 +196,28 @@ $eventDateBadge = static function (string $startDate): string {
     </div>
 </div>
 
+<div class="w-full bg-primary/5">
+    <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('home.journey.eyebrow')) ?></p>
+            <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('home.journey.title')) ?></h2>
+            <p class="text-body-md text-muted"><?= e(t('home.journey.subtitle')) ?></p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
+            <?php foreach ($journeySteps as $step): ?>
+                <div class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border shadow-card">
+                    <span class="h-12 w-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
+                        <i class="<?= e($step['icon']) ?> text-lg" aria-hidden="true"></i>
+                    </span>
+                    <p class="text-label-caps font-label-caps uppercase text-primary mb-1"><?= e($step['label']) ?></p>
+                    <h3 class="font-headline-sm text-headline-sm text-ink mb-1"><?= e($step['title']) ?></h3>
+                    <p class="text-body-sm text-muted"><?= e($step['body']) ?></p>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</div>
+
 <div class="w-full bg-surface">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
@@ -160,25 +235,52 @@ $eventDateBadge = static function (string $startDate): string {
                 <?= component('alert', ['type' => 'info', 'message' => t('home.news.empty')]) ?>
             </div>
         <?php else: ?>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <?php foreach ($latestNews as $news): ?>
-                    <a href="<?= e('/news/' . $news['slug']) ?>" class="flex flex-col bg-white rounded-card border border-border overflow-hidden hover:shadow-card transition-shadow">
-                        <div class="h-32 w-full bg-primary/10 flex items-center justify-center">
-                            <?php if (!empty($news['cover_image'])): ?>
-                                <img src="<?= e('/uploads/' . $news['cover_image']) ?>" alt="" class="w-full h-full object-cover">
-                            <?php else: ?>
-                                <i class="fa-solid fa-newspaper text-primary/40 text-2xl" aria-hidden="true"></i>
-                            <?php endif; ?>
-                        </div>
-                        <div class="p-4 flex flex-col flex-1">
-                            <span class="inline-flex items-center h-5 px-2 mb-2 rounded-full bg-primary/15 text-primary text-label-caps font-label-caps uppercase self-start">
-                                <?= e($newsCategoryLabel($news['category'])) ?>
+            <?php
+            // Article vedette (le plus récent) + liste compacte pour les
+            // suivants — même répartition que la maquette (7/5 colonnes),
+            // pas une grille uniforme : le dernier communiqué mérite plus
+            // de place que les autres.
+            $featuredNews = $latestNews[0];
+            $compactNews = array_slice($latestNews, 1);
+            ?>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <a href="<?= e('/news/' . $featuredNews['slug']) ?>" class="lg:col-span-7 flex flex-col bg-white rounded-card border border-border overflow-hidden hover:shadow-card transition-shadow">
+                    <div class="aspect-video w-full bg-primary/10 flex items-center justify-center">
+                        <?php if (!empty($featuredNews['cover_image'])): ?>
+                            <img src="<?= e('/uploads/' . $featuredNews['cover_image']) ?>" alt="" class="w-full h-full object-cover">
+                        <?php else: ?>
+                            <i class="fa-solid fa-newspaper text-primary/40 text-4xl" aria-hidden="true"></i>
+                        <?php endif; ?>
+                    </div>
+                    <div class="p-6 flex flex-col flex-1">
+                        <span class="inline-flex items-center h-6 px-2.5 mb-3 rounded-full bg-primary/15 text-primary text-label-caps font-label-caps uppercase self-start">
+                            <?= e($newsCategoryLabel($featuredNews['category'])) ?>
+                        </span>
+                        <h3 class="font-headline-md text-headline-md text-ink mb-2"><?= e($featuredNews['title']) ?></h3>
+                        <?php if (!empty($featuredNews['excerpt'])): ?>
+                            <p class="text-body-md text-muted mb-4"><?= e($featuredNews['excerpt']) ?></p>
+                        <?php endif; ?>
+                        <p class="text-label-md font-label-md text-muted mt-auto"><?= e(local_date($featuredNews['published_at'])) ?></p>
+                    </div>
+                </a>
+                <div class="lg:col-span-5 flex flex-col gap-4">
+                    <?php foreach ($compactNews as $news): ?>
+                        <a href="<?= e('/news/' . $news['slug']) ?>" class="flex gap-4 items-start p-4 rounded-card bg-white border border-border hover:shadow-card transition-shadow">
+                            <span class="h-14 w-14 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0 overflow-hidden">
+                                <?php if (!empty($news['cover_image'])): ?>
+                                    <img src="<?= e('/uploads/' . $news['cover_image']) ?>" alt="" class="w-full h-full object-cover">
+                                <?php else: ?>
+                                    <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+                                <?php endif; ?>
                             </span>
-                            <h3 class="font-label-lg text-label-lg text-ink mb-1"><?= e($news['title']) ?></h3>
-                            <p class="text-label-caps font-label-caps text-muted mt-auto"><?= e(local_date($news['published_at'])) ?></p>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
+                            <div class="min-w-0">
+                                <span class="text-label-caps font-label-caps uppercase text-primary"><?= e($newsCategoryLabel($news['category'])) ?></span>
+                                <h4 class="font-label-lg text-label-lg text-ink line-clamp-2"><?= e($news['title']) ?></h4>
+                                <span class="text-label-caps font-label-caps text-muted"><?= e(local_date($news['published_at'])) ?></span>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
             </div>
         <?php endif; ?>
     </div>
@@ -199,8 +301,12 @@ $eventDateBadge = static function (string $startDate): string {
         <?php else: ?>
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
                 <?php foreach ($photos as $photo): ?>
-                    <div class="aspect-square rounded-card overflow-hidden bg-surface">
-                        <img src="<?= e('/uploads/' . $photo['image_path']) ?>" alt="<?= e($photo['caption'] ?? $photo['event_title']) ?>" class="w-full h-full object-cover">
+                    <div class="group relative aspect-square rounded-card overflow-hidden bg-surface">
+                        <img src="<?= e('/uploads/' . $photo['image_path']) ?>" alt="<?= e($photo['caption'] ?? $photo['event_title']) ?>"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <i class="fa-solid fa-expand text-white text-2xl" aria-hidden="true"></i>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -209,5 +315,13 @@ $eventDateBadge = static function (string $startDate): string {
         <div class="flex justify-center">
             <?= component('button', ['label' => t('home.gallery.cta'), 'variant' => 'secondary', 'href' => '/gallery']) ?>
         </div>
+    </div>
+</div>
+
+<div class="w-full bg-primary">
+    <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20 text-center flex flex-col items-center">
+        <h2 class="font-headline-md text-headline-md text-white mb-3"><?= e(t('home.cta.title')) ?></h2>
+        <p class="text-body-lg text-white/80 max-w-2xl mb-8"><?= e(t('home.cta.body', ['count' => $stats['students']])) ?></p>
+        <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
     </div>
 </div>
