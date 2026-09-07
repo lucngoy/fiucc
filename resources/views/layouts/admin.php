@@ -17,11 +17,15 @@
  * Coquille du back office (FIUCC-43) — maquette fiucc_portal_admin_dashboard/
  * code.html pour le style (sidebar bleu marine, cartes blanches arrondies).
  * Barre latérale volontairement minimale : seuls "Membres", "Événements",
- * "Galerie", "Actualités" et "Documents" mènent à une page réelle
- * aujourd'hui. Pas de lien mort vers Dashboard/... — ces sections n'ont ni
- * contrôleur ni ticket construits (une phase à la fois, CLAUDE.md) ; elles
- * rejoindront la navigation quand leur ticket existera, plutôt que de
- * simuler un back office plus complet qu'il ne l'est.
+ * "Galerie", "Actualités", "Documents" et "Élections" mènent à une page
+ * réelle aujourd'hui. Pas de lien mort vers Dashboard/... — ces sections
+ * n'ont ni contrôleur ni ticket construits (une phase à la fois,
+ * CLAUDE.md) ; elles rejoindront la navigation quand leur ticket
+ * existera, plutôt que de simuler un back office plus complet qu'il ne
+ * l'est. "Élections" (FIUCC-59/60) : création/configuration seulement pour
+ * l'instant — candidatures/vote/résultats arrivent avec les tickets
+ * suivants (FIUCC-61+), pas de bouton pour des actions qui n'existent pas
+ * encore.
  *
  * Sidebar fixe au scroll (md+) : logo officiel de la communauté (même
  * asset que le header public, /assets/images/fiucc-seal.png) + nav + pied
@@ -99,6 +103,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                    <?= $activeNav === 'documents' ? 'aria-current="page"' : '' ?>>
                     <i class="fa-solid fa-folder-open w-5 text-center" aria-hidden="true"></i>
                     <?= e(t('admin.nav.documents')) ?>
+                </a>
+                <a href="/admin/elections"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'elections' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'elections' ? 'aria-current="page"' : '' ?>>
+                    <i class="fa-solid fa-check-to-slot w-5 text-center" aria-hidden="true"></i>
+                    <?= e(t('admin.nav.elections')) ?>
                 </a>
             </nav>
         </div>
