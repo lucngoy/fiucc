@@ -161,3 +161,4 @@ $paginationBase = '/admin/news?' . ($activeFilterQuery !== []
 </div>
 
 <script src="/assets/js/admin-dialogs.js" defer></script>
+<script src="/assets/js/admin-tooltip.js" defer></script>

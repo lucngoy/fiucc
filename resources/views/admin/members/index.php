@@ -427,3 +427,4 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
 </dialog>
 
 <script src="/assets/js/admin-members.js" defer></script>
+<script src="/assets/js/admin-tooltip.js" defer></script>
