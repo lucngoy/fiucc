@@ -53,6 +53,49 @@ final class Candidate extends Model
     }
 
     /**
+     * Liste publique des candidats approuvés d'une élection (FIUCC-63,
+     * §17-18 du cahier des charges) — jamais 'pending'/'rejected'/
+     * 'withdrawn' : seul un candidat "publié" (approve(), même verbe que le
+     * cahier §25) apparaît sur cette page.
+     *
+     * Confidentialité (décision explicite conversation FIUCC-63) : un
+     * candidat accepte implicitement d'être visible EN TANT QUE candidat,
+     * pas de voir tout son profil membre exposé dans ce nouveau contexte.
+     * - photo du membre : jamais sélectionnée ici, à dessein — seule
+     *   candidates.photo (une photo choisie pour CETTE candidature) peut
+     *   apparaître ; pas de repli sur la photo de profil.
+     * - faculty/year : toujours renvoyés, ce sont les deux champs que le
+     *   cahier §17 demande explicitement sur la fiche candidat.
+     * - department/instagram : redigés en NULL directement dans la requête
+     *   si members.is_public = 0, pour qu'aucun appelant ne puisse les
+     *   afficher par erreur même s'il oublie de vérifier le drapeau —
+     *   la confidentialité est appliquée une fois, ici, pas à chaque vue.
+     * - email/téléphone/numéro étudiant : jamais sélectionnés, cette page
+     *   n'en a aucun usage légitime (cahier §18 : photo, nom, poste, bio,
+     *   manifeste).
+     */
+    public static function publicListForElection(int $electionId): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT c.id, c.ballot_number, c.bio, c.manifesto, c.photo,
+                    ep.id AS position_id, ep.name AS position_name, ep.sort_order AS position_sort_order,
+                    m.full_name,
+                    m.faculty,
+                    m.year,
+                    CASE WHEN m.is_public = 1 THEN m.department ELSE NULL END AS department,
+                    CASE WHEN m.is_public = 1 THEN m.instagram ELSE NULL END AS instagram
+             FROM candidates c
+             INNER JOIN election_positions ep ON ep.id = c.election_position_id
+             INNER JOIN members m ON m.id = c.member_id
+             WHERE ep.election_id = :election_id AND c.status = 'approved'
+             ORDER BY ep.sort_order ASC, c.ballot_number ASC, m.full_name ASC"
+        );
+        $stmt->execute(['election_id' => $electionId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Un candidat, tous champs + infos membre/poste/élection jointes —
      * formulaire d'édition admin et vérifications de verrouillage
      * (Admin\CandidateController a besoin du statut de l'élection sans

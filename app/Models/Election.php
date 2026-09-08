@@ -81,6 +81,41 @@ final class Election extends Model
     }
 
     /**
+     * Compte à rebours public (FIUCC-62) — dérivé de status/start_at/end_at,
+     * jamais stocké. Borné pour ne jamais afficher un compte à rebours figé
+     * à zéro : le bureau ouvre/ferme le scrutin manuellement (FIUCC-59 §25,
+     * "ouvrir l'élection"/"fermer l'élection"), donc start_at ou end_at peut
+     * être dépassé sans que le statut ait encore changé — dans ce cas
+     * l'affichage doit dire "imminent", pas montrer 00:00:00:00.
+     *
+     * @param array{status: string, start_at: string, end_at: string} $election
+     * @return array{state: string, target: ?string} target est un datetime
+     *         MySQL (fuseau app.timezone) à compter, ou null si l'état n'a
+     *         pas de compte à rebours à afficher.
+     */
+    public static function votingWindowState(array $election): array
+    {
+        $now = time();
+        $start = strtotime((string) $election['start_at']);
+        $end = strtotime((string) $election['end_at']);
+        $status = $election['status'];
+
+        if (in_array($status, ['draft', 'candidacies'], true)) {
+            return $now >= $start
+                ? ['state' => 'opening_imminent', 'target' => null]
+                : ['state' => 'before_open', 'target' => (string) $election['start_at']];
+        }
+
+        if ($status === 'open') {
+            return $now >= $end
+                ? ['state' => 'closing_imminent', 'target' => null]
+                : ['state' => 'open_countdown', 'target' => (string) $election['end_at']];
+        }
+
+        return ['state' => $status === 'closed' ? 'closed' : 'published', 'target' => null];
+    }
+
+    /**
      * @param array{title: string, description: ?string, start_at: string, end_at: string} $data
      */
     public static function create(array $data): int
