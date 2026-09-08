@@ -67,8 +67,13 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                 <h1 class="font-headline-md text-headline-md text-ink"><?= e($election['title']) ?></h1>
                 <?= $statusBadge($election['status']) ?>
             </div>
-            <?php if ($isDraft): ?>
-                <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2">
+                <a href="/admin/elections/<?= e((string) $election['id']) ?>/candidates"
+                   class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
+                    <i class="fa-solid fa-users" aria-hidden="true"></i>
+                    <?= e(t('admin.elections.action.manage_candidates')) ?>
+                </a>
+                <?php if ($isDraft): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/edit"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
                         <i class="fa-solid fa-pen" aria-hidden="true"></i>
@@ -81,8 +86,8 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                             <?= e(t('admin.elections.action.delete')) ?>
                         </button>
                     <?php endif; ?>
-                </div>
-            <?php endif; ?>
+                <?php endif; ?>
+            </div>
         </div>
 
         <?php if (!empty($election['description'])): ?>

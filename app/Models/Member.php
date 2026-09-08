@@ -160,6 +160,41 @@ final class Member extends Model
             && ($member['status_type'] ?? null) === 'student';
     }
 
+    /**
+     * Sélecteur de membre du formulaire de candidature (FIUCC-61) — même
+     * règle qu'isVoterEligible() : un candidat doit pouvoir voter, un
+     * alumni ne se présente pas. Recherche facultative par nom/numéro
+     * étudiant ; liste complète (plafonnée) si $search est vide, une
+     * communauté étudiante reste d'une taille où un <select> simple
+     * suffit, pas besoin d'un pickeur JS.
+     */
+    public static function eligibleForCandidacy(string $search = '', int $limit = 200): array
+    {
+        $conditions = ["status = 'validated'", "status_type = 'student'"];
+        $params = [];
+
+        $search = trim($search);
+        if ($search !== '') {
+            $conditions[] = '(full_name LIKE :search1 OR student_id LIKE :search2)';
+            $like = '%' . $search . '%';
+            $params['search1'] = $like;
+            $params['search2'] = $like;
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+
+        // LIMIT interpolé — même raison qu'ailleurs dans le projet
+        // (Event::adminList()...) : PDO::ATTR_EMULATE_PREPARES à false
+        // n'accepte pas de valeur liée à cet endroit, sûr ici parce que
+        // $limit est typé int (strict_types=1).
+        $stmt = static::db()->prepare(
+            "SELECT id, full_name, student_id FROM members {$where} ORDER BY full_name ASC LIMIT {$limit}"
+        );
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
     public static function findByUserIdWithStatus(int $userId): ?array
     {
         $stmt = static::db()->prepare(
@@ -377,7 +412,7 @@ final class Member extends Model
     public static function findById(int $id): ?array
     {
         $stmt = static::db()->prepare(
-            'SELECT id, user_id, full_name, status FROM members WHERE id = :id LIMIT 1'
+            'SELECT id, user_id, full_name, status, status_type FROM members WHERE id = :id LIMIT 1'
         );
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();

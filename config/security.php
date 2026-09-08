@@ -32,6 +32,10 @@ return [
     // couverture d'événement — affichée en pleine largeur sur la page
     // détail d'un article.
     'upload_news_cover_max_dimension' => (int) Env::get('UPLOAD_NEWS_COVER_MAX_DIMENSION', 1600),
+    // Photo de candidat (FIUCC-61) : même format qu'une photo de profil
+    // (portrait, affiché en carte sur la page des candidats), pas une
+    // couverture pleine largeur.
+    'upload_candidate_photo_max_dimension' => (int) Env::get('UPLOAD_CANDIDATE_PHOTO_MAX_DIMENSION', 800),
     // Documents (FIUCC-58) : plafond distinct de upload_max_size_mb, même
     // valeur ici — un règlement ou un rapport scanné a les mêmes contraintes
     // de taille qu'une photo (envoi mobile, mémoire du script).

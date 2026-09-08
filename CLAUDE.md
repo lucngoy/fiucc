@@ -171,6 +171,37 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
     sous `['validated']` comme les autres routes de cette liste ; si c'est une
     page vitrine du programme sans profils individuels, rester publique est
     correct. Ne pas deviner avant que la page existe réellement.
+13. **Aucune vue, aucun message, aucun email ne peut dépendre du contenu d'un
+    bulletin.** La seule chose que le système peut dire à un membre à propos
+    de son propre vote, c'est le fait d'avoir voté ou non (déductible de
+    `voting_tokens.used_at`) — jamais pour qui, jamais pour quoi. Ça inclut
+    la confirmation affichée juste après le vote, y compris dans la même
+    requête que le POST du bulletin (le serveur connaît le choix à cet
+    instant précis, mais ne doit pas le renvoyer à l'écran) : le message
+    reste générique (« votre vote a été enregistré »), jamais un rappel des
+    sélections faites. Ça inclut aussi tout scénario futur du type
+    « le candidat que vous avez choisi s'est retiré » — un tel message est de
+    toute façon irréalisable sans joindre `voting_tokens` à `votes`, ce que
+    la règle 1 interdit déjà, mais l'interdiction porte ici sur l'intention
+    autant que sur le mécanisme : n'essaie jamais de contourner cette
+    impossibilité par une colonne ajoutée, un journal parallèle, ou tout
+    autre lien indirect entre un membre et son bulletin, même motivé par une
+    bonne raison UX. Vérifié pour FIUCC-61 (retrait de candidat) :
+    `Candidate::voteCount()` n'a que deux points d'appel, tous deux dans
+    `Admin\CandidateController`, tous deux derrière `AdminMiddleware` —
+    aucun contrôleur public ou membre n'y touche. À revérifier explicitement
+    à chaque ticket de FIUCC-62 à FIUCC-73 qui affiche quoi que ce soit à un
+    électeur (authentification au vote, bulletin, confirmation, résultats).
+
+## Manques connus (tickets à créer)
+
+- **Tableau de bord admin.** `routes/admin.php` déclare `GET /admin` vers
+  `Admin\DashboardController@index`, mais ce contrôleur n'existe pas —
+  découvert en testant FIUCC-61 (2026-09-08). La route 404 silencieusement ;
+  le reste du back office n'est pas affecté, chaque section a son propre
+  contrôleur. Pas de ticket Jira existant pour cet écran : à créer côté
+  utilisateur, phase 2 (FIUCC-8). Retirer cette entrée une fois le ticket
+  créé et l'écran construit.
 
 ## Charte graphique
 
