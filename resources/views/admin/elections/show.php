@@ -59,6 +59,7 @@ $noticeMap = [
     'cannot_close'             => ['type' => 'error',   'message' => t('admin.elections.notice.cannot_close')],
     'published'                => ['type' => 'success', 'message' => t('admin.elections.notice.published')],
     'cannot_publish'           => ['type' => 'error',   'message' => t('admin.elections.notice.cannot_publish')],
+    'results_not_ready'        => ['type' => 'error',   'message' => t('admin.elections.notice.results_not_ready')],
 ];
 
 $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50';
@@ -121,7 +122,7 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                     </button>
                 <?php endif; ?>
                 <?php if ($isClosed || $isPublished): ?>
-                    <a href="/elections/<?= e((string) $election['id']) ?>/results"
+                    <a href="/admin/elections/<?= e((string) $election['id']) ?>/results"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
                         <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
                         <?= e(t('elections.detail.view_results')) ?>

@@ -7,6 +7,7 @@ use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\Election;
 use App\Models\User;
+use App\Models\Vote;
 use DateTime;
 
 /**
@@ -313,6 +314,58 @@ final class ElectionController extends Controller
         ActivityLog::record((int) $_SESSION['user_id'], 'election.results_published', 'election', $electionId);
 
         $this->redirect('/admin/elections/' . $electionId . '?notice=published');
+    }
+
+    /**
+     * Aperçu admin du dépouillement (FIUCC-71) — décision explicite
+     * conversation FIUCC-68 : "le bureau doit pouvoir fermer, vérifier,
+     * PUIS publier". La page publique (App\Controllers\ElectionController::
+     * results()) ne montre rien avant 'published' ; sans cette vue admin,
+     * "vérifier" était impossible entre la fermeture et la publication —
+     * manque constaté en revisitant FIUCC-71. Même agrégat
+     * (Vote::resultsForElection()), même gabarit partagé
+     * (resources/views/partials/election_results_body.php), simplement
+     * accessible dès 'closed' et réservé aux admins (AdminMiddleware).
+     */
+    public function results(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        if (!in_array($election['status'], ['closed', 'published'], true)) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=results_not_ready');
+            return;
+        }
+
+        $groups = [];
+
+        foreach (Election::positions($electionId) as $position) {
+            $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0];
+        }
+
+        foreach (Vote::resultsForElection($electionId) as $row) {
+            $positionId = (int) $row['position_id'];
+
+            if (!isset($groups[$positionId])) {
+                continue;
+            }
+
+            $groups[$positionId]['candidates'][] = $row;
+            $groups[$positionId]['total'] += (int) $row['vote_count'];
+        }
+
+        $this->view('admin.elections.results', [
+            'title'      => t('admin.elections.results.title'),
+            'activeNav'  => 'elections',
+            'adminEmail' => $this->currentAdminEmail(),
+            'election'   => $election,
+            'groups'     => $groups,
+        ], 'layouts.admin');
     }
 
     public function delete(array $params): void

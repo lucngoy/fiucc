@@ -73,6 +73,7 @@ return [
     ['POST', '/admin/elections/{id}/open',      'Admin\ElectionController@open'],
     ['POST', '/admin/elections/{id}/close',     'Admin\ElectionController@close'],
     ['POST', '/admin/elections/{id}/publish',   'Admin\ElectionController@publishResults'],
+    ['GET',  '/admin/elections/{id}/results',   'Admin\ElectionController@results'],
 
     ['GET',  '/admin/emails',                   'Admin\EmailController@index'],
     ['GET',  '/admin/logs',                     'Admin\LogController@index'],
