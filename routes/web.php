@@ -9,8 +9,14 @@ declare(strict_types=1);
  * ['validated'] exige en plus members.status = 'validated' (FIUCC-35) :
  * toute route qui expose d'autres membres (annuaire, mentorat...) doit
  * l'utiliser à la place de ['auth'], jamais en plus.
- * Les routes marquées [vote] (commentaire, pas encore un vrai middleware)
- * passeront par le futur middleware de token de vote (phase Election).
+ * Les routes marquées [vote] portent ['auth'] (session) au niveau routeur,
+ * mais le contrôle "jeton de vote déjà validé pour CETTE élection" reste
+ * dans App\Controllers\VoteController::eligibleContext()/votingAuthorized(),
+ * pas dans une classe middleware séparée : App\Core\Router::runMiddleware()
+ * n'a accès à aucun paramètre de route ({id} compris), un middleware ne
+ * pourrait donc pas savoir quelle élection est concernée (constaté en
+ * construisant FIUCC-66 — pas une régression, une contrainte réelle du
+ * routeur tel qu'il existe).
  */
 
 return [
@@ -65,8 +71,8 @@ return [
     ['GET',  '/elections/{id}/candidates',     'ElectionController@candidates'],
     ['GET',  '/elections/{id}/authenticate',   'VoteController@authenticate',     ['auth']],
     ['POST', '/elections/{id}/authenticate',   'VoteController@sendToken',        ['auth']],
-    ['GET',  '/elections/{id}/vote',           'VoteController@ballot'],           // [vote]
-    ['POST', '/elections/{id}/vote',           'VoteController@submit'],           // [vote]
+    ['GET',  '/elections/{id}/vote',           'VoteController@ballot',           ['auth']], // [vote] voir ci-dessous
+    ['POST', '/elections/{id}/vote',           'VoteController@submit',           ['auth']], // [vote] voir ci-dessous
     ['GET',  '/elections/{id}/results',        'ElectionController@results'],
 
     // Divers
