@@ -9,6 +9,7 @@ use App\Core\View;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Member;
+use App\Models\Vote;
 use App\Models\VotingToken;
 
 /**
@@ -60,12 +61,61 @@ final class ElectionController extends Controller
         }
 
         $electionId = (int) $election['id'];
+        $context = $this->voterEligibility($electionId);
 
         $this->view('elections.show', [
             'title'       => $election['title'],
             'election'    => $election,
             'window'      => Election::votingWindowState($election),
-            'eligibility' => $this->voterEligibility($electionId)['state'],
+            'eligibility' => $context['state'],
+            // Reçu déjà émis (FIUCC-67) — sa seule preuve d'avoir voté si
+            // elle a perdu l'email/l'écran de confirmation. Jamais rien
+            // d'autre du jeton n'est exposé ici (voir voterEligibility()).
+            'receipt'     => $context['receipt'],
+        ]);
+    }
+
+    /**
+     * §22 du cahier des charges : "Results unavailable" tant que
+     * status != 'published' — pas dès 'closed' (décision explicite
+     * conversation FIUCC-68 : le bureau ferme, vérifie, publie ensuite,
+     * deux actions distinctes). Agrégats purs (Vote::resultsForElection()),
+     * jamais un bulletin individuel — voir son commentaire de classe.
+     */
+    public function results(array $params): void
+    {
+        $election = $this->findElectionOr404((int) ($params['id'] ?? 0));
+
+        if ($election === null) {
+            return;
+        }
+
+        $electionId = (int) $election['id'];
+        $published = $election['status'] === 'published';
+        $groups = [];
+
+        if ($published) {
+            foreach (Election::positions($electionId) as $position) {
+                $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0];
+            }
+
+            foreach (Vote::resultsForElection($electionId) as $row) {
+                $positionId = (int) $row['position_id'];
+
+                if (!isset($groups[$positionId])) {
+                    continue;
+                }
+
+                $groups[$positionId]['candidates'][] = $row;
+                $groups[$positionId]['total'] += (int) $row['vote_count'];
+            }
+        }
+
+        $this->view('elections.results', [
+            'title'     => t('elections.results.title', ['election' => $election['title']]),
+            'election'  => $election,
+            'published' => $published,
+            'groups'    => $groups,
         ]);
     }
 
@@ -131,42 +181,48 @@ final class ElectionController extends Controller
     }
 
     /**
-     * @return array{state: string, member: ?array}
+     * @return array{state: string, member: ?array, receipt: ?string}
      */
     private function voterEligibility(int $electionId): array
     {
         if (!isset($_SESSION['user_id'])) {
-            return ['state' => 'not_signed_in', 'member' => null];
+            return ['state' => 'not_signed_in', 'member' => null, 'receipt' => null];
         }
 
         $member = Member::findByUserIdWithStatus((int) $_SESSION['user_id']);
 
         // Un compte admin, par exemple, peut n'avoir aucune fiche membre.
         if ($member === null) {
-            return ['state' => 'no_member_profile', 'member' => null];
+            return ['state' => 'no_member_profile', 'member' => null, 'receipt' => null];
         }
 
         if ($member['status'] === 'pending') {
-            return ['state' => 'pending', 'member' => $member];
+            return ['state' => 'pending', 'member' => $member, 'receipt' => null];
         }
 
         if ($member['status'] === 'rejected') {
-            return ['state' => 'rejected', 'member' => $member];
+            return ['state' => 'rejected', 'member' => $member, 'receipt' => null];
         }
 
         if ($member['status'] === 'suspended') {
-            return ['state' => 'suspended', 'member' => $member];
+            return ['state' => 'suspended', 'member' => $member, 'receipt' => null];
         }
 
         // $member['status'] === 'validated' à partir d'ici.
         if ($member['status_type'] !== 'student') {
-            return ['state' => 'not_student_' . $member['status_type'], 'member' => $member];
+            return ['state' => 'not_student_' . $member['status_type'], 'member' => $member, 'receipt' => null];
         }
 
-        if (VotingToken::hasVoted($electionId, (int) $member['id'])) {
-            return ['state' => 'already_voted', 'member' => $member];
+        // Une seule lecture pour "a voté ?" et "quel reçu ?" (FIUCC-67) —
+        // used_at reste la seule chose lue pour la question d'éligibilité
+        // elle-même, receipt_code ne sert qu'à l'affichage une fois déjà
+        // voté, jamais à en décider.
+        $token = VotingToken::find($electionId, (int) $member['id']);
+
+        if ($token !== null && $token['used_at'] !== null) {
+            return ['state' => 'already_voted', 'member' => $member, 'receipt' => $token['receipt_code']];
         }
 
-        return ['state' => 'eligible', 'member' => $member];
+        return ['state' => 'eligible', 'member' => $member, 'receipt' => null];
     }
 }

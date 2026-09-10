@@ -254,6 +254,24 @@ final class Election extends Model
     }
 
     /**
+     * 'closed' -> 'published' (FIUCC-68, §22 du cahier des charges) — étape
+     * séparée et délibérée d'open()/close() : le bureau ferme, vérifie,
+     * PUIS publie, jamais les deux à la fois. results_published_at
+     * (colonne déjà prévue en migration 001) horodate la publication elle-
+     * même, distincte de created_at/updated_at.
+     */
+    public static function publishResults(int $id): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET status = 'published', results_published_at = NOW()
+             WHERE id = :id AND status = 'closed'"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * Pas de suppression au sens large (un scrutin est une archive
      * communautaire, décision explicite conversation FIUCC-59) — seulement
      * un brouillon qui n'a encore aucun poste, pour ne pas laisser un

@@ -14,6 +14,7 @@
 $election ??= [];
 $groups ??= [];
 $errors ??= [];
+$closingWarning ??= null;
 
 $electionId = (int) $election['id'];
 $globalError = $errors['_global'] ?? null;
@@ -38,6 +39,10 @@ $globalError = $errors['_global'] ?? null;
 
         <?php if ($globalError !== null): ?>
             <?= component('alert', ['type' => 'error', 'message' => $globalError]) ?>
+        <?php endif; ?>
+
+        <?php if ($closingWarning !== null): ?>
+            <?= component('alert', ['type' => 'warning', 'message' => $closingWarning]) ?>
         <?php endif; ?>
 
         <form method="POST" action="<?= e('/elections/' . $electionId . '/vote') ?>" class="flex flex-col gap-8">

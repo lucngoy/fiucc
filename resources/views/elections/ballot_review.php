@@ -13,6 +13,7 @@
  */
 $election ??= [];
 $rows ??= [];
+$closingWarning ??= null;
 
 $electionId = (int) $election['id'];
 ?>
@@ -26,6 +27,10 @@ $electionId = (int) $election['id'];
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
     <div class="max-w-2xl mx-auto flex flex-col gap-6">
+
+        <?php if ($closingWarning !== null): ?>
+            <?= component('alert', ['type' => 'warning', 'message' => $closingWarning]) ?>
+        <?php endif; ?>
 
         <div class="bg-surface rounded-card border border-border divide-y divide-border overflow-hidden">
             <?php foreach ($rows as $row): ?>

@@ -53,7 +53,7 @@ final class VotingToken extends Model
     public static function find(int $electionId, int $memberId): ?array
     {
         $stmt = static::db()->prepare(
-            'SELECT sent_at, used_at, expires_at, attempts
+            'SELECT sent_at, used_at, expires_at, attempts, receipt_code
              FROM voting_tokens WHERE election_id = :election_id AND member_id = :member_id
              LIMIT 1'
         );

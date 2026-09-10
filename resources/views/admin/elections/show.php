@@ -21,6 +21,8 @@ $notice ??= '';
 $isDraft = $election['status'] === 'draft';
 $isCandidacies = $election['status'] === 'candidacies';
 $isOpen = $election['status'] === 'open';
+$isClosed = $election['status'] === 'closed';
+$isPublished = $election['status'] === 'published';
 $canDelete = $isDraft && $positions === [];
 $canStartCandidacies = $isDraft && $positions !== [];
 
@@ -55,6 +57,8 @@ $noticeMap = [
     'cannot_open'              => ['type' => 'error',   'message' => t('admin.elections.notice.cannot_open')],
     'closed'                   => ['type' => 'success', 'message' => t('admin.elections.notice.closed')],
     'cannot_close'             => ['type' => 'error',   'message' => t('admin.elections.notice.cannot_close')],
+    'published'                => ['type' => 'success', 'message' => t('admin.elections.notice.published')],
+    'cannot_publish'           => ['type' => 'error',   'message' => t('admin.elections.notice.cannot_publish')],
 ];
 
 $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50';
@@ -108,6 +112,20 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                         <i class="fa-solid fa-lock" aria-hidden="true"></i>
                         <?= e(t('admin.elections.action.close')) ?>
                     </button>
+                <?php endif; ?>
+                <?php if ($isClosed): ?>
+                    <button type="button" data-open-dialog="publish-results-dialog"
+                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors">
+                        <i class="fa-solid fa-square-poll-vertical" aria-hidden="true"></i>
+                        <?= e(t('admin.elections.action.publish')) ?>
+                    </button>
+                <?php endif; ?>
+                <?php if ($isClosed || $isPublished): ?>
+                    <a href="/elections/<?= e((string) $election['id']) ?>/results"
+                       class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
+                        <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                        <?= e(t('elections.detail.view_results')) ?>
+                    </a>
                 <?php endif; ?>
                 <?php if ($isDraft): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/edit"
@@ -306,6 +324,20 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                 <div class="flex justify-end gap-2 mt-1">
                     <button type="button" data-close-dialog class="h-9 px-3 rounded-control text-ink text-label-md font-label-md hover:bg-surface transition-colors"><?= e(t('admin.elections.action.cancel')) ?></button>
                     <button type="submit" class="h-9 px-4 rounded-control bg-danger text-white text-label-md font-label-md hover:bg-danger/90 transition-colors"><?= e(t('admin.elections.close.confirm_button')) ?></button>
+                </div>
+            </form>
+        </dialog>
+    <?php endif; ?>
+
+    <?php if ($isClosed): ?>
+        <dialog id="publish-results-dialog" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
+            <form method="POST" action="/admin/elections/<?= e((string) $election['id']) ?>/publish" class="flex flex-col gap-2 p-4 text-left">
+                <?= csrf_field() ?>
+                <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.elections.publish.confirm_title')) ?></h2>
+                <p class="text-body-sm text-muted"><?= e(t('admin.elections.publish.confirm_message')) ?></p>
+                <div class="flex justify-end gap-2 mt-1">
+                    <button type="button" data-close-dialog class="h-9 px-3 rounded-control text-ink text-label-md font-label-md hover:bg-surface transition-colors"><?= e(t('admin.elections.action.cancel')) ?></button>
+                    <button type="submit" class="h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors"><?= e(t('admin.elections.publish.confirm_button')) ?></button>
                 </div>
             </form>
         </dialog>

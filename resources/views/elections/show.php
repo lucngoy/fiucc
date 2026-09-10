@@ -28,6 +28,7 @@
 $election ??= [];
 $window ??= ['state' => 'closed', 'target' => null];
 $eligibility ??= 'not_signed_in';
+$receipt ??= null;
 
 $statusBadgeLabel = in_array($election['status'], ['candidacies', 'open', 'closed', 'published'], true)
     ? t('elections.status.' . $election['status'])
@@ -155,16 +156,30 @@ $eligibilityStyle = [
                     </div>
                 <?php elseif (in_array($eligibility, ['pending', 'rejected', 'suspended'], true)): ?>
                     <a href="/profile" class="inline-flex items-center justify-center self-start h-10 px-5 rounded-control border border-border text-ink text-label-lg font-label-lg font-semibold hover:bg-surface transition-colors"><?= e(t('elections.eligibility.' . $eligibility . '.profile_cta')) ?></a>
+                <?php elseif ($eligibility === 'already_voted' && $receipt !== null): ?>
+                    <div class="bg-surface rounded-control border border-border p-3 w-fit">
+                        <p class="text-label-caps font-label-caps uppercase text-muted mb-1"><?= e(t('elections.ballot.receipt_label')) ?></p>
+                        <p class="font-mono text-label-lg font-label-lg text-ink tracking-wider"><?= e($receipt) ?></p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div>
     </div>
 
-    <a href="<?= e('/elections/' . $election['id'] . '/candidates') ?>"
-       class="inline-flex items-center justify-center gap-2 self-start h-11 px-6 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
-        <?= e(t('elections.detail.view_candidates')) ?>
-        <i class="fa-solid fa-arrow-right text-sm" aria-hidden="true"></i>
-    </a>
+    <div class="flex flex-wrap gap-3">
+        <a href="<?= e('/elections/' . $election['id'] . '/candidates') ?>"
+           class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
+            <?= e(t('elections.detail.view_candidates')) ?>
+            <i class="fa-solid fa-arrow-right text-sm" aria-hidden="true"></i>
+        </a>
+        <?php if (in_array($election['status'], ['closed', 'published'], true)): ?>
+            <a href="<?= e('/elections/' . $election['id'] . '/results') ?>"
+               class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control border border-border text-ink text-label-lg font-label-lg font-semibold hover:bg-surface transition-colors">
+                <?= e(t('elections.detail.view_results')) ?>
+                <i class="fa-solid fa-chart-simple text-sm" aria-hidden="true"></i>
+            </a>
+        <?php endif; ?>
+    </div>
 
 </div>
 </div>

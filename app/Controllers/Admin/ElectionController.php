@@ -288,6 +288,33 @@ final class ElectionController extends Controller
         $this->redirect('/admin/elections/' . $electionId . '?notice=closed');
     }
 
+    /**
+     * 'closed' -> 'published' — étape séparée de close() (décision
+     * explicite conversation FIUCC-68) : le bureau ferme, vérifie, puis
+     * publie, jamais les deux d'un coup.
+     */
+    public function publishResults(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        $published = Election::publishResults($electionId);
+
+        if (!$published) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=cannot_publish');
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'election.results_published', 'election', $electionId);
+
+        $this->redirect('/admin/elections/' . $electionId . '?notice=published');
+    }
+
     public function delete(array $params): void
     {
         $election = Election::find((int) ($params['id'] ?? 0));

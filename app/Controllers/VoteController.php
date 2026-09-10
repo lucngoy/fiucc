@@ -8,8 +8,10 @@ use App\Models\ActivityLog;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Member;
+use App\Models\User;
 use App\Models\Vote;
 use App\Models\VotingToken;
+use App\Services\VoteTokenNotifier;
 
 /**
  * Authentification au vote (FIUCC-64/65) et bulletin multi-postes
@@ -118,10 +120,11 @@ final class VoteController extends Controller
         }
 
         $this->view('elections.ballot', [
-            'title'    => t('elections.ballot.title'),
-            'election' => $election,
-            'groups'   => $this->positionsWithCandidates($electionId),
-            'errors'   => [],
+            'title'          => t('elections.ballot.title'),
+            'election'       => $election,
+            'groups'         => $this->positionsWithCandidates($electionId),
+            'errors'         => [],
+            'closingWarning' => $this->closingSoonWarning($election),
         ]);
     }
 
@@ -146,19 +149,21 @@ final class VoteController extends Controller
 
         if ($shapeErrors !== []) {
             $this->view('elections.ballot', [
-                'title'    => t('elections.ballot.title'),
-                'election' => $election,
-                'groups'   => $groups,
-                'errors'   => $shapeErrors,
+                'title'          => t('elections.ballot.title'),
+                'election'       => $election,
+                'groups'         => $groups,
+                'errors'         => $shapeErrors,
+                'closingWarning' => $this->closingSoonWarning($election),
             ]);
             return;
         }
 
         if (empty($_POST['confirm'])) {
             $this->view('elections.ballot_review', [
-                'title'      => t('elections.ballot.review_title'),
-                'election'   => $election,
-                'rows'       => $this->reviewRows($groups, $selections),
+                'title'          => t('elections.ballot.review_title'),
+                'election'       => $election,
+                'rows'           => $this->reviewRows($groups, $selections),
+                'closingWarning' => $this->closingSoonWarning($election),
             ]);
             return;
         }
@@ -172,8 +177,9 @@ final class VoteController extends Controller
                 // Reconstruit après l'échec : la liste de candidats a pu
                 // changer entre le récapitulatif et cette écriture (c'est
                 // précisément ce que castBallot() vient de détecter).
-                'groups'   => $this->positionsWithCandidates($electionId),
-                'errors'   => ['_global' => t('elections.ballot.error.' . $result['reason'])],
+                'groups'         => $this->positionsWithCandidates($electionId),
+                'errors'         => ['_global' => t('elections.ballot.error.' . $result['reason'])],
+                'closingWarning' => $this->closingSoonWarning($election),
             ]);
             return;
         }
@@ -182,6 +188,23 @@ final class VoteController extends Controller
 
         // Participation, jamais contenu : voir le commentaire de classe.
         ActivityLog::record((int) $_SESSION['user_id'], 'vote.cast', 'election', $electionId);
+
+        // Reçu par email (FIUCC-67), même convention que le reste de la
+        // maison (MemberNotifier) — meilleur effort : un échec d'envoi ne
+        // doit jamais empêcher d'afficher la confirmation, le reçu est de
+        // toute façon déjà affiché à l'écran et consultable plus tard
+        // depuis le panneau d'éligibilité (App\Controllers\ElectionController).
+        $user = User::find((int) $_SESSION['user_id']);
+        $member = Member::findByUserIdWithStatus((int) $_SESSION['user_id']);
+
+        if ($user !== null && $member !== null) {
+            VoteTokenNotifier::sendReceipt(
+                (string) $user['email'],
+                (string) $member['full_name'],
+                ['id' => $electionId, 'title' => $election['title']],
+                (string) $result['receipt']
+            );
+        }
 
         $this->view('elections.ballot_confirmation', [
             'title'    => t('elections.ballot.confirmation_title'),
@@ -213,6 +236,26 @@ final class VoteController extends Controller
         }
 
         return true;
+    }
+
+    /**
+     * Avertissement affiché sur le bulletin ET le récapitulatif quand il
+     * reste moins de 5 minutes avant end_at (décision explicite
+     * conversation FIUCC-68 : traiter la cause plutôt que le symptôme —
+     * réduire la chance qu'un membre arrive au bord de la fermeture plutôt
+     * que de seulement gérer le rejet une fois qu'il y est arrivé).
+     */
+    private function closingSoonWarning(array $election): ?string
+    {
+        $secondsRemaining = strtotime((string) $election['end_at']) - time();
+
+        if ($secondsRemaining >= 300) {
+            return null;
+        }
+
+        $minutes = max(1, (int) ceil($secondsRemaining / 60));
+
+        return t('elections.ballot.closing_soon', ['minutes' => (string) $minutes]);
     }
 
     /**
@@ -319,7 +362,15 @@ final class VoteController extends Controller
     {
         $election = Election::find($electionId);
 
-        if ($election === null || $election['status'] !== 'open') {
+        // end_at dépassé traité comme "pas open", même si le bureau n'a pas
+        // encore cliqué "Fermer le vote" (FIUCC-68) — voir App\Models\Vote::
+        // castBallot(), qui applique la même garde à l'écriture. Ici, elle
+        // empêche en plus d'AFFICHER le bulletin ou le récapitulatif une
+        // fois l'heure dépassée : décision explicite conversation FIUCC-68,
+        // « ne laisse pas soumettre du tout — dis-le immédiatement plutôt
+        // que de laisser quelqu'un cliquer dans le vide ».
+        if ($election === null || $election['status'] !== 'open'
+            || strtotime((string) $election['end_at']) <= time()) {
             return null;
         }
 

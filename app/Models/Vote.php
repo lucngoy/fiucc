@@ -35,7 +35,7 @@ final class Vote extends Model
      * @param array<int, int|null> $selections position_id => candidate_id
      *        (null = vote blanc), une entrée par poste de l'élection.
      * @return array{ok: bool, reason: ?string, receipt: ?string} reason
-     *         parmi : 'not_open', 'candidate_unavailable', 'already_used'.
+     *         parmi : 'election_closed', 'candidate_unavailable', 'already_used'.
      */
     public static function castBallot(int $electionId, int $memberId, array $selections): array
     {
@@ -43,6 +43,28 @@ final class Vote extends Model
         $db->beginTransaction();
 
         try {
+            // Contrôle explicite en tête de transaction (FIUCC-68) : donne
+            // un motif précis ("le scrutin est fermé") plutôt que de laisser
+            // le premier INSERT échouer et rapporter candidate_unavailable
+            // à tort. Sous REPEATABLE READ (InnoDB), cette lecture établit
+            // l'instantané que verront TOUTES les lectures suivantes de
+            // cette transaction — les gardes status/end_at répétées dans
+            // insertBlank()/insertForCandidate() ci-dessous ne peuvent donc
+            // plus, en pratique, échouer pour cette raison une fois qu'on a
+            // dépassé ce point ; elles restent quand même, en défense de
+            // profondeur, plutôt que de faire reposer toute la garantie sur
+            // ce détail d'isolation.
+            $stmt = $db->prepare(
+                "SELECT 1 FROM elections WHERE id = :id AND status = 'open' AND end_at > NOW() LIMIT 1"
+            );
+            $stmt->execute(['id' => $electionId]);
+
+            if ($stmt->fetchColumn() === false) {
+                $db->rollBack();
+
+                return ['ok' => false, 'reason' => 'election_closed', 'receipt' => null];
+            }
+
             foreach ($selections as $positionId => $candidateId) {
                 $inserted = $candidateId === null
                     ? self::insertBlank($db, $electionId, (int) $positionId)
@@ -87,7 +109,7 @@ final class Vote extends Model
             "INSERT INTO votes (election_id, position_id, candidate_id, vote_hash, created_at)
              SELECT :election_id, :position_id, NULL, :vote_hash, CURDATE()
              FROM elections e
-             WHERE e.id = :election_id_check AND e.status = 'open'"
+             WHERE e.id = :election_id_check AND e.status = 'open' AND e.end_at > NOW()"
         );
         $stmt->execute([
             'election_id'       => $electionId,
@@ -109,7 +131,7 @@ final class Vote extends Model
              INNER JOIN elections e ON e.id = ep.election_id
              WHERE c.id = :candidate_id_check AND c.status = 'approved'
                AND c.election_position_id = :position_id_check
-               AND e.id = :election_id_check AND e.status = 'open'"
+               AND e.id = :election_id_check AND e.status = 'open' AND e.end_at > NOW()"
         );
         $stmt->execute([
             'election_id'        => $electionId,
@@ -132,6 +154,12 @@ final class Vote extends Model
      * receipt_code (UNIQUE, 48 bits — astronomiquement improbable) ;
      * n'importe quelle autre cause d'échec de l'UPDATE (used_at déjà posé)
      * arrête net, sans réessayer.
+     *
+     * Rejointe à elections avec la même garde status/end_at que
+     * insertBlank()/insertForCandidate() (FIUCC-68) — jamais atteignable en
+     * pratique puisque le contrôle en tête de castBallot() aurait déjà
+     * arrêté la transaction avant d'arriver ici, mais chaque écriture porte
+     * sa propre garde dans cette épopée, jamais seulement l'ordre d'appel.
      */
     private static function consumeToken(\PDO $db, int $electionId, int $memberId): ?string
     {
@@ -140,8 +168,10 @@ final class Vote extends Model
 
             try {
                 $stmt = $db->prepare(
-                    "UPDATE voting_tokens SET used_at = NOW(), receipt_code = :receipt
-                     WHERE election_id = :election_id AND member_id = :member_id AND used_at IS NULL"
+                    "UPDATE voting_tokens vt
+                     INNER JOIN elections e ON e.id = vt.election_id AND e.status = 'open' AND e.end_at > NOW()
+                     SET vt.used_at = NOW(), vt.receipt_code = :receipt
+                     WHERE vt.election_id = :election_id AND vt.member_id = :member_id AND vt.used_at IS NULL"
                 );
                 $stmt->execute([
                     'receipt'     => $receipt,
@@ -159,5 +189,36 @@ final class Vote extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Dépouillement (FIUCC-68, §22 du cahier des charges) — un total par
+     * (poste, candidat), candidate_id NULL agrégé à part (vote blanc).
+     *
+     * Jamais filtré sur candidates.status : un candidat retiré après coup
+     * garde les voix déjà exprimées pour lui (décision FIUCC-61,
+     * App\Models\Candidate — "les voix déjà exprimées pour lui ne sont
+     * jamais touchées"), donc son nom doit continuer à apparaître ici même
+     * s'il ne serait plus proposable sur un bulletin neuf.
+     *
+     * Agrégat pur — aucune colonne de voting_tokens ni de members touchant
+     * à l'identité d'un électeur n'entre dans cette requête, seulement le
+     * décompte par candidat (CLAUDE.md règle 13 : un résultat public global
+     * n'est pas la même chose qu'exposer le bulletin d'un membre précis).
+     */
+    public static function resultsForElection(int $electionId): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT v.position_id, v.candidate_id, m.full_name AS candidate_name, COUNT(*) AS vote_count
+             FROM votes v
+             LEFT JOIN candidates c ON c.id = v.candidate_id
+             LEFT JOIN members m ON m.id = c.member_id
+             WHERE v.election_id = :election_id
+             GROUP BY v.position_id, v.candidate_id, m.full_name
+             ORDER BY v.position_id ASC, vote_count DESC"
+        );
+        $stmt->execute(['election_id' => $electionId]);
+
+        return $stmt->fetchAll();
     }
 }
