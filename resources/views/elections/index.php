@@ -44,7 +44,7 @@ $statusBadge = static function (string $status): string {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <?php foreach ($elections as $election): ?>
                 <a href="<?= e('/elections/' . (int) $election['id']) ?>"
-                   class="bg-surface rounded-card border border-border p-6 flex flex-col gap-3 hover:shadow-md transition-shadow">
+                   class="bg-surface rounded-card border border-border p-6 flex flex-col gap-3 hover:shadow-card transition-shadow">
                     <div>
                         <?= $statusBadge($election['status']) ?>
                     </div>
