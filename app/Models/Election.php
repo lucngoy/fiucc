@@ -200,6 +200,60 @@ final class Election extends Model
     }
 
     /**
+     * 'draft' -> 'candidacies' : verrouille définitivement titre/dates/
+     * postes (Admin\ElectionController::update()/storePosition()/etc. ne
+     * s'appliquent qu'à 'draft'). Exige au moins un poste — faire
+     * progresser une élection sans aucun poste n'a pas de sens, et la
+     * configuration devient justement figée à cet instant.
+     */
+    public static function startCandidacies(int $id): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections e
+             SET e.status = 'candidacies'
+             WHERE e.id = :id AND e.status = 'draft'
+               AND EXISTS (SELECT 1 FROM election_positions WHERE election_id = e.id)"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * 'candidacies' -> 'open' : ouvre le vote. Ne vérifie pas qu'un
+     * candidat approuvé existe par poste — un poste sans candidat approuvé
+     * reste votable en blanc (App\Models\Vote::castBallot()), pas une
+     * erreur de configuration à bloquer ici.
+     */
+    public static function open(int $id): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET status = 'open' WHERE id = :id AND status = 'candidacies'"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * 'open' -> 'closed'. Pas de garde temporelle (end_at atteint ou non) :
+     * le bureau garde la main pour fermer plus tôt si besoin, symétrique à
+     * extendEndAt() qui permet déjà de prolonger. §25 du cahier : "Une
+     * élection fermée ne doit plus accepter de votes" — déjà garanti
+     * ailleurs, chaque garde SQL de vote vérifie elections.status = 'open'
+     * en direct, jamais déduit d'une horloge.
+     */
+    public static function close(int $id): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET status = 'closed' WHERE id = :id AND status = 'open'"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * Pas de suppression au sens large (un scrutin est une archive
      * communautaire, décision explicite conversation FIUCC-59) — seulement
      * un brouillon qui n'a encore aucun poste, pour ne pas laisser un

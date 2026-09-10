@@ -217,6 +217,77 @@ final class ElectionController extends Controller
         $this->redirect('/admin/elections/' . $electionId . '?notice=extended');
     }
 
+    /**
+     * 'draft' -> 'candidacies' — verrouille la configuration. Distinct
+     * de open()/close() : voir App\Models\Election pour ce que chaque
+     * transition garde et pourquoi.
+     */
+    public function startCandidacies(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        $moved = Election::startCandidacies($electionId);
+
+        if (!$moved) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=cannot_start_candidacies');
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'election.candidacies_started', 'election', $electionId);
+
+        $this->redirect('/admin/elections/' . $electionId . '?notice=candidacies_started');
+    }
+
+    public function open(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        $opened = Election::open($electionId);
+
+        if (!$opened) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=cannot_open');
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'election.opened', 'election', $electionId);
+
+        $this->redirect('/admin/elections/' . $electionId . '?notice=opened');
+    }
+
+    public function close(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        $closed = Election::close($electionId);
+
+        if (!$closed) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=cannot_close');
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'election.closed', 'election', $electionId);
+
+        $this->redirect('/admin/elections/' . $electionId . '?notice=closed');
+    }
+
     public function delete(array $params): void
     {
         $election = Election::find((int) ($params['id'] ?? 0));

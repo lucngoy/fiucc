@@ -69,6 +69,7 @@ return [
     ['GET',  '/admin/elections/{id}/tokens',              'Admin\VotingTokenController@index'],
     ['POST', '/admin/elections/{id}/tokens/send',          'Admin\VotingTokenController@send'],
     ['POST', '/admin/elections/{id}/tokens/{member_id}/regenerate', 'Admin\VotingTokenController@regenerate'],
+    ['POST', '/admin/elections/{id}/start-candidacies', 'Admin\ElectionController@startCandidacies'],
     ['POST', '/admin/elections/{id}/open',      'Admin\ElectionController@open'],
     ['POST', '/admin/elections/{id}/close',     'Admin\ElectionController@close'],
     ['POST', '/admin/elections/{id}/publish',   'Admin\ElectionController@publishResults'],
