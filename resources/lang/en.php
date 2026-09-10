@@ -903,6 +903,9 @@ return [
     'admin.candidates.withdraw.reason_label'    => 'Reason for withdrawal',
     'admin.candidates.withdraw.confirm_button'  => 'Confirm withdrawal',
 
+    'elections.title'    => 'Elections',
+    'elections.subtitle' => 'Follow the community\'s elections: candidacies, voting, and results.',
+    'elections.empty'    => 'No election published yet.',
     'elections.status.candidacies' => 'Candidacies open',
     'elections.status.open'        => 'Voting open',
     'elections.status.closed'      => 'Voting closed',

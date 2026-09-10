@@ -901,6 +901,9 @@ return [
     'admin.candidates.withdraw.reason_label'    => 'Motif du retrait',
     'admin.candidates.withdraw.confirm_button'  => 'Confirmer le retrait',
 
+    'elections.title'    => 'Élections',
+    'elections.subtitle' => "Suivez les scrutins de la communauté : candidatures, vote et résultats.",
+    'elections.empty'    => 'Aucune élection publiée pour le moment.',
     'elections.status.candidacies' => 'Candidatures en cours',
     'elections.status.open'        => 'Vote ouvert',
     'elections.status.closed'      => 'Vote fermé',

@@ -12,10 +12,12 @@ use App\Models\Member;
 use App\Models\VotingToken;
 
 /**
- * Page élection — compte à rebours et éligibilité (FIUCC-62) et page des
- * candidats (FIUCC-63), sections 16-19 du cahier des charges. Authentifi-
- * cation, bulletin, vote anonyme et résultats : tickets séparés (FIUCC-64+),
- * pas construits ici — aucun lien vers ces pages tant qu'elles n'existent
+ * Liste publique (index(), ajouté après coup — voir son commentaire),
+ * page élection : compte à rebours et éligibilité (FIUCC-62), page des
+ * candidats (FIUCC-63), sections 16-19 du cahier des charges.
+ * Authentification, bulletin et enregistrement du vote vivent dans
+ * App\Controllers\VoteController (FIUCC-64/65/66) ; résultats (FIUCC-69+)
+ * pas construits ici — aucun lien vers cette page tant qu'elle n'existe
  * pas (même principe que le reste du site, voir resources/views/home/index.php).
  *
  * Éligibilité au vote (CLAUDE.md règle 13) : la seule chose que ce
@@ -26,6 +28,29 @@ use App\Models\VotingToken;
  */
 final class ElectionController extends Controller
 {
+    /**
+     * Liste publique — manquait depuis FIUCC-62/63 : /elections était déjà
+     * lié depuis la navigation (resources/views/partials/header.php et
+     * footer.php) et depuis chaque page élection (fil d'Ariane), mais
+     * personne ne le servait, 404 silencieux. Constaté une fois FIUCC-64/
+     * 65/66 construits — le module fonctionne de bout en bout, mais restait
+     * introuvable sans connaître un identifiant à l'avance.
+     */
+    public function index(): void
+    {
+        $elections = Election::publicList();
+
+        foreach ($elections as &$election) {
+            $election['window'] = Election::votingWindowState($election);
+        }
+        unset($election);
+
+        $this->view('elections.index', [
+            'title'     => t('elections.title'),
+            'elections' => $elections,
+        ]);
+    }
+
     public function show(array $params): void
     {
         $election = $this->findElectionOr404((int) ($params['id'] ?? 0));

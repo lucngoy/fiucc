@@ -81,6 +81,25 @@ final class Election extends Model
     }
 
     /**
+     * Liste publique (FIUCC-62/63 déclarent la page, mais aucune ne liste
+     * les élections — /elections pointait dans le vide, découvert après
+     * coup une fois le reste du module construit). Jamais 'draft' — même
+     * règle que App\Controllers\ElectionController::findElectionOr404() :
+     * une élection en configuration n'est pas encore publique. Pas de
+     * pagination : le nombre d'élections réelles pour une seule communauté
+     * reste faible, une page suffit.
+     */
+    public static function publicList(): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT * FROM elections WHERE status != 'draft' ORDER BY start_at DESC"
+        );
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Compte à rebours public (FIUCC-62) — dérivé de status/start_at/end_at,
      * jamais stocké. Borné pour ne jamais afficher un compte à rebours figé
      * à zéro : le bureau ouvre/ferme le scrutin manuellement (FIUCC-59 §25,
