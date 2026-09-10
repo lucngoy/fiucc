@@ -13,6 +13,10 @@ return [
     'otp_resend_cooldown_seconds' => (int) Env::get('OTP_RESEND_COOLDOWN_SECONDS', 60),
     'otp_max_resends_per_hour'    => (int) Env::get('OTP_MAX_RESENDS_PER_HOUR', 5),
     'vote_token_ttl_hours' => (int) Env::get('VOTE_TOKEN_TTL_HOURS', 72),
+    // Tentatives de saisie du code de vote (FIUCC-64) avant verrouillage —
+    // même principe qu'otp_max_attempts : au-delà, même un code correct est
+    // refusé, il faut passer par une régénération admin.
+    'vote_token_max_attempts' => (int) Env::get('VOTE_TOKEN_MAX_ATTEMPTS', 5),
     'upload_max_size_mb'   => (int) Env::get('UPLOAD_MAX_SIZE_MB', 15),
     // Plus long côté, en pixels, après redimensionnement (FIUCC-38) — une
     // photo de profil n'a jamais besoin d'être plus grande que ça.

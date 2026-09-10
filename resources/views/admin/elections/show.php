@@ -73,6 +73,13 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                     <i class="fa-solid fa-users" aria-hidden="true"></i>
                     <?= e(t('admin.elections.action.manage_candidates')) ?>
                 </a>
+                <?php if ($isOpen): ?>
+                    <a href="/admin/elections/<?= e((string) $election['id']) ?>/tokens"
+                       class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
+                        <i class="fa-solid fa-key" aria-hidden="true"></i>
+                        <?= e(t('admin.elections.action.voting_tokens')) ?>
+                    </a>
+                <?php endif; ?>
                 <?php if ($isDraft): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/edit"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">

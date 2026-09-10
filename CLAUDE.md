@@ -104,6 +104,32 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
 2. L'écriture d'un bulletin et le marquage du token comme utilisé sont **deux opérations
    distinctes**, sans identifiant commun.
 3. Les **tokens de vote et codes OTP sont stockés hashés**, jamais en clair.
+   **Taille du token de vote (FIUCC-64, décidé explicitement, pas un oubli) :**
+   `random_bytes(16)` — 128 bits, pas 256 comme le CSRF token ou les noms de
+   fichier upload les plus sensibles. Réduit volontairement par rapport à un
+   premier jet à 256 bits, une fois le vrai modèle de menace posé : ce jeton
+   est à usage unique, expire avec l'élection (`LEAST(now + vote_token_ttl_hours,
+   election.end_at)`), plafonné à `security.vote_token_max_attempts` tentatives
+   de saisie (au-delà, même un code correct est refusé), et inutilisable sans
+   une session membre déjà authentifiée (`['auth']` sur les routes
+   `/elections/{id}/authenticate`). Face à ces contraintes combinées, la borne
+   n'a jamais été l'entropie du jeton — 5 tentatives rendraient même un espace
+   bien plus petit impraticable à deviner en ligne, et hors ligne, 128 bits
+   reste le plancher accepté d'un secret "cryptographiquement sûr" (force
+   d'AES-128). Le gain réel de 256 → 128 bits n'est pas la sécurité, c'est la
+   longueur affichée au membre : encodé en Base32 de Crockford (alphabet
+   `0123456789ABCDEFGHJKMNPQRSTVWXYZ` — chiffres conservés, lettres I/L/O/U
+   retirées, aucune ambiguïté visuelle une fois ces lettres absentes) et
+   groupé par blocs de 4, un jeton 256 bits donne 13 blocs (64 caractères,
+   pire qu'en hexadécimal) contre 7 blocs (26 caractères) à 128 bits — la
+   différence entre un code qu'on recopie sur un scrutin et un code devant
+   lequel on abandonne. `token_hash` reste du SHA-256 sur les octets bruts,
+   inchangé : seul ce qui est montré au membre a changé, jamais ce qui est
+   haché ni comparé. Si un jour ce calcul doit être refait (menace différente,
+   contrainte de saisie levée), documenter le nouveau raisonnement ici plutôt
+   que de remonter silencieusement la taille — le but de ce paragraphe est
+   justement qu'un futur changement ne puisse pas être pris pour un
+   affaiblissement accidentel.
 4. **Toutes** les requêtes SQL passent par des requêtes préparées PDO.
 5. **Toutes** les sorties sont échappées avec le helper `e()` (`app/Helpers/helpers.php`,
    `htmlspecialchars` avec `ENT_QUOTES` et `UTF-8`) — jamais `htmlspecialchars()` en direct,
