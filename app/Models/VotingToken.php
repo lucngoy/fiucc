@@ -273,6 +273,67 @@ final class VotingToken extends Model
         return $stmt->fetchAll();
     }
 
+    /**
+     * Destinataires d'un rappel manuel (FIUCC-73) : tout membre ayant un
+     * jeton non utilisé pour cette élection, qu'il l'ait reçu ou non —
+     * volontairement plus large que pendingForBatchSend() (règle validée
+     * conversation FIUCC-73 : "membres avec un token non utilisé
+     * uniquement"). Ne relance jamais quelqu'un qui a déjà voté : c'est la
+     * seule garde qui compte ici, la fenêtre de 12h entre deux envois vit
+     * dans App\Models\Election::claimReminderSlot(), pas dans cette
+     * requête.
+     */
+    public static function pendingReminderRecipients(int $electionId): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT m.full_name, u.email
+             FROM voting_tokens vt
+             INNER JOIN members m ON m.id = vt.member_id
+             INNER JOIN users u ON u.id = m.user_id
+             WHERE vt.election_id = :election_id AND vt.used_at IS NULL"
+        );
+        $stmt->execute(['election_id' => $electionId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Destinataires de l'annonce de clôture (FIUCC-73, §31 du cahier) :
+     * même population que pendingReminderRecipients() (n'a pas voté), mais
+     * suivie par membre via closure_notified_at (migration 015) plutôt que
+     * par élection — à la différence du rappel, cette annonce n'est envoyée
+     * qu'une fois par membre, jamais rejouée pour qui l'a déjà reçue.
+     */
+    public static function pendingClosureNotice(int $electionId): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT m.id AS member_id, m.full_name, u.email
+             FROM voting_tokens vt
+             INNER JOIN members m ON m.id = vt.member_id
+             INNER JOIN users u ON u.id = m.user_id
+             WHERE vt.election_id = :election_id AND vt.used_at IS NULL
+               AND vt.closure_notified_at IS NULL"
+        );
+        $stmt->execute(['election_id' => $electionId]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * N'est appelé qu'après un envoi réussi (même convention que
+     * markSent()) : un échec SMTP laisse closure_notified_at à NULL, pour
+     * que pendingClosureNotice() reprenne exactement les membres non
+     * couverts au prochain clic, sans en oublier ni en redoubler aucun.
+     */
+    public static function markClosureNotified(int $electionId, int $memberId): void
+    {
+        $stmt = static::db()->prepare(
+            'UPDATE voting_tokens SET closure_notified_at = NOW()
+             WHERE election_id = :election_id AND member_id = :member_id'
+        );
+        $stmt->execute(['election_id' => $electionId, 'member_id' => $memberId]);
+    }
+
     private static function registerFailedAttempt(int $electionId, int $memberId): void
     {
         $stmt = static::db()->prepare(

@@ -203,6 +203,116 @@ final class VotingTokenController extends Controller
     }
 
     /**
+     * Rappel manuel (FIUCC-73, §31 du cahier) — un seul bouton, réutilisable
+     * à chaque relance (décision explicite conversation FIUCC-73 : la
+     * distinction mi-parcours/avant-clôture n'a pas de formule, c'est un
+     * jugement du bureau, pas deux boutons séparés). Election::
+     * claimReminderSlot() EST la garde des 12h entre deux envois — si elle
+     * renvoie false, aucun email ne part, qu'il s'agisse d'une élection pas
+     * ouverte ou d'un rappel trop récent : les deux cas se résolvent au même
+     * message, la distinction n'est pas actionnable différemment côté admin.
+     */
+    public function sendReminder(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        if (!Election::claimReminderSlot($electionId)) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=reminder_too_soon');
+            return;
+        }
+
+        $recipients = VotingToken::pendingReminderRecipients($electionId);
+        set_time_limit(300);
+
+        $sent = 0;
+        foreach ($recipients as $member) {
+            $ok = VoteTokenNotifier::sendReminder(
+                (string) $member['email'],
+                (string) $member['full_name'],
+                ['id' => $electionId, 'title' => $election['title']]
+            );
+
+            if ($ok) {
+                $sent++;
+            }
+        }
+
+        ActivityLog::record(
+            (int) $_SESSION['user_id'],
+            'election.reminder_sent',
+            'election',
+            $electionId,
+            "envoyés: {$sent}/" . count($recipients)
+        );
+
+        $this->redirect('/admin/elections/' . $electionId . '?' . http_build_query([
+            'notice' => 'reminder_sent',
+            'count'  => $sent,
+        ]));
+    }
+
+    /**
+     * Annonce de clôture (FIUCC-73, §31 du cahier) — action séparée de
+     * Election::close() (décision explicite conversation FIUCC-73, même
+     * principe que "Envoyer les jetons" distinct de open()) : le bureau
+     * ferme le vote, PUIS déclenche l'annonce quand il le juge utile,
+     * jamais les deux d'un coup. Idempotent par membre via
+     * closure_notified_at (migration 015) : rejouable sans jamais redoubler
+     * qui l'a déjà reçue.
+     */
+    public function sendClosureNotice(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        if (!in_array($election['status'], ['closed', 'published'], true)) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=not_closed');
+            return;
+        }
+
+        $recipients = VotingToken::pendingClosureNotice($electionId);
+        set_time_limit(300);
+
+        $sent = 0;
+        foreach ($recipients as $member) {
+            $ok = VoteTokenNotifier::sendClosureNotice(
+                (string) $member['email'],
+                (string) $member['full_name'],
+                ['id' => $electionId, 'title' => $election['title']]
+            );
+
+            if ($ok) {
+                VotingToken::markClosureNotified($electionId, (int) $member['member_id']);
+                $sent++;
+            }
+        }
+
+        ActivityLog::record(
+            (int) $_SESSION['user_id'],
+            'election.closure_notice_sent',
+            'election',
+            $electionId,
+            "envoyés: {$sent}/" . count($recipients)
+        );
+
+        $this->redirect('/admin/elections/' . $electionId . '?' . http_build_query([
+            'notice' => 'closure_notice_sent',
+            'count'  => $sent,
+        ]));
+    }
+
+    /**
      * @return array{0: string, 1: string}|null [email, full_name]
      */
     private function recipient(int $memberId): ?array

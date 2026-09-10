@@ -272,6 +272,33 @@ final class Election extends Model
     }
 
     /**
+     * Rappel manuel de vote (FIUCC-73, §31 du cahier) — la garde de 12h est
+     * l'écriture elle-même, pas un pré-contrôle séparé : deux clics rapides
+     * en course ne peuvent donc jamais faire passer les deux (rowCount() = 0
+     * pour le second, quel que soit l'ordre d'arrivée). Décision explicite
+     * conversation FIUCC-73 : un seul bouton "Envoyer un rappel", réutilisé
+     * à chaque relance — pas de distinction mi-parcours/avant-clôture, le
+     * bureau juge du moment, pas une formule.
+     *
+     * @return bool true si l'élection était 'open' et hors fenêtre des 12h
+     *              (aucun rappel envoyé, ou le dernier remonte à plus de
+     *              12h) — l'appelant ne doit envoyer les emails que si ceci
+     *              renvoie true.
+     */
+    public static function claimReminderSlot(int $id): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections
+             SET last_reminder_sent_at = NOW()
+             WHERE id = :id AND status = 'open'
+               AND (last_reminder_sent_at IS NULL OR last_reminder_sent_at <= NOW() - INTERVAL 12 HOUR)"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
      * Pas de suppression au sens large (un scrutin est une archive
      * communautaire, décision explicite conversation FIUCC-59) — seulement
      * un brouillon qui n'a encore aucun poste, pour ne pas laisser un

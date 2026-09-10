@@ -70,4 +70,57 @@ final class VoteTokenNotifier
             $body
         );
     }
+
+    /**
+     * Rappel manuel (FIUCC-73) — contient volontairement AUCUN jeton
+     * (décision explicite conversation FIUCC-73) : juste un lien vers la
+     * page publique de l'élection. Un membre ayant perdu son code passe par
+     * la régénération admin (Admin\VotingTokenController::regenerate()),
+     * jamais par un code recopié depuis cet email.
+     *
+     * @param array{id: int, title: string} $election
+     */
+    public static function sendReminder(string $toEmail, string $toName, array $election): bool
+    {
+        $link = rtrim((string) Config::get('app.url', ''), '/') . '/elections/' . (int) $election['id'];
+
+        $body = View::partial('emails.vote_reminder', [
+            'election' => $election,
+            'link'     => $link,
+        ]);
+
+        return Mail::send(
+            $toEmail,
+            $toName,
+            t('mail.vote_reminder.subject', ['election' => $election['title']]),
+            t('mail.vote_reminder.heading'),
+            $body
+        );
+    }
+
+    /**
+     * Annonce de clôture (FIUCC-73, §31 du cahier) — même contrainte règle
+     * 13 que sendReceipt() : aucun contenu de bulletin, seulement le fait
+     * que le scrutin est fermé. Pas de $secrets non plus : rien de sensible
+     * dans ce message.
+     *
+     * @param array{id: int, title: string} $election
+     */
+    public static function sendClosureNotice(string $toEmail, string $toName, array $election): bool
+    {
+        $link = rtrim((string) Config::get('app.url', ''), '/') . '/elections/' . (int) $election['id'];
+
+        $body = View::partial('emails.vote_closed', [
+            'election' => $election,
+            'link'     => $link,
+        ]);
+
+        return Mail::send(
+            $toEmail,
+            $toName,
+            t('mail.vote_closed.subject', ['election' => $election['title']]),
+            t('mail.vote_closed.heading'),
+            $body
+        );
+    }
 }

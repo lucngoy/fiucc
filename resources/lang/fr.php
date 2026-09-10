@@ -882,6 +882,19 @@ return [
     'admin.elections.close.confirm_message' => 'Plus aucun vote ne sera accepté après cette action. Cette action est irréversible.',
     'admin.elections.close.confirm_button'  => 'Fermer le vote',
 
+    'admin.elections.action.send_reminder'        => 'Envoyer un rappel',
+    'admin.elections.action.send_closure_notice'  => 'Envoyer l’annonce de clôture',
+    'admin.elections.reminder.confirm_title'   => 'Envoyer un rappel de vote',
+    'admin.elections.reminder.confirm_message' => "Un email sera envoyé à tous les membres éligibles n'ayant pas encore voté, avec un simple lien vers la page de l'élection (aucun code de vote). Un nouveau rappel ne pourra être envoyé que 12 heures après celui-ci.",
+    'admin.elections.reminder.confirm_button'  => 'Envoyer le rappel',
+    'admin.elections.closure_notice.confirm_title'   => 'Annoncer la clôture du vote',
+    'admin.elections.closure_notice.confirm_message' => "Un email sera envoyé aux membres éligibles n'ayant pas voté, pour les informer que le scrutin est fermé. Chaque membre ne reçoit cette annonce qu'une seule fois.",
+    'admin.elections.closure_notice.confirm_button'  => "Envoyer l'annonce",
+    'admin.elections.notice.reminder_too_soon'   => "Un rappel a déjà été envoyé récemment : attendez au moins 12 heures avant le prochain.",
+    'admin.elections.notice.not_closed'          => "L'annonce de clôture n'est disponible qu'une fois le scrutin fermé.",
+    'admin.elections.notice.reminder_sent'       => 'Rappel envoyé à :count membre(s).',
+    'admin.elections.notice.closure_notice_sent' => 'Annonce de clôture envoyée à :count membre(s).',
+
     'admin.candidates.title'        => 'Candidatures',
     'admin.candidates.create_title' => 'Nouvelle candidature',
     'admin.candidates.edit_title'   => 'Modifier la candidature',
@@ -1079,4 +1092,16 @@ return [
     'mail.vote_receipt.heading' => 'Votre vote a été enregistré',
     'mail.vote_receipt.intro'   => '<p>Merci pour votre participation à <strong>:election</strong>.</p><p>Voici votre code de reçu — conservez-le, il prouve que votre vote a été enregistré :</p>',
     'mail.vote_receipt.security_note' => 'Ce reçu ne révèle jamais votre choix : il prouve uniquement votre participation.',
+
+    'mail.vote_reminder.subject' => 'Le vote est toujours ouvert — :election',
+    'mail.vote_reminder.heading' => 'Le vote est toujours ouvert',
+    'mail.vote_reminder.intro'   => '<p>Le scrutin <strong>:election</strong> est ouvert et vous n’avez pas encore voté.</p>',
+    'mail.vote_reminder.cta'     => 'Accéder à la page de vote',
+    'mail.vote_reminder.lost_code_note' => "Vous avez perdu votre code de vote ? Contactez le bureau électoral pour en obtenir un nouveau — ne le recherchez pas dans cet email, il n'en contient pas.",
+
+    'mail.vote_closed.subject' => 'Le vote est fermé — :election',
+    'mail.vote_closed.heading' => 'Le vote est fermé',
+    'mail.vote_closed.intro'   => '<p>Le scrutin <strong>:election</strong> est maintenant fermé. Merci à toutes celles et ceux qui ont participé.</p>',
+    'mail.vote_closed.cta'     => "Voir la page de l'élection",
+    'mail.vote_closed.outro'   => 'Les résultats seront publiés par le bureau électoral une fois vérifiés.',
 ];
