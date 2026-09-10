@@ -342,30 +342,46 @@ final class ElectionController extends Controller
             return;
         }
 
-        $groups = [];
-
-        foreach (Election::positions($electionId) as $position) {
-            $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0];
-        }
-
-        foreach (Vote::resultsForElection($electionId) as $row) {
-            $positionId = (int) $row['position_id'];
-
-            if (!isset($groups[$positionId])) {
-                continue;
-            }
-
-            $groups[$positionId]['candidates'][] = $row;
-            $groups[$positionId]['total'] += (int) $row['vote_count'];
-        }
-
         $this->view('admin.elections.results', [
             'title'      => t('admin.elections.results.title'),
             'activeNav'  => 'elections',
             'adminEmail' => $this->currentAdminEmail(),
             'election'   => $election,
-            'groups'     => $groups,
+            'groups'     => Vote::groupResultsByPosition($electionId),
         ], 'layouts.admin');
+    }
+
+    /**
+     * Rapport imprimable (FIUCC-72) — pas de bibliothèque PDF (décision
+     * explicite conversation FIUCC-72 : dompdf n'aurait de toute façon pas
+     * rendu les classes Tailwind du site, il aurait fallu une feuille de
+     * style dédiée quoi qu'il arrive ; autant s'appuyer sur l'impression
+     * native du navigateur plutôt qu'ajouter une dépendance). Même garde
+     * que results() (closed/published), même agrégat — juste un gabarit
+     * autonome (layouts.print, pas layouts.admin : la barre latérale et la
+     * navigation n'ont rien à faire dans un document archivé).
+     */
+    public function report(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $election = Election::find($electionId);
+
+        if ($election === null) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        if (!in_array($election['status'], ['closed', 'published'], true)) {
+            $this->redirect('/admin/elections/' . $electionId . '?notice=results_not_ready');
+            return;
+        }
+
+        $this->view('admin.elections.report', [
+            'title'       => t('admin.elections.report.title', ['election' => $election['title']]),
+            'election'    => $election,
+            'groups'      => Vote::groupResultsByPosition($electionId),
+            'generatedAt' => date('Y-m-d H:i:s'),
+        ], 'layouts.print');
     }
 
     public function delete(array $params): void

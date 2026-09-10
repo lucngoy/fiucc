@@ -92,24 +92,7 @@ final class ElectionController extends Controller
 
         $electionId = (int) $election['id'];
         $published = $election['status'] === 'published';
-        $groups = [];
-
-        if ($published) {
-            foreach (Election::positions($electionId) as $position) {
-                $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0];
-            }
-
-            foreach (Vote::resultsForElection($electionId) as $row) {
-                $positionId = (int) $row['position_id'];
-
-                if (!isset($groups[$positionId])) {
-                    continue;
-                }
-
-                $groups[$positionId]['candidates'][] = $row;
-                $groups[$positionId]['total'] += (int) $row['vote_count'];
-            }
-        }
+        $groups = $published ? Vote::groupResultsByPosition($electionId) : [];
 
         $this->view('elections.results', [
             'title'     => t('elections.results.title', ['election' => $election['title']]),

@@ -21,7 +21,14 @@ $isPublished = $election['status'] === 'published';
         <?= component('alert', ['type' => 'info', 'message' => t('admin.elections.results.preview_notice')]) ?>
     <?php endif; ?>
 
-    <h1 class="font-headline-md text-headline-md text-ink"><?= e(t('admin.elections.results.title')) ?></h1>
+    <div class="flex items-center justify-between gap-3">
+        <h1 class="font-headline-md text-headline-md text-ink"><?= e(t('admin.elections.results.title')) ?></h1>
+        <a href="/admin/elections/<?= e((string) $electionId) ?>/report"
+           class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <?= e(t('admin.elections.report.link')) ?>
+        </a>
+    </div>
 
-    <?= component('election_results_body', ['groups' => $groups]) ?>
+    <?= component('election_results_body', ['groups' => $groups, 'cardBg' => 'bg-white']) ?>
 </div>

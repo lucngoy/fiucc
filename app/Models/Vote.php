@@ -221,4 +221,36 @@ final class Vote extends Model
 
         return $stmt->fetchAll();
     }
+
+    /**
+     * Assemble resultsForElection() et Election::positions() en une seule
+     * structure prête à afficher — factorisé ici (FIUCC-72) parce que
+     * App\Controllers\ElectionController::results(), Admin\ElectionController
+     * ::results() et ::report() en avaient chacun besoin : dupliqué trois
+     * fois, ce n'était plus une garde de sécurité à répéter par écriture
+     * (comme ailleurs dans cette épopée), juste de l'assemblage de lecture.
+     *
+     * @return array<int, array{position: array, candidates: array, total: int}>
+     */
+    public static function groupResultsByPosition(int $electionId): array
+    {
+        $groups = [];
+
+        foreach (Election::positions($electionId) as $position) {
+            $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0];
+        }
+
+        foreach (self::resultsForElection($electionId) as $row) {
+            $positionId = (int) $row['position_id'];
+
+            if (!isset($groups[$positionId])) {
+                continue;
+            }
+
+            $groups[$positionId]['candidates'][] = $row;
+            $groups[$positionId]['total'] += (int) $row['vote_count'];
+        }
+
+        return $groups;
+    }
 }
