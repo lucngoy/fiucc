@@ -2,10 +2,15 @@
 .env
 .env.*
 !.env.example
+!.env.testing.example
 
 # Dépendances
 /vendor/
 /node_modules/
+
+# PHPUnit
+/.phpunit.cache/
+/.phpunit.result.cache
 
 # Uploads : le contenu ne va JAMAIS dans git (photos de membres, données perso)
 /public/uploads/*

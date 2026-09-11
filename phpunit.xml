@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="tests/bootstrap.php"
+         colors="true"
+         failOnWarning="true"
+         failOnDeprecation="false"
+         cacheDirectory=".phpunit.cache">
+    <testsuites>
+        <testsuite name="fiucc-portal">
+            <directory suffix="Test.php">tests</directory>
+            <!-- tests/support n'est pas une suite : scripts de sous-processus
+                 (tests/support/race_vote_attempt.php) invoqués par les tests
+                 de concurrence, pas des cas de test eux-mêmes. -->
+            <exclude>tests/support</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>

@@ -8,6 +8,7 @@ declare(strict_types=1);
  * est un changement de schéma, pas une donnée de test.
  *
  * Usage : php database/migrate.php
+ *         php database/migrate.php --env=testing   (cible .env.testing — FIUCC-79)
  */
 
 use App\Core\Config;
@@ -20,7 +21,14 @@ define('BASE_PATH', $root);
 
 require $root . '/vendor/autoload.php';
 
-Env::load($root . '/.env');
+$envSuffix = null;
+foreach ($argv as $arg) {
+    if (str_starts_with($arg, '--env=')) {
+        $envSuffix = substr($arg, strlen('--env='));
+    }
+}
+
+Env::load($root . '/.env' . ($envSuffix !== null ? '.' . $envSuffix : ''));
 Config::load($root . '/config');
 
 $pdo = Database::connection();
