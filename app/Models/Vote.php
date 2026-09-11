@@ -35,7 +35,8 @@ final class Vote extends Model
      * @param array<int, int|null> $selections position_id => candidate_id
      *        (null = vote blanc), une entrée par poste de l'élection.
      * @return array{ok: bool, reason: ?string, receipt: ?string} reason
-     *         parmi : 'election_closed', 'candidate_unavailable', 'already_used'.
+     *         parmi : 'election_closed', 'member_ineligible',
+     *         'candidate_unavailable', 'already_used'.
      */
     public static function castBallot(int $electionId, int $memberId, array $selections): array
     {
@@ -43,17 +44,24 @@ final class Vote extends Model
         $db->beginTransaction();
 
         try {
-            // Contrôle explicite en tête de transaction (FIUCC-68) : donne
-            // un motif précis ("le scrutin est fermé") plutôt que de laisser
-            // le premier INSERT échouer et rapporter candidate_unavailable
-            // à tort. Sous REPEATABLE READ (InnoDB), cette lecture établit
-            // l'instantané que verront TOUTES les lectures suivantes de
-            // cette transaction — les gardes status/end_at répétées dans
-            // insertBlank()/insertForCandidate() ci-dessous ne peuvent donc
-            // plus, en pratique, échouer pour cette raison une fois qu'on a
-            // dépassé ce point ; elles restent quand même, en défense de
-            // profondeur, plutôt que de faire reposer toute la garantie sur
-            // ce détail d'isolation.
+            // Deux contrôles explicites en tête de transaction (FIUCC-68 pour
+            // l'élection, FIUCC-79 pour le membre — trouvé en écrivant les
+            // tests de cette épopée : rien ne revérifiait le droit de vote au
+            // moment même de l'écriture, seulement à l'émission du jeton,
+            // potentiellement des heures ou des jours plus tôt). Deux
+            // requêtes séparées plutôt qu'une jointure unique : c'est
+            // précisément pour distinguer "élection fermée" de "membre
+            // devenu inéligible" que l'appelant doit pouvoir donner un
+            // message différent (docs/SECURITE_ELECTIONS.md, §1.10 —
+            // "le droit de vote se vérifie à l'instant de l'écriture, jamais
+            // à l'émission du jeton"). Sous REPEATABLE READ (InnoDB), ces
+            // lectures établissent l'instantané que verront TOUTES les
+            // lectures suivantes de cette transaction — les gardes répétées
+            // dans insertBlank()/insertForCandidate()/consumeToken()
+            // ci-dessous ne peuvent donc plus, en pratique, échouer pour ces
+            // raisons une fois qu'on a dépassé ce point ; elles restent quand
+            // même, en défense de profondeur, plutôt que de faire reposer
+            // toute la garantie sur ce détail d'isolation.
             $stmt = $db->prepare(
                 "SELECT 1 FROM elections WHERE id = :id AND status = 'open' AND end_at > NOW() LIMIT 1"
             );
@@ -65,20 +73,41 @@ final class Vote extends Model
                 return ['ok' => false, 'reason' => 'election_closed', 'receipt' => null];
             }
 
+            $stmt = $db->prepare(
+                "SELECT 1 FROM members WHERE id = :id AND status = 'validated' AND status_type = 'student' LIMIT 1"
+            );
+            $stmt->execute(['id' => $memberId]);
+
+            if ($stmt->fetchColumn() === false) {
+                $db->rollBack();
+
+                // Cas administratif (suspension, passage alumni... entre
+                // l'émission du jeton et le vote), jamais confondu avec
+                // election_closed ou candidate_unavailable : le membre doit
+                // savoir qu'il faut contacter le bureau, pas revoir son
+                // bulletin ni réessayer plus tard.
+                return ['ok' => false, 'reason' => 'member_ineligible', 'receipt' => null];
+            }
+
             foreach ($selections as $positionId => $candidateId) {
                 $inserted = $candidateId === null
-                    ? self::insertBlank($db, $electionId, (int) $positionId)
-                    : self::insertForCandidate($db, $electionId, (int) $positionId, $candidateId);
+                    ? self::insertBlank($db, $electionId, $memberId, (int) $positionId)
+                    : self::insertForCandidate($db, $electionId, $memberId, (int) $positionId, $candidateId);
 
                 if (!$inserted) {
                     $db->rollBack();
 
-                    // Un INSERT sur zéro ligne ici signifie soit l'élection
-                    // n'est plus 'open', soit (pour un choix non-blanc) le
-                    // candidat n'est plus 'approved' ou ne correspond plus
-                    // à ce poste — dans les deux cas, aucune substitution,
-                    // aucun repli sur un vote blanc : la soumission entière
-                    // est rejetée (décision explicite conversation FIUCC-66).
+                    // Un INSERT sur zéro ligne ici signifie l'élection n'est
+                    // plus 'open', le membre n'est plus éligible, ou (pour un
+                    // choix non-blanc) le candidat n'est plus 'approved' ou
+                    // ne correspond plus à ce poste — dans tous les cas,
+                    // aucune substitution, aucun repli sur un vote blanc : la
+                    // soumission entière est rejetée (décision explicite
+                    // conversation FIUCC-66). Le contrôle ci-dessus rend ce
+                    // cas non atteignable en pratique pour l'élection et le
+                    // membre (même raisonnement que pour candidate_unavailable
+                    // plus haut) ; candidate_unavailable reste le message
+                    // générique de ce filet, comme pour le candidat retiré.
                     return ['ok' => false, 'reason' => 'candidate_unavailable', 'receipt' => null];
                 }
             }
@@ -103,17 +132,28 @@ final class Vote extends Model
         }
     }
 
-    private static function insertBlank(\PDO $db, int $electionId, int $positionId): bool
+    /**
+     * Le JOIN sur members ne sert qu'à vérifier une condition — memberId
+     * n'entre dans AUCUNE colonne insérée dans `votes` (toujours
+     * election_id, position_id, candidate_id, vote_hash, created_at, rien
+     * d'autre) : le lien entre un électeur et son bulletin ne doit exister
+     * nulle part, y compris dans la garde qui protège son écriture
+     * (CLAUDE.md règle 1).
+     */
+    private static function insertBlank(\PDO $db, int $electionId, int $memberId, int $positionId): bool
     {
         $stmt = $db->prepare(
             "INSERT INTO votes (election_id, position_id, candidate_id, vote_hash, created_at)
              SELECT :election_id, :position_id, NULL, :vote_hash, CURDATE()
              FROM elections e
-             WHERE e.id = :election_id_check AND e.status = 'open' AND e.end_at > NOW()"
+             INNER JOIN members m ON m.id = :member_id
+             WHERE e.id = :election_id_check AND e.status = 'open' AND e.end_at > NOW()
+               AND m.status = 'validated' AND m.status_type = 'student'"
         );
         $stmt->execute([
             'election_id'       => $electionId,
             'election_id_check' => $electionId,
+            'member_id'         => $memberId,
             'position_id'       => $positionId,
             'vote_hash'         => bin2hex(random_bytes(32)),
         ]);
@@ -121,7 +161,11 @@ final class Vote extends Model
         return $stmt->rowCount() === 1;
     }
 
-    private static function insertForCandidate(\PDO $db, int $electionId, int $positionId, int $candidateId): bool
+    /**
+     * Même principe qu'insertBlank() : memberId ne sert qu'à la garde, ne
+     * touche à aucune colonne insérée.
+     */
+    private static function insertForCandidate(\PDO $db, int $electionId, int $memberId, int $positionId, int $candidateId): bool
     {
         $stmt = $db->prepare(
             "INSERT INTO votes (election_id, position_id, candidate_id, vote_hash, created_at)
@@ -129,13 +173,16 @@ final class Vote extends Model
              FROM candidates c
              INNER JOIN election_positions ep ON ep.id = c.election_position_id
              INNER JOIN elections e ON e.id = ep.election_id
+             INNER JOIN members m ON m.id = :member_id
              WHERE c.id = :candidate_id_check AND c.status = 'approved'
                AND c.election_position_id = :position_id_check
-               AND e.id = :election_id_check AND e.status = 'open' AND e.end_at > NOW()"
+               AND e.id = :election_id_check AND e.status = 'open' AND e.end_at > NOW()
+               AND m.status = 'validated' AND m.status_type = 'student'"
         );
         $stmt->execute([
             'election_id'        => $electionId,
             'election_id_check'  => $electionId,
+            'member_id'          => $memberId,
             'position_id'        => $positionId,
             'position_id_check'  => $positionId,
             'candidate_id'       => $candidateId,
@@ -155,11 +202,12 @@ final class Vote extends Model
      * n'importe quelle autre cause d'échec de l'UPDATE (used_at déjà posé)
      * arrête net, sans réessayer.
      *
-     * Rejointe à elections avec la même garde status/end_at que
-     * insertBlank()/insertForCandidate() (FIUCC-68) — jamais atteignable en
-     * pratique puisque le contrôle en tête de castBallot() aurait déjà
-     * arrêté la transaction avant d'arriver ici, mais chaque écriture porte
-     * sa propre garde dans cette épopée, jamais seulement l'ordre d'appel.
+     * Rejointe à elections ET members avec les mêmes gardes status/end_at et
+     * éligibilité que insertBlank()/insertForCandidate() (FIUCC-68,
+     * FIUCC-79) — jamais atteignable en pratique puisque les contrôles en
+     * tête de castBallot() auraient déjà arrêté la transaction avant
+     * d'arriver ici, mais chaque écriture porte sa propre garde dans cette
+     * épopée, jamais seulement l'ordre d'appel.
      */
     private static function consumeToken(\PDO $db, int $electionId, int $memberId): ?string
     {
@@ -170,6 +218,7 @@ final class Vote extends Model
                 $stmt = $db->prepare(
                     "UPDATE voting_tokens vt
                      INNER JOIN elections e ON e.id = vt.election_id AND e.status = 'open' AND e.end_at > NOW()
+                     INNER JOIN members m ON m.id = vt.member_id AND m.status = 'validated' AND m.status_type = 'student'
                      SET vt.used_at = NOW(), vt.receipt_code = :receipt
                      WHERE vt.election_id = :election_id AND vt.member_id = :member_id AND vt.used_at IS NULL"
                 );

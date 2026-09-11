@@ -67,12 +67,16 @@ final class VoteEligibilityTest extends TestCase
     }
 
     /**
-     * Défense en profondeur : même si un jeton existait déjà pour un membre
-     * devenu inéligible entre-temps (suspendu après émission, par exemple),
-     * castBallot() doit refuser d'écrire — ce n'est pas seulement
-     * VotingToken::issue() qui protège l'urne.
+     * Défense en profondeur (corrigé conversation FIUCC-79, après que ce
+     * test — dans sa version précédente — a mis en évidence que
+     * castBallot() ne revérifiait pas le statut du membre à l'écriture) :
+     * un jeton émis à un instant T n'est pas une garantie que le membre est
+     * encore éligible à T+n. Suspendu après l'émission de son jeton, il ne
+     * doit plus pouvoir voter avec — et pas avec le message "élection
+     * fermée" ni "candidat indisponible", qui l'orienteraient à tort vers
+     * un problème technique plutôt qu'administratif.
      */
-    public function test_casting_a_ballot_is_refused_for_a_member_who_became_ineligible_after_token_issuance(): void
+    public function test_casting_a_ballot_is_refused_for_a_member_suspended_after_token_issuance(): void
     {
         [
             'election_id'  => $electionId,
@@ -83,24 +87,46 @@ final class VoteEligibilityTest extends TestCase
         $member = $this->makeMember(['status' => 'validated', 'status_type' => 'student']);
         $this->issueToken($electionId, $member);
 
-        // Le membre est suspendu après coup — un scénario réel (§ cahier :
-        // un statut peut changer après l'émission d'un jeton).
+        // Le membre est suspendu après coup — un scénario réel : un statut
+        // peut changer après l'émission d'un jeton, sans qu'on compte sur
+        // une révocation manuelle de ce jeton pour empêcher le vote.
         $stmt = $this->db->prepare('UPDATE members SET status = :status WHERE id = :id');
         $stmt->execute(['status' => 'suspended', 'id' => $member]);
 
-        // Rappel : cette garde n'existe pas explicitement dans castBallot()
-        // aujourd'hui (elle vérifie l'élection et le candidat, pas le membre
-        // — voir app/Models/Vote.php). Ce test documente l'état RÉEL du
-        // code, pas un souhait : s'il échoue un jour parce que la garde a
-        // été ajoutée, très bien, le test se met à jour dans la foulée.
         $result = Vote::castBallot($electionId, $member, [$positionId => $candidateId]);
 
-        self::assertTrue(
-            $result['ok'],
-            'Documente le comportement actuel : castBallot() ne revérifie pas le statut du membre au moment ' .
-            'de l\'écriture, seulement l\'élection et le candidat (app/Models/Vote.php). Un membre suspendu ' .
-            'après l\'émission de son jeton peut donc encore voter avec. À signaler comme un manque connu si ' .
-            'ce test échoue en confirmant l\'inverse.'
-        );
+        self::assertFalse($result['ok']);
+        self::assertSame('member_ineligible', $result['reason']);
+        self::assertSame(0, $this->voteCountForCandidate($candidateId));
+        self::assertFalse($this->hasVoted($electionId, $member), 'Le jeton ne doit pas être consommé par un vote refusé.');
+    }
+
+    /**
+     * Même défaut, autre transition : un membre qui devient alumni
+     * (diplômé, par exemple) entre l'émission de son jeton et son vote doit
+     * être refusé exactement comme un membre suspendu — les deux passent
+     * par la même garde (Member::isVoterEligible() : validated ET student).
+     */
+    public function test_casting_a_ballot_is_refused_for_a_member_who_became_alumni_after_token_issuance(): void
+    {
+        [
+            'election_id'  => $electionId,
+            'position_id'  => $positionId,
+            'candidate_id' => $candidateId,
+        ] = $this->makeOpenElectionWithCandidate();
+
+        $member = $this->makeMember(['status' => 'validated', 'status_type' => 'student']);
+        $this->issueToken($electionId, $member);
+
+        // Passage alumni après coup — reste 'validated', seul status_type change.
+        $stmt = $this->db->prepare('UPDATE members SET status_type = :status_type WHERE id = :id');
+        $stmt->execute(['status_type' => 'alumni', 'id' => $member]);
+
+        $result = Vote::castBallot($electionId, $member, [$positionId => $candidateId]);
+
+        self::assertFalse($result['ok']);
+        self::assertSame('member_ineligible', $result['reason']);
+        self::assertSame(0, $this->voteCountForCandidate($candidateId));
+        self::assertFalse($this->hasVoted($electionId, $member));
     }
 }

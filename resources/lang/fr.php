@@ -1067,6 +1067,7 @@ return [
     'elections.ballot.error.invalid'  => 'Sélection invalide pour ce poste.',
     'elections.ballot.error.candidate_unavailable' => "Un ou plusieurs choix ne sont plus disponibles (candidat retiré entre-temps, ou scrutin fermé). Vérifiez votre bulletin ci-dessous et validez à nouveau.",
     'elections.ballot.error.already_used'          => 'Votre vote a déjà été enregistré pour cette élection.',
+    'elections.ballot.error.member_ineligible'     => "Votre situation d'adhérent a changé et votre bulletin n'a pas pu être enregistré. Contactez le bureau électoral pour en savoir plus.",
     'elections.ballot.review_title' => 'Vérifiez votre bulletin',
     'elections.ballot.review_intro' => 'Voici vos choix. Vérifiez-les avant de valider — cette action est définitive.',
     'elections.ballot.modify_cta' => 'Modifier mes choix',

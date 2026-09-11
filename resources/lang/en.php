@@ -1069,6 +1069,7 @@ return [
     'elections.ballot.error.invalid'  => 'Invalid selection for this position.',
     'elections.ballot.error.candidate_unavailable' => 'One or more of your choices is no longer available (a candidate withdrew, or voting closed). Review your ballot below and submit again.',
     'elections.ballot.error.already_used'          => 'Your vote has already been recorded for this election.',
+    'elections.ballot.error.member_ineligible'     => "Your membership status has changed and your ballot could not be recorded. Contact the electoral office to find out more.",
     'elections.ballot.review_title' => 'Review your ballot',
     'elections.ballot.review_intro' => 'Here are your choices. Review them before submitting — this action is final.',
     'elections.ballot.modify_cta' => 'Modify my choices',

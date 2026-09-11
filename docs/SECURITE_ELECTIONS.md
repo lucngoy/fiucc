@@ -142,13 +142,55 @@ une nouvelle action. Le token est vérifié par comparaison en temps constant
 
 ### 1.10 Droit de vote = `members.status = 'validated'` ET `status_type = 'student'`
 
-**Niveau : garde SQL + contrôle applicatif, redondants.**
-`VotingToken::issue()`/`regenerate()` n'émettent un jeton que si cette
-condition est vraie **au moment de l'écriture** (jointure dans la requête,
-pas une lecture préalable). `Member::isVoterEligible()` revérifie la même
-règle côté affichage (`VoteController::eligibleContext()`) avant de montrer
-authentification, bulletin ou récapitulatif. Un alumni reste membre sans
-jamais pouvoir recevoir de jeton.
+**Niveau : garde SQL, vérifiée à CHAQUE écriture qui compte — pas seulement
+à l'émission du jeton.** Décision explicite : **le droit de vote se vérifie
+à l'instant de l'écriture du bulletin, jamais seulement à l'émission du
+jeton.** Un jeton prouve qu'un membre était éligible au moment où il a été
+émis — potentiellement des heures ou des jours avant le vote lui-même —
+jamais qu'il l'est resté.
+
+Corrigé pendant FIUCC-79 : `tests/Elections/VoteEligibilityTest.php`, en
+construisant un scénario "membre suspendu après l'émission de son jeton",
+a mis en évidence que `Vote::castBallot()` ne revérifiait *pas* le statut
+du membre à l'écriture — seulement l'élection et le candidat. Un membre
+suspendu (ou passé alumni) après avoir reçu son jeton pouvait donc encore
+voter avec, tant que personne n'avait pensé à révoquer ce jeton précis.
+Compter sur une révocation manuelle est exactement le type d'hypothèse que
+ce module évite partout ailleurs — corrigé, pas documenté comme limite
+acceptée.
+
+`Vote::castBallot()` vérifie maintenant l'éligibilité du membre à deux
+niveaux, la même défense en profondeur qu'ailleurs dans cette épopée :
+
+- un contrôle explicite en tête de transaction, séparé du contrôle sur
+  l'élection, précisément pour renvoyer un motif distinct
+  (`member_ineligible`, jamais confondu avec `election_closed` ni
+  `candidate_unavailable`) — voir §1.11 sur pourquoi ce message doit être
+  administratif, pas technique ;
+- la même condition rejouée dans le `WHERE`/`JOIN` de chacune des trois
+  écritures (`insertBlank()`, `insertForCandidate()`, `consumeToken()`),
+  pour la même raison que la garde `end_at` : le contrôle en tête rend ce
+  second niveau non atteignable en pratique, mais aucune écriture ne doit
+  dépendre uniquement de l'ordre d'appel.
+
+`member_id` n'entre dans aucune colonne insérée dans `votes` malgré cette
+jointure — il ne sert qu'à filtrer si l'écriture a lieu, jamais à quoi
+que ce soit qui y serait stocké (§1.1 reste intact).
+
+En parallèle, `VotingToken::issue()`/`regenerate()` continuent de
+n'émettre un jeton que si cette même condition est vraie au moment de
+l'émission, et `Member::isVoterEligible()` la revérifie aussi côté
+affichage (`VoteController::eligibleContext()`) avant de montrer
+authentification, bulletin ou récapitulatif — mais ni l'un ni l'autre ne
+suffit plus seul à garantir l'éligibilité au moment exact où le bulletin
+est écrit : c'est désormais `castBallot()` lui-même qui en est l'autorité
+finale, comme pour l'élection et le candidat.
+
+Le message montré au membre dans ce cas (`elections.ballot.error.
+member_ineligible`) est délibérément distinct des autres échecs : "votre
+situation a changé, contactez le bureau" plutôt qu'un message qui suggère
+de réessayer ou de revoir son bulletin — son cas est administratif, pas
+technique.
 
 ### 1.11 Un membre n'apprend que le fait d'avoir voté, jamais pour qui
 
@@ -480,4 +522,5 @@ doit être fait à la main, à chaque fois.
 *Document à mettre à jour à chaque ticket touchant le vote, la table `votes`,
 `voting_tokens`, ou tout écran/email/log visible par un électeur ou un admin
 — pas seulement relu une fois. Reflète l'état du code à la fin de la phase 4
-(FIUCC-59 à FIUCC-73).*
+(FIUCC-59 à FIUCC-73), complété §1.10 et §2.7 pendant FIUCC-79 (phase 5,
+tests obligatoires) suite à des corrections trouvées en écrivant les tests.*
