@@ -40,12 +40,20 @@ abstract class TestCase extends BaseTestCase
     /**
      * Tables à vider avant chaque test, dans un ordre qui n'a pas besoin
      * d'être topologique puisque les clés étrangères sont désactivées le
-     * temps de l'opération. À étendre quand un futur lot de FIUCC-79
-     * (registration, security) ajoutera des fixtures hors de ces tables.
+     * temps de l'opération.
+     *
+     * email_verifications/login_throttle ajoutées au tour Registration/
+     * Security de FIUCC-79 — leur absence a réellement cassé un test
+     * (OtpTest) : `users` étant TRUNCATE (donc son AUTO_INCREMENT remis à
+     * zéro) à chaque test, un user_id est réutilisé d'un test à l'autre ;
+     * une ligne email_verifications laissée par un test précédent pour ce
+     * même id faussait le calcul du cooldown de renvoi (Otp::
+     * secondsUntilResendAllowed()) dans le test suivant. À étendre à chaque
+     * nouvelle fixture qui référence `users`/`members` par id.
      */
     private const TABLES_TO_RESET = [
         'votes', 'voting_tokens', 'candidates', 'election_positions',
-        'elections', 'members', 'users',
+        'elections', 'members', 'users', 'email_verifications', 'login_throttle',
     ];
 
     protected PDO $db;

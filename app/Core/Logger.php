@@ -60,8 +60,25 @@ final class Logger
             $line = self::redact($line);
         }
 
-        $path = BASE_PATH . '/storage/logs/' . $channel . '.log';
+        $path = self::basePath() . '/' . $channel . '.log';
         file_put_contents($path, $line . PHP_EOL, FILE_APPEND | LOCK_EX);
+    }
+
+    /**
+     * storage/logs/ par défaut — surchageable via app.log_path (FIUCC-79,
+     * .env.testing uniquement) pour qu'un test n'écrive jamais dans le vrai
+     * dossier partagé avec le dev/Apache. Chemin relatif à BASE_PATH si la
+     * valeur ne commence pas par "/".
+     */
+    private static function basePath(): string
+    {
+        $configured = Config::get('app.log_path');
+
+        if (!is_string($configured) || $configured === '') {
+            return BASE_PATH . '/storage/logs';
+        }
+
+        return str_starts_with($configured, '/') ? $configured : BASE_PATH . '/' . ltrim($configured, '/');
     }
 
     /**

@@ -189,7 +189,7 @@ final class RegistrationController extends Controller
 
         if ($input['email'] === '' || filter_var($input['email'], FILTER_VALIDATE_EMAIL) === false) {
             $errors['email'] = t('validation.email_invalid');
-        } elseif (!$this->hasAllowedDomain($input['email'], $allowedDomains)) {
+        } elseif (!self::hasAllowedDomain($input['email'], $allowedDomains)) {
             $errors['email'] = t('validation.email_domain_restricted', ['domains' => implode(' ' . t('common.or') . ' ', $allowedDomains)]);
         } elseif (User::emailExists($input['email'])) {
             $errors['email'] = t('validation.email_taken');
@@ -235,7 +235,13 @@ final class RegistrationController extends Controller
         return $date !== false && $date->format('Y-m-d') === $value;
     }
 
-    private function hasAllowedDomain(string $email, array $allowedDomains): bool
+    /**
+     * Statique et publique (FIUCC-79) — logique pure, sans dépendance à
+     * $this, extraite pour être testable directement
+     * (tests/Registration/EmailDomainTest.php) sans passer par une requête
+     * HTTP complète.
+     */
+    public static function hasAllowedDomain(string $email, array $allowedDomains): bool
     {
         $atPosition = strrchr($email, '@');
 

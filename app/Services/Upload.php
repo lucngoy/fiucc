@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Core\Config;
 use finfo;
 use GdImage;
 use RuntimeException;
@@ -34,6 +35,37 @@ use ZipArchive;
  */
 final class Upload
 {
+    /**
+     * Dossier de base des images (public/uploads/ par défaut) — surchargeable
+     * via security.upload_images_base_path (FIUCC-79, .env.testing
+     * uniquement) pour qu'un test n'écrive jamais dans le vrai dossier servi
+     * par Apache. Chemin relatif à BASE_PATH si la valeur ne commence pas
+     * par "/".
+     */
+    private static function imagesBasePath(): string
+    {
+        return self::resolveBasePath('upload_images_base_path', BASE_PATH . '/public/uploads');
+    }
+
+    /**
+     * Même principe qu'imagesBasePath() pour storage/ (documents).
+     */
+    private static function storageBasePath(): string
+    {
+        return self::resolveBasePath('upload_storage_base_path', BASE_PATH . '/storage');
+    }
+
+    private static function resolveBasePath(string $configKey, string $default): string
+    {
+        $configured = Config::get('security.' . $configKey);
+
+        if (!is_string($configured) || $configured === '') {
+            return $default;
+        }
+
+        return str_starts_with($configured, '/') ? $configured : BASE_PATH . '/' . ltrim($configured, '/');
+    }
+
     private const ALLOWED_IMAGE_TYPES = [
         'image/jpeg' => 'jpg',
         'image/png'  => 'png',
@@ -76,7 +108,7 @@ final class Upload
         $extension = self::ALLOWED_IMAGE_TYPES[$realMime];
         $relativeDirectory = trim($subdirectory, '/');
         $filename = bin2hex(random_bytes(16)) . '.' . $extension;
-        $destinationDir = BASE_PATH . '/public/uploads/' . $relativeDirectory;
+        $destinationDir = self::imagesBasePath() . '/' . $relativeDirectory;
 
         if (!is_dir($destinationDir)) {
             throw new RuntimeException(t('upload.processing_failed'));
@@ -139,7 +171,7 @@ final class Upload
         $extension = self::ALLOWED_IMAGE_TYPES[$realMime];
         $relativeDirectory = trim($subdirectory, '/');
         $filename = bin2hex(random_bytes(16)) . '.' . $extension;
-        $destinationDir = BASE_PATH . '/public/uploads/' . $relativeDirectory;
+        $destinationDir = self::imagesBasePath() . '/' . $relativeDirectory;
         $thumbnailDir = $destinationDir . '/thumbs';
 
         if (!is_dir($destinationDir) || !is_dir($thumbnailDir)) {
@@ -214,7 +246,7 @@ final class Upload
 
         $relativeDirectory = trim($subdirectory, '/');
         $filename = bin2hex(random_bytes(16)) . '.' . $extension;
-        $destinationDir = rtrim(BASE_PATH, '/') . '/storage/' . $relativeDirectory;
+        $destinationDir = self::storageBasePath() . '/' . $relativeDirectory;
 
         if (!is_dir($destinationDir)) {
             throw new RuntimeException(t('upload.processing_failed'));

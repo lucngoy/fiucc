@@ -49,6 +49,15 @@ return [
     // en explosant la mémoire une fois décodée en pixels par GD. Vérifié via
     // getimagesize() (lit l'en-tête, pas les pixels) avant tout appel GD.
     'upload_max_input_dimension' => (int) Env::get('UPLOAD_MAX_INPUT_DIMENSION', 5000),
+    // Dossiers de destination d'App\Services\Upload — absents (null) partout
+    // sauf .env.testing (FIUCC-79) : sans ça, un test d'upload écrirait dans
+    // le vrai public/uploads/ servi par Apache. Chemin relatif à BASE_PATH
+    // si non absolu (voir Upload::imagesBasePath()/storageBasePath()) ; la
+    // valeur par défaut (BASE_PATH . '/public/uploads' ou '/storage') reste
+    // inchangée en dev et en production tant que ces variables ne sont pas
+    // définies.
+    'upload_images_base_path'  => Env::get('UPLOAD_IMAGES_BASE_PATH'),
+    'upload_storage_base_path' => Env::get('UPLOAD_STORAGE_BASE_PATH'),
     // Verrouillage dur — comptes admin uniquement (voir CLAUDE.md : un
     // verrouillage par compte seul permettrait de priver un membre de vote).
     'login_max_attempts'   => (int) Env::get('LOGIN_MAX_ATTEMPTS', 5),
