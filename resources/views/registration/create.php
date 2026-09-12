@@ -238,7 +238,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                     <?= component('checkbox_field', [
                         'name' => 'is_public', 'label' => t('census.privacy.is_public'),
                         'description' => t('census.privacy.is_public_description'),
-                        'checked' => $old === [] ? true : ($field('is_public') === '1'),
+                        'checked' => $field('is_public') === '1',
                     ]) ?>
                     <?= component('checkbox_field', [
                         'name' => 'show_email', 'label' => t('census.privacy.show_email'),

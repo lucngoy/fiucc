@@ -15,7 +15,9 @@ use RuntimeException;
  * Page profil du membre (FIUCC-37) : affichage seul, sa propre fiche et
  * l'état de son dossier (pending/validated/rejected/suspended).
  * Édition + upload de la photo (FIUCC-38) : edit()/update() ci-dessous.
- * updatePrivacy() reste hors de ce ticket — FIUCC-83, phase 6.
+ * Confidentialité (FIUCC-83) : privacy()/updatePrivacy() ci-dessous, un
+ * formulaire et un chemin d'écriture séparés d'update() — voir
+ * Member::updateProfile()/updatePrivacySettings().
  */
 final class ProfileController extends Controller
 {
@@ -117,6 +119,54 @@ final class ProfileController extends Controller
         ActivityLog::record($userId, 'profile_updated', 'member', (int) $member['id']);
 
         $this->redirect('/profile');
+    }
+
+    public function privacy(): void
+    {
+        $member = Member::findFullByUserId((int) $_SESSION['user_id']);
+
+        if ($member === null) {
+            $this->redirect('/');
+            return;
+        }
+
+        $settings = Member::privacySettings((int) $member['id']);
+
+        if ($settings === null) {
+            $this->redirect('/');
+            return;
+        }
+
+        $this->view('profile.privacy', [
+            'title'    => t('profile.privacy.title'),
+            'settings' => $settings,
+        ]);
+    }
+
+    /**
+     * $memberId dérivé de la session, jamais d'un id de route/formulaire —
+     * même principe IDOR-safe que update() ci-dessus : un membre ne peut
+     * changer que ses propres réglages de confidentialité.
+     */
+    public function updatePrivacy(): void
+    {
+        $userId = (int) $_SESSION['user_id'];
+        $member = Member::findFullByUserId($userId);
+
+        if ($member === null) {
+            $this->redirect('/');
+            return;
+        }
+
+        Member::updatePrivacySettings((int) $member['id'], [
+            'is_public'  => ($_POST['is_public'] ?? '') === '1' ? 1 : 0,
+            'show_email' => ($_POST['show_email'] ?? '') === '1' ? 1 : 0,
+            'show_phone' => ($_POST['show_phone'] ?? '') === '1' ? 1 : 0,
+        ]);
+
+        ActivityLog::record($userId, 'privacy_updated', 'member', (int) $member['id']);
+
+        $this->redirect('/profile/privacy?notice=updated');
     }
 
     private function showForm(array $member, array $input, array $errors): void

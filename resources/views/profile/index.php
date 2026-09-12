@@ -47,22 +47,27 @@ if ($member['status_type'] !== 'student') {
         <?= component('alert', ['type' => 'info', 'message' => $notice]) ?>
     <?php endif; ?>
 
-    <div class="bg-white rounded-card border border-border shadow-card p-6 flex items-center gap-5">
-        <?php if (!empty($member['photo'])): ?>
-            <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 shrink-0 rounded-full object-cover border border-border">
-        <?php else: ?>
-            <span class="h-16 w-16 shrink-0 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-headline-sm text-headline-sm">
-                <?= e($initials) ?>
-            </span>
-        <?php endif; ?>
-        <div class="min-w-0 flex-1">
-            <h1 class="font-headline-lg text-headline-lg text-ink truncate"><?= e($member['full_name']) ?></h1>
-            <div class="mt-1 flex flex-wrap items-center gap-2">
-                <?= component('status_badge', ['status' => $member['status_type']]) ?>
-                <span class="text-body-sm text-muted"><?= e($member['membership_number']) ?></span>
+    <div class="bg-white rounded-card border border-border shadow-card p-6 flex flex-col md:flex-row md:items-center gap-5">
+        <div class="flex items-center gap-5">
+            <?php if (!empty($member['photo'])): ?>
+                <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 shrink-0 rounded-full object-cover border border-border">
+            <?php else: ?>
+                <span class="h-16 w-16 shrink-0 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-headline-sm text-headline-sm">
+                    <?= e($initials) ?>
+                </span>
+            <?php endif; ?>
+            <div class="min-w-0 flex-1">
+                <h1 class="font-headline-lg text-headline-lg text-ink truncate"><?= e($member['full_name']) ?></h1>
+                <div class="mt-1 flex flex-wrap items-center gap-2">
+                    <?= component('status_badge', ['status' => $member['status_type']]) ?>
+                    <span class="text-body-sm text-muted"><?= e($member['membership_number']) ?></span>
+                </div>
             </div>
         </div>
-        <?= component('button', ['label' => t('profile.edit_profile'), 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
+        <div class="flex flex-wrap items-center gap-2 md:shrink-0 md:ml-auto">
+            <?= component('button', ['label' => t('profile.privacy_link'), 'variant' => 'secondary', 'href' => '/profile/privacy']) ?>
+            <?= component('button', ['label' => t('profile.edit_profile'), 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
+        </div>
     </div>
 
     <?= component('alert', ['type' => $status['type'], 'message' => $status['message']]) ?>

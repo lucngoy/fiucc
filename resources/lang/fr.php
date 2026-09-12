@@ -209,6 +209,11 @@ return [
     'profile.cancel' => 'Annuler',
     'profile.save'   => 'Enregistrer',
 
+    'profile.privacy_link'          => 'Confidentialité',
+    'profile.privacy.title'         => 'Confidentialité et annuaire',
+    'profile.privacy.subtitle'      => 'Contrôlez ce que les autres membres peuvent voir de votre profil.',
+    'profile.privacy.notice.updated' => 'Vos réglages de confidentialité ont été mis à jour.',
+
     'password.show' => 'Afficher le mot de passe',
     'password.hide' => 'Masquer le mot de passe',
 

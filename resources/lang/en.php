@@ -211,6 +211,11 @@ return [
     'profile.cancel' => 'Cancel',
     'profile.save'   => 'Save changes',
 
+    'profile.privacy_link'          => 'Privacy',
+    'profile.privacy.title'         => 'Privacy and directory',
+    'profile.privacy.subtitle'      => 'Control what other members can see on your profile.',
+    'profile.privacy.notice.updated' => 'Your privacy settings have been updated.',
+
     'password.show' => 'Show password',
     'password.hide' => 'Hide password',
 

@@ -234,8 +234,10 @@ final class Member extends Model
      * d'affiliation académique. student_id, email et le cycle de statut
      * restent hors de portée — les changer soi-même contournerait la
      * validation admin (section 24) ou l'ancrage d'identité du recensement.
-     * is_public/show_email/show_phone (confidentialité) et mentor_* restent
-     * pour FIUCC-83/87, pas cette édition générale.
+     * is_public/show_email/show_phone (confidentialité) : voir
+     * privacySettings()/updatePrivacySettings() ci-dessous (FIUCC-83), un
+     * formulaire séparé, jamais mélangé à cette édition générale. mentor_*
+     * reste hors de portée pour FIUCC-87.
      */
     public static function updateProfile(int $memberId, array $data): void
     {
@@ -265,6 +267,42 @@ final class Member extends Model
     {
         $stmt = static::db()->prepare('UPDATE members SET photo = :photo WHERE id = :id');
         $stmt->execute(['photo' => $photoPath, 'id' => $memberId]);
+    }
+
+    /**
+     * Réglages de confidentialité (FIUCC-83) : lecture/écriture séparées de
+     * updateProfile() ci-dessus à dessein (voir son commentaire) — un
+     * formulaire distinct, une seule responsabilité, jamais mélangé aux
+     * champs d'identité/contact.
+     *
+     * @return array{is_public: int, show_email: int, show_phone: int}|null
+     */
+    public static function privacySettings(int $memberId): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT is_public, show_email, show_phone FROM members WHERE id = :id LIMIT 1'
+        );
+        $stmt->execute(['id' => $memberId]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    /**
+     * @param array{is_public: int, show_email: int, show_phone: int} $data
+     */
+    public static function updatePrivacySettings(int $memberId, array $data): void
+    {
+        $stmt = static::db()->prepare(
+            'UPDATE members SET is_public = :is_public, show_email = :show_email, show_phone = :show_phone
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            'is_public'  => $data['is_public'],
+            'show_email' => $data['show_email'],
+            'show_phone' => $data['show_phone'],
+            'id'         => $memberId,
+        ]);
     }
 
     /**

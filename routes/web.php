@@ -55,6 +55,7 @@ return [
     ['GET',  '/profile',                       'ProfileController@index',         ['auth']],
     ['GET',  '/profile/edit',                  'ProfileController@edit',          ['auth']],
     ['POST', '/profile',                       'ProfileController@update',        ['auth']],
+    ['GET',  '/profile/privacy',               'ProfileController@privacy',       ['auth']],
     ['POST', '/profile/privacy',               'ProfileController@updatePrivacy', ['auth']],
 
     // Réseau et alumni (phase 6) — exposent d'autres membres : ['validated'],
