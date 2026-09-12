@@ -27,7 +27,7 @@ $errorMessages = [
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="<?= e('/elections/' . $electionId) ?>" class="hover:text-white transition-colors"><?= e($election['title']) ?></a>
@@ -43,7 +43,7 @@ $errorMessages = [
     <div class="max-w-md mx-auto bg-surface rounded-card border border-border p-6 md:p-8 flex flex-col gap-5">
         <?php if ($authorized): ?>
             <div class="flex items-start gap-3">
-                <span class="h-11 w-11 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+                <span class="h-11 w-11 rounded-full bg-success/[4%] text-success flex items-center justify-center shrink-0">
                     <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
                 </span>
                 <div>

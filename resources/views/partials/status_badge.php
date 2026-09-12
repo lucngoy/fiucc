@@ -9,7 +9,7 @@ $status ??= 'student';
 $label ??= null;
 
 $variants = [
-    'student' => 'bg-primary/15 text-primary',
+    'student' => 'bg-primary/[4%] text-primary',
     'alumni'  => 'bg-gold/20 text-ink',
     'mentor'  => 'bg-primary-light/30 text-primary',
     'admin'   => 'bg-danger/15 text-danger',

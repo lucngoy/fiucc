@@ -11,7 +11,7 @@ $type ??= 'info';
 
 $variants = [
     'info'    => ['bg' => 'bg-primary-light/20', 'text' => 'text-primary', 'icon' => 'i'],
-    'success' => ['bg' => 'bg-success/15',       'text' => 'text-success', 'icon' => '✓'],
+    'success' => ['bg' => 'bg-success/[4%]',       'text' => 'text-success', 'icon' => '✓'],
     'warning' => ['bg' => 'bg-gold/20',          'text' => 'text-ink',     'icon' => '!'],
     'error'   => ['bg' => 'bg-danger/10',        'text' => 'text-danger', 'icon' => '✕'],
 ];

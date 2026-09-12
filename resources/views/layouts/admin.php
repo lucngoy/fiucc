@@ -66,10 +66,10 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 <img src="/assets/images/fiucc-seal.png" alt="<?= e(t('admin.brand.name')) ?>" class="h-9 w-9 object-contain shrink-0">
                 <div class="leading-tight min-w-0">
                     <p class="font-label-lg text-label-lg truncate"><?= e(t('admin.brand.name')) ?></p>
-                    <p class="hidden sm:block text-label-caps font-label-caps uppercase text-white/60"><?= e(t('admin.brand.tagline')) ?></p>
+                    <p class="hidden sm:block text-label-caps font-label-caps uppercase text-white/90"><?= e(t('admin.brand.tagline')) ?></p>
                 </div>
             </div>
-            <p class="hidden md:block px-3 pt-3 pb-1 font-label-caps text-label-caps uppercase text-white/40 tracking-wider"><?= e(t('admin.nav.section_label')) ?></p>
+            <p class="hidden md:block px-3 pt-3 pb-1 font-label-caps text-label-caps uppercase text-white/90 tracking-wider"><?= e(t('admin.nav.section_label')) ?></p>
             <nav class="flex-1 py-2 md:py-1 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
                 <?php
                 // Item actif : pastille claire + liseré or à gauche (charte —
@@ -77,7 +77,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 // (nav horizontale), juste la pastille, le liseré vertical
                 // n'aurait pas de sens dans une rangée.
                 $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:hidden md:before:block before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
-                $inactiveClasses = 'text-white/70 hover:bg-white/10 hover:text-white';
+                $inactiveClasses = 'text-white/90 hover:bg-white/10 hover:text-white';
                 ?>
                 <a href="/admin/members"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? $activeClasses : $inactiveClasses ?>"
@@ -123,12 +123,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
             </span>
             <div class="leading-tight min-w-0 flex-1">
                 <p class="text-label-md font-label-md text-white truncate"><?= e($adminEmail ?? '') ?></p>
-                <p class="text-label-caps font-label-caps text-white/60 uppercase truncate"><?= e(t('common.role.admin')) ?></p>
+                <p class="text-label-caps font-label-caps text-white/90 uppercase truncate"><?= e(t('common.role.admin')) ?></p>
             </div>
             <form method="POST" action="/logout" class="shrink-0">
                 <?= csrf_field() ?>
                 <button type="submit" title="<?= e(t('admin.nav.logout')) ?>" aria-label="<?= e(t('admin.nav.logout')) ?>"
-                    class="h-8 w-8 flex items-center justify-center rounded-control text-white/70 hover:bg-white/10 hover:text-white transition-colors">
+                    class="h-8 w-8 flex items-center justify-center rounded-control text-white/90 hover:bg-white/10 hover:text-white transition-colors">
                     <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
                 </button>
             </form>

@@ -44,19 +44,19 @@ $countdownIcon = [
 
 $eligibilityStyle = [
     'not_signed_in'         => ['bg' => 'bg-primary/10',  'text' => 'text-primary',  'icon' => 'fa-right-to-bracket'],
-    'no_member_profile'     => ['bg' => 'bg-muted/15',    'text' => 'text-muted',    'icon' => 'fa-circle-info'],
+    'no_member_profile'     => ['bg' => 'bg-muted/[1%]',    'text' => 'text-muted',    'icon' => 'fa-circle-info'],
     'pending'                => ['bg' => 'bg-gold/20',     'text' => 'text-ink',      'icon' => 'fa-hourglass-half'],
     'rejected'               => ['bg' => 'bg-danger/10',   'text' => 'text-danger',   'icon' => 'fa-circle-xmark'],
     'suspended'              => ['bg' => 'bg-danger/10',   'text' => 'text-danger',   'icon' => 'fa-ban'],
     'not_student_alumni'    => ['bg' => 'bg-primary/10',  'text' => 'text-primary',  'icon' => 'fa-graduation-cap'],
     'not_student_honorary'  => ['bg' => 'bg-primary/10',  'text' => 'text-primary',  'icon' => 'fa-graduation-cap'],
-    'already_voted'          => ['bg' => 'bg-success/15',  'text' => 'text-success',  'icon' => 'fa-circle-check'],
-    'eligible'               => ['bg' => 'bg-success/15',  'text' => 'text-success',  'icon' => 'fa-circle-check'],
-][$eligibility] ?? ['bg' => 'bg-muted/15', 'text' => 'text-muted', 'icon' => 'fa-circle-info'];
+    'already_voted'          => ['bg' => 'bg-success/[4%]',  'text' => 'text-success',  'icon' => 'fa-circle-check'],
+    'eligible'               => ['bg' => 'bg-success/[4%]',  'text' => 'text-success',  'icon' => 'fa-circle-check'],
+][$eligibility] ?? ['bg' => 'bg-muted/[1%]', 'text' => 'text-muted', 'icon' => 'fa-circle-info'];
 ?>
 <div class="relative w-full bg-primary">
     <div class="relative z-10 max-w-layout mx-auto px-4 md:px-6 pt-8 pb-10 md:pt-10 md:pb-14 w-full">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-5">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-5">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="/elections" class="hover:text-white transition-colors"><?= e(t('elections.detail.breadcrumb')) ?></a>
@@ -64,7 +64,7 @@ $eligibilityStyle = [
             <span class="text-white"><?= e($election['title']) ?></span>
         </nav>
         <?php if ($statusBadgeLabel !== ''): ?>
-            <span class="inline-flex items-center h-7 px-3 rounded-full bg-white/15 text-white text-label-md font-label-md mb-4">
+            <span class="inline-flex items-center h-7 px-3 rounded-full bg-ink/25 text-white text-label-md font-label-md mb-4">
                 <?= e($statusBadgeLabel) ?>
             </span>
         <?php endif; ?>
@@ -76,14 +76,14 @@ $eligibilityStyle = [
             <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
                 <i class="fa-solid fa-calendar-day text-gold text-lg" aria-hidden="true"></i>
                 <div class="flex flex-col">
-                    <span class="text-label-caps font-label-caps uppercase text-white/60"><?= e(t('elections.detail.starts')) ?></span>
+                    <span class="text-label-caps font-label-caps uppercase text-white"><?= e(t('elections.detail.starts')) ?></span>
                     <span class="text-label-md font-label-md text-white font-semibold"><?= e(local_date($election['start_at'])) ?></span>
                 </div>
             </div>
             <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
                 <i class="fa-solid fa-calendar-check text-gold text-lg" aria-hidden="true"></i>
                 <div class="flex flex-col">
-                    <span class="text-label-caps font-label-caps uppercase text-white/60"><?= e(t('elections.detail.ends')) ?></span>
+                    <span class="text-label-caps font-label-caps uppercase text-white"><?= e(t('elections.detail.ends')) ?></span>
                     <span class="text-label-md font-label-md text-white font-semibold"><?= e(local_date($election['end_at'])) ?></span>
                 </div>
             </div>

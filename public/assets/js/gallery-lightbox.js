@@ -69,11 +69,46 @@
 
     // Flèches clavier — Échap est géré nativement par <dialog>.showModal(),
     // rien à faire pour ça ici.
+    //
+    // Piège au clavier explicite pour Tab/Maj+Tab (FIUCC-76, testé au
+    // clavier réel) : le confinement natif de <dialog> laisse le focus
+    // atterrir brièvement sur <body> avant de reboucler dans la boîte
+    // (constaté avec Playwright, pas supposé) — un lecteur d'écran y
+    // annoncerait un focus sans rien à lire. Boucle donc explicitement
+    // entre le premier et le dernier contrôle plutôt que de compter
+    // uniquement sur le comportement natif du navigateur.
     dialog.addEventListener('keydown', function (event) {
         if (event.key === 'ArrowLeft') {
             show(current - 1);
-        } else if (event.key === 'ArrowRight') {
+            return;
+        }
+
+        if (event.key === 'ArrowRight') {
             show(current + 1);
+            return;
+        }
+
+        if (event.key !== 'Tab') {
+            return;
+        }
+
+        var focusable = Array.prototype.slice.call(
+            dialog.querySelectorAll('button, a[href]')
+        );
+
+        if (focusable.length === 0) {
+            return;
+        }
+
+        var first = focusable[0];
+        var last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
         }
     });
 

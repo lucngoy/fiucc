@@ -21,9 +21,9 @@ $activeFilterQuery = array_filter([
 
 $statusBadge = static function (string $status): string {
     $variants = [
-        'draft'       => 'bg-muted/15 text-muted',
+        'draft'       => 'bg-muted/[1%] text-muted',
         'candidacies' => 'bg-gold/20 text-ink',
-        'open'        => 'bg-success/15 text-success',
+        'open'        => 'bg-success/[4%] text-success',
         'closed'      => 'bg-primary/10 text-primary',
         'published'   => 'bg-primary/10 text-primary',
     ];

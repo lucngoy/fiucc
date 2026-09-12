@@ -103,7 +103,7 @@ $renderSocialLink = static function (?string $instagram, string $size = 'h-8 w-8
 
     return '<a href="' . e('https://www.instagram.com/' . $handle . '/') . '" target="_blank" rel="noopener noreferrer" '
         . 'title="Instagram" aria-label="Instagram — @' . e($handle) . '" '
-        . 'class="inline-flex ' . $size . ' rounded-full bg-primary/15 text-primary items-center justify-center hover:bg-primary/25 transition-colors">'
+        . 'class="inline-flex ' . $size . ' rounded-full bg-primary/[4%] text-primary items-center justify-center hover:bg-primary/25 transition-colors">'
         . '<i class="fa-brands fa-instagram" aria-hidden="true"></i></a>';
 };
 
@@ -133,7 +133,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <div class="flex items-center justify-between gap-4 mb-6">
-            <nav aria-label="Breadcrumb" class="text-body-sm text-white/70">
+            <nav aria-label="Breadcrumb" class="text-body-sm text-white/90">
                 <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
                 <span class="mx-2" aria-hidden="true">/</span>
                 <a href="/community" class="hover:text-white transition-colors"><?= e(t('community.title')) ?></a>
@@ -148,7 +148,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
         </div>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('government.title')) ?></h1>
         <?php if ($government !== null): ?>
-            <p class="text-body-lg text-white/80 max-w-2xl"><?= e(t('government.subtitle', ['mandate' => $government['mandate']])) ?></p>
+            <p class="text-body-lg text-white/90 max-w-2xl"><?= e(t('government.subtitle', ['mandate' => $government['mandate']])) ?></p>
         <?php endif; ?>
     </div>
 
@@ -161,7 +161,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
                             <i class="<?= e($stat['icon']) ?> text-white/70 text-xl" aria-hidden="true"></i>
                             <div class="min-w-0">
                                 <p class="font-headline-sm text-headline-sm text-white"><?= e($stat['primary']) ?></p>
-                                <p class="text-label-md font-label-md text-white/70"><?= e($stat['caption']) ?></p>
+                                <p class="text-label-md font-label-md text-white/90 break-words"><?= e($stat['caption']) ?></p>
                             </div>
                         </div>
                     <?php endforeach; ?>
@@ -183,7 +183,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
                         <img src="<?= e('/uploads/' . $spotlight['photo']) ?>" alt=""
                              class="h-32 w-32 md:h-36 md:w-36 rounded-full object-cover border border-border shrink-0">
                     <?php else: ?>
-                        <span class="h-32 w-32 md:h-36 md:w-36 rounded-full bg-primary/15 text-primary flex items-center justify-center font-headline-lg text-headline-lg shrink-0">
+                        <span class="h-32 w-32 md:h-36 md:w-36 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-headline-lg text-headline-lg shrink-0">
                             <?= e(initials($spotlight['display_name'])) ?>
                         </span>
                     <?php endif; ?>
@@ -230,12 +230,12 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
                         <?php if (!empty($member['photo'])): ?>
                             <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="w-full aspect-square object-cover">
                         <?php else: ?>
-                            <span class="w-full aspect-square bg-primary/15 text-primary flex items-center justify-center font-headline-sm text-headline-sm">
+                            <span class="w-full aspect-square bg-primary/[4%] text-primary flex items-center justify-center font-headline-sm text-headline-sm">
                                 <?= e(initials($member['display_name'])) ?>
                             </span>
                         <?php endif; ?>
                         <div class="p-3">
-                            <span class="inline-flex items-center h-5 px-2 mb-1.5 rounded-full bg-primary/15 text-primary text-label-caps font-label-caps uppercase">
+                            <span class="inline-flex items-center h-5 px-2 mb-1.5 rounded-full bg-primary/[4%] text-primary text-label-caps font-label-caps uppercase">
                                 <?= e($member['role']) ?>
                             </span>
                             <h3 class="font-label-lg text-label-lg text-ink mb-0.5"><?= e($member['display_name']) ?></h3>
@@ -264,9 +264,9 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
     <div class="flex flex-col items-center">
         <!-- Nœud du haut : dynamique, vraies données du spotlight. -->
         <div class="w-full max-w-sm bg-primary text-white rounded-card shadow-card px-4 py-3 text-center">
-            <p class="text-label-caps font-label-caps uppercase text-white/70 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
+            <p class="text-label-caps font-label-caps uppercase text-white/90 mb-1"><?= e(t('government.orgchart.top_eyebrow')) ?></p>
             <p class="font-label-lg text-label-lg"><?= e(t('government.orgchart.top_title')) ?></p>
-            <p class="text-body-sm text-white/80"><?= e(t('government.orgchart.top_subtitle', ['name' => $spotlight['display_name']])) ?></p>
+            <p class="text-body-sm text-white/90"><?= e(t('government.orgchart.top_subtitle', ['name' => $spotlight['display_name']])) ?></p>
         </div>
 
         <!-- Branche président → palier 2. -->

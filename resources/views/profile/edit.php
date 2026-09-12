@@ -32,7 +32,7 @@ $error = static fn (string $name) => $errors[$name] ?? null;
                 <?php if (!empty($member['photo'])): ?>
                     <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 rounded-full object-cover border border-border">
                 <?php else: ?>
-                    <span class="h-16 w-16 rounded-full bg-primary/15 text-primary flex items-center justify-center font-headline-sm text-headline-sm">
+                    <span class="h-16 w-16 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-headline-sm text-headline-sm">
                         <?= e(mb_substr($member['full_name'], 0, 1)) ?>
                     </span>
                 <?php endif; ?>

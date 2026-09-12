@@ -40,9 +40,9 @@ $tabUrl = static function (string $targetWhen) use ($filters): string {
 
 $statusBadge = static function (string $state): string {
     $variants = [
-        'upcoming'  => 'bg-primary/15 text-primary',
-        'ongoing'   => 'bg-success/15 text-success',
-        'completed' => 'bg-muted/15 text-muted',
+        'upcoming'  => 'bg-primary/[4%] text-primary',
+        'ongoing'   => 'bg-success/[4%] text-success',
+        'completed' => 'bg-muted/[1%] text-muted',
         'cancelled' => 'bg-danger/10 text-danger',
     ];
     $classes = $variants[$state] ?? $variants['upcoming'];
@@ -88,13 +88,13 @@ $registrationLine = static function (array $event, int $registered): string {
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <span class="text-white"><?= e(t('events.title')) ?></span>
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('events.title')) ?></h1>
-        <p class="text-body-lg text-white/80 max-w-2xl"><?= e(t('events.subtitle')) ?></p>
+        <p class="text-body-lg text-white/90 max-w-2xl"><?= e(t('events.subtitle')) ?></p>
     </div>
 </div>
 

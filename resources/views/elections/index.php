@@ -13,11 +13,11 @@ $elections ??= [];
 $statusBadge = static function (string $status): string {
     $variants = [
         'candidacies' => 'bg-gold/20 text-ink',
-        'open'        => 'bg-success/15 text-success',
-        'closed'      => 'bg-muted/15 text-muted',
+        'open'        => 'bg-success/[4%] text-success',
+        'closed'      => 'bg-muted/[1%] text-muted',
         'published'   => 'bg-primary/10 text-primary',
     ];
-    $classes = $variants[$status] ?? 'bg-muted/15 text-muted';
+    $classes = $variants[$status] ?? 'bg-muted/[1%] text-muted';
 
     return '<span class="inline-flex items-center h-6 px-2.5 rounded-full ' . $classes . ' text-label-md font-label-md">'
         . e(t('elections.status.' . $status)) . '</span>';
@@ -25,13 +25,13 @@ $statusBadge = static function (string $status): string {
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <span class="text-white"><?= e(t('elections.title')) ?></span>
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('elections.title')) ?></h1>
-        <p class="text-body-lg text-white/80 max-w-2xl"><?= e(t('elections.subtitle')) ?></p>
+        <p class="text-body-lg text-white/90 max-w-2xl"><?= e(t('elections.subtitle')) ?></p>
     </div>
 </div>
 

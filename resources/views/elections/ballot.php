@@ -21,7 +21,7 @@ $globalError = $errors['_global'] ?? null;
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="<?= e('/elections/' . $electionId) ?>" class="hover:text-white transition-colors"><?= e($election['title']) ?></a>
@@ -29,7 +29,7 @@ $globalError = $errors['_global'] ?? null;
             <span class="text-white"><?= e(t('elections.ballot.breadcrumb')) ?></span>
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white"><?= e(t('elections.ballot.title')) ?></h1>
-        <p class="text-body-md text-white/80 mt-2 max-w-2xl"><?= e(t('elections.ballot.intro')) ?></p>
+        <p class="text-body-md text-white/90 mt-2 max-w-2xl"><?= e(t('elections.ballot.intro')) ?></p>
     </div>
 </div>
 

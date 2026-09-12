@@ -101,12 +101,12 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             <?= e(t('home.hero.badge')) ?>
         </span>
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-4"><?= e(t('home.hero.title')) ?></h1>
-        <p class="text-body-lg text-white/80 max-w-2xl mb-8"><?= e(t('home.hero.tagline')) ?></p>
+        <p class="text-body-lg text-white/90 max-w-2xl mb-8"><?= e(t('home.hero.tagline')) ?></p>
         <div class="flex flex-row sm:flex-row items-center gap-4 mb-10">
             <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
             <?= component('button', ['label' => t('home.hero.cta_discover'), 'variant' => 'inverse', 'href' => '#events']) ?>
         </div>
-        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/80 text-label-md font-label-md pt-6">
+        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/90 text-label-md font-label-md pt-6">
             <span class="flex items-center gap-2">
                 <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
                 <?= e(t('home.stats.students', ['count' => $stats['students']])) ?>
@@ -237,7 +237,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
     </div>
 </div>
 
-<div class="w-full bg-primary/5">
+<div class="w-full bg-surface">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
         <div class="text-center max-w-2xl mx-auto mb-12">
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('home.journey.eyebrow')) ?></p>
@@ -247,7 +247,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             <?php foreach ($journeySteps as $step): ?>
                 <div class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border">
-                    <span class="h-12 w-12 rounded-full bg-primary/15 text-primary flex items-center justify-center mb-3">
+                    <span class="h-12 w-12 rounded-full bg-primary/[4%] text-primary flex items-center justify-center mb-3">
                         <i class="<?= e($step['icon']) ?> text-lg" aria-hidden="true"></i>
                     </span>
                     <p class="text-label-caps font-label-caps uppercase text-primary mb-1"><?= e($step['label']) ?></p>
@@ -377,7 +377,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20 text-center flex flex-col items-center">
         <h2 class="font-headline-md text-headline-md text-white mb-3"><?= e(t('home.cta.title')) ?></h2>
-        <p class="text-body-lg text-white/80 max-w-2xl mb-8"><?= e(t('home.cta.body', ['count' => $stats['students']])) ?></p>
+        <p class="text-body-lg text-white/90 max-w-2xl mb-8"><?= e(t('home.cta.body', ['count' => $stats['students']])) ?></p>
         <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
     </div>
 </div>

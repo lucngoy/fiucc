@@ -16,7 +16,7 @@ $receipt ??= '';
 <div class="w-full bg-white min-h-[70vh] flex items-center">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 w-full">
     <div class="max-w-md mx-auto bg-surface rounded-card border border-border p-8 flex flex-col items-center gap-5 text-center">
-        <span class="h-16 w-16 rounded-full bg-success/15 text-success flex items-center justify-center">
+        <span class="h-16 w-16 rounded-full bg-success/[4%] text-success flex items-center justify-center">
             <i class="fa-solid fa-circle-check text-3xl" aria-hidden="true"></i>
         </span>
         <div>

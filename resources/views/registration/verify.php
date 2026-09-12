@@ -10,7 +10,7 @@ $resendWaitSeconds ??= 0;
 <div class="max-w-md mx-auto px-4 py-16 text-center">
     <?php if ($verified): ?>
         <div class="flex flex-col items-center gap-4">
-            <span class="h-16 w-16 rounded-full bg-success/15 text-success flex items-center justify-center text-3xl font-bold">&#10003;</span>
+            <span class="h-16 w-16 rounded-full bg-success/[4%] text-success flex items-center justify-center text-3xl font-bold">&#10003;</span>
             <h1 class="font-headline-lg text-headline-lg text-ink"><?= e(t('verify.verified_title')) ?></h1>
             <p class="text-body-md text-muted"><?= e(t('verify.verified_body')) ?></p>
             <?= component('button', ['label' => t('common.back_home'), 'variant' => 'primary', 'href' => '/']) ?>

@@ -17,7 +17,7 @@ $electionId = (int) $election['id'];
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="<?= e('/elections/' . $electionId) ?>" class="hover:text-white transition-colors"><?= e($election['title']) ?></a>
@@ -26,7 +26,7 @@ $electionId = (int) $election['id'];
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white"><?= e($election['title']) ?></h1>
         <?php if ($published && !empty($election['results_published_at'])): ?>
-            <p class="text-body-md text-white/80 mt-2"><?= e(t('elections.results.published_note', ['date' => local_date($election['results_published_at'])])) ?></p>
+            <p class="text-body-md text-white/90 mt-2"><?= e(t('elections.results.published_note', ['date' => local_date($election['results_published_at'])])) ?></p>
         <?php endif; ?>
     </div>
 </div>
@@ -37,7 +37,7 @@ $electionId = (int) $election['id'];
 
         <?php if (!$published): ?>
             <div class="bg-surface rounded-card border border-border p-8 flex flex-col items-center gap-3 text-center">
-                <span class="h-14 w-14 rounded-full bg-muted/15 text-muted flex items-center justify-center">
+                <span class="h-14 w-14 rounded-full bg-muted/[1%] text-muted flex items-center justify-center">
                     <i class="fa-solid fa-lock text-2xl" aria-hidden="true"></i>
                 </span>
                 <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('elections.results.unavailable_title')) ?></h2>

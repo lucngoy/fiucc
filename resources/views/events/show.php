@@ -27,11 +27,11 @@ $registrationStatus ??= null;
 $notice ??= '';
 
 $statusBadgeClasses = [
-    'upcoming'  => 'bg-primary/15 text-primary',
-    'ongoing'   => 'bg-success/15 text-success',
-    'completed' => 'bg-muted/15 text-muted',
+    'upcoming'  => 'bg-primary/[4%] text-primary',
+    'ongoing'   => 'bg-success/[4%] text-success',
+    'completed' => 'bg-muted/[1%] text-muted',
     'cancelled' => 'bg-danger/10 text-danger',
-][$displayState] ?? 'bg-primary/15 text-primary';
+][$displayState] ?? 'bg-primary/[4%] text-primary';
 
 $hasCapacity = $event['capacity'] !== null;
 $capacity = $hasCapacity ? (int) $event['capacity'] : null;
@@ -62,7 +62,7 @@ $mapsUrl = !empty($event['location'])
         <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/60 to-ink/20"></div>
     <?php endif; ?>
     <div class="relative z-10 max-w-layout mx-auto px-4 md:px-6 <?= !empty($event['cover_image']) ? 'py-10 md:py-16' : 'pt-8 pb-10 md:pt-10' ?> w-full">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-5">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-5">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="/events" class="hover:text-white transition-colors"><?= e(t('events.detail.breadcrumb')) ?></a>
@@ -74,7 +74,7 @@ $mapsUrl = !empty($event['location'])
                 <?= e(t('events.status.' . $displayState)) ?>
             </span>
             <?php if (!empty($event['category'])): ?>
-                <span class="inline-flex items-center h-7 px-3 rounded-full bg-white/15 text-white text-label-md font-label-md"><?= e($event['category']) ?></span>
+                <span class="inline-flex items-center h-7 px-3 rounded-full bg-ink/25 text-white text-label-md font-label-md"><?= e($event['category']) ?></span>
             <?php endif; ?>
         </div>
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-6"><?= e($event['title']) ?></h1>

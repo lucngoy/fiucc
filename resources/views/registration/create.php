@@ -41,13 +41,13 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
              (masqué en lg via lg:hidden ci-dessus). -->
         <aside class="hidden lg:flex lg:col-span-5 lg:sticky lg:top-24 flex-col justify-between gap-8 bg-primary text-white rounded-card shadow-card p-8">
             <div class="flex flex-col gap-6">
-                <span class="inline-flex items-center gap-2 self-start px-3 h-7 rounded-full bg-white/15 text-label-caps font-label-caps uppercase tracking-wider">
+                <span class="inline-flex items-center gap-2 self-start px-3 h-7 rounded-full bg-ink/25 text-label-caps font-label-caps uppercase tracking-wider">
                     <span class="h-2 w-2 rounded-full bg-gold" aria-hidden="true"></span>
                     <?= e(t('census.info.eyebrow')) ?>
                 </span>
                 <div class="flex flex-col gap-2">
                     <h1 class="font-headline-lg text-headline-lg"><?= e(t('census.info.title')) ?></h1>
-                    <p class="text-body-md text-white/80"><?= e(t('census.info.subtitle')) ?></p>
+                    <p class="text-body-md text-white/90"><?= e(t('census.info.subtitle')) ?></p>
                 </div>
                 <div class="flex flex-col gap-4 pt-2">
                     <?php foreach ([
@@ -56,28 +56,28 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                         ['icon' => 'fa-solid fa-check-to-slot', 'title' => t('census.info.benefit3_title'), 'body' => t('census.info.benefit3_body')],
                     ] as $benefit): ?>
                         <div class="flex items-start gap-3">
-                            <span class="h-6 w-6 rounded-full bg-white/15 flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
+                            <span class="h-6 w-6 rounded-full bg-ink/25 flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
                                 <i class="<?= e($benefit['icon']) ?> text-gold text-sm"></i>
                             </span>
                             <div class="flex flex-col">
                                 <span class="font-label-lg text-label-lg"><?= e($benefit['title']) ?></span>
-                                <span class="text-body-sm text-white/70"><?= e($benefit['body']) ?></span>
+                                <span class="text-body-sm text-white"><?= e($benefit['body']) ?></span>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
                 <div class="flex items-start gap-3 p-3 rounded-control bg-white/10">
                     <i class="fa-solid fa-shield-halved text-gold mt-0.5" aria-hidden="true"></i>
-                    <p class="text-label-caps font-label-caps text-white/80 leading-relaxed"><?= e(t('census.info.privacy')) ?></p>
+                    <p class="text-label-caps font-label-caps text-white leading-relaxed"><?= e(t('census.info.privacy')) ?></p>
                 </div>
             </div>
 
-            <a href="/contact" class="flex items-center justify-between gap-3 p-4 rounded-control bg-white/10 hover:bg-white/15 transition-colors">
+            <a href="/contact" class="flex items-center justify-between gap-3 p-4 rounded-control bg-white/10 hover:bg-ink/25 transition-colors">
                 <span class="flex items-center gap-3">
                     <i class="fa-solid fa-circle-question text-lg" aria-hidden="true"></i>
                     <span class="flex flex-col">
                         <span class="font-label-md text-label-md"><?= e(t('census.info.help_title')) ?></span>
-                        <span class="text-body-sm text-white/70"><?= e(t('census.info.help_body')) ?></span>
+                        <span class="text-body-sm text-white"><?= e(t('census.info.help_body')) ?></span>
                     </span>
                 </span>
                 <i class="fa-solid fa-arrow-right text-white/50" aria-hidden="true"></i>

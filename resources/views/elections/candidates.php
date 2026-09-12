@@ -55,7 +55,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="/elections" class="hover:text-white transition-colors"><?= e(t('elections.detail.breadcrumb')) ?></a>
@@ -65,7 +65,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
             <span class="text-white"><?= e(t('elections.candidates.breadcrumb')) ?></span>
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e($election['title']) ?></h1>
-        <a href="<?= e('/elections/' . $electionId) ?>" class="inline-flex items-center gap-2 text-body-sm text-white/80 hover:text-white transition-colors">
+        <a href="<?= e('/elections/' . $electionId) ?>" class="inline-flex items-center gap-2 text-body-sm text-white/90 hover:text-white transition-colors">
             <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
             <?= e(t('elections.candidates.back_to_election')) ?>
         </a>

@@ -64,9 +64,9 @@ $sortIcon = static function (string $column) use ($sort, $dir): string {
 $statusBadge = static function (string $status): string {
     $variants = [
         'pending'   => 'bg-gold/20 text-ink',
-        'validated' => 'bg-success/15 text-success',
+        'validated' => 'bg-success/[4%] text-success',
         'rejected'  => 'bg-danger/10 text-danger',
-        'suspended' => 'bg-muted/15 text-muted',
+        'suspended' => 'bg-muted/[1%] text-muted',
     ];
     $classes = $variants[$status] ?? $variants['pending'];
 
@@ -241,6 +241,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                         <tr class="border-b border-border last:border-0 align-top">
                             <td class="p-3">
                                 <input type="checkbox" form="<?= e($bulkFormId) ?>" name="ids[]" value="<?= e((string) $memberId) ?>"
+                                    aria-label="<?= e(t('admin.members.bulk.select_one', ['name' => $member['full_name']])) ?>"
                                     class="member-row-checkbox h-4 w-4 rounded border-border text-primary focus:outline-none focus:ring-2 focus:ring-primary-light/50">
                             </td>
                             <td class="p-3">
@@ -248,7 +249,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                     <?php if (!empty($member['photo'])): ?>
                                         <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-9 w-9 rounded-full object-cover border border-border shrink-0">
                                     <?php else: ?>
-                                        <span class="h-9 w-9 rounded-full bg-primary/15 text-primary flex items-center justify-center font-label-md text-label-md shrink-0">
+                                        <span class="h-9 w-9 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-label-md text-label-md shrink-0">
                                             <?= e(initials($member['full_name'])) ?>
                                         </span>
                                     <?php endif; ?>

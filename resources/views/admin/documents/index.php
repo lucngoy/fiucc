@@ -31,7 +31,7 @@ $fileIcon = static function (string $mimeType): string {
 
 $visibilityBadge = static function (string $visibility): string {
     $variants = [
-        'public'     => 'bg-success/15 text-success',
+        'public'     => 'bg-success/[4%] text-success',
         'members'    => 'bg-gold/20 text-ink',
         'government' => 'bg-primary/10 text-primary',
         'admin'      => 'bg-danger/10 text-danger',

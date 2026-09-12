@@ -48,7 +48,7 @@ $values = [
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-16 md:pt-10 md:pb-20">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-8">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-8">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <span class="text-white"><?= e(t('community.title')) ?></span>
@@ -56,10 +56,10 @@ $values = [
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div class="max-w-2xl">
                 <h1 class="font-headline-lg text-headline-lg text-white mb-4"><?= e(t('community.title')) ?></h1>
-                <p class="text-body-lg text-white/80 mb-6"><?= e(t('community.intro')) ?></p>
+                <p class="text-body-lg text-white/90 mb-6"><?= e(t('community.intro')) ?></p>
                 <?= component('button', ['label' => t('community.cta.meet_government'), 'variant' => 'inverse', 'href' => '/community/government']) ?>
             </div>
-            <span class="inline-flex items-center h-9 px-4 rounded-full bg-white/15 text-white text-label-md font-label-md shrink-0">
+            <span class="inline-flex items-center h-9 px-4 rounded-full bg-ink/25 text-white text-label-md font-label-md shrink-0">
                 <?= e(t('community.founded_badge')) ?>
             </span>
         </div>
@@ -114,7 +114,7 @@ $values = [
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <?php foreach ($values as $index => $value): ?>
             <div class="bg-surface rounded-card border border-border p-6">
-                <span class="inline-flex h-10 w-10 rounded-control bg-primary/15 text-primary items-center justify-center font-headline-sm text-headline-sm mb-4">
+                <span class="inline-flex h-10 w-10 rounded-control bg-primary/[4%] text-primary items-center justify-center font-headline-sm text-headline-sm mb-4">
                     <?= e((string) ($index + 1)) ?>
                 </span>
                 <p class="font-label-caps text-label-caps uppercase text-muted tracking-wider mb-1"><?= e($value['tag']) ?></p>
@@ -175,7 +175,7 @@ $values = [
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20 text-center">
         <h2 class="font-headline-md text-headline-md text-white mb-3"><?= e(t('community.cta.title')) ?></h2>
-        <p class="text-body-md text-white/80 mb-8 max-w-xl mx-auto"><?= e(t('community.cta.body')) ?></p>
+        <p class="text-body-md text-white/90 mb-8 max-w-xl mx-auto"><?= e(t('community.cta.body')) ?></p>
         <div class="flex flex-wrap items-center justify-center gap-3">
             <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
             <?= component('button', ['label' => t('community.cta.meet_government'), 'variant' => 'inverse', 'href' => '/community/government']) ?>

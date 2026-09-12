@@ -24,9 +24,9 @@ $electionId = (int) $election['id'];
 $statusBadge = static function (string $status): string {
     $variants = [
         'pending'   => 'bg-gold/20 text-ink',
-        'approved'  => 'bg-success/15 text-success',
+        'approved'  => 'bg-success/[4%] text-success',
         'rejected'  => 'bg-danger/10 text-danger',
-        'withdrawn' => 'bg-muted/15 text-muted',
+        'withdrawn' => 'bg-muted/[1%] text-muted',
     ];
     $classes = $variants[$status] ?? $variants['pending'];
 

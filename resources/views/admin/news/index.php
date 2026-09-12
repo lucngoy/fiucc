@@ -19,11 +19,11 @@ $activeFilterQuery = array_filter([
 
 $publishBadge = static function (?string $publishedAt): string {
     if ($publishedAt === null) {
-        return '<span class="inline-flex items-center h-6 px-2.5 rounded-full bg-muted/15 text-muted text-label-md font-label-md">' . e(t('admin.news.status.draft')) . '</span>';
+        return '<span class="inline-flex items-center h-6 px-2.5 rounded-full bg-muted/[1%] text-muted text-label-md font-label-md">' . e(t('admin.news.status.draft')) . '</span>';
     }
 
     $isFuture = strtotime($publishedAt) > time();
-    $classes = $isFuture ? 'bg-gold/20 text-ink' : 'bg-success/15 text-success';
+    $classes = $isFuture ? 'bg-gold/20 text-ink' : 'bg-success/[4%] text-success';
     $label = $isFuture ? t('admin.news.status.scheduled') : t('admin.news.status.published');
 
     return '<span class="inline-flex items-center h-6 px-2.5 rounded-full ' . $classes . ' text-label-md font-label-md">' . e($label) . '</span>';

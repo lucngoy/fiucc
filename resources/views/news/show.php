@@ -16,13 +16,13 @@ $article ??= [];
 $related ??= [];
 
 $categoryBadge = static function (string $category): string {
-    return '<span class="inline-flex items-center h-7 px-3 rounded-full bg-white/15 text-white text-label-md font-label-md uppercase tracking-wide">'
+    return '<span class="inline-flex items-center h-7 px-3 rounded-full bg-ink/25 text-white text-label-md font-label-md uppercase tracking-wide">'
         . e(t('news.category.' . $category)) . '</span>';
 };
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-10 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="/news" class="hover:text-white transition-colors"><?= e(t('news.title')) ?></a>
@@ -31,7 +31,7 @@ $categoryBadge = static function (string $category): string {
         </nav>
         <div class="flex flex-wrap items-center gap-3 mb-4">
             <?= $categoryBadge($article['category']) ?>
-            <span class="text-body-sm text-white/70"><?= e(local_date($article['published_at'])) ?></span>
+            <span class="text-body-sm text-white/90"><?= e(local_date($article['published_at'])) ?></span>
         </div>
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl"><?= e($article['title']) ?></h1>
     </div>

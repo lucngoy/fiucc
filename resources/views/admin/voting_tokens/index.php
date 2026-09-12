@@ -48,9 +48,9 @@ $statusFor = static function (array $row) use ($maxAttempts, $now): string {
 
 $statusBadge = static function (string $status): string {
     $variants = [
-        'not_issued'  => 'bg-muted/15 text-muted',
+        'not_issued'  => 'bg-muted/[1%] text-muted',
         'send_failed' => 'bg-danger/10 text-danger',
-        'sent'        => 'bg-success/15 text-success',
+        'sent'        => 'bg-success/[4%] text-success',
         'expired'     => 'bg-gold/20 text-ink',
         'locked'      => 'bg-danger/10 text-danger',
         'voted'       => 'bg-primary/10 text-primary',

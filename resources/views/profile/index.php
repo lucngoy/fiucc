@@ -51,7 +51,7 @@ if ($member['status_type'] !== 'student') {
         <?php if (!empty($member['photo'])): ?>
             <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 shrink-0 rounded-full object-cover border border-border">
         <?php else: ?>
-            <span class="h-16 w-16 shrink-0 rounded-full bg-primary/15 text-primary flex items-center justify-center font-headline-sm text-headline-sm">
+            <span class="h-16 w-16 shrink-0 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-headline-sm text-headline-sm">
                 <?= e($initials) ?>
             </span>
         <?php endif; ?>

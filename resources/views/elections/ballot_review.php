@@ -20,7 +20,7 @@ $electionId = (int) $election['id'];
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <h1 class="font-headline-lg text-headline-lg text-white"><?= e(t('elections.ballot.review_title')) ?></h1>
-        <p class="text-body-md text-white/80 mt-2 max-w-2xl"><?= e(t('elections.ballot.review_intro')) ?></p>
+        <p class="text-body-md text-white/90 mt-2 max-w-2xl"><?= e(t('elections.ballot.review_intro')) ?></p>
     </div>
 </div>
 

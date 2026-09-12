@@ -11,7 +11,7 @@ $mandates ??= [];
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="/community" class="hover:text-white transition-colors"><?= e(t('community.title')) ?></a>
@@ -21,7 +21,7 @@ $mandates ??= [];
             <span class="text-white"><?= e(t('government.archives.title')) ?></span>
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e(t('government.archives.title')) ?></h1>
-        <p class="text-body-lg text-white/80 max-w-2xl"><?= e(t('government.archives.subtitle')) ?></p>
+        <p class="text-body-lg text-white/90 max-w-2xl"><?= e(t('government.archives.subtitle')) ?></p>
     </div>
 
     <?php if ($mandates !== []): ?>
@@ -31,7 +31,7 @@ $mandates ??= [];
                     <i class="fa-solid fa-clock-rotate-left text-white/70 text-xl" aria-hidden="true"></i>
                     <div>
                         <p class="font-headline-sm text-headline-sm text-white"><?= e(t('government.archives.stat_value', ['count' => count($mandates)])) ?></p>
-                        <p class="text-label-md font-label-md text-white/70"><?= e(t('government.archives.stat_caption')) ?></p>
+                        <p class="text-label-md font-label-md text-white/90"><?= e(t('government.archives.stat_caption')) ?></p>
                     </div>
                 </div>
             </div>
@@ -68,12 +68,12 @@ $mandates ??= [];
                             <?php if (!empty($member['photo'])): ?>
                                 <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="w-full aspect-square object-cover">
                             <?php else: ?>
-                                <span class="w-full aspect-square bg-primary/15 text-primary flex items-center justify-center font-headline-sm text-headline-sm">
+                                <span class="w-full aspect-square bg-primary/[4%] text-primary flex items-center justify-center font-headline-sm text-headline-sm">
                                     <?= e(initials($member['display_name'])) ?>
                                 </span>
                             <?php endif; ?>
                             <div class="p-3">
-                                <span class="inline-flex items-center h-5 px-2 mb-1.5 rounded-full bg-primary/15 text-primary text-label-caps font-label-caps uppercase">
+                                <span class="inline-flex items-center h-5 px-2 mb-1.5 rounded-full bg-primary/[4%] text-primary text-label-caps font-label-caps uppercase">
                                     <?= e($member['role']) ?>
                                 </span>
                                 <h3 class="font-label-lg text-label-lg text-ink mb-0.5"><?= e($member['display_name']) ?></h3>

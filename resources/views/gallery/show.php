@@ -27,7 +27,7 @@ $photos ??= [];
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/70 mb-6">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <a href="/gallery" class="hover:text-white transition-colors"><?= e(t('gallery.title')) ?></a>
@@ -36,12 +36,12 @@ $photos ??= [];
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e($album['title']) ?></h1>
         <?php if (!empty($album['description'])): ?>
-            <p class="text-body-lg text-white/80 max-w-2xl whitespace-pre-line"><?= e($album['description']) ?></p>
+            <p class="text-body-lg text-white/90 max-w-2xl whitespace-pre-line"><?= e($album['description']) ?></p>
         <?php endif; ?>
-        <p class="text-body-md text-white/70 mt-3"><?= e(t('gallery.detail.photo_count', ['count' => count($photos)])) ?></p>
+        <p class="text-body-md text-white/90 mt-3"><?= e(t('gallery.detail.photo_count', ['count' => count($photos)])) ?></p>
         <?php if (!empty($album['event_slug'])): ?>
             <a href="<?= e('/events/' . $album['event_slug']) ?>"
-               class="inline-flex items-center gap-2 mt-4 text-body-sm text-white/80 hover:text-white transition-colors">
+               class="inline-flex items-center gap-2 mt-4 text-body-sm text-white/90 hover:text-white transition-colors">
                 <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
                 <?= e(t('gallery.detail.view_event', ['title' => $album['event_title']])) ?>
             </a>
@@ -62,9 +62,19 @@ $photos ??= [];
         </div>
     <?php else: ?>
         <div class="columns-1 sm:columns-2 lg:columns-3 gap-4 md:gap-6 [column-fill:_balance]">
-            <?php foreach ($photos as $photo): ?>
-                <?php $thumb = $photo['thumbnail_path'] ?: $photo['image_path']; ?>
+            <?php foreach ($photos as $index => $photo): ?>
+                <?php
+                $thumb = $photo['thumbnail_path'] ?: $photo['image_path'];
+                // Nom accessible du lien toujours présent, légende ou non —
+                // sans ça, une photo sans légende (alt="" sur l'image, aucun
+                // texte visible) n'a aucun nom pour qui navigue au clavier ou
+                // au lecteur d'écran (trouvé par le scan WCAG, FIUCC-76).
+                $accessibleName = $photo['caption'] !== null && $photo['caption'] !== ''
+                    ? $photo['caption']
+                    : t('gallery.detail.photo_number', ['number' => (string) ($index + 1)]);
+                ?>
                 <a href="<?= e('/uploads/' . $photo['image_path']) ?>" target="_blank" rel="noopener"
+                   aria-label="<?= e($accessibleName) ?>"
                    data-lightbox-trigger data-full="<?= e('/uploads/' . $photo['image_path']) ?>" data-caption="<?= e((string) ($photo['caption'] ?? '')) ?>"
                    class="group block mb-4 md:mb-6 break-inside-avoid rounded-card overflow-hidden bg-surface border border-border hover:shadow-card transition-shadow cursor-zoom-in">
                     <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e((string) ($photo['caption'] ?? '')) ?>"
