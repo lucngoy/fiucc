@@ -2,11 +2,15 @@
 /**
  * Footer institutionnel — 4 colonnes (FIUCC-22) : marque, liens rapides,
  * communauté, contact. Uniquement des routes déjà déclarées dans
- * routes/web.php — pas de contenu inventé (réseaux sociaux en lien inerte,
- * cahier des charges §40 ne fournit pas de handle réel).
+ * routes/web.php. Réseaux sociaux (FIUCC-89) : lien réel si WHATSAPP_GROUP_URL/
+ * INSTAGRAM_URL sont configurées (config/app.php), sinon lien inerte — le
+ * cahier des charges §40 ne fournit pas de handle réel, jamais une adresse
+ * inventée en attendant (voir CLAUDE.md, Manques connus).
  */
 $brandName ??= 'FIUCC';
 $year = date('Y');
+$whatsappUrl = \App\Core\Config::get('app.whatsapp_url');
+$instagramUrl = \App\Core\Config::get('app.instagram_url');
 ?>
 <footer class="w-full bg-white border-t border-border">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -21,6 +25,7 @@ $year = date('Y');
         <div class="flex flex-col gap-3">
             <h4 class="font-label-caps text-label-caps uppercase text-muted"><?= e(t('footer.quick_links')) ?></h4>
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
+                <li><a href="/new-at-final" class="hover:text-primary transition-colors"><?= e(t('footer.new_at_final')) ?></a></li>
                 <li><a href="/community" class="hover:text-primary transition-colors"><?= e(t('nav.community')) ?></a></li>
                 <li><a href="/events" class="hover:text-primary transition-colors"><?= e(t('nav.events')) ?></a></li>
                 <li><a href="/news" class="hover:text-primary transition-colors"><?= e(t('nav.news')) ?></a></li>
@@ -43,8 +48,8 @@ $year = date('Y');
         <div class="flex flex-col gap-3">
             <h4 class="font-label-caps text-label-caps uppercase text-muted"><?= e(t('footer.connect')) ?></h4>
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
-                <li><a href="#" class="hover:text-primary transition-colors"><?= e(t('footer.instagram')) ?></a></li>
-                <li><a href="#" class="hover:text-primary transition-colors"><?= e(t('footer.whatsapp')) ?></a></li>
+                <li><a href="<?= e($instagramUrl ?: '#') ?>" <?= $instagramUrl ? 'target="_blank" rel="noopener noreferrer"' : '' ?> class="hover:text-primary transition-colors"><?= e(t('footer.instagram')) ?></a></li>
+                <li><a href="<?= e($whatsappUrl ?: '#') ?>" <?= $whatsappUrl ? 'target="_blank" rel="noopener noreferrer"' : '' ?> class="hover:text-primary transition-colors"><?= e(t('footer.whatsapp')) ?></a></li>
                 <li><a href="/contact" class="hover:text-primary transition-colors"><?= e(t('footer.contact')) ?></a></li>
             </ul>
         </div>

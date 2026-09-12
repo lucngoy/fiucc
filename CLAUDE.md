@@ -254,6 +254,28 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
   deux écrans : à créer côté utilisateur, phase 2. Retirer cette entrée
   une fois les tickets créés et les écrans construits.
 
+- **Page contact.** `routes/web.php` déclare `GET/POST /contact` vers
+  `ContactController@index`/`@send`, mais ce contrôleur n'existe pas —
+  découvert en préparant FIUCC-89 (2026-09-12), le lien "Contact" du pied
+  de page (`footer.php`) y mène donc vers un 404. Pas de ticket Jira
+  existant pour cet écran : à créer côté utilisateur. En attendant, la
+  page "Nouveau à Final ?" (FIUCC-89) pointe vers `/community/government`
+  plutôt que `/contact` pour "une question avant de commencer" — un vrai
+  point de contact qui fonctionne aujourd'hui. Retirer cette entrée une
+  fois le ticket créé et l'écran construit.
+
+- **URLs WhatsApp et Instagram de la communauté.** Le pied de page et la
+  page "Nouveau à Final ?" (FIUCC-89) lisent `app.whatsapp_url`/
+  `app.instagram_url` (config/app.php, variables d'env
+  `WHATSAPP_GROUP_URL`/`INSTAGRAM_URL`) — absentes tant que personne ne
+  fournit les vraies URLs, décision déjà prise en FIUCC-22 ("le cahier des
+  charges §40 ne fournit pas de handle réel") et reconduite ici plutôt
+  qu'inventée. Tant qu'elles restent vides : les liens du pied de page
+  restent inertes (`#`, comportement inchangé), et l'étape "Rejoindre le
+  groupe" de la page onboarding pointe vers `/community/government` à la
+  place. Retirer cette entrée une fois les deux variables renseignées en
+  production.
+
 - **Image de partage (og:image) générique.** FIUCC-75 (SEO) pose le bloc
   Open Graph/Twitter Card dans `layouts/app.php`, avec un repli sur
   `/assets/images/fiucc-seal.png` (le sceau, 200×200) quand une page ne

@@ -59,7 +59,7 @@ foreach ($aboutPhotoCandidates as $candidate) {
 $hasAboutPhoto = $aboutPhotoPath !== null;
 
 $journeySteps = [
-    ['icon' => 'fa-solid fa-compass', 'label' => t('home.journey.step1_label'), 'title' => t('home.journey.step1_title'), 'body' => t('home.journey.step1_body')],
+    ['icon' => 'fa-solid fa-compass', 'label' => t('home.journey.step1_label'), 'title' => t('home.journey.step1_title'), 'body' => t('home.journey.step1_body'), 'href' => '/new-at-final'],
     ['icon' => 'fa-solid fa-user-plus', 'label' => t('home.journey.step2_label'), 'title' => t('home.journey.step2_title'), 'body' => t('home.journey.step2_body')],
     ['icon' => 'fa-solid fa-people-group', 'label' => t('home.journey.step3_label'), 'title' => t('home.journey.step3_title'), 'body' => t('home.journey.step3_body')],
     ['icon' => 'fa-solid fa-square-check', 'label' => t('home.journey.step4_label'), 'title' => t('home.journey.step4_title'), 'body' => t('home.journey.step4_body')],
@@ -246,14 +246,15 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5">
             <?php foreach ($journeySteps as $step): ?>
-                <div class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border">
+                <?php $tag = isset($step['href']) ? 'a' : 'div'; ?>
+                <<?= $tag ?><?= isset($step['href']) ? ' href="' . e($step['href']) . '"' : '' ?> class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border<?= isset($step['href']) ? ' hover:border-primary hover:shadow-card transition-all' : '' ?>">
                     <span class="h-12 w-12 rounded-full bg-primary/[4%] text-primary flex items-center justify-center mb-3">
                         <?= icon($step['icon'], 'text-lg') ?>
                     </span>
                     <p class="text-label-caps font-label-caps uppercase text-primary mb-1"><?= e($step['label']) ?></p>
                     <h3 class="font-headline-sm text-headline-sm text-ink mb-1"><?= e($step['title']) ?></h3>
                     <p class="text-body-sm text-muted"><?= e($step['body']) ?></p>
-                </div>
+                </<?= $tag ?>>
             <?php endforeach; ?>
         </div>
     </div>

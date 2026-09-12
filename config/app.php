@@ -20,4 +20,10 @@ return [
     // process de test lancé en CLI — un vrai conflit d'accès, pas
     // seulement un principe). Chemin relatif à BASE_PATH si non absolu.
     'log_path' => Env::get('LOG_PATH'),
+    // Réseaux sociaux de la communauté (footer, FIUCC-89 "Nouveau à Final ?")
+    // — absents (null) tant que personne ne fournit les vraies URLs, jamais
+    // une adresse inventée en attendant (cahier des charges §40 ne fournit
+    // pas de handle réel, voir CLAUDE.md, Manques connus).
+    'whatsapp_url'  => Env::get('WHATSAPP_GROUP_URL'),
+    'instagram_url' => Env::get('INSTAGRAM_URL'),
 ];
