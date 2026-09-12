@@ -236,23 +236,15 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
 
 ## Manques connus (tickets à créer)
 
-- **Tableau de bord admin.** `routes/admin.php` déclare `GET /admin` vers
-  `Admin\DashboardController@index`, mais ce contrôleur n'existe pas —
-  découvert en testant FIUCC-61 (2026-09-08). La route 404 silencieusement ;
-  le reste du back office n'est pas affecté, chaque section a son propre
-  contrôleur. Pas de ticket Jira existant pour cet écran : à créer côté
-  utilisateur, phase 2 (FIUCC-8). Retirer cette entrée une fois le ticket
-  créé et l'écran construit.
-
 - **Emails et logs admin.** `routes/admin.php` déclare aussi `GET
   /admin/emails` vers `Admin\EmailController@index` et `GET /admin/logs`
   vers `Admin\LogController@index` — ni l'un ni l'autre n'existe,
-  découvert en revue FIUCC-77 (2026-09-12). Même situation que le tableau
-  de bord ci-dessus : route 404 silencieusement, aucun lien dans la
-  sidebar (`layouts/admin.php` ne référence que les sections réellement
-  construites), rien d'autre affecté. Pas de ticket Jira existant pour ces
-  deux écrans : à créer côté utilisateur, phase 2. Retirer cette entrée
-  une fois les tickets créés et les écrans construits.
+  découvert en revue FIUCC-77 (2026-09-12). Même situation qu'avait le
+  tableau de bord avant FIUCC-23 : route 404 silencieusement, aucun lien
+  dans la sidebar (`layouts/admin.php` ne référence que les sections
+  réellement construites), rien d'autre affecté. Pas de ticket Jira
+  existant pour ces deux écrans : à créer côté utilisateur, phase 2.
+  Retirer cette entrée une fois les tickets créés et les écrans construits.
 
 - **Page contact.** `routes/web.php` déclare `GET/POST /contact` vers
   `ContactController@index`/`@send`, mais ce contrôleur n'existe pas —
