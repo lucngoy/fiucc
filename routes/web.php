@@ -57,6 +57,8 @@ return [
     ['POST', '/profile',                       'ProfileController@update',        ['auth']],
     ['GET',  '/profile/privacy',               'ProfileController@privacy',       ['auth']],
     ['POST', '/profile/privacy',               'ProfileController@updatePrivacy', ['auth']],
+    ['GET',  '/profile/mentor',                'ProfileController@mentor',        ['auth']],
+    ['POST', '/profile/mentor',                'ProfileController@updateMentor',  ['auth']],
 
     // Réseau et alumni (phase 6) — exposent d'autres membres : ['validated'],
     // jamais ['auth'] seul (voir commentaire d'en-tête, FIUCC-35).

@@ -18,6 +18,9 @@ use RuntimeException;
  * Confidentialité (FIUCC-83) : privacy()/updatePrivacy() ci-dessous, un
  * formulaire et un chemin d'écriture séparés d'update() — voir
  * Member::updateProfile()/updatePrivacySettings().
+ * Déclaration de mentor (FIUCC-87) : mentor()/updateMentor() ci-dessous,
+ * réservé aux alumni (section "Mentorat & partenariats" du cahier —
+ * "un alumni peut se déclarer mentor").
  */
 final class ProfileController extends Controller
 {
@@ -174,6 +177,90 @@ final class ProfileController extends Controller
         ActivityLog::record($userId, 'privacy_updated', 'member', (int) $member['id']);
 
         $this->redirect('/profile/privacy?notice=updated');
+    }
+
+    /**
+     * Réservé aux alumni (cahier : "un alumni peut se déclarer mentor") —
+     * un student ou un honorary est redirigé vers son profil, jamais un
+     * formulaire qu'il ne peut pas légitimement soumettre.
+     */
+    public function mentor(): void
+    {
+        $member = Member::findFullByUserId((int) $_SESSION['user_id']);
+
+        if ($member === null || $member['status_type'] !== 'alumni') {
+            $this->redirect('/profile');
+            return;
+        }
+
+        $settings = Member::mentorSettings((int) $member['id']);
+
+        if ($settings === null) {
+            $this->redirect('/profile');
+            return;
+        }
+
+        $this->view('profile.mentor', [
+            'title'    => t('profile.mentor.title'),
+            'settings' => $settings,
+            'errors'   => [],
+        ]);
+    }
+
+    public function updateMentor(): void
+    {
+        $userId = (int) $_SESSION['user_id'];
+        $member = Member::findFullByUserId($userId);
+
+        if ($member === null || $member['status_type'] !== 'alumni') {
+            $this->redirect('/profile');
+            return;
+        }
+
+        $isMentor = ($_POST['is_mentor'] ?? '') === '1' ? 1 : 0;
+        $mentorField = trim((string) ($_POST['mentor_field'] ?? ''));
+        $mentorAvailability = trim((string) ($_POST['mentor_availability'] ?? ''));
+        $mentorBio = trim((string) ($_POST['mentor_bio'] ?? ''));
+
+        // Un mentor sans domaine ni disponibilité n'aide pas un étudiant à
+        // choisir — obligatoires seulement si is_mentor est activé, jamais
+        // pour simplement désactiver la déclaration.
+        $errors = [];
+        if ($isMentor === 1 && $mentorField === '') {
+            $errors['mentor_field'] = t('validation.mentor_field_required');
+        }
+        if ($isMentor === 1 && $mentorAvailability === '') {
+            $errors['mentor_availability'] = t('validation.mentor_availability_required');
+        }
+
+        if ($errors !== []) {
+            $currentSettings = Member::mentorSettings((int) $member['id']);
+
+            $this->view('profile.mentor', [
+                'title'    => t('profile.mentor.title'),
+                'settings' => [
+                    'is_mentor'           => $isMentor,
+                    'mentor_field'        => $mentorField,
+                    'mentor_availability' => $mentorAvailability,
+                    'mentor_bio'          => $mentorBio,
+                    'show_email'          => (int) ($currentSettings['show_email'] ?? 0),
+                    'show_phone'          => (int) ($currentSettings['show_phone'] ?? 0),
+                ],
+                'errors' => $errors,
+            ]);
+            return;
+        }
+
+        Member::updateMentorSettings((int) $member['id'], [
+            'is_mentor'           => $isMentor,
+            'mentor_field'        => $mentorField !== '' ? $mentorField : null,
+            'mentor_availability' => $mentorAvailability !== '' ? $mentorAvailability : null,
+            'mentor_bio'          => $mentorBio !== '' ? $mentorBio : null,
+        ]);
+
+        ActivityLog::record($userId, 'mentor_settings_updated', 'member', (int) $member['id']);
+
+        $this->redirect('/profile/mentor?notice=updated');
     }
 
     private function showForm(array $member, array $input, array $errors): void

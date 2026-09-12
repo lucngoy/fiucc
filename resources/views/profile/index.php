@@ -48,7 +48,7 @@ if ($member['status_type'] !== 'student') {
         <?= component('alert', ['type' => 'info', 'message' => $notice]) ?>
     <?php endif; ?>
 
-    <div class="bg-white rounded-card border border-border shadow-card p-6 flex flex-col md:flex-row md:items-center gap-5">
+    <div class="bg-white rounded-card border border-border shadow-card p-6 flex flex-col md:flex-row md:flex-wrap md:items-center gap-5">
         <div class="flex items-center gap-5">
             <?php if (!empty($member['photo'])): ?>
                 <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 shrink-0 rounded-full object-cover border border-border">
@@ -66,6 +66,9 @@ if ($member['status_type'] !== 'student') {
             </div>
         </div>
         <div class="flex flex-wrap items-center gap-2 md:shrink-0 md:ml-auto">
+            <?php if ($member['status_type'] === 'alumni'): ?>
+                <?= component('button', ['label' => t('profile.mentor_link'), 'variant' => 'secondary', 'href' => '/profile/mentor']) ?>
+            <?php endif; ?>
             <?= component('button', ['label' => t('profile.privacy_link'), 'variant' => 'secondary', 'href' => '/profile/privacy']) ?>
             <?= component('button', ['label' => t('profile.edit_profile'), 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
         </div>

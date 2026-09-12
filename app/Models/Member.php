@@ -353,6 +353,48 @@ final class Member extends Model
     }
 
     /**
+     * Déclaration de mentor (FIUCC-87, section "Mentorat & partenariats"
+     * du cahier — "un alumni peut se déclarer mentor (domaine,
+     * disponibilité, mode de contact)"). show_email/show_phone lus ici en
+     * lecture seule (le "mode de contact") : leur écriture reste celle de
+     * updatePrivacySettings() ci-dessus, un seul chemin d'écriture par
+     * donnée — cet écran affiche l'état actuel avec un lien vers
+     * /profile/privacy pour le changer, il ne le duplique pas.
+     *
+     * @return array{is_mentor: int, mentor_field: ?string, mentor_availability: ?string, mentor_bio: ?string, show_email: int, show_phone: int}|null
+     */
+    public static function mentorSettings(int $memberId): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT is_mentor, mentor_field, mentor_availability, mentor_bio, show_email, show_phone
+             FROM members WHERE id = :id LIMIT 1'
+        );
+        $stmt->execute(['id' => $memberId]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    /**
+     * @param array{is_mentor: int, mentor_field: ?string, mentor_availability: ?string, mentor_bio: ?string} $data
+     */
+    public static function updateMentorSettings(int $memberId, array $data): void
+    {
+        $stmt = static::db()->prepare(
+            'UPDATE members SET is_mentor = :is_mentor, mentor_field = :mentor_field,
+                 mentor_availability = :mentor_availability, mentor_bio = :mentor_bio
+             WHERE id = :id'
+        );
+        $stmt->execute([
+            'is_mentor'           => $data['is_mentor'],
+            'mentor_field'        => $data['mentor_field'],
+            'mentor_availability' => $data['mentor_availability'],
+            'mentor_bio'          => $data['mentor_bio'],
+            'id'                  => $memberId,
+        ]);
+    }
+
+    /**
      * Colonnes de tri autorisées pour l'admin (section 24 du cahier des
      * charges) — whitelist plutôt qu'une colonne prise telle quelle dans la
      * query string, qui permettrait d'injecter n'importe quoi dans l'ORDER BY.
