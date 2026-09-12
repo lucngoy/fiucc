@@ -1,0 +1,6 @@
+# Aucune exécution de script dans le dossier des uploads (section 35)
+php_flag engine off
+AddType text/plain .php .phtml .php3 .php4 .php5 .php7 .phps .cgi .pl .py .sh
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|cgi|pl|py|sh|htaccess)$">
+    Require all denied
+</FilesMatch>

@@ -12,8 +12,22 @@
 /.phpunit.cache/
 /.phpunit.result.cache
 
-# Uploads : le contenu ne va JAMAIS dans git (photos de membres, données perso)
-/public/uploads/*
+# Uploads : le contenu ne va JAMAIS dans git (photos de membres, données perso).
+# /public/uploads/* ignorerait aussi les sous-dossiers eux-mêmes (git ne
+# descend pas dans un dossier ignoré pour appliquer une négation plus bas) —
+# chaque sous-dossier d'upload est donc listé explicitement, comme pour
+# storage/ ci-dessous. Une nouvelle catégorie d'upload doit ajouter sa
+# propre ligne ici (FIUCC-81, découvert en préparant le handoff : sans ça,
+# public/uploads/.htaccess — qui bloque toute exécution PHP dans ce dossier,
+# règle de sécurité non négociable — n'était pas versionné, ni les dossiers
+# eux-mêmes : un clone frais n'avait aucun de ces dossiers).
+/public/uploads/candidates/*
+/public/uploads/documents/*
+/public/uploads/events/*
+/public/uploads/gallery/*
+/public/uploads/members/*
+/public/uploads/news/*
+/public/uploads/partners/*
 !/public/uploads/**/.gitkeep
 
 # Stockage runtime
