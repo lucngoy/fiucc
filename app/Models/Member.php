@@ -7,6 +7,8 @@ use App\Core\Model;
 
 final class Member extends Model
 {
+    private const DIRECTORY_PER_PAGE = 20;
+
     public static function studentIdExists(string $studentId): bool
     {
         $stmt = static::db()->prepare('SELECT 1 FROM members WHERE student_id = :student_id LIMIT 1');
@@ -440,6 +442,116 @@ final class Member extends Model
         );
 
         return $stmt->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Options des filtres de l'annuaire (FIUCC-82), scopées à is_public = 1
+     * — jamais les valeurs de distinctFaculties() ci-dessus (non scopée,
+     * réservée à l'admin) : une faculté ou une ville qui n'existe que chez
+     * des membres restés privés ne doit pas apparaître dans un menu, ça
+     * révélerait indirectement qu'au moins un membre privé la partage.
+     *
+     * @return array{faculties: array<int, string>, cities: array<int, string>, arrival_years: array<int, int>}
+     */
+    public static function directoryFilterOptions(): array
+    {
+        $base = "FROM members WHERE status = 'validated' AND is_public = 1";
+
+        $faculties = static::db()
+            ->query("SELECT DISTINCT faculty {$base} AND faculty IS NOT NULL AND faculty != '' ORDER BY faculty ASC")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $cities = static::db()
+            ->query("SELECT DISTINCT city_of_origin {$base} AND city_of_origin IS NOT NULL AND city_of_origin != '' ORDER BY city_of_origin ASC")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        $arrivalYears = static::db()
+            ->query("SELECT DISTINCT arrival_year {$base} AND arrival_year IS NOT NULL ORDER BY arrival_year DESC")
+            ->fetchAll(\PDO::FETCH_COLUMN);
+
+        return [
+            'faculties'     => $faculties,
+            'cities'        => $cities,
+            'arrival_years' => array_map('intval', $arrivalYears),
+        ];
+    }
+
+    /**
+     * Annuaire public (FIUCC-82, section Annuaire des membres du cahier) :
+     * "profil public simplifié : prénom, nom, faculté, année, photo,
+     * réseaux sociaux" — exactement ces champs, rien de plus. email/phone
+     * n'y figurent délibérément pas : show_email/show_phone existent pour
+     * une page de profil individuel (FIUCC-84, pas encore construite), pas
+     * pour cette liste — ne pas anticiper dessus maintenant (CLAUDE.md).
+     *
+     * is_public = 1 filtre l'INCLUSION même dans la liste : un membre qui
+     * n'a pas opté n'apparaît pas du tout, pas même son nom — c'est la
+     * seule redaction nécessaire ici, portée par le WHERE plutôt que par
+     * un filtre après coup côté PHP ou vue (même discipline que CASE WHEN
+     * dans Candidate::publicListForElection(), FIUCC-63, pour la même
+     * raison : qu'aucun futur appelant ne puisse fuiter en oubliant un
+     * contrôle). instagram/whatsapp ne sont pas rédigés séparément : une
+     * fois is_public = 1, ils font partie du "profil public simplifié" que
+     * le membre a accepté de montrer, sans bascule propre dans le schéma.
+     *
+     * student/alumni/honorary tous inclus : le cahier dit que les alumni
+     * "conservent... l'accès à l'annuaire" sans les exclure d'y apparaître,
+     * et l'esprit réseau de la phase 6 est justement de garder le contact
+     * au-delà de la scolarité.
+     *
+     * @param array{search?: string, faculty?: string, city?: string, arrival_year?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function directoryList(array $filters, int $page, int $perPage = self::DIRECTORY_PER_PAGE): array
+    {
+        $conditions = ["m.status = 'validated'", 'm.is_public = 1'];
+        $params = [];
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $conditions[] = 'm.full_name LIKE :search';
+            $params['search'] = '%' . $search . '%';
+        }
+
+        $faculty = trim((string) ($filters['faculty'] ?? ''));
+        if ($faculty !== '') {
+            $conditions[] = 'm.faculty = :faculty';
+            $params['faculty'] = $faculty;
+        }
+
+        $city = trim((string) ($filters['city'] ?? ''));
+        if ($city !== '') {
+            $conditions[] = 'm.city_of_origin = :city';
+            $params['city'] = $city;
+        }
+
+        $arrivalYear = trim((string) ($filters['arrival_year'] ?? ''));
+        if ($arrivalYear !== '') {
+            $conditions[] = 'm.arrival_year = :arrival_year';
+            $params['arrival_year'] = (int) $arrivalYear;
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+
+        $countStmt = static::db()->prepare("SELECT COUNT(*) FROM members m {$where}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        // LIMIT/OFFSET interpolés, pas liés — mêmes raisons qu'Event::
+        // publicList() : PDO::ATTR_EMULATE_PREPARES à false, $page/$perPage
+        // typés int (strict_types=1).
+        $offset = ($page - 1) * $perPage;
+        $stmt = static::db()->prepare(
+            "SELECT m.id, m.full_name, m.faculty, m.year, m.arrival_year, m.city_of_origin, m.photo,
+                    m.instagram, m.whatsapp
+             FROM members m
+             {$where}
+             ORDER BY m.full_name ASC
+             LIMIT {$perPage} OFFSET {$offset}"
+        );
+        $stmt->execute($params);
+
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
     }
 
     /**
