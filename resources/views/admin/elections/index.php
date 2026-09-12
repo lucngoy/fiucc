@@ -101,10 +101,10 @@ $paginationBase = '/admin/elections?' . ($activeFilterQuery !== []
                     </tr>
                 <?php else: ?>
                     <?php foreach ($elections as $election): ?>
-                        <tr class="border-b border-border last:border-0 align-top hover:bg-surface transition-colors cursor-pointer"
-                            onclick="window.location='/admin/elections/<?= e((string) $election['id']) ?>'">
+                        <tr class="border-b border-border last:border-0 align-top hover:bg-surface transition-colors">
                             <td class="p-3">
-                                <p class="font-label-lg text-label-lg text-ink"><?= e($election['title']) ?></p>
+                                <a href="<?= e('/admin/elections/' . $election['id']) ?>"
+                                   class="font-label-lg text-label-lg text-ink hover:text-primary hover:underline"><?= e($election['title']) ?></a>
                             </td>
                             <td class="p-3 text-body-sm text-ink">
                                 <?= e(local_date($election['start_at'])) ?> — <?= e(local_date($election['end_at'])) ?>

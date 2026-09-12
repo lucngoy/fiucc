@@ -65,5 +65,9 @@ return [
     // Ralentissement progressif — comptes membre, par (compte, IP).
     'member_login_throttle_step_seconds' => (int) Env::get('MEMBER_LOGIN_THROTTLE_STEP_SECONDS', 5),
     'member_login_throttle_max_seconds'  => (int) Env::get('MEMBER_LOGIN_THROTTLE_MAX_SECONDS', 30),
-    'password_min_length' => (int) Env::get('PASSWORD_MIN_LENGTH', 6),
+    // 8, pas 6 (FIUCC-77) : plancher NIST SP 800-63B pour un mot de passe
+    // sans exigence de composition — un compte membre donne accès à des
+    // données personnelles (annuaire) et, pour un électeur, à un jeton de
+    // vote envoyé par email au même compte.
+    'password_min_length' => (int) Env::get('PASSWORD_MIN_LENGTH', 8),
 ];

@@ -108,7 +108,7 @@ final class RegistrationController extends Controller
             'title'             => t('census.title'),
             'faculties'         => Config::get('registration.faculties', []),
             'studyLevels'       => Config::get('registration.study_levels', []),
-            'passwordMinLength' => Config::get('security.password_min_length', 10),
+            'passwordMinLength' => Config::get('security.password_min_length', 8),
             'old'               => $old,
             'errors'            => $errors,
         ]);
@@ -145,7 +145,7 @@ final class RegistrationController extends Controller
         $faculties = Config::get('registration.faculties', []);
         $studyLevels = Config::get('registration.study_levels', []);
         $allowedDomains = Config::get('registration.allowed_email_domains', []);
-        $passwordMinLength = (int) Config::get('security.password_min_length', 10);
+        $passwordMinLength = (int) Config::get('security.password_min_length', 8);
 
         if ($input['full_name'] === '') {
             $errors['full_name'] = t('validation.full_name_required');
