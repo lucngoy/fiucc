@@ -229,6 +229,16 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
   utilisateur, phase 2 (FIUCC-8). Retirer cette entrée une fois le ticket
   créé et l'écran construit.
 
+- **Emails et logs admin.** `routes/admin.php` déclare aussi `GET
+  /admin/emails` vers `Admin\EmailController@index` et `GET /admin/logs`
+  vers `Admin\LogController@index` — ni l'un ni l'autre n'existe,
+  découvert en revue FIUCC-77 (2026-09-12). Même situation que le tableau
+  de bord ci-dessus : route 404 silencieusement, aucun lien dans la
+  sidebar (`layouts/admin.php` ne référence que les sections réellement
+  construites), rien d'autre affecté. Pas de ticket Jira existant pour ces
+  deux écrans : à créer côté utilisateur, phase 2. Retirer cette entrée
+  une fois les tickets créés et les écrans construits.
+
 - **Image de partage (og:image) générique.** FIUCC-75 (SEO) pose le bloc
   Open Graph/Twitter Card dans `layouts/app.php`, avec un repli sur
   `/assets/images/fiucc-seal.png` (le sceau, 200×200) quand une page ne
