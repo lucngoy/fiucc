@@ -44,7 +44,7 @@ $errorMessages = [
         <?php if ($authorized): ?>
             <div class="flex items-start gap-3">
                 <span class="h-11 w-11 rounded-full bg-success/[4%] text-success flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                    <?= icon('circle-check') ?>
                 </span>
                 <div>
                     <p class="font-label-lg text-label-lg text-ink"><?= e(t('elections.authenticate.authorized_title')) ?></p>

@@ -16,17 +16,17 @@
     <div class="relative flex flex-col items-center gap-3 p-2 sm:p-4">
         <button type="button" id="lightbox-close" aria-label="<?= e(t('gallery.lightbox.close')) ?>"
             class="absolute -top-3 -right-3 sm:-top-2 sm:-right-2 z-20 h-10 w-10 rounded-full bg-ink/70 hover:bg-ink text-white flex items-center justify-center transition-colors">
-            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            <?= icon('xmark') ?>
         </button>
         <div class="relative w-full flex items-center justify-center">
             <button type="button" id="lightbox-prev" aria-label="<?= e(t('gallery.lightbox.previous')) ?>"
                 class="absolute left-1 sm:left-2 z-10 h-10 w-10 rounded-full bg-ink/50 hover:bg-ink/70 text-white flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+                <?= icon('chevron-left') ?>
             </button>
             <img id="lightbox-image" src="" alt="" class="max-h-[75vh] w-auto max-w-full rounded-control object-contain">
             <button type="button" id="lightbox-next" aria-label="<?= e(t('gallery.lightbox.next')) ?>"
                 class="absolute right-1 sm:right-2 z-10 h-10 w-10 rounded-full bg-ink/50 hover:bg-ink/70 text-white flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                <?= icon('chevron-right') ?>
             </button>
         </div>
         <div class="flex flex-col items-center gap-1 text-center px-8">

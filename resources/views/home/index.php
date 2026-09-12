@@ -90,14 +90,14 @@ $eventDateBadge = static function (string $startDate): string {
  */
 $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text-3xl'): string {
     return '<div class="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
-        . '<i class="' . e($iconClass) . ' ' . e($iconSize) . ' text-primary/30" aria-hidden="true"></i>'
+        . icon($iconClass, $iconSize . ' text-primary/30')
         . '</div>';
 };
 ?>
 <div class="w-full bg-primary">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-24 text-center flex flex-col items-center">
         <span class="inline-flex items-center gap-2 h-8 px-4 rounded-full bg-gold text-ink text-label-md font-label-md mb-6">
-            <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+            <?= icon('graduation-cap') ?>
             <?= e(t('home.hero.badge')) ?>
         </span>
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-4"><?= e(t('home.hero.title')) ?></h1>
@@ -136,7 +136,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             ?>
             <?php foreach ($statItems as $stat): ?>
                 <div class="flex flex-col border border-border items-center text-center gap-2 p-4 rounded-card bg-surface">
-                    <i class="<?= e($stat['icon']) ?> text-primary text-2xl" aria-hidden="true"></i>
+                    <?= icon($stat['icon'], 'text-primary text-2xl') ?>
                     <span class="font-headline-lg text-headline-lg text-primary"><?= e($stat['value']) ?></span>
                     <span class="text-label-md font-label-md text-muted"><?= e($stat['caption']) ?></span>
                 </div>
@@ -158,7 +158,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             <?php endif; ?>
             <div>
                 <p class="inline-flex items-center gap-2 font-label-caps text-label-caps uppercase text-primary tracking-wider mb-4">
-                    <i class="fa-solid fa-flag text-xs" aria-hidden="true"></i>
+                    <?= icon('flag', 'text-xs') ?>
                     <?= e(t('home.about.eyebrow')) ?>
                 </p>
                 <h2 class="font-headline-md text-headline-md text-ink mb-5"><?= e(t('home.about.title')) ?></h2>
@@ -167,11 +167,11 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
                 <div class="flex flex-wrap items-center gap-6">
                     <a href="/community" class="group inline-flex items-center gap-2 text-primary font-label-lg text-label-lg font-semibold hover:underline">
                         <span><?= e(t('home.about.cta')) ?></span>
-                        <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform" aria-hidden="true"></i>
+                        <?= icon('arrow-right', 'text-xs group-hover:translate-x-1 transition-transform') ?>
                     </a>
                     <span class="text-border" aria-hidden="true">•</span>
                     <a href="/community/government" class="inline-flex items-center gap-2 text-muted hover:text-ink font-label-lg text-label-lg transition-colors">
-                        <i class="fa-solid fa-gavel text-xs" aria-hidden="true"></i>
+                        <?= icon('gavel', 'text-xs') ?>
                         <span><?= e(t('home.about.constitution')) ?></span>
                     </a>
                 </div>
@@ -215,7 +215,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
                         <div class="p-6 flex flex-col flex-grow">
                             <?php if (!empty($event['location'])): ?>
                                 <div class="flex items-center gap-1.5 text-muted text-label-md font-label-md mb-2">
-                                    <i class="fa-solid fa-location-dot text-primary text-xs" aria-hidden="true"></i>
+                                    <?= icon('location-dot', 'text-primary text-xs') ?>
                                     <span><?= e($event['location']) ?></span>
                                 </div>
                             <?php endif; ?>
@@ -227,7 +227,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
                             <?php endif; ?>
                             <a href="<?= e('/events/' . $event['slug']) ?>" class="inline-flex items-center gap-1 text-primary font-label-lg text-label-lg font-semibold group-hover:underline mt-auto">
                                 <span><?= e(t('home.events.view')) ?></span>
-                                <i class="fa-solid fa-chevron-right text-xs" aria-hidden="true"></i>
+                                <?= icon('chevron-right', 'text-xs') ?>
                             </a>
                         </div>
                     </div>
@@ -248,7 +248,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
             <?php foreach ($journeySteps as $step): ?>
                 <div class="flex flex-col items-center text-center p-5 rounded-card bg-white border border-border">
                     <span class="h-12 w-12 rounded-full bg-primary/[4%] text-primary flex items-center justify-center mb-3">
-                        <i class="<?= e($step['icon']) ?> text-lg" aria-hidden="true"></i>
+                        <?= icon($step['icon'], 'text-lg') ?>
                     </span>
                     <p class="text-label-caps font-label-caps uppercase text-primary mb-1"><?= e($step['label']) ?></p>
                     <h3 class="font-headline-sm text-headline-sm text-ink mb-1"><?= e($step['title']) ?></h3>
@@ -351,7 +351,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
                         <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e($photo['caption'] ?? $photo['event_title']) ?>"
                              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                         <div class="absolute inset-0 bg-primary/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <i class="fa-solid fa-expand text-white text-2xl" aria-hidden="true"></i>
+                            <?= icon('expand', 'text-white text-2xl') ?>
                         </div>
                     </a>
                 <?php endforeach; ?>

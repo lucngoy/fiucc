@@ -67,7 +67,7 @@ $paginationBase = '/admin/documents?' . ($activeFilterQuery !== []
         <p class="text-body-md text-muted"><?= e(t('admin.documents.total', ['count' => $total])) ?></p>
         <a href="/admin/documents/create"
            class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <?= icon('plus') ?>
             <?= e(t('admin.documents.create_button')) ?>
         </a>
     </div>
@@ -121,7 +121,7 @@ $paginationBase = '/admin/documents?' . ($activeFilterQuery !== []
                             <td class="p-3">
                                 <div class="flex items-center gap-3">
                                     <span class="h-10 w-10 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                        <i class="fa-solid <?= e($fileIcon((string) $document['mime_type'])) ?>" aria-hidden="true"></i>
+                                        <?= icon($fileIcon((string) $document['mime_type'])) ?>
                                     </span>
                                     <p class="font-label-lg text-label-lg text-ink truncate"><?= e($document['title']) ?></p>
                                 </div>
@@ -133,14 +133,14 @@ $paginationBase = '/admin/documents?' . ($activeFilterQuery !== []
                                     <div class="relative group">
                                         <a href="/documents/<?= e((string) $documentId) ?>/download" aria-label="<?= e(t('admin.documents.action.download')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-download" aria-hidden="true"></i>
+                                            <?= icon('download') ?>
                                         </a>
                                         <?= $actionTooltip(t('admin.documents.action.download')) ?>
                                     </div>
                                     <div class="relative group">
                                         <a href="/admin/documents/<?= e((string) $documentId) ?>/edit" aria-label="<?= e(t('admin.documents.action.edit')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                            <?= icon('pen') ?>
                                         </a>
                                         <?= $actionTooltip(t('admin.documents.action.edit')) ?>
                                     </div>
@@ -148,7 +148,7 @@ $paginationBase = '/admin/documents?' . ($activeFilterQuery !== []
                                         <button type="button" data-open-dialog="delete-dialog-<?= e((string) $documentId) ?>"
                                             aria-label="<?= e(t('admin.documents.action.delete')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                            <?= icon('trash') ?>
                                         </button>
                                         <?= $actionTooltip(t('admin.documents.action.delete')) ?>
                                     </div>

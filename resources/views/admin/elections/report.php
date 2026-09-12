@@ -23,11 +23,11 @@ $electionId = (int) $election['id'];
     <div class="flex flex-col gap-3 print:hidden">
         <div class="flex items-center justify-between">
             <a href="/admin/elections/<?= e((string) $electionId) ?>/results" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors">
-                <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+                <?= icon('arrow-left') ?>
                 <?= e(t('admin.elections.report.back')) ?>
             </a>
             <button type="button" data-print-trigger class="inline-flex items-center gap-2 h-10 px-5 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-                <i class="fa-solid fa-print" aria-hidden="true"></i>
+                <?= icon('print') ?>
                 <?= e(t('admin.elections.report.print_cta')) ?>
             </button>
         </div>

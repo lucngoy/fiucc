@@ -110,6 +110,51 @@ if (!function_exists('meta_description')) {
     }
 }
 
+if (!function_exists('icon')) {
+    /**
+     * Icône SVG en ligne (FIUCC-78) — remplace la police web Font Awesome
+     * chargée depuis un CDN (mesuré : fa-solid-900.woff2 + fa-brands-400.woff2
+     * pèsent ~270 Ko à elles deux, pour un site qui n'utilise que 80 icônes
+     * précises sur les ~2 000 de la police complète). Les tracés viennent de
+     * resources/icons.php, extraits une fois du paquet Font Awesome Free —
+     * jamais un CDN ni une police à charger, aucune requête externe.
+     *
+     * $name accepte le nom nu ("arrow-left") ou l'ancien style de classe
+     * complet ("fa-solid fa-arrow-left"), pour ne jamais devoir retoucher un
+     * tableau de données qui stockait encore ce format — seul le point
+     * d'affichage change, pas la donnée.
+     *
+     * $class reçoit les classes Tailwind qui géraient jusqu'ici taille et
+     * couleur de l'icône (ex. "text-xl text-white/70") — le SVG hérite de
+     * currentColor et se dimensionne en 1em, exactement comme la police
+     * qu'il remplace, sans qu'aucun appelant n'ait à changer ses classes.
+     * Toujours aria-hidden : vérifié avant d'écrire cette fonction que les
+     * 134 usages d'icône existants du projet le sont déjà tous — aucune
+     * n'est le seul porteur d'un sens qu'un lecteur d'écran devrait annoncer.
+     */
+    function icon(string $name, string $class = ''): string
+    {
+        static $icons = null;
+
+        if ($icons === null) {
+            $icons = require BASE_PATH . '/resources/icons.php';
+        }
+
+        $slug = preg_replace('/^fa-(solid|brands|regular)\s+fa-/', '', trim($name));
+        $slug = preg_replace('/^fa-/', '', (string) $slug);
+
+        if (!isset($icons[$slug])) {
+            return '';
+        }
+
+        $data = $icons[$slug];
+        $classAttr = $class !== '' ? ' class="' . e($class) . '"' : '';
+
+        return '<svg' . $classAttr . ' viewBox="' . e($data['viewBox']) . '" width="1em" height="1em"'
+            . ' fill="currentColor" aria-hidden="true" focusable="false"><path d="' . e($data['path']) . '"/></svg>';
+    }
+}
+
 if (!function_exists('initials')) {
     /**
      * Repli d'avatar quand aucune photo n'est disponible (profil, page

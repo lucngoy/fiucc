@@ -41,7 +41,7 @@ $categoryBadge = static function (string $category): string {
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12">
     <div class="mx-auto flex flex-col gap-8">
         <a href="/news" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors self-start">
-            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            <?= icon('arrow-left') ?>
             <?= e(t('news.detail.back')) ?>
         </a>
 
@@ -69,7 +69,7 @@ $categoryBadge = static function (string $category): string {
                                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <?php else: ?>
                                 <div class="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">
-                                    <i class="fa-solid fa-newspaper text-2xl text-primary/30" aria-hidden="true"></i>
+                                    <?= icon('newspaper', 'text-2xl text-primary/30') ?>
                                 </div>
                             <?php endif; ?>
                         </div>

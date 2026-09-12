@@ -52,7 +52,7 @@ $paginationBase = '/admin/elections?' . ($activeFilterQuery !== []
         <p class="text-body-md text-muted"><?= e(t('admin.elections.total', ['count' => $total])) ?></p>
         <a href="/admin/elections/create"
            class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <?= icon('plus') ?>
             <?= e(t('admin.elections.create_button')) ?>
         </a>
     </div>

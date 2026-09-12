@@ -76,7 +76,7 @@ $noticeMap = [
 ?>
 <div class="flex flex-col gap-6">
     <a href="/admin/elections/<?= e((string) $electionId) ?>" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors self-start">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e($election['title']) ?>
     </a>
 
@@ -95,7 +95,7 @@ $noticeMap = [
                 <form method="POST" action="/admin/elections/<?= e((string) $electionId) ?>/tokens/send">
                     <?= csrf_field() ?>
                     <button type="submit" class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-                        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+                        <?= icon('paper-plane') ?>
                         <?= e(t('admin.voting_tokens.action.send')) ?>
                     </button>
                 </form>
@@ -138,7 +138,7 @@ $noticeMap = [
                                     <div class="flex justify-end">
                                         <button type="button" data-open-dialog="regen-dialog-<?= e((string) $memberId) ?>"
                                             class="h-9 px-3 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center gap-2 text-label-md font-label-md transition-colors">
-                                            <i class="fa-solid fa-rotate" aria-hidden="true"></i>
+                                            <?= icon('rotate') ?>
                                             <?= e(t('admin.voting_tokens.action.regenerate')) ?>
                                         </button>
                                     </div>

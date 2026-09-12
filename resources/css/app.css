@@ -2,6 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * Inter auto-hébergée (FIUCC-78) — remplace le <link> vers
+ * fonts.googleapis.com/fonts.gstatic.com. Trois raisons, dans l'ordre où
+ * elles ont compté : (1) mesuré, une requête tierce de moins et son
+ * DNS/connexion propres sur une 4G déjà chargée ; (2) supprime un point de
+ * défaillance externe — si Google Fonts est lent ou bloqué, le site n'en
+ * dépend plus du tout ; (3) chaque visiteur ne signale plus son adresse IP
+ * à Google au seul chargement de la page, avant même d'avoir consenti à
+ * quoi que ce soit.
+ *
+ * Un seul fichier variable (public/assets/fonts/inter-latin.woff2, 47 Ko)
+ * couvre tout l'intervalle 400-800 utilisé par ce projet — c'est
+ * exactement ce que Google Fonts servait déjà en coulisses pour cette même
+ * combinaison de graisses (vérifié : les 5 @font-face générés par
+ * fonts.googleapis.com pour 400/500/600/700/800 pointent tous vers LE
+ * MÊME fichier variable, seule la valeur font-weight déclarée change).
+ * Sous-ensemble "latin" uniquement (pas cyrillique/grec/vietnamien) : ce
+ * projet n'a que deux langues, français et anglais, toutes deux
+ * entièrement couvertes par ce sous-ensemble (y compris les caractères
+ * accentués et « œ »).
+ */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url('/assets/fonts/inter-latin.woff2') format('woff2-variations'), url('/assets/fonts/inter-latin.woff2') format('woff2');
+}
+
 @layer base {
   body {
     @apply bg-surface text-ink font-sans antialiased;

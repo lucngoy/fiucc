@@ -54,7 +54,7 @@ $paginationBase = '/admin/news?' . ($activeFilterQuery !== []
         <p class="text-body-md text-muted"><?= e(t('admin.news.total', ['count' => $total])) ?></p>
         <a href="/admin/news/create"
            class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <?= icon('plus') ?>
             <?= e(t('admin.news.create_button')) ?>
         </a>
     </div>
@@ -111,7 +111,7 @@ $paginationBase = '/admin/news?' . ($activeFilterQuery !== []
                                         <img src="<?= e('/uploads/' . $article['cover_image']) ?>" alt="" class="h-10 w-14 rounded-control object-cover border border-border shrink-0">
                                     <?php else: ?>
                                         <span class="h-10 w-14 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                            <i class="fa-solid fa-newspaper" aria-hidden="true"></i>
+                                            <?= icon('newspaper') ?>
                                         </span>
                                     <?php endif; ?>
                                     <p class="font-label-lg text-label-lg text-ink truncate"><?= e($article['title']) ?></p>
@@ -124,7 +124,7 @@ $paginationBase = '/admin/news?' . ($activeFilterQuery !== []
                                     <div class="relative group">
                                         <a href="/admin/news/<?= e((string) $articleId) ?>/edit" aria-label="<?= e(t('admin.news.action.edit')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                            <?= icon('pen') ?>
                                         </a>
                                         <?= $actionTooltip(t('admin.news.action.edit')) ?>
                                     </div>
@@ -132,7 +132,7 @@ $paginationBase = '/admin/news?' . ($activeFilterQuery !== []
                                         <button type="button" data-open-dialog="delete-dialog-<?= e((string) $articleId) ?>"
                                             aria-label="<?= e(t('admin.news.action.delete')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                            <?= icon('trash') ?>
                                         </button>
                                         <?= $actionTooltip(t('admin.news.action.delete')) ?>
                                     </div>

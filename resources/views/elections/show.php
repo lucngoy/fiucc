@@ -74,14 +74,14 @@ $eligibilityStyle = [
         <?php endif; ?>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl">
             <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
-                <i class="fa-solid fa-calendar-day text-gold text-lg" aria-hidden="true"></i>
+                <?= icon('calendar-day', 'text-gold text-lg') ?>
                 <div class="flex flex-col">
                     <span class="text-label-caps font-label-caps uppercase text-white"><?= e(t('elections.detail.starts')) ?></span>
                     <span class="text-label-md font-label-md text-white font-semibold"><?= e(local_date($election['start_at'])) ?></span>
                 </div>
             </div>
             <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
-                <i class="fa-solid fa-calendar-check text-gold text-lg" aria-hidden="true"></i>
+                <?= icon('calendar-check', 'text-gold text-lg') ?>
                 <div class="flex flex-col">
                     <span class="text-label-caps font-label-caps uppercase text-white"><?= e(t('elections.detail.ends')) ?></span>
                     <span class="text-label-md font-label-md text-white font-semibold"><?= e(local_date($election['end_at'])) ?></span>
@@ -97,7 +97,7 @@ $eligibilityStyle = [
     <?php if (in_array($window['state'], $countdownStaticStates, true)): ?>
         <div class="bg-surface rounded-card border border-border p-6 md:p-8 flex items-center gap-4">
             <span class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                <i class="fa-solid <?= e($countdownIcon) ?> text-xl" aria-hidden="true"></i>
+                <?= icon($countdownIcon, 'text-xl') ?>
             </span>
             <div>
                 <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('elections.countdown.' . $window['state'] . '.title')) ?></h2>
@@ -142,7 +142,7 @@ $eligibilityStyle = [
         <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('elections.eligibility.title')) ?></h2>
         <div class="flex items-start gap-4">
             <span class="h-11 w-11 rounded-full <?= e($eligibilityStyle['bg']) ?> <?= e($eligibilityStyle['text']) ?> flex items-center justify-center shrink-0">
-                <i class="fa-solid <?= e($eligibilityStyle['icon']) ?>" aria-hidden="true"></i>
+                <?= icon($eligibilityStyle['icon']) ?>
             </span>
             <div class="flex flex-col gap-3">
                 <div>
@@ -170,13 +170,13 @@ $eligibilityStyle = [
         <a href="<?= e('/elections/' . $election['id'] . '/candidates') ?>"
            class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
             <?= e(t('elections.detail.view_candidates')) ?>
-            <i class="fa-solid fa-arrow-right text-sm" aria-hidden="true"></i>
+            <?= icon('arrow-right', 'text-sm') ?>
         </a>
         <?php if (in_array($election['status'], ['closed', 'published'], true)): ?>
             <a href="<?= e('/elections/' . $election['id'] . '/results') ?>"
                class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control border border-border text-ink text-label-lg font-label-lg font-semibold hover:bg-surface transition-colors">
                 <?= e(t('elections.detail.view_results')) ?>
-                <i class="fa-solid fa-chart-simple text-sm" aria-hidden="true"></i>
+                <?= icon('chart-simple', 'text-sm') ?>
             </a>
         <?php endif; ?>
     </div>

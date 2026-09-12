@@ -53,7 +53,7 @@ $statusBadge = static function (string $state): string {
 
 $imagePlaceholder = static function (string $iconSize = 'text-3xl'): string {
     return '<div class="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
-        . '<i class="fa-solid fa-calendar-days ' . e($iconSize) . ' text-primary/30" aria-hidden="true"></i>'
+        . icon('calendar-days', $iconSize . ' text-primary/30')
         . '</div>';
 };
 
@@ -160,7 +160,7 @@ $registrationLine = static function (array $event, int $registered): string {
                 <h2 class="font-headline-lg text-headline-lg text-ink group-hover:text-primary transition-colors"><?= e($featured['title']) ?></h2>
                 <?php if (!empty($featured['location'])): ?>
                     <p class="flex items-center gap-2 text-body-md text-muted">
-                        <i class="fa-solid fa-location-dot text-primary" aria-hidden="true"></i>
+                        <?= icon('location-dot', 'text-primary') ?>
                         <?= e($featured['location']) ?>
                     </p>
                 <?php endif; ?>
@@ -208,7 +208,7 @@ $registrationLine = static function (array $event, int $registered): string {
                         <h3 class="font-headline-sm text-headline-sm text-ink mb-2 group-hover:text-primary transition-colors"><?= e($event['title']) ?></h3>
                         <?php if (!empty($event['location'])): ?>
                             <div class="flex items-center gap-1.5 text-muted text-label-md font-label-md mb-2">
-                                <i class="fa-solid fa-location-dot text-primary text-xs" aria-hidden="true"></i>
+                                <?= icon('location-dot', 'text-primary text-xs') ?>
                                 <span><?= e($event['location']) ?></span>
                             </div>
                         <?php endif; ?>

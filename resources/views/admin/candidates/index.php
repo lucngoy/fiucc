@@ -54,7 +54,7 @@ $actionTooltip = static function (string $label): string {
 ?>
 <div class="flex flex-col gap-6">
     <a href="/admin/elections/<?= e((string) $electionId) ?>" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors self-start">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e($election['title']) ?>
     </a>
 
@@ -67,7 +67,7 @@ $actionTooltip = static function (string $label): string {
         <?php if ($canManage): ?>
             <a href="/admin/elections/<?= e((string) $electionId) ?>/candidates/create"
                class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-                <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                <?= icon('plus') ?>
                 <?= e(t('admin.candidates.action.create')) ?>
             </a>
         <?php endif; ?>
@@ -102,14 +102,14 @@ $actionTooltip = static function (string $label): string {
                                         <img src="<?= e('/uploads/' . $candidate['photo']) ?>" alt="" class="h-10 w-10 rounded-full object-cover border border-border shrink-0">
                                     <?php else: ?>
                                         <span class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                            <i class="fa-solid fa-user" aria-hidden="true"></i>
+                                            <?= icon('user') ?>
                                         </span>
                                     <?php endif; ?>
                                     <div>
                                         <p class="font-label-lg text-label-lg text-ink"><?= e($candidate['full_name']) ?></p>
                                         <?php if (!$candidate['eligible']): ?>
                                             <p class="flex items-center gap-1.5 text-label-md font-label-md text-danger mt-0.5">
-                                                <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+                                                <?= icon('triangle-exclamation') ?>
                                                 <?= e(t('admin.candidates.ineligible_warning')) ?>
                                             </p>
                                         <?php endif; ?>
@@ -126,7 +126,7 @@ $actionTooltip = static function (string $label): string {
                                             <a href="/admin/elections/<?= e((string) $electionId) ?>/candidates/<?= e((string) $candidateId) ?>/edit"
                                                 aria-label="<?= e(t('admin.candidates.action.edit')) ?>"
                                                 class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                                <?= icon('pen') ?>
                                             </a>
                                             <?= $actionTooltip(t('admin.candidates.action.edit')) ?>
                                         </div>
@@ -136,7 +136,7 @@ $actionTooltip = static function (string $label): string {
                                                     <?= csrf_field() ?>
                                                     <button type="submit" aria-label="<?= e(t('admin.candidates.action.approve')) ?>"
                                                         class="h-9 w-9 rounded-control bg-surface text-success hover:bg-success/15 flex items-center justify-center transition-colors">
-                                                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                                                        <?= icon('check') ?>
                                                     </button>
                                                 </form>
                                                 <?= $actionTooltip(t('admin.candidates.action.approve')) ?>
@@ -146,7 +146,7 @@ $actionTooltip = static function (string $label): string {
                                                     <?= csrf_field() ?>
                                                     <button type="submit" aria-label="<?= e(t('admin.candidates.action.reject')) ?>"
                                                         class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                                        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                                        <?= icon('xmark') ?>
                                                     </button>
                                                 </form>
                                                 <?= $actionTooltip(t('admin.candidates.action.reject')) ?>
@@ -158,7 +158,7 @@ $actionTooltip = static function (string $label): string {
                                             <button type="button" data-open-dialog="withdraw-dialog-<?= e((string) $candidateId) ?>"
                                                 aria-label="<?= e(t('admin.candidates.action.withdraw')) ?>"
                                                 class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-user-slash" aria-hidden="true"></i>
+                                                <?= icon('user-slash') ?>
                                             </button>
                                             <?= $actionTooltip(t('admin.candidates.action.withdraw')) ?>
                                         </div>

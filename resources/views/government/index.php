@@ -104,7 +104,7 @@ $renderSocialLink = static function (?string $instagram, string $size = 'h-8 w-8
     return '<a href="' . e('https://www.instagram.com/' . $handle . '/') . '" target="_blank" rel="noopener noreferrer" '
         . 'title="Instagram" aria-label="Instagram — @' . e($handle) . '" '
         . 'class="inline-flex ' . $size . ' rounded-full bg-primary/[4%] text-primary items-center justify-center hover:bg-primary/25 transition-colors">'
-        . '<i class="fa-brands fa-instagram" aria-hidden="true"></i></a>';
+        . icon('instagram') . '</a>';
 };
 
 // Branche verticale au-dessus d'une carte de palier — même procédé que
@@ -158,7 +158,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
                 <div class="grid grid-cols-3 gap-4 md:gap-8">
                     <?php foreach (array_values($stats) as $index => $stat): ?>
                         <div class="flex items-center gap-3 min-w-0 <?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
-                            <i class="<?= e($stat['icon']) ?> text-white/70 text-xl" aria-hidden="true"></i>
+                            <?= icon($stat['icon'], 'text-white/90 text-xl') ?>
                             <div class="min-w-0">
                                 <p class="font-headline-sm text-headline-sm text-white"><?= e($stat['primary']) ?></p>
                                 <p class="text-label-md font-label-md text-white/90 break-words"><?= e($stat['caption']) ?></p>
@@ -204,7 +204,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
         <?php if ($rest !== []): ?>
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
                 <div>
-                    <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><i class="fa-solid fa-shield-halved mr-1.5" aria-hidden="true"></i><?= e(t('government.bureau.eyebrow')) ?></p>
+                    <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('shield-halved', 'mr-1.5') ?><?= e(t('government.bureau.eyebrow')) ?></p>
                     <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.bureau.title')) ?></h2>
                     <p class="text-body-md text-muted max-w-xl"><?= e(t('government.bureau.subtitle')) ?></p>
                 </div>
@@ -257,7 +257,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <!-- En-tête de section aligné à gauche, comme code.html (pas centré). -->
     <div class="mb-8">
-        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><i class="fa-solid fa-sitemap mr-1.5" aria-hidden="true"></i><?= e(t('government.orgchart.eyebrow')) ?></p>
+        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('sitemap', 'mr-1.5') ?><?= e(t('government.orgchart.eyebrow')) ?></p>
         <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.orgchart.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
     </div>
@@ -310,7 +310,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
          réellement quelque chose à y voir. -->
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><i class="fa-solid fa-clock-rotate-left mr-1.5" aria-hidden="true"></i><?= e(t('government.history.eyebrow')) ?></p>
+            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('clock-rotate-left', 'mr-1.5') ?><?= e(t('government.history.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.history.title')) ?></h2>
             <p class="text-body-md text-muted max-w-xl"><?= e(t('government.history.subtitle')) ?></p>
         </div>
@@ -340,7 +340,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-4 text-center md:text-left">
-            <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center shrink-0" aria-hidden="true"><i class="fa-solid fa-scale-balanced text-xl"></i></span>
+            <span class="hidden md:flex h-12 w-12 rounded-full bg-primary/10 text-primary items-center justify-center shrink-0" aria-hidden="true"><?= icon('scale-balanced', 'text-xl') ?></span>
             <div>
                 <p class="font-label-caps text-label-caps uppercase text-primary mb-1"><?= e(t('government.rule.title')) ?></p>
                 <p class="text-body-sm text-ink max-w-2xl"><?= e(t('government.rule.body')) ?></p>

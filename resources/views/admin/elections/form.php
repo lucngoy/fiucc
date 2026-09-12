@@ -25,7 +25,7 @@ $inputClasses = static function (?string $errorMessage): string {
 <div>
     <a href="<?= e($isEdit ? '/admin/elections/' . (int) $election['id'] : '/admin/elections') ?>"
        class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-6">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('admin.elections.title')) ?>
     </a>
 

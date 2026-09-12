@@ -37,7 +37,7 @@ $noticeMap = [
 ?>
 <div>
     <a href="/admin/gallery" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-6">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('admin.gallery.title')) ?>
     </a>
 

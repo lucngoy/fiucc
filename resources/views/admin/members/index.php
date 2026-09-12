@@ -53,12 +53,10 @@ $sortUrl = static function (string $column) use ($activeFilterQuery, $sort, $dir
 
 $sortIcon = static function (string $column) use ($sort, $dir): string {
     if ($sort !== $column) {
-        return '<i class="fa-solid fa-sort text-white/30" aria-hidden="true"></i>';
+        return icon('sort', 'text-white/30');
     }
 
-    return $dir === 'asc'
-        ? '<i class="fa-solid fa-sort-up" aria-hidden="true"></i>'
-        : '<i class="fa-solid fa-sort-down" aria-hidden="true"></i>';
+    return $dir === 'asc' ? icon('sort-up') : icon('sort-down');
 };
 
 $statusBadge = static function (string $status): string {
@@ -137,7 +135,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                  tout ce qui correspond part dans le fichier. -->
             <a href="/admin/members/export<?= $activeFilterQuery !== [] ? '?' . http_build_query($activeFilterQuery) : '' ?>"
                class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-white border border-border text-ink text-label-md font-label-md hover:bg-surface transition-colors">
-                <i class="fa-solid fa-download" aria-hidden="true"></i>
+                <?= icon('download') ?>
                 <?= e(t('admin.members.export.button')) ?>
             </a>
         </div>
@@ -277,7 +275,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                                 <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
                                                 <button type="submit" aria-label="<?= e(t('admin.members.action.validate')) ?>"
                                                     class="h-9 w-9 rounded-control bg-surface text-success hover:bg-success/15 flex items-center justify-center transition-colors">
-                                                    <i class="fa-solid fa-check" aria-hidden="true"></i>
+                                                    <?= icon('check') ?>
                                                 </button>
                                             </form>
                                             <?= $actionTooltip(t('admin.members.action.validate')) ?>
@@ -289,7 +287,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                             <button type="button" data-open-dialog="reason-dialog-reject-<?= e((string) $memberId) ?>"
                                                 aria-label="<?= e(t('admin.members.action.reject')) ?>"
                                                 class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                                                <?= icon('xmark') ?>
                                             </button>
                                             <?= $actionTooltip(t('admin.members.action.reject')) ?>
                                         </div>
@@ -314,7 +312,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                             <button type="button" data-open-dialog="reason-dialog-suspend-<?= e((string) $memberId) ?>"
                                                 aria-label="<?= e(t('admin.members.action.suspend')) ?>"
                                                 class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                                <i class="fa-solid fa-ban" aria-hidden="true"></i>
+                                                <?= icon('ban') ?>
                                             </button>
                                             <?= $actionTooltip(t('admin.members.action.suspend')) ?>
                                         </div>

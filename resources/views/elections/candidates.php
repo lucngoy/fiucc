@@ -66,7 +66,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
         </nav>
         <h1 class="font-headline-lg text-headline-lg text-white mb-3"><?= e($election['title']) ?></h1>
         <a href="<?= e('/elections/' . $electionId) ?>" class="inline-flex items-center gap-2 text-body-sm text-white/90 hover:text-white transition-colors">
-            <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+            <?= icon('arrow-left', 'text-xs') ?>
             <?= e(t('elections.candidates.back_to_election')) ?>
         </a>
     </div>
@@ -113,7 +113,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
                                             <img src="<?= e('/uploads/' . $candidate['photo']) ?>" alt="" class="h-16 w-16 rounded-full object-cover border border-border">
                                         <?php else: ?>
                                             <span class="h-16 w-16 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                                                <i class="fa-solid fa-user text-xl" aria-hidden="true"></i>
+                                                <?= icon('user', 'text-xl') ?>
                                             </span>
                                         <?php endif; ?>
                                         <?php if ($candidate['ballot_number'] !== null): ?>
@@ -131,7 +131,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
                                         <?php if (!empty($candidate['instagram'])): ?>
                                             <a href="<?= e('https://instagram.com/' . ltrim($candidate['instagram'], '@')) ?>" target="_blank" rel="noopener noreferrer"
                                                class="inline-flex items-center gap-1.5 text-body-sm text-muted hover:text-primary transition-colors mt-1 w-fit">
-                                                <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+                                                <?= icon('instagram') ?>
                                                 @<?= e(ltrim($candidate['instagram'], '@')) ?>
                                             </a>
                                         <?php endif; ?>
@@ -147,7 +147,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
                                         <summary class="cursor-pointer list-none flex items-center justify-between gap-2 text-label-md font-label-md text-primary hover:text-primary-dark transition-colors">
                                             <span class="group-open:hidden"><?= e(t('elections.candidates.view_profile')) ?></span>
                                             <span class="hidden group-open:inline"><?= e(t('elections.candidates.hide_profile')) ?></span>
-                                            <i class="fa-solid fa-chevron-down text-xs transition-transform group-open:rotate-180" aria-hidden="true"></i>
+                                            <?= icon('chevron-down', 'text-xs transition-transform group-open:rotate-180') ?>
                                         </summary>
                                         <p class="text-body-sm text-ink whitespace-pre-line mt-3"><?= e($candidate['manifesto']) ?></p>
                                     </details>

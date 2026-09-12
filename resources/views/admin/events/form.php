@@ -24,7 +24,7 @@ $inputClasses = static function (?string $errorMessage): string {
 ?>
 <div>
     <a href="/admin/events" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-6">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('admin.events.title')) ?>
     </a>
 
@@ -105,7 +105,7 @@ $inputClasses = static function (?string $errorMessage): string {
                     <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt="" class="h-16 w-24 rounded-control object-cover border border-border">
                 <?php else: ?>
                     <span class="h-16 w-24 rounded-control bg-primary/10 text-primary flex items-center justify-center">
-                        <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                        <?= icon('calendar-days') ?>
                     </span>
                 <?php endif; ?>
 

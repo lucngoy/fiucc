@@ -67,20 +67,20 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                     <?php endforeach; ?>
                 </div>
                 <div class="flex items-start gap-3 p-3 rounded-control bg-white/10">
-                    <i class="fa-solid fa-shield-halved text-gold mt-0.5" aria-hidden="true"></i>
+                    <?= icon('shield-halved', 'text-gold mt-0.5') ?>
                     <p class="text-label-caps font-label-caps text-white leading-relaxed"><?= e(t('census.info.privacy')) ?></p>
                 </div>
             </div>
 
             <a href="/contact" class="flex items-center justify-between gap-3 p-4 rounded-control bg-white/10 hover:bg-ink/25 transition-colors">
                 <span class="flex items-center gap-3">
-                    <i class="fa-solid fa-circle-question text-lg" aria-hidden="true"></i>
+                    <?= icon('circle-question', 'text-lg') ?>
                     <span class="flex flex-col">
                         <span class="font-label-md text-label-md"><?= e(t('census.info.help_title')) ?></span>
                         <span class="text-body-sm text-white"><?= e(t('census.info.help_body')) ?></span>
                     </span>
                 </span>
-                <i class="fa-solid fa-arrow-right text-white/50" aria-hidden="true"></i>
+                <?= icon('arrow-right', 'text-white/50') ?>
             </a>
         </aside>
 

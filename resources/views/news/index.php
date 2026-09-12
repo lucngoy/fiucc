@@ -27,7 +27,7 @@ $categoryBadge = static function (string $category): string {
 
 $imagePlaceholder = static function (string $iconSize = 'text-3xl'): string {
     return '<div class="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
-        . '<i class="fa-solid fa-newspaper ' . e($iconSize) . ' text-primary/30" aria-hidden="true"></i>'
+        . icon('newspaper', $iconSize . ' text-primary/30')
         . '</div>';
 };
 

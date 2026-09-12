@@ -31,7 +31,7 @@ $inputClasses = static function (?string $errorMessage): string {
 ?>
 <div>
     <a href="/admin/elections/<?= e((string) $electionId) ?>/candidates" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-6">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('admin.candidates.title')) ?>
     </a>
 
@@ -112,7 +112,7 @@ $inputClasses = static function (?string $errorMessage): string {
                     <img src="<?= e('/uploads/' . $candidate['photo']) ?>" alt="" class="h-16 w-16 rounded-full object-cover border border-border">
                 <?php else: ?>
                     <span class="h-16 w-16 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-                        <i class="fa-solid fa-user" aria-hidden="true"></i>
+                        <?= icon('user') ?>
                     </span>
                 <?php endif; ?>
 

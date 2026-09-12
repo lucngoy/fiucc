@@ -90,13 +90,13 @@ $values = [
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="bg-white rounded-card border border-border p-8">
-            <span class="inline-flex h-11 w-11 rounded-full bg-primary/15 text-primary items-center justify-center mb-4" aria-hidden="true"><i class="fa-solid fa-bullseye text-lg"></i></span>
+            <span class="inline-flex h-11 w-11 rounded-full bg-primary/[4%] text-primary items-center justify-center mb-4" aria-hidden="true"><?= icon('bullseye', 'text-lg') ?></span>
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('community.mission.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('community.mission.title')) ?></h2>
             <p class="text-body-md text-muted"><?= e(t('community.mission.body')) ?></p>
         </div>
         <div class="bg-white rounded-card border border-border p-8">
-            <span class="inline-flex h-11 w-11 rounded-full bg-gold/20 text-ink items-center justify-center mb-4" aria-hidden="true"><i class="fa-solid fa-binoculars text-lg"></i></span>
+            <span class="inline-flex h-11 w-11 rounded-full bg-gold/20 text-ink items-center justify-center mb-4" aria-hidden="true"><?= icon('binoculars', 'text-lg') ?></span>
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('community.vision.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('community.vision.title')) ?></h2>
             <p class="text-body-md text-muted"><?= e(t('community.vision.body')) ?></p>

@@ -53,7 +53,7 @@ $statusBadge = static function (string $status): string {
                         <p class="text-body-sm text-muted line-clamp-2"><?= e($election['description']) ?></p>
                     <?php endif; ?>
                     <div class="flex items-center gap-2 text-body-sm text-muted mt-auto pt-2 border-t border-border">
-                        <i class="fa-solid fa-calendar-day text-primary" aria-hidden="true"></i>
+                        <?= icon('calendar-day', 'text-primary') ?>
                         <span><?= e(local_date($election['start_at'])) ?> – <?= e(local_date($election['end_at'])) ?></span>
                     </div>
                 </a>

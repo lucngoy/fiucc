@@ -80,14 +80,14 @@ $mapsUrl = !empty($event['location'])
         <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-6"><?= e($event['title']) ?></h1>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl">
             <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
-                <i class="fa-solid fa-calendar-day text-gold text-lg" aria-hidden="true"></i>
+                <?= icon('calendar-day', 'text-gold text-lg') ?>
                 <div class="flex flex-col">
                     <span class="text-label-caps font-label-caps uppercase text-white/60"><?= e(t('events.detail.date')) ?></span>
                     <span class="text-label-md font-label-md text-white font-semibold"><?= e(local_date($event['start_date'])) ?></span>
                 </div>
             </div>
             <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
-                <i class="fa-solid fa-clock text-gold text-lg" aria-hidden="true"></i>
+                <?= icon('clock', 'text-gold text-lg') ?>
                 <div class="flex flex-col">
                     <span class="text-label-caps font-label-caps uppercase text-white/60"><?= e(t('events.detail.time')) ?></span>
                     <span class="text-label-md font-label-md text-white font-semibold"><?= e($timeRange) ?></span>
@@ -95,7 +95,7 @@ $mapsUrl = !empty($event['location'])
             </div>
             <?php if (!empty($event['location'])): ?>
                 <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-control p-3">
-                    <i class="fa-solid fa-location-dot text-gold text-lg" aria-hidden="true"></i>
+                    <?= icon('location-dot', 'text-gold text-lg') ?>
                     <div class="flex flex-col min-w-0">
                         <span class="text-label-caps font-label-caps uppercase text-white/60"><?= e(t('events.detail.venue')) ?></span>
                         <span class="text-label-md font-label-md text-white font-semibold truncate"><?= e($event['location']) ?></span>
@@ -125,7 +125,7 @@ $mapsUrl = !empty($event['location'])
             <?php if ($mapsUrl !== null): ?>
                 <div class="bg-surface rounded-card border border-border p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
-                        <span class="h-11 w-11 rounded-full bg-primary/15 text-primary flex items-center justify-center shrink-0"><i class="fa-solid fa-map-location-dot" aria-hidden="true"></i></span>
+                        <span class="h-11 w-11 rounded-full bg-primary/[4%] text-primary flex items-center justify-center shrink-0"><?= icon('map-location-dot') ?></span>
                         <div>
                             <p class="font-label-lg text-label-lg text-ink"><?= e(t('events.detail.venue')) ?></p>
                             <p class="text-body-sm text-muted"><?= e($event['location']) ?></p>
@@ -133,7 +133,7 @@ $mapsUrl = !empty($event['location'])
                     </div>
                     <a href="<?= e($mapsUrl) ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-primary font-label-lg text-label-lg font-semibold hover:underline">
                         <?= e(t('events.detail.map_link')) ?>
-                        <i class="fa-solid fa-arrow-up-right-from-square text-xs" aria-hidden="true"></i>
+                        <?= icon('arrow-up-right-from-square', 'text-xs') ?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -161,7 +161,7 @@ $mapsUrl = !empty($event['location'])
             </div>
 
             <a href="/events" class="inline-flex items-center gap-2 text-primary font-label-lg text-label-lg font-semibold hover:underline self-start">
-                <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+                <?= icon('arrow-left', 'text-xs') ?>
                 <?= e(t('events.detail.back')) ?>
             </a>
         </div>
@@ -170,7 +170,7 @@ $mapsUrl = !empty($event['location'])
             <div class="bg-white rounded-card border border-border p-6 flex flex-col gap-5 lg:sticky lg:top-24">
                 <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('events.detail.registration')) ?></h2>
                 <div class="flex items-center gap-2 text-body-md text-ink">
-                    <i class="fa-solid fa-users text-primary" aria-hidden="true"></i>
+                    <?= icon('users', 'text-primary') ?>
                     <span><?= e(t('events.detail.registered', ['count' => $registeredCount])) ?></span>
                 </div>
                 <?php if ($hasCapacity): ?>
@@ -181,13 +181,13 @@ $mapsUrl = !empty($event['location'])
 
                 <?php if ($isRegistered): ?>
                     <p class="flex items-center gap-2 text-success font-label-lg text-label-lg font-semibold">
-                        <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                        <?= icon('circle-check') ?>
                         <?= e(t('events.detail.you_are_registered')) ?>
                     </p>
                     <form method="POST" action="<?= e('/events/' . $event['slug'] . '/unregister') ?>">
                         <?= csrf_field() ?>
                         <button type="submit" class="w-full h-11 rounded-control border border-danger text-danger text-label-lg font-label-lg font-semibold hover:bg-danger/10 transition-colors flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                            <?= icon('xmark') ?>
                             <?= e(t('events.detail.unregister_cta')) ?>
                         </button>
                     </form>
@@ -195,7 +195,7 @@ $mapsUrl = !empty($event['location'])
                     <form method="POST" action="<?= e('/events/' . $event['slug'] . '/register') ?>">
                         <?= csrf_field() ?>
                         <button type="submit" class="w-full h-11 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-clipboard-check" aria-hidden="true"></i>
+                            <?= icon('clipboard-check') ?>
                             <?= e(t('events.detail.register_cta')) ?>
                         </button>
                     </form>

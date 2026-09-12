@@ -25,7 +25,7 @@ $totalPages ??= 1;
 
 $imagePlaceholder = static function (): string {
     return '<div class="absolute inset-0 bg-gradient-to-br from-primary/15 to-primary/5 flex items-center justify-center">'
-        . '<i class="fa-solid fa-images text-4xl text-primary/30" aria-hidden="true"></i>'
+        . icon('images', 'text-4xl text-primary/30')
         . '</div>';
 };
 ?>
@@ -62,7 +62,7 @@ $imagePlaceholder = static function (): string {
                             <?= $imagePlaceholder() ?>
                         <?php endif; ?>
                         <span class="absolute top-3 right-3 bg-ink/75 text-white text-label-md font-label-md px-2.5 py-1 rounded-control backdrop-blur-sm inline-flex items-center gap-1.5">
-                            <i class="fa-solid fa-images text-xs" aria-hidden="true"></i>
+                            <?= icon('images', 'text-xs') ?>
                             <?= e(t('gallery.album.photo_count', ['count' => (int) $album['photo_count']])) ?>
                         </span>
                     </div>

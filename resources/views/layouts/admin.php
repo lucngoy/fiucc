@@ -9,11 +9,7 @@
          profondeur, même principe que le reste du projet). -->
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'FIUCC Admin') ?></title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Police et icônes auto-hébergées (FIUCC-78) — voir layouts/app.php. -->
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body class="bg-surface">
@@ -82,37 +78,37 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 <a href="/admin/members"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'members' ? 'aria-current="page"' : '' ?>>
-                    <i class="fa-solid fa-users w-5 text-center" aria-hidden="true"></i>
+                    <?= icon('users', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.members')) ?>
                 </a>
                 <a href="/admin/events"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'events' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'events' ? 'aria-current="page"' : '' ?>>
-                    <i class="fa-solid fa-calendar-days w-5 text-center" aria-hidden="true"></i>
+                    <?= icon('calendar-days', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.events')) ?>
                 </a>
                 <a href="/admin/gallery"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'gallery' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'gallery' ? 'aria-current="page"' : '' ?>>
-                    <i class="fa-solid fa-images w-5 text-center" aria-hidden="true"></i>
+                    <?= icon('images', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.gallery')) ?>
                 </a>
                 <a href="/admin/news"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'news' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'news' ? 'aria-current="page"' : '' ?>>
-                    <i class="fa-solid fa-newspaper w-5 text-center" aria-hidden="true"></i>
+                    <?= icon('newspaper', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.news')) ?>
                 </a>
                 <a href="/admin/documents"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'documents' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'documents' ? 'aria-current="page"' : '' ?>>
-                    <i class="fa-solid fa-folder-open w-5 text-center" aria-hidden="true"></i>
+                    <?= icon('folder-open', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.documents')) ?>
                 </a>
                 <a href="/admin/elections"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'elections' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'elections' ? 'aria-current="page"' : '' ?>>
-                    <i class="fa-solid fa-check-to-slot w-5 text-center" aria-hidden="true"></i>
+                    <?= icon('check-to-slot', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.elections')) ?>
                 </a>
             </nav>
@@ -129,7 +125,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 <?= csrf_field() ?>
                 <button type="submit" title="<?= e(t('admin.nav.logout')) ?>" aria-label="<?= e(t('admin.nav.logout')) ?>"
                     class="h-8 w-8 flex items-center justify-center rounded-control text-white/90 hover:bg-white/10 hover:text-white transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                    <?= icon('arrow-right-from-bracket') ?>
                 </button>
             </form>
         </div>
@@ -145,7 +141,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 </div>
                 <button type="button" title="<?= e(t('admin.header.notifications')) ?>" aria-label="<?= e(t('admin.header.notifications')) ?>"
                     class="h-10 w-10 rounded-control flex items-center justify-center text-muted hover:bg-surface hover:text-ink transition-colors">
-                    <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                    <?= icon('bell') ?>
                 </button>
                 <details class="relative">
                     <summary title="<?= e(t('admin.header.profile')) ?>" aria-label="<?= e(t('admin.header.profile')) ?>"
@@ -160,7 +156,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                         <form method="POST" action="/logout">
                             <?= csrf_field() ?>
                             <button type="submit" class="w-full flex items-center gap-2 px-3 py-2.5 text-body-sm text-ink hover:bg-surface transition-colors">
-                                <i class="fa-solid fa-arrow-right-from-bracket text-muted" aria-hidden="true"></i>
+                                <?= icon('arrow-right-from-bracket', 'text-muted') ?>
                                 <?= e(t('admin.nav.logout')) ?>
                             </button>
                         </form>

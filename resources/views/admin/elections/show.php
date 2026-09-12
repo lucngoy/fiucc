@@ -70,7 +70,7 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
 ?>
 <div class="flex flex-col gap-6">
     <a href="/admin/elections" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors self-start">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('admin.elections.title')) ?>
     </a>
 
@@ -87,73 +87,73 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
             <div class="flex items-center gap-2">
                 <a href="/admin/elections/<?= e((string) $election['id']) ?>/candidates"
                    class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
-                    <i class="fa-solid fa-users" aria-hidden="true"></i>
+                    <?= icon('users') ?>
                     <?= e(t('admin.elections.action.manage_candidates')) ?>
                 </a>
                 <?php if ($isOpen): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/tokens"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
-                        <i class="fa-solid fa-key" aria-hidden="true"></i>
+                        <?= icon('key') ?>
                         <?= e(t('admin.elections.action.voting_tokens')) ?>
                     </a>
                     <button type="button" data-open-dialog="send-reminder-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
-                        <i class="fa-solid fa-bell" aria-hidden="true"></i>
+                        <?= icon('bell') ?>
                         <?= e(t('admin.elections.action.send_reminder')) ?>
                     </button>
                 <?php endif; ?>
                 <?php if ($isClosed): ?>
                     <button type="button" data-open-dialog="send-closure-notice-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
-                        <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+                        <?= icon('envelope') ?>
                         <?= e(t('admin.elections.action.send_closure_notice')) ?>
                     </button>
                 <?php endif; ?>
                 <?php if ($canStartCandidacies): ?>
                     <button type="button" data-open-dialog="start-candidacies-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors">
-                        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                        <?= icon('arrow-right') ?>
                         <?= e(t('admin.elections.action.start_candidacies')) ?>
                     </button>
                 <?php endif; ?>
                 <?php if ($isCandidacies): ?>
                     <button type="button" data-open-dialog="open-election-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors">
-                        <i class="fa-solid fa-lock-open" aria-hidden="true"></i>
+                        <?= icon('lock-open') ?>
                         <?= e(t('admin.elections.action.open')) ?>
                     </button>
                 <?php endif; ?>
                 <?php if ($isOpen): ?>
                     <button type="button" data-open-dialog="close-election-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-danger text-label-md font-label-md hover:bg-danger/15 transition-colors">
-                        <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                        <?= icon('lock') ?>
                         <?= e(t('admin.elections.action.close')) ?>
                     </button>
                 <?php endif; ?>
                 <?php if ($isClosed): ?>
                     <button type="button" data-open-dialog="publish-results-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors">
-                        <i class="fa-solid fa-square-poll-vertical" aria-hidden="true"></i>
+                        <?= icon('square-poll-vertical') ?>
                         <?= e(t('admin.elections.action.publish')) ?>
                     </button>
                 <?php endif; ?>
                 <?php if ($isClosed || $isPublished): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/results"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
-                        <i class="fa-solid fa-chart-simple" aria-hidden="true"></i>
+                        <?= icon('chart-simple') ?>
                         <?= e(t('elections.detail.view_results')) ?>
                     </a>
                 <?php endif; ?>
                 <?php if ($isDraft): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/edit"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
-                        <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                        <?= icon('pen') ?>
                         <?= e(t('admin.elections.action.edit')) ?>
                     </a>
                     <?php if ($canDelete): ?>
                         <button type="button" data-open-dialog="delete-election-dialog"
                             class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-danger text-label-md font-label-md hover:bg-danger/15 transition-colors">
-                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                            <?= icon('trash') ?>
                             <?= e(t('admin.elections.action.delete')) ?>
                         </button>
                     <?php endif; ?>
@@ -236,7 +236,7 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                             </form>
                             <button type="button" data-open-dialog="delete-position-<?= e((string) $positionId) ?>"
                                 class="h-10 w-10 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors shrink-0">
-                                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                <?= icon('trash') ?>
                             </button>
                             <dialog id="delete-position-<?= e((string) $positionId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
                                 <form method="POST" action="/admin/elections/<?= e((string) $election['id']) ?>/positions/<?= e((string) $positionId) ?>/delete" class="flex flex-col gap-2 p-4 text-left">

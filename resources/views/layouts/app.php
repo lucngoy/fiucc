@@ -39,11 +39,10 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
     <meta name="twitter:title" content="<?= e($title) ?>">
     <meta name="twitter:description" content="<?= e($description) ?>">
     <meta name="twitter:image" content="<?= e($ogImageUrl) ?>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <!-- Police (Inter) et icônes : auto-hébergées (FIUCC-78) — voir
+         resources/css/app.css pour le raisonnement complet et
+         app/Helpers/helpers.php (icon()) pour les icônes, plus aucune
+         requête vers un CDN tiers pour l'une ou l'autre. -->
     <link rel="stylesheet" href="/assets/css/app.css">
 </head>
 <body>

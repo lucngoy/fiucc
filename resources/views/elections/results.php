@@ -38,7 +38,7 @@ $electionId = (int) $election['id'];
         <?php if (!$published): ?>
             <div class="bg-surface rounded-card border border-border p-8 flex flex-col items-center gap-3 text-center">
                 <span class="h-14 w-14 rounded-full bg-muted/[1%] text-muted flex items-center justify-center">
-                    <i class="fa-solid fa-lock text-2xl" aria-hidden="true"></i>
+                    <?= icon('lock', 'text-2xl') ?>
                 </span>
                 <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('elections.results.unavailable_title')) ?></h2>
                 <p class="text-body-md text-muted"><?= e(t('elections.results.unavailable_message')) ?></p>
@@ -48,7 +48,7 @@ $electionId = (int) $election['id'];
         <?php endif; ?>
 
         <a href="<?= e('/elections/' . $electionId) ?>" class="inline-flex items-center gap-2 text-primary font-label-lg font-label-lg hover:underline self-start">
-            <i class="fa-solid fa-arrow-left text-xs" aria-hidden="true"></i>
+            <?= icon('arrow-left', 'text-xs') ?>
             <?= e(t('elections.results.back_to_election')) ?>
         </a>
     </div>

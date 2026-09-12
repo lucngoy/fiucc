@@ -67,7 +67,7 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
         <p class="text-body-md text-muted"><?= e(t('admin.events.total', ['count' => $total])) ?></p>
         <a href="/admin/events/create"
            class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <?= icon('plus') ?>
             <?= e(t('admin.events.create_button')) ?>
         </a>
     </div>
@@ -125,7 +125,7 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                                         <img src="<?= e('/uploads/' . $event['cover_image']) ?>" alt="" class="h-10 w-14 rounded-control object-cover border border-border shrink-0">
                                     <?php else: ?>
                                         <span class="h-10 w-14 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                                            <?= icon('calendar-days') ?>
                                         </span>
                                     <?php endif; ?>
                                     <div class="min-w-0">
@@ -146,7 +146,7 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                                     <div class="relative group">
                                         <a href="/admin/events/<?= e((string) $eventId) ?>/edit" aria-label="<?= e(t('admin.events.action.edit')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                            <?= icon('pen') ?>
                                         </a>
                                         <?= $actionTooltip(t('admin.events.action.edit')) ?>
                                     </div>
@@ -156,7 +156,7 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                                                 <?= csrf_field() ?>
                                                 <button type="submit" aria-label="<?= e(t('admin.events.action.unarchive')) ?>"
                                                     class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                                    <i class="fa-solid fa-box-open" aria-hidden="true"></i>
+                                                    <?= icon('box-open') ?>
                                                 </button>
                                             </form>
                                             <?= $actionTooltip(t('admin.events.action.unarchive')) ?>
@@ -167,7 +167,7 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                                                 <?= csrf_field() ?>
                                                 <button type="submit" aria-label="<?= e(t('admin.events.action.archive')) ?>"
                                                     class="h-9 w-9 rounded-control bg-surface text-ink hover:bg-ink/10 flex items-center justify-center transition-colors">
-                                                    <i class="fa-solid fa-box-archive" aria-hidden="true"></i>
+                                                    <?= icon('box-archive') ?>
                                                 </button>
                                             </form>
                                             <?= $actionTooltip(t('admin.events.action.archive')) ?>
@@ -177,7 +177,7 @@ $paginationBase = '/admin/events?' . ($activeFilterQuery !== []
                                         <button type="button" data-open-dialog="delete-dialog-<?= e((string) $eventId) ?>"
                                             aria-label="<?= e(t('admin.events.action.delete')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                            <?= icon('trash') ?>
                                         </button>
                                         <?= $actionTooltip(t('admin.events.action.delete')) ?>
                                     </div>

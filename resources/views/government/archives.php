@@ -28,7 +28,7 @@ $mandates ??= [];
         <div class="w-full bg-primary-dark/40">
             <div class="max-w-layout mx-auto px-4 md:px-6 py-5">
                 <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-clock-rotate-left text-white/70 text-xl" aria-hidden="true"></i>
+                    <?= icon('clock-rotate-left', 'text-white/90 text-xl') ?>
                     <div>
                         <p class="font-headline-sm text-headline-sm text-white"><?= e(t('government.archives.stat_value', ['count' => count($mandates)])) ?></p>
                         <p class="text-label-md font-label-md text-white/90"><?= e(t('government.archives.stat_caption')) ?></p>
@@ -93,7 +93,7 @@ $mandates ??= [];
 <div class="w-full <?= $mandates === [] || count($mandates) % 2 === 0 ? 'bg-white' : 'bg-surface' ?>">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12">
     <a href="/community/government" class="inline-flex items-center gap-2 text-primary font-label-lg text-label-lg font-semibold hover:underline">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('government.archives.back')) ?>
     </a>
 </div>

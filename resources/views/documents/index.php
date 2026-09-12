@@ -59,7 +59,7 @@ $visibilityBadge = static function (string $visibility): string {
     };
 
     return '<span class="inline-flex items-center h-6 px-2.5 rounded-full bg-gold/20 text-ink text-label-md font-label-md">'
-        . '<i class="fa-solid fa-lock text-xs mr-1.5" aria-hidden="true"></i>' . e($label) . '</span>';
+        . icon('lock', 'text-xs mr-1.5') . e($label) . '</span>';
 };
 
 $paginationQuery = array_filter(['search' => $filters['search'], 'category' => $filters['category']], static fn ($v) => $v !== '');
@@ -114,7 +114,7 @@ $paginationQuery = array_filter(['search' => $filters['search'], 'category' => $
                 <?php $meta = $fileMeta((string) $document['mime_type']); ?>
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 bg-white rounded-card border border-border p-5 hover:shadow-card transition-shadow">
                     <span class="h-12 w-12 rounded-control bg-primary/10 text-primary flex items-center justify-center text-xl shrink-0">
-                        <i class="fa-solid <?= e($meta['icon']) ?>" aria-hidden="true"></i>
+                        <?= icon($meta['icon']) ?>
                     </span>
                     <div class="flex-1 min-w-0">
                         <div class="flex flex-wrap items-center gap-2 mb-1">
@@ -136,7 +136,7 @@ $paginationQuery = array_filter(['search' => $filters['search'], 'category' => $
                     </div>
                     <a href="/documents/<?= e((string) $document['id']) ?>/download"
                        class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors shrink-0 self-start sm:self-center">
-                        <i class="fa-solid fa-download" aria-hidden="true"></i>
+                        <?= icon('download') ?>
                         <?= e(t('documents.download')) ?>
                     </a>
                 </div>

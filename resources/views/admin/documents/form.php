@@ -24,7 +24,7 @@ $inputClasses = static function (?string $errorMessage): string {
 ?>
 <div>
     <a href="/admin/documents" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-6">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('admin.documents.title')) ?>
     </a>
 
@@ -78,7 +78,7 @@ $inputClasses = static function (?string $errorMessage): string {
         <div class="flex flex-col gap-1.5 pt-2 border-t border-border">
             <?php if ($isEdit): ?>
                 <p class="text-body-sm text-ink">
-                    <i class="fa-solid fa-paperclip text-muted mr-1.5" aria-hidden="true"></i>
+                    <?= icon('paperclip', 'text-muted mr-1.5') ?>
                     <?= e(t('admin.documents.field.current_file')) ?>
                 </p>
             <?php endif; ?>

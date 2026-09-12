@@ -54,7 +54,7 @@ $paginationBase = '/admin/gallery?' . ($activeFilterQuery !== []
         <p class="text-body-md text-muted"><?= e(t('admin.gallery.total', ['count' => $total])) ?></p>
         <a href="/admin/gallery/create"
            class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
-            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <?= icon('plus') ?>
             <?= e(t('admin.gallery.create_button')) ?>
         </a>
     </div>
@@ -101,7 +101,7 @@ $paginationBase = '/admin/gallery?' . ($activeFilterQuery !== []
                                         <img src="<?= e('/uploads/' . $album['cover_thumbnail']) ?>" alt="" class="h-10 w-14 rounded-control object-cover border border-border shrink-0">
                                     <?php else: ?>
                                         <span class="h-10 w-14 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                                            <i class="fa-solid fa-images" aria-hidden="true"></i>
+                                            <?= icon('images') ?>
                                         </span>
                                     <?php endif; ?>
                                     <p class="font-label-lg text-label-lg text-ink truncate"><?= e($album['title']) ?></p>
@@ -117,7 +117,7 @@ $paginationBase = '/admin/gallery?' . ($activeFilterQuery !== []
                                     <div class="relative group">
                                         <a href="/admin/gallery/<?= e((string) $albumId) ?>/edit" aria-label="<?= e(t('admin.gallery.action.edit')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                                            <?= icon('pen') ?>
                                         </a>
                                         <?= $actionTooltip(t('admin.gallery.action.edit')) ?>
                                     </div>
@@ -125,7 +125,7 @@ $paginationBase = '/admin/gallery?' . ($activeFilterQuery !== []
                                         <button type="button" data-open-dialog="delete-dialog-<?= e((string) $albumId) ?>"
                                             aria-label="<?= e(t('admin.gallery.action.delete')) ?>"
                                             class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                            <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                                            <?= icon('trash') ?>
                                         </button>
                                         <?= $actionTooltip(t('admin.gallery.action.delete')) ?>
                                     </div>

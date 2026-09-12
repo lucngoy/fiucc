@@ -42,7 +42,7 @@ $photos ??= [];
         <?php if (!empty($album['event_slug'])): ?>
             <a href="<?= e('/events/' . $album['event_slug']) ?>"
                class="inline-flex items-center gap-2 mt-4 text-body-sm text-white/90 hover:text-white transition-colors">
-                <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+                <?= icon('calendar-days') ?>
                 <?= e(t('gallery.detail.view_event', ['title' => $album['event_title']])) ?>
             </a>
         <?php endif; ?>
@@ -52,7 +52,7 @@ $photos ??= [];
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12">
     <a href="/gallery" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-8">
-        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+        <?= icon('arrow-left') ?>
         <?= e(t('gallery.detail.back')) ?>
     </a>
 
@@ -77,7 +77,18 @@ $photos ??= [];
                    aria-label="<?= e($accessibleName) ?>"
                    data-lightbox-trigger data-full="<?= e('/uploads/' . $photo['image_path']) ?>" data-caption="<?= e((string) ($photo['caption'] ?? '')) ?>"
                    class="group block mb-4 md:mb-6 break-inside-avoid rounded-card overflow-hidden bg-surface border border-border hover:shadow-card transition-shadow cursor-zoom-in">
+                    <?php
+                    // Chargement paresseux au-delà des toutes premières
+                    // photos (FIUCC-78, mesuré en 4G simulée sur un album de
+                    // 40 photos : 1,26 Mo / 3,1s jusqu'à l'événement load
+                    // avec les 40 vignettes chargées d'un coup, contre 595 Ko
+                    // / 1,8s une fois différées — measure avant/après, pas
+                    // supposé). Les 4 premières restent eager — visibles dès
+                    // le premier écran sur mobile comme sur desktop, pas de
+                    // raison de les retarder.
+                    ?>
                     <img src="<?= e('/uploads/' . $thumb) ?>" alt="<?= e((string) ($photo['caption'] ?? '')) ?>"
+                         loading="<?= $index < 4 ? 'eager' : 'lazy' ?>" decoding="async"
                          class="w-full h-auto group-hover:scale-[1.02] transition-transform duration-300">
                     <?php if (!empty($photo['caption'])): ?>
                         <p class="p-3 text-body-sm text-muted"><?= e($photo['caption']) ?></p>
