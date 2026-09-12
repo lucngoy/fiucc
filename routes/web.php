@@ -40,6 +40,7 @@ return [
     // Pas de middleware fixe : l'autorisation dépend de documents.visibility
     // (par ligne), pas de la route — voir DocumentController::download().
     ['GET',  '/documents/{id}/download',       'DocumentController@download'],
+    ['GET',  '/partners',                      'PartnerController@index'],
 
     // Recensement et authentification
     ['GET',  '/register',                      'RegistrationController@create'],

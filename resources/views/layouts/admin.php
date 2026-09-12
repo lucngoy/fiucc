@@ -18,8 +18,8 @@
  * Coquille du back office (FIUCC-43) — maquette fiucc_portal_admin_dashboard/
  * code.html pour le style (sidebar bleu marine, cartes blanches arrondies).
  * Barre latérale volontairement minimale : seuls "Membres", "Événements",
- * "Galerie", "Actualités", "Documents", "Élections" et "Sauvegardes"
- * mènent à une page réelle aujourd'hui. Pas de lien mort vers Dashboard/... — ces sections
+ * "Galerie", "Actualités", "Documents", "Partenaires", "Élections" et
+ * "Sauvegardes" mènent à une page réelle aujourd'hui. Pas de lien mort vers Dashboard/... — ces sections
  * n'ont ni contrôleur ni ticket construits (une phase à la fois,
  * CLAUDE.md) ; elles rejoindront la navigation quand leur ticket
  * existera, plutôt que de simuler un back office plus complet qu'il ne
@@ -104,6 +104,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                    <?= $activeNav === 'documents' ? 'aria-current="page"' : '' ?>>
                     <?= icon('folder-open', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.documents')) ?>
+                </a>
+                <a href="/admin/partners"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'partners' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'partners' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('building-columns', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.partners')) ?>
                 </a>
                 <a href="/admin/elections"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'elections' ? $activeClasses : $inactiveClasses ?>"

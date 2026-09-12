@@ -40,6 +40,10 @@ return [
     // (portrait, affiché en carte sur la page des candidats), pas une
     // couverture pleine largeur.
     'upload_candidate_photo_max_dimension' => (int) Env::get('UPLOAD_CANDIDATE_PHOTO_MAX_DIMENSION', 800),
+    // Logo partenaire (FIUCC-90) : même ordre de grandeur qu'une photo de
+    // candidat — un logo carré affiché en carte, jamais une bannière pleine
+    // largeur.
+    'upload_partner_logo_max_dimension' => (int) Env::get('UPLOAD_PARTNER_LOGO_MAX_DIMENSION', 800),
     // Documents (FIUCC-58) : plafond distinct de upload_max_size_mb, même
     // valeur ici — un règlement ou un rapport scanné a les mêmes contraintes
     // de taille qu'une photo (envoi mobile, mémoire du script).

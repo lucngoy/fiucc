@@ -42,6 +42,7 @@ $instagramUrl = \App\Core\Config::get('app.instagram_url');
                 <li><a href="/mentors" class="hover:text-primary transition-colors"><?= e(t('footer.mentors')) ?></a></li>
                 <li><a href="/community/government" class="hover:text-primary transition-colors"><?= e(t('footer.government')) ?></a></li>
                 <li><a href="/documents" class="hover:text-primary transition-colors"><?= e(t('footer.documents')) ?></a></li>
+                <li><a href="/partners" class="hover:text-primary transition-colors"><?= e(t('footer.partners')) ?></a></li>
             </ul>
         </div>
 

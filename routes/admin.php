@@ -48,6 +48,13 @@ return [
     ['POST', '/admin/documents/{id}',           'Admin\DocumentController@update'],
     ['POST', '/admin/documents/{id}/delete',    'Admin\DocumentController@delete'],
 
+    ['GET',  '/admin/partners',                 'Admin\PartnerController@index'],
+    ['GET',  '/admin/partners/create',          'Admin\PartnerController@create'],
+    ['POST', '/admin/partners',                 'Admin\PartnerController@store'],
+    ['GET',  '/admin/partners/{id}/edit',       'Admin\PartnerController@edit'],
+    ['POST', '/admin/partners/{id}',            'Admin\PartnerController@update'],
+    ['POST', '/admin/partners/{id}/delete',     'Admin\PartnerController@delete'],
+
     ['GET',  '/admin/elections',                'Admin\ElectionController@index'],
     ['GET',  '/admin/elections/create',         'Admin\ElectionController@create'],
     ['POST', '/admin/elections',                'Admin\ElectionController@store'],
