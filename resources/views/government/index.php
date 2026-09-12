@@ -157,9 +157,9 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
             <div class="max-w-layout mx-auto px-4 md:px-6 py-5">
                 <div class="grid grid-cols-3 gap-4 md:gap-8">
                     <?php foreach (array_values($stats) as $index => $stat): ?>
-                        <div class="flex items-center gap-3 <?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
+                        <div class="flex items-center gap-3 min-w-0 <?= $index > 0 ? 'md:pl-8 md:border-l md:border-white/20' : '' ?>">
                             <i class="<?= e($stat['icon']) ?> text-white/70 text-xl" aria-hidden="true"></i>
-                            <div>
+                            <div class="min-w-0">
                                 <p class="font-headline-sm text-headline-sm text-white"><?= e($stat['primary']) ?></p>
                                 <p class="text-label-md font-label-md text-white/70"><?= e($stat['caption']) ?></p>
                             </div>
