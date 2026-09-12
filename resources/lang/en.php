@@ -9,6 +9,13 @@ declare(strict_types=1);
  */
 
 return [
+    // SEO (FIUCC-75, section 36 of the cahier des charges) — fallback used
+    // by any page that doesn't provide its own $title/$description to the
+    // controller (see resources/views/layouts/app.php).
+    'seo.site_name'          => 'FIUCC — Congolese Community of Final International University',
+    'seo.default_title'      => 'FIUCC — Congolese Community of Final International University',
+    'seo.default_description' => 'The portal of the Congolese Community of Final International University: registration, events, news, gallery, elections and member directory.',
+
     'nav.home'      => 'Home',
     'nav.community' => 'Community',
     'nav.events'    => 'Events',

@@ -78,6 +78,38 @@ if (!function_exists('local_date')) {
     }
 }
 
+if (!function_exists('meta_description')) {
+    /**
+     * Dérive une meta description (FIUCC-75, section 36 du cahier des
+     * charges) à partir d'un champ de contenu long (description d'un
+     * événement, d'un album...) — jamais tronquée au milieu d'un mot, et
+     * jamais l'introduction d'une balise HTML si le champ en contenait
+     * (strip_tags avant tout). Repli sur seo.default_description si le
+     * contenu est vide, jamais une chaîne vide dans <meta name="description">.
+     */
+    function meta_description(?string $text, int $maxLength = 160): string
+    {
+        $text = trim(strip_tags((string) $text));
+
+        if ($text === '') {
+            return t('seo.default_description');
+        }
+
+        if (mb_strlen($text) <= $maxLength) {
+            return $text;
+        }
+
+        $truncated = mb_substr($text, 0, $maxLength);
+        $lastSpace = mb_strrpos($truncated, ' ');
+
+        if ($lastSpace !== false) {
+            $truncated = mb_substr($truncated, 0, $lastSpace);
+        }
+
+        return rtrim($truncated) . '…';
+    }
+}
+
 if (!function_exists('initials')) {
     /**
      * Repli d'avatar quand aucune photo n'est disponible (profil, page

@@ -229,6 +229,20 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
   utilisateur, phase 2 (FIUCC-8). Retirer cette entrée une fois le ticket
   créé et l'écran construit.
 
+- **Image de partage (og:image) générique.** FIUCC-75 (SEO) pose le bloc
+  Open Graph/Twitter Card dans `layouts/app.php`, avec un repli sur
+  `/assets/images/fiucc-seal.png` (le sceau, 200×200) quand une page ne
+  fournit pas `$ogImage` — ce qui est le cas de toutes les pages
+  aujourd'hui, aucun contrôleur ne le fait encore. C'est une tâche de
+  contenu, pas de code : une vraie image de partage 1200×630, aux couleurs
+  de la communauté (charte ci-dessous), remplacerait avantageusement le
+  sceau étiré/pixelisé que voient aujourd'hui les étudiants quand un lien
+  circule sur WhatsApp — l'aperçu de lien est souvent ce qui décide de
+  l'ouverture ou non, donc un vrai visuel pèse directement sur les
+  inscriptions. Pas de ticket Jira existant : à créer, phase 2. Retirer
+  cette entrée une fois l'image fournie et `seo.default_*`/le repli mis à
+  jour en conséquence.
+
 ## Charte graphique
 
 | Rôle | Hex | Usage |

@@ -59,7 +59,8 @@ final class NewsController extends Controller
         }
 
         $this->view('news.show', [
-            'title'   => $article['title'],
+            'title'       => $article['title'],
+            'description' => meta_description($article['excerpt']),
             'article' => $article,
             'related' => News::related((int) $article['id'], $article['category']),
         ]);

@@ -9,6 +9,13 @@ declare(strict_types=1);
  */
 
 return [
+    // SEO (FIUCC-75, section 36 du cahier des charges) — repli utilisé par
+    // toute page qui ne fournit pas son propre $title/$description au
+    // contrôleur (voir resources/views/layouts/app.php).
+    'seo.site_name'          => 'FIUCC — Communauté Congolaise de Final International University',
+    'seo.default_title'      => 'FIUCC — Communauté Congolaise de Final International University',
+    'seo.default_description' => "Le portail de la Communauté Congolaise de Final International University : recensement, événements, actualités, galerie, élections et annuaire des membres.",
+
     'nav.home'      => 'Accueil',
     'nav.community' => 'Communauté',
     'nav.events'    => 'Événements',

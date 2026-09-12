@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Jamais indexé (FIUCC-75) : back-office, aucune page ici n'a de
+         contenu destiné à une recherche publique — robots.txt bloque déjà
+         /admin/, cette balise le redit au niveau de chaque page (défense en
+         profondeur, même principe que le reste du projet). -->
+    <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'FIUCC Admin') ?></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

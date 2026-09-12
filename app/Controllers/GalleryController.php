@@ -41,7 +41,8 @@ final class GalleryController extends Controller
         }
 
         $this->view('gallery.show', [
-            'title'  => $album['title'],
+            'title'       => $album['title'],
+            'description' => meta_description($album['description']),
             'album'  => $album,
             'photos' => Album::photos((int) $album['id']),
         ]);

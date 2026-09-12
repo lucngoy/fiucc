@@ -65,6 +65,7 @@ final class ElectionController extends Controller
 
         $this->view('elections.show', [
             'title'       => $election['title'],
+            'description' => meta_description($election['description']),
             'election'    => $election,
             'window'      => Election::votingWindowState($election),
             'eligibility' => $context['state'],

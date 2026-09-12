@@ -20,7 +20,8 @@ final class HomeController extends Controller
     public function index(): void
     {
         $this->view('home.index', [
-            'title' => (string) Config::get('app.name'),
+            'title'       => (string) Config::get('app.name'),
+            'description' => t('seo.default_description'),
             'stats' => [
                 'students'   => Member::registeredStudentsCount(),
                 'events'     => Event::organizedCount(),

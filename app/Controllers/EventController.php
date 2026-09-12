@@ -83,6 +83,7 @@ final class EventController extends Controller
 
         $this->view('events.show', [
             'title'              => $event['title'],
+            'description'        => meta_description($event['description']),
             'event'              => $event,
             'displayState'       => Event::displayState($event),
             'registeredCount'    => Event::registeredCount((int) $event['id']),
