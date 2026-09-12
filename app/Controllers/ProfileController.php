@@ -7,6 +7,7 @@ use App\Core\Config;
 use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\Member;
+use App\Models\Mentorship;
 use App\Services\Upload;
 use DateTime;
 use RuntimeException;
@@ -204,7 +205,37 @@ final class ProfileController extends Controller
             'title'    => t('profile.mentor.title'),
             'settings' => $settings,
             'errors'   => [],
+            'requests' => Mentorship::incomingForMentor((int) $member['id']),
+            'notice'   => (string) ($_GET['notice'] ?? ''),
         ]);
+    }
+
+    /**
+     * Mentorship::respond() revérifie mentor_id = ce membre ET status =
+     * 'pending' dans son propre WHERE — ce contrôleur ne fait que
+     * traduire un échec (mauvais id, déjà tranchée, pas la sienne) en un
+     * message générique, jamais de détail qui confirmerait l'existence
+     * d'une demande appartenant à quelqu'un d'autre.
+     */
+    public function respondToMentorship(array $params): void
+    {
+        $member = Member::findFullByUserId((int) $_SESSION['user_id']);
+
+        if ($member === null || $member['status_type'] !== 'alumni') {
+            $this->redirect('/profile');
+            return;
+        }
+
+        $status = ($_POST['response'] ?? '') === 'accepted' ? 'accepted' : 'declined';
+        $mentorshipId = (int) ($params['id'] ?? 0);
+
+        $success = Mentorship::respond($mentorshipId, (int) $member['id'], $status);
+
+        if ($success) {
+            ActivityLog::record((int) $_SESSION['user_id'], 'mentorship_' . $status, 'mentorship', $mentorshipId);
+        }
+
+        $this->redirect('/profile/mentor?notice=' . ($success ? 'responded' : 'response_failed'));
     }
 
     public function updateMentor(): void

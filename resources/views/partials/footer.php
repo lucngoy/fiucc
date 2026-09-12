@@ -34,6 +34,7 @@ $year = date('Y');
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
                 <li><a href="/directory" class="hover:text-primary transition-colors"><?= e(t('footer.directory')) ?></a></li>
                 <li><a href="/alumni" class="hover:text-primary transition-colors"><?= e(t('footer.alumni')) ?></a></li>
+                <li><a href="/mentors" class="hover:text-primary transition-colors"><?= e(t('footer.mentors')) ?></a></li>
                 <li><a href="/community/government" class="hover:text-primary transition-colors"><?= e(t('footer.government')) ?></a></li>
                 <li><a href="/documents" class="hover:text-primary transition-colors"><?= e(t('footer.documents')) ?></a></li>
             </ul>

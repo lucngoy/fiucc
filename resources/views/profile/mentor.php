@@ -10,6 +10,7 @@
  */
 $settings ??= ['is_mentor' => 0, 'mentor_field' => '', 'mentor_availability' => '', 'mentor_bio' => '', 'show_email' => 0, 'show_phone' => 0];
 $errors ??= [];
+$requests ??= [];
 $notice ??= (string) ($_GET['notice'] ?? '');
 
 $error = static fn (string $name) => $errors[$name] ?? null;
@@ -18,6 +19,11 @@ $contactChannels = array_filter([
     (int) $settings['show_email'] === 1 ? t('census.privacy.show_email') : null,
     (int) $settings['show_phone'] === 1 ? t('census.privacy.show_phone') : null,
 ]);
+
+$requestNoticeMap = [
+    'responded'       => ['type' => 'success', 'message' => t('profile.mentor.requests.notice.responded')],
+    'response_failed' => ['type' => 'error',   'message' => t('profile.mentor.requests.notice.response_failed')],
+];
 ?>
 <div class="max-w-2xl mx-auto px-4 py-12 md:py-16">
     <div class="mb-8">
@@ -28,6 +34,10 @@ $contactChannels = array_filter([
     <?php if ($notice === 'updated'): ?>
         <div class="mb-8">
             <?= component('alert', ['type' => 'success', 'message' => t('profile.mentor.notice.updated')]) ?>
+        </div>
+    <?php elseif (isset($requestNoticeMap[$notice])): ?>
+        <div class="mb-8">
+            <?= component('alert', $requestNoticeMap[$notice]) ?>
         </div>
     <?php endif; ?>
 
@@ -82,4 +92,47 @@ $contactChannels = array_filter([
             <?= component('button', ['label' => t('profile.save'), 'variant' => 'primary', 'type' => 'submit']) ?>
         </div>
     </form>
+
+    <?php if ($requests !== []): ?>
+        <div class="mt-10">
+            <h2 class="font-headline-sm text-headline-sm text-ink mb-4"><?= e(t('profile.mentor.requests.title')) ?></h2>
+            <div class="flex flex-col gap-3">
+                <?php foreach ($requests as $request): ?>
+                    <div class="bg-white rounded-card border border-border p-4 flex flex-col gap-2">
+                        <div class="flex items-center gap-3">
+                            <?php if (!empty($request['student_photo'])): ?>
+                                <img src="<?= e('/uploads/' . $request['student_photo']) ?>" alt="" class="h-10 w-10 rounded-full object-cover shrink-0">
+                            <?php else: ?>
+                                <span class="h-10 w-10 rounded-full bg-primary/[4%] text-primary flex items-center justify-center font-label-md text-label-md shrink-0">
+                                    <?= e(initials($request['student_name'])) ?>
+                                </span>
+                            <?php endif; ?>
+                            <p class="font-label-lg text-label-lg text-ink"><?= e($request['student_name']) ?></p>
+                        </div>
+                        <?php if (!empty($request['topic'])): ?>
+                            <p class="text-label-caps font-label-caps text-muted"><?= e($request['topic']) ?></p>
+                        <?php endif; ?>
+                        <p class="text-body-sm text-ink"><?= e($request['message']) ?></p>
+
+                        <?php if ($request['status'] === 'pending'): ?>
+                            <div class="flex gap-2 mt-2">
+                                <form method="POST" action="<?= e('/profile/mentor/requests/' . $request['id'] . '/respond') ?>">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="response" value="accepted">
+                                    <button type="submit" class="h-9 px-4 rounded-control bg-success text-white text-label-md font-label-md hover:bg-success/90 transition-colors"><?= e(t('profile.mentor.requests.accept')) ?></button>
+                                </form>
+                                <form method="POST" action="<?= e('/profile/mentor/requests/' . $request['id'] . '/respond') ?>">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="response" value="declined">
+                                    <button type="submit" class="h-9 px-4 rounded-control bg-surface text-ink hover:bg-ink/10 transition-colors"><?= e(t('profile.mentor.requests.decline')) ?></button>
+                                </form>
+                            </div>
+                        <?php else: ?>
+                            <span class="text-body-sm text-muted"><?= e(t('profile.mentor.requests.status.' . $request['status'])) ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
 </div>

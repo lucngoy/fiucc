@@ -729,6 +729,49 @@ final class Member extends Model
     }
 
     /**
+     * Mentors disponibles (FIUCC-88) — mêmes conditions que le WHERE de
+     * Mentorship::create() (is_mentor/is_public/validated/alumni) : la
+     * liste et la garde d'écriture doivent rester en accord, sinon un
+     * mentor visible ici pourrait être refusé à la demande, ou l'inverse.
+     * Domaine/disponibilité toujours renvoyés (jamais rédigés) : is_mentor
+     * = 1 dans le WHERE signifie que le membre a déjà accepté de rendre
+     * ces deux champs publics en se déclarant mentor (FIUCC-87).
+     *
+     * @param array{search?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function mentorList(array $filters, int $page, int $perPage = self::ALUMNI_PER_PAGE): array
+    {
+        $conditions = ["status = 'validated'", "status_type = 'alumni'", 'is_mentor = 1', 'is_public = 1'];
+        $params = [];
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $conditions[] = '(full_name LIKE :search OR mentor_field LIKE :search2)';
+            $params['search'] = '%' . $search . '%';
+            $params['search2'] = '%' . $search . '%';
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+
+        $countStmt = static::db()->prepare("SELECT COUNT(*) FROM members {$where}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        $offset = ($page - 1) * $perPage;
+        $stmt = static::db()->prepare(
+            "SELECT id, full_name, photo, mentor_field, mentor_availability, mentor_bio
+             FROM members
+             {$where}
+             ORDER BY full_name ASC
+             LIMIT {$perPage} OFFSET {$offset}"
+        );
+        $stmt->execute($params);
+
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
+    }
+
+    /**
      * Fiche minimale pour une action admin unitaire (validate/reject/suspend,
      * FIUCC-44) — juste de quoi vérifier le statut courant, empêcher
      * l'auto-action et notifier le bon compte.
