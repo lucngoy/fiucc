@@ -114,7 +114,7 @@ if (!function_exists('icon')) {
     /**
      * Icône SVG en ligne (FIUCC-78) — remplace la police web Font Awesome
      * chargée depuis un CDN (mesuré : fa-solid-900.woff2 + fa-brands-400.woff2
-     * pèsent ~270 Ko à elles deux, pour un site qui n'utilise que 80 icônes
+     * pèsent ~270 Ko à elles deux, pour un site qui n'utilise que 81 icônes
      * précises sur les ~2 000 de la police complète). Les tracés viennent de
      * resources/icons.php, extraits une fois du paquet Font Awesome Free —
      * jamais un CDN ni une police à charger, aucune requête externe.

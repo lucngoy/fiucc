@@ -58,6 +58,9 @@ return [
     // définies.
     'upload_images_base_path'  => Env::get('UPLOAD_IMAGES_BASE_PATH'),
     'upload_storage_base_path' => Env::get('UPLOAD_STORAGE_BASE_PATH'),
+    // Même principe pour App\Services\Backup (FIUCC-80) : sans ça, un test
+    // de sauvegarde écrirait/lirait dans le vrai storage/backups/.
+    'backup_base_path' => Env::get('BACKUP_BASE_PATH'),
     // Verrouillage dur — comptes admin uniquement (voir CLAUDE.md : un
     // verrouillage par compte seul permettrait de priver un membre de vote).
     'login_max_attempts'   => (int) Env::get('LOGIN_MAX_ATTEMPTS', 5),

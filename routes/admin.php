@@ -78,6 +78,11 @@ return [
     ['GET',  '/admin/elections/{id}/results',   'Admin\ElectionController@results'],
     ['GET',  '/admin/elections/{id}/report',    'Admin\ElectionController@report'],
 
+    ['GET',  '/admin/backups',                  'Admin\BackupController@index'],
+    ['POST', '/admin/backups',                  'Admin\BackupController@create'],
+    ['GET',  '/admin/backups/{filename}',       'Admin\BackupController@download'],
+    ['POST', '/admin/backups/{filename}/delete','Admin\BackupController@delete'],
+
     ['GET',  '/admin/emails',                   'Admin\EmailController@index'],
     ['GET',  '/admin/logs',                     'Admin\LogController@index'],
 ];
