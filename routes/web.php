@@ -62,7 +62,7 @@ return [
     // jamais ['auth'] seul (voir commentaire d'en-tête, FIUCC-35).
     ['GET',  '/directory',                     'DirectoryController@index',       ['validated']],
     ['GET',  '/directory/{id}',                'DirectoryController@show',        ['validated']],
-    ['GET',  '/alumni',                        'AlumniController@index'],
+    ['GET',  '/alumni',                        'AlumniController@index',          ['validated']],
     ['GET',  '/mentors',                       'MentorController@index',          ['validated']],
     ['POST', '/mentors/{id}/request',          'MentorController@request',        ['validated']],
 

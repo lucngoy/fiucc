@@ -1,14 +1,20 @@
 <?php
 /**
- * Profil public d'un membre (FIUCC-84, section 15 du cahier des charges —
- * "PROFIL MEMBRE"). $member vient déjà filtré/rédigé de Member::
- * directoryProfile() : photo, nom, faculté, département, année, Instagram
- * — exactement la liste "Profil public éventuel" du cahier, jamais
- * student_id/email/téléphone (voir CLAUDE.md, point ouvert sur
- * show_email/show_phone). Cette vue n'a aucun contrôle de confidentialité
- * à faire, seulement à afficher ce qu'elle reçoit.
+ * Profil public d'un membre — student (FIUCC-84, section 15 du cahier des
+ * charges — "PROFIL MEMBRE") : photo, nom, faculté, département, année,
+ * Instagram, exactement la liste "Profil public éventuel" du cahier.
+ * alumni (FIUCC-86, section "Espace Alumni") : quatre champs de plus à la
+ * place de l'année d'étude — promotion (graduation_year), ville actuelle
+ * (city/country), domaine professionnel (profession/company). Jamais
+ * student_id/email/téléphone dans un cas comme dans l'autre (voir
+ * CLAUDE.md — show_email/show_phone n'ont un usage légitime qu'en
+ * mentorat, FIUCC-87/88). $member vient déjà filtré/rédigé de Member::
+ * directoryProfile() : cette vue n'a aucun contrôle de confidentialité à
+ * faire, seulement à afficher ce qu'elle reçoit.
  */
 $studyLevels ??= [];
+$isAlumni = ($member['status_type'] ?? null) === 'alumni';
+$currentPlace = trim(implode(', ', array_filter([$member['city'] ?? null, $member['country'] ?? null], static fn ($v) => !empty($v))));
 
 $renderInstagram = static function (?string $instagram): string {
     if (empty($instagram)) {
@@ -48,8 +54,21 @@ $renderInstagram = static function (?string $instagram): string {
             <?php if (!empty($member['department'])): ?>
                 <p class="text-body-sm text-muted"><?= e($member['department']) ?></p>
             <?php endif; ?>
-            <?php if (!empty($member['year']) && isset($studyLevels[(int) $member['year']])): ?>
+            <?php if (!$isAlumni && !empty($member['year']) && isset($studyLevels[(int) $member['year']])): ?>
                 <p class="text-body-sm text-muted"><?= e($studyLevels[(int) $member['year']]) ?></p>
+            <?php endif; ?>
+            <?php if ($isAlumni): ?>
+                <?php if (!empty($member['graduation_year'])): ?>
+                    <p class="text-body-sm text-muted"><?= e(t('alumni.card.promotion', ['year' => (string) $member['graduation_year']])) ?></p>
+                <?php endif; ?>
+                <?php if (!empty($member['profession'])): ?>
+                    <p class="text-body-md text-ink mt-2">
+                        <?= e($member['profession']) ?><?php if (!empty($member['company'])): ?> · <?= e($member['company']) ?><?php endif; ?>
+                    </p>
+                <?php endif; ?>
+                <?php if ($currentPlace !== ''): ?>
+                    <p class="text-body-sm text-muted"><?= e($currentPlace) ?></p>
+                <?php endif; ?>
             <?php endif; ?>
         </div>
 

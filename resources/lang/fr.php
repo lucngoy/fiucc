@@ -750,6 +750,18 @@ return [
     'directory.card.whatsapp' => 'WhatsApp',
     'directory.back_to_directory' => "← Retour à l'annuaire",
 
+    'alumni.title'    => 'Réseau alumni',
+    'alumni.subtitle' => "D'anciens membres de la communauté, aujourd'hui en poste ou en formation ailleurs.",
+    'alumni.search_label'       => 'Rechercher un alumni',
+    'alumni.search_placeholder' => 'Rechercher par nom…',
+    'alumni.filter.apply' => 'Filtrer',
+    'alumni.filter.reset' => 'Réinitialiser',
+    'alumni.total' => ':count alumni trouvé(s)',
+    'alumni.empty.default'  => "Aucun alumni n'apparaît ici pour l'instant : comme l'annuaire, cette page n'affiche que les membres qui ont choisi d'y figurer, dans leurs paramètres de confidentialité.",
+    'alumni.empty.filtered' => 'Aucun alumni ne correspond à cette recherche.',
+    'alumni.sparse_notice'  => "Le réseau alumni se peuple à mesure que d'anciens membres choisissent d'y figurer — ce n'est pas une erreur si peu de profils apparaissent encore.",
+    'alumni.card.promotion' => 'Promotion :year',
+
     'documents.title'    => 'Documents',
     'documents.subtitle' => 'Règlements, formulaires, rapports et archives de la communauté.',
     'documents.search_label'       => 'Rechercher un document',

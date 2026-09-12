@@ -8,6 +8,7 @@ use App\Core\Model;
 final class Member extends Model
 {
     private const DIRECTORY_PER_PAGE = 20;
+    private const ALUMNI_PER_PAGE = 20;
 
     public static function studentIdExists(string $studentId): bool
     {
@@ -600,14 +601,22 @@ final class Member extends Model
 
     /**
      * Profil public d'un membre (FIUCC-84, section 15 du cahier des
-     * charges — "PROFIL MEMBRE"). Champs exactement ceux listés sous
-     * "Profil public éventuel" : PHOTO, NAME, Faculty, Department, Year,
-     * Instagram — jamais student_id/email/téléphone, le cahier est
-     * explicite ("Ne jamais afficher publiquement"), sans exception
-     * d'opt-in. show_email/show_phone (FIUCC-83) ne sont délibérément pas
-     * lus ici : ce ticket ne leur trouve aucune surface d'affichage
-     * légitime, décision prise en préparant FIUCC-84, pas un oubli — voir
-     * CLAUDE.md.
+     * charges — "PROFIL MEMBRE"), aussi utilisé par le réseau alumni
+     * (FIUCC-86, section "Espace Alumni") pour le même id : un seul profil
+     * public par membre, pas deux pages séparées. Champs pour un student,
+     * exactement ceux listés sous "Profil public éventuel" : PHOTO, NAME,
+     * Faculty, Department, Year, Instagram — jamais student_id/email/
+     * téléphone, le cahier est explicite ("Ne jamais afficher
+     * publiquement"), sans exception d'opt-in — voir CLAUDE.md
+     * (show_email/show_phone n'ont un usage légitime qu'en mentorat,
+     * FIUCC-87/88, jamais ici). Pour un alumni, quatre champs de plus,
+     * exactement ceux de la section "Espace Alumni" du cahier ("parcours,
+     * promotion, ville actuelle, domaine professionnel") : department déjà
+     * sélectionné couvre "parcours" avec faculty, graduation_year est la
+     * "promotion", city/country sont "ville actuelle", profession/company
+     * sont le "domaine professionnel". La vue choisit quoi afficher selon
+     * status_type — ce modèle renvoie toujours tout, jamais moins que ce
+     * que le statut du membre autorise.
      *
      * WHERE porte à la fois l'existence, le statut ET is_public : les
      * trois raisons de refus (id inconnu, membre non validé, membre resté
@@ -619,7 +628,8 @@ final class Member extends Model
     public static function directoryProfile(int $id): ?array
     {
         $stmt = static::db()->prepare(
-            "SELECT id, full_name, faculty, department, year, photo, instagram
+            "SELECT id, full_name, faculty, department, year, photo, instagram,
+                    status_type, graduation_year, city, country, profession, company
              FROM members
              WHERE id = :id AND status = 'validated' AND is_public = 1
              LIMIT 1"
@@ -628,6 +638,52 @@ final class Member extends Model
         $row = $stmt->fetch();
 
         return $row === false ? null : $row;
+    }
+
+    /**
+     * Réseau alumni (FIUCC-86, section "Espace Alumni" du cahier) — même
+     * discipline que directoryList() : is_public = 1 filtre l'inclusion
+     * dans la liste elle-même (un alumni resté privé n'apparaît nulle
+     * part), status_type = 'alumni' exclut les students et les honorary
+     * (jamais eu de scolarité à raconter). Recherche par nom seulement,
+     * pas de filtres dédiés : le cahier n'en demande pas pour cette page,
+     * contrairement à l'annuaire général — ne pas en inventer.
+     *
+     * @param array{search?: string} $filters
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
+     */
+    public static function alumniList(array $filters, int $page, int $perPage = self::ALUMNI_PER_PAGE): array
+    {
+        $conditions = ["status = 'validated'", "status_type = 'alumni'", 'is_public = 1'];
+        $params = [];
+
+        $search = trim((string) ($filters['search'] ?? ''));
+        if ($search !== '') {
+            $conditions[] = 'full_name LIKE :search';
+            $params['search'] = '%' . $search . '%';
+        }
+
+        $where = 'WHERE ' . implode(' AND ', $conditions);
+
+        $countStmt = static::db()->prepare("SELECT COUNT(*) FROM members {$where}");
+        $countStmt->execute($params);
+        $total = (int) $countStmt->fetchColumn();
+
+        // LIMIT/OFFSET interpolés, pas liés — mêmes raisons que
+        // directoryList() : PDO::ATTR_EMULATE_PREPARES à false, $page/
+        // $perPage typés int (strict_types=1).
+        $offset = ($page - 1) * $perPage;
+        $stmt = static::db()->prepare(
+            "SELECT id, full_name, faculty, department, photo,
+                    graduation_year, city, country, profession, company
+             FROM members
+             {$where}
+             ORDER BY full_name ASC
+             LIMIT {$perPage} OFFSET {$offset}"
+        );
+        $stmt->execute($params);
+
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
     }
 
     /**

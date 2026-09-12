@@ -752,6 +752,18 @@ return [
     'directory.card.whatsapp' => 'WhatsApp',
     'directory.back_to_directory' => '← Back to directory',
 
+    'alumni.title'    => 'Alumni Network',
+    'alumni.subtitle' => 'Former community members, now working or studying elsewhere.',
+    'alumni.search_label'       => 'Search for an alumni',
+    'alumni.search_placeholder' => 'Search by name…',
+    'alumni.filter.apply' => 'Filter',
+    'alumni.filter.reset' => 'Reset',
+    'alumni.total' => ':count alumni found',
+    'alumni.empty.default'  => "No alumni appear here yet: like the directory, this page only shows members who chose to be listed, in their privacy settings.",
+    'alumni.empty.filtered' => 'No alumni match this search.',
+    'alumni.sparse_notice'  => "The alumni network fills up as former members choose to be listed — it's not a bug if few profiles show up yet.",
+    'alumni.card.promotion' => 'Class of :year',
+
     'documents.title'    => 'Documents',
     'documents.subtitle' => "The community's regulations, forms, reports, and archives.",
     'documents.search_label'       => 'Search documents',
