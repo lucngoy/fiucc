@@ -6,6 +6,7 @@ namespace App\Controllers\Admin;
 use App\Core\Controller;
 use App\Core\View;
 use App\Models\ActivityLog;
+use App\Models\User;
 use App\Services\Backup;
 use Throwable;
 
@@ -29,11 +30,19 @@ final class BackupController extends Controller
     public function index(): void
     {
         $this->view('admin.backups.index', [
-            'title'     => t('admin.backups.title'),
-            'activeNav' => 'backups',
-            'backups'   => Backup::list(),
-            'notice'    => (string) ($_GET['notice'] ?? ''),
-        ]);
+            'title'      => t('admin.backups.title'),
+            'activeNav'  => 'backups',
+            'adminEmail' => $this->currentAdminEmail(),
+            'backups'    => Backup::list(),
+            'notice'     => (string) ($_GET['notice'] ?? ''),
+        ], 'layouts.admin');
+    }
+
+    private function currentAdminEmail(): string
+    {
+        $user = User::find((int) $_SESSION['user_id']);
+
+        return $user['email'] ?? '';
     }
 
     public function create(): void

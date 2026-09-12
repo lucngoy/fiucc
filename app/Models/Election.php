@@ -89,6 +89,18 @@ final class Election extends Model
      * pagination : le nombre d'élections réelles pour une seule communauté
      * reste faible, une page suffit.
      */
+    /**
+     * "Active" au sens du dashboard admin (FIUCC-23) : le vote est
+     * effectivement ouvert en ce moment — pas candidacies/closed/published,
+     * des phases qui ne demandent aucune surveillance en temps réel.
+     */
+    public static function countOpen(): int
+    {
+        return (int) static::db()
+            ->query("SELECT COUNT(*) FROM elections WHERE status = 'open'")
+            ->fetchColumn();
+    }
+
     public static function publicList(): array
     {
         $stmt = static::db()->prepare(

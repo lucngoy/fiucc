@@ -17,14 +17,17 @@
 /**
  * Coquille du back office (FIUCC-43) — maquette fiucc_portal_admin_dashboard/
  * code.html pour le style (sidebar bleu marine, cartes blanches arrondies).
- * Barre latérale volontairement minimale : seuls "Membres", "Événements",
- * "Galerie", "Actualités", "Documents", "Partenaires", "Élections" et
- * "Sauvegardes" mènent à une page réelle aujourd'hui. Pas de lien mort vers Dashboard/... — ces sections
- * n'ont ni contrôleur ni ticket construits (une phase à la fois,
- * CLAUDE.md) ; elles rejoindront la navigation quand leur ticket
- * existera, plutôt que de simuler un back office plus complet qu'il ne
- * l'est. "Élections" (FIUCC-59/60) : création/configuration seulement pour
- * l'instant — candidatures/vote/résultats arrivent avec les tickets
+ * Barre latérale volontairement minimale : "Tableau de bord" (FIUCC-23,
+ * ajouté en préparant FIUCC-81 — la route existait depuis le début dans
+ * routes/admin.php mais Admin\DashboardController n'a été construit que là,
+ * voir CLAUDE.md), "Membres", "Événements", "Galerie", "Actualités",
+ * "Documents", "Partenaires", "Élections" et "Sauvegardes" mènent à une
+ * page réelle aujourd'hui. Pas de lien mort vers Emails/Logs/Admins/
+ * Paramètres — ces sections n'ont ni contrôleur ni ticket construits (une
+ * phase à la fois, CLAUDE.md) ; elles rejoindront la navigation quand leur
+ * ticket existera, plutôt que de simuler un back office plus complet qu'il
+ * ne l'est. "Élections" (FIUCC-59/60) : création/configuration seulement
+ * pour l'instant — candidatures/vote/résultats arrivent avec les tickets
  * suivants (FIUCC-61+), pas de bouton pour des actions qui n'existent pas
  * encore.
  *
@@ -75,6 +78,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:hidden md:before:block before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
                 $inactiveClasses = 'text-white/90 hover:bg-white/10 hover:text-white';
                 ?>
+                <a href="/admin"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'dashboard' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'dashboard' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('chart-simple', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.dashboard')) ?>
+                </a>
                 <a href="/admin/members"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'members' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'members' ? 'aria-current="page"' : '' ?>>

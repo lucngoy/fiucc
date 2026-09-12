@@ -272,6 +272,18 @@ final class Vote extends Model
     }
 
     /**
+     * Total des bulletins enregistrés, toutes élections confondues (FIUCC-23,
+     * dashboard admin) — encore plus strictement un agrégat pur que
+     * resultsForElection() ci-dessus : aucune jointure du tout, pas même vers
+     * candidates/members, seulement COUNT(*) FROM votes. Ne révèle ni pour
+     * qui, ni pour quel poste, ni quelle élection (CLAUDE.md règle 1/13).
+     */
+    public static function countAll(): int
+    {
+        return (int) static::db()->query('SELECT COUNT(*) FROM votes')->fetchColumn();
+    }
+
+    /**
      * Assemble resultsForElection() et Election::positions() en une seule
      * structure prête à afficher — factorisé ici (FIUCC-72) parce que
      * App\Controllers\ElectionController::results(), Admin\ElectionController

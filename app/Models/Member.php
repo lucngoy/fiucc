@@ -196,6 +196,25 @@ final class Member extends Model
     }
 
     /**
+     * Total des recensements soumis, tous statuts confondus (FIUCC-23,
+     * dashboard admin) — différent de registeredStudentsCount() ci-dessus
+     * (validated + student uniquement, pensé pour l'affichage public) :
+     * ici l'admin a besoin de voir le volume total traité, pending compris.
+     */
+    public static function countAll(): int
+    {
+        return (int) static::db()->query('SELECT COUNT(*) FROM members')->fetchColumn();
+    }
+
+    public static function countByStatus(string $status): int
+    {
+        $stmt = static::db()->prepare('SELECT COUNT(*) FROM members WHERE status = :status');
+        $stmt->execute(['status' => $status]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
      * Droit de vote (CLAUDE.md, règle non négociable) : status='validated'
      * ET status_type='student' — un alumni reste membre sans être électeur.
      * Point d'entrée unique pour ne pas réimplémenter cette règle ailleurs

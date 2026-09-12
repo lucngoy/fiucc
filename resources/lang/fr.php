@@ -378,6 +378,7 @@ return [
     'admin.brand.name'    => 'FIUCC Admin',
     'admin.brand.tagline' => 'Centre de contrôle',
     'admin.nav.section_label' => 'Navigation',
+    'admin.nav.dashboard' => 'Tableau de bord',
     'admin.nav.members'   => 'Membres',
     'admin.nav.events'    => 'Événements',
     'admin.nav.gallery'   => 'Galerie',
@@ -976,6 +977,15 @@ return [
     'admin.documents.field.file_required' => 'Un fichier est obligatoire.',
     'admin.documents.submit.create' => 'Créer le document',
     'admin.documents.submit.update' => 'Enregistrer les modifications',
+
+    'admin.dashboard.title'    => 'Tableau de bord',
+    'admin.dashboard.subtitle' => 'Vue d\'ensemble de la communauté.',
+    'admin.dashboard.stats.registered_members' => 'Membres recensés',
+    'admin.dashboard.stats.pending_members'    => 'En attente de validation',
+    'admin.dashboard.stats.upcoming_events'    => 'Événements à venir',
+    'admin.dashboard.stats.published_news'     => 'Actualités publiées',
+    'admin.dashboard.stats.active_elections'   => 'Élections en cours',
+    'admin.dashboard.stats.votes'              => 'Bulletins enregistrés',
 
     'admin.backups.title' => 'Sauvegardes',
     'admin.backups.total' => ':count sauvegarde(s)',

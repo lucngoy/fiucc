@@ -380,6 +380,7 @@ return [
     'admin.brand.name'    => 'FIUCC Admin',
     'admin.brand.tagline' => 'Control Center',
     'admin.nav.section_label' => 'Navigation',
+    'admin.nav.dashboard' => 'Dashboard',
     'admin.nav.members'   => 'Members',
     'admin.nav.events'    => 'Events',
     'admin.nav.gallery'   => 'Gallery',
@@ -978,6 +979,15 @@ return [
     'admin.documents.field.file_required' => 'A file is required.',
     'admin.documents.submit.create' => 'Create document',
     'admin.documents.submit.update' => 'Save changes',
+
+    'admin.dashboard.title'    => 'Dashboard',
+    'admin.dashboard.subtitle' => 'Community overview.',
+    'admin.dashboard.stats.registered_members' => 'Registered members',
+    'admin.dashboard.stats.pending_members'    => 'Pending approval',
+    'admin.dashboard.stats.upcoming_events'    => 'Upcoming events',
+    'admin.dashboard.stats.published_news'     => 'Published news',
+    'admin.dashboard.stats.active_elections'   => 'Active elections',
+    'admin.dashboard.stats.votes'              => 'Ballots cast',
 
     'admin.backups.title' => 'Backups',
     'admin.backups.total' => ':count backup(s)',

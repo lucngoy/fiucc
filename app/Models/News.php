@@ -49,6 +49,16 @@ final class News extends Model
     }
 
     /**
+     * Même condition de visibilité que latest() (FIUCC-23, dashboard admin).
+     */
+    public static function countPublished(): int
+    {
+        return (int) static::db()
+            ->query('SELECT COUNT(*) FROM news WHERE published_at IS NOT NULL AND published_at <= NOW()')
+            ->fetchColumn();
+    }
+
+    /**
      * Liste publique (FIUCC-55) — recherche, filtre catégorie, pagination.
      * Même visibilité que latest().
      *
