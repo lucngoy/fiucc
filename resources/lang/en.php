@@ -215,6 +215,8 @@ return [
     'profile.privacy.title'         => 'Privacy and directory',
     'profile.privacy.subtitle'      => 'Control what other members can see on your profile.',
     'profile.privacy.notice.updated' => 'Your privacy settings have been updated.',
+    'profile.directory_hint.not_visible' => "You don't appear in the members directory.",
+    'profile.directory_hint.link'        => 'Change that',
 
     'password.show' => 'Show password',
     'password.hide' => 'Hide password',
@@ -741,8 +743,9 @@ return [
     'directory.filter.apply' => 'Filter',
     'directory.filter.reset' => 'Reset',
     'directory.total' => ':count member(s) found',
-    'directory.empty.default'  => 'No members are visible in the directory yet.',
+    'directory.empty.default'  => "No members appear here yet: the directory only shows members who chose to be listed, in their privacy settings. This isn't a bug — be the first to make yourself visible!",
     'directory.empty.filtered' => 'No members match these filters.',
+    'directory.sparse_notice'  => "The directory fills up as members choose to be listed, in their privacy settings — it's not a bug if few profiles show up yet.",
     'directory.card.whatsapp' => 'WhatsApp',
 
     'documents.title'    => 'Documents',

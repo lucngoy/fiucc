@@ -3,6 +3,7 @@
  * Page profil du membre (FIUCC-37) — affichage seul, sa propre fiche.
  */
 $notice ??= null;
+$isPublic ??= false;
 
 $statusCopy = [
     'validated' => ['type' => 'success', 'message' => t('profile.status.validated')],
@@ -69,6 +70,16 @@ if ($member['status_type'] !== 'student') {
             <?= component('button', ['label' => t('profile.edit_profile'), 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
         </div>
     </div>
+
+    <?php if (!$isPublic): ?>
+        <p class="flex items-center gap-2 text-body-sm text-muted">
+            <?= icon('eye-slash', 'shrink-0') ?>
+            <span>
+                <?= e(t('profile.directory_hint.not_visible')) ?>
+                <a href="/profile/privacy" class="text-primary underline"><?= e(t('profile.directory_hint.link')) ?></a>
+            </span>
+        </p>
+    <?php endif; ?>
 
     <?= component('alert', ['type' => $status['type'], 'message' => $status['message']]) ?>
 

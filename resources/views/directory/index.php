@@ -18,6 +18,11 @@ $total ??= 0;
 $currentPage ??= 1;
 $totalPages ??= 1;
 
+// En dessous de ce seuil, la grille a l'air cassée plutôt que jeune — un
+// mot d'explication au-dessus plutôt qu'une page qui semble juste vide de
+// contenu (les membres choisissent d'y figurer, voir /profile/privacy).
+$sparseThreshold = 5;
+
 $activeFilterQuery = array_filter([
     'search'       => $filters['search'],
     'faculty'      => $filters['faculty'],
@@ -103,6 +108,12 @@ $paginationBase = '/directory?' . ($activeFilterQuery !== []
             <?php endif; ?>
         </div>
     <?php else: ?>
+        <?php if ($total < $sparseThreshold): ?>
+            <div class="mb-6">
+                <?= component('alert', ['type' => 'info', 'message' => t('directory.sparse_notice')]) ?>
+            </div>
+        <?php endif; ?>
+
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <?php foreach ($members as $member): ?>
                 <div class="bg-surface rounded-card border border-border overflow-hidden">

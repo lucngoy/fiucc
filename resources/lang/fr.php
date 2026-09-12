@@ -213,6 +213,8 @@ return [
     'profile.privacy.title'         => 'Confidentialité et annuaire',
     'profile.privacy.subtitle'      => 'Contrôlez ce que les autres membres peuvent voir de votre profil.',
     'profile.privacy.notice.updated' => 'Vos réglages de confidentialité ont été mis à jour.',
+    'profile.directory_hint.not_visible' => "Vous n'apparaissez pas dans l'annuaire des membres.",
+    'profile.directory_hint.link'        => 'Changer ça',
 
     'password.show' => 'Afficher le mot de passe',
     'password.hide' => 'Masquer le mot de passe',
@@ -739,8 +741,9 @@ return [
     'directory.filter.apply' => 'Filtrer',
     'directory.filter.reset' => 'Réinitialiser',
     'directory.total' => ':count membre(s) trouvé(s)',
-    'directory.empty.default'  => 'Aucun membre visible dans l\'annuaire pour le moment.',
+    'directory.empty.default'  => "Aucun membre n'apparaît ici pour l'instant : l'annuaire n'affiche que les membres qui ont choisi d'y figurer, dans leurs paramètres de confidentialité. Ce n'est pas une erreur — soyez le premier à vous rendre visible !",
     'directory.empty.filtered' => 'Aucun membre ne correspond à ces filtres.',
+    'directory.sparse_notice'  => "L'annuaire se peuple à mesure que les membres choisissent d'y figurer, dans leurs paramètres de confidentialité — ce n'est pas une erreur si peu de profils apparaissent encore.",
     'directory.card.whatsapp' => 'WhatsApp',
 
     'documents.title'    => 'Documents',

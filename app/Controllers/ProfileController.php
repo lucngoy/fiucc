@@ -36,11 +36,18 @@ final class ProfileController extends Controller
             ? t('profile.notice_validation_required')
             : null;
 
+        // Juste is_public, pas les trois réglages (FIUCC-83 en garde la
+        // lecture complète séparée) : cette page n'a besoin que de savoir
+        // si l'invitation "vous n'apparaissez pas dans l'annuaire" doit
+        // s'afficher.
+        $privacySettings = Member::privacySettings((int) $member['id']);
+
         $this->view('profile.index', [
             'title'       => t('profile.title'),
             'member'      => $member,
             'studyLevels' => Config::get('registration.study_levels', []),
             'notice'      => $notice,
+            'isPublic'    => $privacySettings !== null && (int) $privacySettings['is_public'] === 1,
         ]);
     }
 
