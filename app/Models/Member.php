@@ -555,6 +555,38 @@ final class Member extends Model
     }
 
     /**
+     * Profil public d'un membre (FIUCC-84, section 15 du cahier des
+     * charges — "PROFIL MEMBRE"). Champs exactement ceux listés sous
+     * "Profil public éventuel" : PHOTO, NAME, Faculty, Department, Year,
+     * Instagram — jamais student_id/email/téléphone, le cahier est
+     * explicite ("Ne jamais afficher publiquement"), sans exception
+     * d'opt-in. show_email/show_phone (FIUCC-83) ne sont délibérément pas
+     * lus ici : ce ticket ne leur trouve aucune surface d'affichage
+     * légitime, décision prise en préparant FIUCC-84, pas un oubli — voir
+     * CLAUDE.md.
+     *
+     * WHERE porte à la fois l'existence, le statut ET is_public : les
+     * trois raisons de refus (id inconnu, membre non validé, membre resté
+     * privé) produisent exactement le même null, donc la même réponse
+     * (404, jamais un login) — un id deviné ne permet jamais de distinguer
+     * "n'existe pas" de "existe mais privé", même principe que
+     * DocumentController::download() pour un document restreint.
+     */
+    public static function directoryProfile(int $id): ?array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT id, full_name, faculty, department, year, photo, instagram
+             FROM members
+             WHERE id = :id AND status = 'validated' AND is_public = 1
+             LIMIT 1"
+        );
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
+    }
+
+    /**
      * Fiche minimale pour une action admin unitaire (validate/reject/suspend,
      * FIUCC-44) — juste de quoi vérifier le statut courant, empêcher
      * l'auto-action et notifier le bon compte.

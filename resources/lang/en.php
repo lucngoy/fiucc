@@ -747,6 +747,7 @@ return [
     'directory.empty.filtered' => 'No members match these filters.',
     'directory.sparse_notice'  => "The directory fills up as members choose to be listed, in their privacy settings — it's not a bug if few profiles show up yet.",
     'directory.card.whatsapp' => 'WhatsApp',
+    'directory.back_to_directory' => '← Back to directory',
 
     'documents.title'    => 'Documents',
     'documents.subtitle' => "The community's regulations, forms, reports, and archives.",

@@ -197,6 +197,19 @@ Ces règles priment sur toute autre considération, y compris la simplicité ou 
     sous `['validated']` comme les autres routes de cette liste ; si c'est une
     page vitrine du programme sans profils individuels, rester publique est
     correct. Ne pas deviner avant que la page existe réellement.
+    **Point ouvert : `members.show_email`/`show_phone` sans usage légitime
+    connu.** Ces deux colonnes (opt-in, migration 001) ont un écran pour les
+    régler (`/profile/privacy`, FIUCC-83) mais aucun écran ne les lit
+    aujourd'hui : le profil public d'un membre (FIUCC-84, section 15 du
+    cahier — "PROFIL MEMBRE") dit explicitement "ne jamais afficher
+    publiquement" l'email et le téléphone, sans exception d'opt-in, et sa
+    liste de champs autorisés ("photo, name, faculty, department, year,
+    instagram") ne les inclut même pas conditionnellement — décision prise
+    en préparant FIUCC-84 de suivre le cahier à la lettre plutôt que
+    d'inventer une exception. Si un futur ticket (mentorat, FIUCC-87/88 ?)
+    leur trouve un vrai contexte d'affichage entre un mentor et un mentee,
+    documenter ce raisonnement ici plutôt que de les câbler silencieusement
+    dans une vue qui n'a pas ce contexte.
 13. **Aucune vue, aucun message, aucun email ne peut dépendre du contenu d'un
     bulletin.** La seule chose que le système peut dire à un membre à propos
     de son propre vote, c'est le fait d'avoir voté ou non (déductible de

@@ -745,6 +745,7 @@ return [
     'directory.empty.filtered' => 'Aucun membre ne correspond à ces filtres.',
     'directory.sparse_notice'  => "L'annuaire se peuple à mesure que les membres choisissent d'y figurer, dans leurs paramètres de confidentialité — ce n'est pas une erreur si peu de profils apparaissent encore.",
     'directory.card.whatsapp' => 'WhatsApp',
+    'directory.back_to_directory' => "← Retour à l'annuaire",
 
     'documents.title'    => 'Documents',
     'documents.subtitle' => 'Règlements, formulaires, rapports et archives de la communauté.',

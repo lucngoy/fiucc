@@ -125,7 +125,9 @@ $paginationBase = '/directory?' . ($activeFilterQuery !== []
                         </span>
                     <?php endif; ?>
                     <div class="p-3">
-                        <h3 class="font-label-lg text-label-lg text-ink mb-0.5 truncate"><?= e($member['full_name']) ?></h3>
+                        <h3 class="font-label-lg text-label-lg text-ink mb-0.5 truncate">
+                            <a href="<?= e('/directory/' . $member['id']) ?>" class="hover:text-primary hover:underline"><?= e($member['full_name']) ?></a>
+                        </h3>
                         <?php if (!empty($member['faculty'])): ?>
                             <p class="text-label-caps font-label-caps text-muted mb-0.5 truncate"><?= e($member['faculty']) ?></p>
                         <?php endif; ?>
