@@ -135,6 +135,50 @@ final class Member extends Model
     }
 
     /**
+     * Passage manuel en alumni (FIUCC-85, section "Espace Alumni" du
+     * cahier — "passage en alumni... manuel par l'admin"), pour le cas où
+     * graduation_year est absent ou faux. status seul ne change pas : un
+     * membre suspendu reste suspendu, devenir alumni ne rouvre pas
+     * l'accès — c'est status_type qui détermine l'électorat
+     * (isVoterEligible()), pas status.
+     */
+    public static function markAlumni(int $memberId): void
+    {
+        $stmt = static::db()->prepare("UPDATE members SET status_type = 'alumni' WHERE id = :id");
+        $stmt->execute(['id' => $memberId]);
+    }
+
+    /**
+     * Passage automatique en alumni (FIUCC-85, même section — "automatique
+     * via graduation_year"), appelé depuis bin/promote_alumni.php. Pas de
+     * tâche planifiée dans ce projet (CLAUDE.md, voir aussi FIUCC-80) :
+     * script à exécuter manuellement ou à brancher sur un cron externe au
+     * moment du déploiement, jamais un job embarqué dans l'application.
+     *
+     * graduation_year <= année en cours : diplômé au titre de cette
+     * année-là, pas seulement après qu'elle soit passée — un membre dont
+     * l'année de diplôme est l'année en cours n'a plus de raison de rester
+     * électeur pendant que l'admin prépare la prochaine élection. Seuls
+     * les 'student' déjà 'validated' sont concernés : un membre encore
+     * pending/rejected n'a pas de statut électoral à retirer, et un
+     * honorary n'a jamais été étudiant.
+     *
+     * @return int Nombre de membres promus.
+     */
+    public static function promoteGraduatedStudents(): int
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE members
+             SET status_type = 'alumni'
+             WHERE status = 'validated' AND status_type = 'student'
+               AND graduation_year IS NOT NULL AND graduation_year <= :current_year"
+        );
+        $stmt->execute(['current_year' => (int) date('Y')]);
+
+        return $stmt->rowCount();
+    }
+
+    /**
      * Statistique "Registered Students" de la page d'accueil (section 10 du
      * cahier des charges, FIUCC-47) : membres validés par un admin, jamais
      * les pending/rejected/suspended — une inscription non confirmée ou

@@ -10,6 +10,7 @@ return [
     ['POST', '/admin/members/{id}/validate',    'Admin\MemberController@validate'],
     ['POST', '/admin/members/{id}/reject',      'Admin\MemberController@reject'],
     ['POST', '/admin/members/{id}/suspend',     'Admin\MemberController@suspend'],
+    ['POST', '/admin/members/{id}/mark-alumni', 'Admin\MemberController@markAlumni'],
     ['POST', '/admin/members/bulk-validate',    'Admin\MemberController@bulkValidate'],
     ['POST', '/admin/members/bulk-reject',      'Admin\MemberController@bulkReject'],
     ['POST', '/admin/members/bulk-suspend',     'Admin\MemberController@bulkSuspend'],

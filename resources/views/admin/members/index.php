@@ -109,6 +109,8 @@ $noticeMap = [
     'validated'          => ['type' => 'success', 'message' => t('admin.members.notice.validated')],
     'rejected'           => ['type' => 'success', 'message' => t('admin.members.notice.rejected')],
     'suspended'          => ['type' => 'success', 'message' => t('admin.members.notice.suspended')],
+    'marked_alumni'      => ['type' => 'success', 'message' => t('admin.members.notice.marked_alumni')],
+    'already_alumni'     => ['type' => 'error',   'message' => t('admin.members.notice.already_alumni')],
     'reason_required'    => ['type' => 'error',   'message' => t('admin.members.notice.reason_required')],
     'self_action_denied' => ['type' => 'error',   'message' => t('admin.members.notice.self_action_denied')],
     'bulk_none_selected' => ['type' => 'warning', 'message' => t('admin.members.notice.bulk_none_selected')],
@@ -330,6 +332,20 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                                 </div>
                                             </form>
                                         </dialog>
+                                    <?php endif; ?>
+
+                                    <?php if ($member['status'] === 'validated' && $member['status_type'] === 'student'): ?>
+                                        <div class="relative group">
+                                            <form method="POST" action="<?= e($rowActionUrl('mark-alumni')) ?>">
+                                                <?= csrf_field() ?>
+                                                <input type="hidden" name="return_to" value="<?= e($currentUrl) ?>">
+                                                <button type="submit" aria-label="<?= e(t('admin.members.action.mark_alumni')) ?>"
+                                                    class="h-9 w-9 rounded-control bg-surface text-primary hover:bg-primary/15 flex items-center justify-center transition-colors">
+                                                    <?= icon('graduation-cap') ?>
+                                                </button>
+                                            </form>
+                                            <?= $actionTooltip(t('admin.members.action.mark_alumni')) ?>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                             </td>

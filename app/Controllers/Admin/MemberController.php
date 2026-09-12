@@ -193,6 +193,32 @@ final class MemberController extends Controller
     }
 
     /**
+     * Passage manuel en alumni (FIUCC-85) — pas de raison à saisir,
+     * contrairement à reject()/suspend() : ce n'est pas une sanction, la
+     * même mécanique de confirmation que validate().
+     */
+    public function markAlumni(array $params): void
+    {
+        $adminId = (int) $_SESSION['user_id'];
+        $member = Member::findById((int) ($params['id'] ?? 0));
+
+        if ($member === null || (int) $member['user_id'] === $adminId) {
+            $this->redirectToList('self_action_denied');
+            return;
+        }
+
+        if ($member['status_type'] !== 'student') {
+            $this->redirectToList('already_alumni');
+            return;
+        }
+
+        Member::markAlumni((int) $member['id']);
+        ActivityLog::record($adminId, 'member.marked_alumni', 'member', (int) $member['id']);
+
+        $this->redirectToList('marked_alumni');
+    }
+
+    /**
      * Validation groupée : ne touche qu'aux membres réellement 'pending'
      * parmi les ids soumis (CLAUDE.md/consigne FIUCC-44 — une sélection mal
      * ciblée ne doit jamais faire entrer un non-membre dans le corps
