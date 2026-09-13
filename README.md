@@ -89,9 +89,13 @@ config Apache globale. En production, cette configuration doit être servie en *
 `config/mail.php` a deux modes, pilotés par `MAIL_DRIVER` :
 
 - `log` (**défaut**) : aucun email n'est réellement envoyé, chaque message est écrit dans
-  `storage/logs/mail.log`. C'est le mode sûr pour développer sans risquer d'envoyer un
-  email réel à une adresse `@final.edu.tr`.
-- `smtp` : envoi réel via PHPMailer. **À positionner explicitement en production.**
+  `storage/logs/mail.log`. C'est le repli sûr si `MAIL_DRIVER` est absent ou vide de
+  `.env` — jamais déduit d'`APP_ENV`, un oubli ne peut donc jamais déclencher un envoi
+  réel par accident, y compris en production.
+- `smtp` : envoi réel via PHPMailer. `MAIL_DRIVER` explicite a toujours priorité : rien
+  n'empêche de le positionner en local, contre un vrai fournisseur (Mailersend...), pour
+  tester un envoi réel sans toucher à `APP_ENV` — un usage courant en développement, pas
+  réservé à la production.
 
 Pour activer l'envoi réel, dans `.env` :
 
@@ -116,9 +120,12 @@ Quelques repères selon le fournisseur :
   identifiants au service informatique. C'est l'option la plus cohérente avec l'usage
   réel (les emails partent au nom du domaine de la communauté), mais elle n'est pas
   encore configurée — voir la checklist de mise en production.
-- **SendGrid / Mailgun / un service transactionnel** : host/port fournis par le service,
-  `MAIL_USERNAME`/`MAIL_PASSWORD` sont la clé API et son identifiant technique, pas un
-  compte personnel.
+- **Mailersend** : `smtp.mailersend.net`, port `587`, `tls`. `MAIL_USERNAME`/
+  `MAIL_PASSWORD` sont les identifiants SMTP générés dans le tableau de bord Mailersend
+  (Domains → SMTP), pas le compte de connexion au service.
+- **SendGrid / Mailgun / un autre service transactionnel** : host/port fournis par le
+  service, `MAIL_USERNAME`/`MAIL_PASSWORD` sont la clé API et son identifiant technique,
+  pas un compte personnel.
 
 `MAIL_REVEAL_SECRETS=true` affiche les codes OTP en clair dans `mail.log` — **utile
 uniquement en local** (`APP_ENV=local`) pour tester un parcours d'inscription sans boîte

@@ -10,10 +10,15 @@ use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\PHPMailer;
 
 /**
- * Comportement piloté par config/mail.php (mail.driver) :
+ * Comportement piloté par config/mail.php (mail.driver), lui-même
+ * MAIL_DRIVER de .env sans aucune déduction depuis APP_ENV — une valeur
+ * explicite a toujours priorité, 'log' n'intervient que si la variable est
+ * absente. Ça permet de positionner MAIL_DRIVER=smtp en local, contre un
+ * vrai fournisseur (Mailersend...), pour tester un envoi réel sans changer
+ * APP_ENV — un oubli de ce réglage (variable absente ou vide) retombe
+ * toujours sur 'log', jamais un envoi réel par défaut :
  * - 'log' (défaut) : aucun email réel, écrit dans storage/logs/mail.log.
  * - 'smtp' : envoi réel via PHPMailer.
- * Ne jamais positionner 'smtp' en local — voir .env.example.
  *
  * Gabarit : resources/views/emails/layout.php, styles en ligne, charte
  * FIUCC (bleu principal, logo). Le texte de repli est dérivé automatiquement
