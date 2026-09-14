@@ -56,7 +56,8 @@ $instagramUrl = \App\Core\Config::get('app.instagram_url');
         </div>
     </div>
 
-    <div class="w-full bg-primary">
+    <div class="relative w-full overflow-hidden bg-primary">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
         <div class="max-w-layout mx-auto px-4 md:px-6 py-4 text-center text-body-sm text-white">
             <p>&copy; <?= e($year) ?> <?= e($brandName) ?>. <?= e(t('footer.rights')) ?></p>
         </div>

@@ -39,7 +39,8 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
         <!-- Carte d'information — lg+ uniquement, remplace le titre du haut
              (masqué en lg via lg:hidden ci-dessus). -->
-        <aside class="hidden lg:flex lg:col-span-5 lg:sticky lg:top-24 flex-col justify-between gap-8 bg-primary text-white rounded-card shadow-card p-8">
+        <aside class="hidden lg:flex lg:col-span-5 lg:sticky lg:top-24 flex-col justify-between gap-8 bg-primary text-white rounded-card p-8">
+            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
             <div class="flex flex-col gap-6">
                 <span class="inline-flex items-center gap-2 self-start px-3 h-7 rounded-full bg-ink/25 text-label-caps font-label-caps uppercase tracking-wider">
                     <span class="h-2 w-2 rounded-full bg-gold" aria-hidden="true"></span>
@@ -113,7 +114,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                 <?php endforeach; ?>
             </div>
 
-            <form id="registration-form" method="POST" action="/register" class="max-w-2xl mx-auto lg:max-w-none bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col gap-8" novalidate>
+            <form id="registration-form" method="POST" action="/register" class="max-w-2xl mx-auto lg:max-w-none bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-8" novalidate>
                 <?= csrf_field() ?>
 
         <!-- Étape 1 : Identité -->

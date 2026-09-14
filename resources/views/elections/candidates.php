@@ -53,7 +53,8 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
     return implode(' · ', $parts);
 };
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -72,7 +73,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full bg-surface">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12 flex flex-col gap-10">
 
     <?php if ($totalCandidates === 0): ?>
@@ -83,9 +84,9 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
             <nav aria-label="<?= e(t('elections.candidates.positions_nav')) ?>" class="flex flex-wrap gap-2">
                 <?php foreach ($groups as $positionId => $group): ?>
                     <a href="#position-<?= e((string) $positionId) ?>"
-                       class="inline-flex items-center gap-2 px-4 h-9 rounded-full bg-surface text-ink text-label-md font-label-md hover:bg-primary/10 hover:text-primary transition-colors">
+                       class="inline-flex items-center gap-2 px-4 h-9 rounded-full bg-white text-ink text-label-md font-label-md hover:bg-primary/10 hover:text-primary transition-colors">
                         <?= e($group['position']['name']) ?>
-                        <span class="px-2 py-0.5 rounded-full bg-white text-muted text-label-caps font-label-caps"><?= e((string) count($group['candidates'])) ?></span>
+                        <span class="px-2 py-0.5 rounded-full bg-surface text-muted text-label-caps font-label-caps"><?= e((string) count($group['candidates'])) ?></span>
                     </a>
                 <?php endforeach; ?>
             </nav>
@@ -106,7 +107,7 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <?php foreach ($group['candidates'] as $candidate): ?>
                             <?php $meta = $candidateMeta($candidate); ?>
-                            <article class="bg-surface rounded-card border border-border p-6 md:p-8 flex flex-col gap-4">
+                            <article class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-4">
                                 <div class="flex items-start gap-4">
                                     <div class="relative shrink-0">
                                         <?php if (!empty($candidate['photo'])): ?>

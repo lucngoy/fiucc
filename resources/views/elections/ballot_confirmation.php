@@ -13,9 +13,9 @@
 $election ??= [];
 $receipt ??= '';
 ?>
-<div class="w-full bg-white min-h-[70vh] flex items-center">
+<div class="w-fullmin-h-[70vh] flex items-center">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 w-full">
-    <div class="max-w-md mx-auto bg-surface rounded-card border border-border p-8 flex flex-col items-center gap-5 text-center">
+    <div class="max-w-layout mx-auto bg-white rounded-card border border-border p-8 flex flex-col items-center gap-5 text-center">
         <span class="h-16 w-16 rounded-full bg-success/[4%] text-success flex items-center justify-center">
             <?= icon('circle-check', 'text-3xl') ?>
         </span>
@@ -24,7 +24,7 @@ $receipt ??= '';
             <p class="text-body-md text-muted mt-2"><?= e(t('elections.ballot.confirmation_message')) ?></p>
         </div>
 
-        <div class="w-full bg-white rounded-control border border-border p-4">
+        <div class="w-full bg-surface rounded-control border border-border p-4">
             <p class="text-label-caps font-label-caps uppercase text-muted mb-1"><?= e(t('elections.ballot.receipt_label')) ?></p>
             <p class="font-mono text-headline-sm text-headline-sm text-ink tracking-wider"><?= e($receipt) ?></p>
         </div>

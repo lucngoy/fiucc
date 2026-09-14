@@ -16,7 +16,9 @@
     # part. style-src garde 'unsafe-inline' : quelques attributs style=""
     # existants (badges dynamiques, emails) n'en dépendent pas pour un XSS —
     # le risque réel qu'un CSP strict couvre est côté script, pas style.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    # NOTE : option 2 = garder le kit JS Font Awesome, donc il faut autoriser
+    # explicitement ses chargements externes et les scripts inline qu'il injecte.
+    Header always set Content-Security-Policy "default-src 'self'; connect-src 'self' https://ka-f.fontawesome.com https://kit.fontawesome.com; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://site-assets.fontawesome.com; font-src 'self' https://site-assets.fontawesome.com data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 </IfModule>
 
 Options -Indexes

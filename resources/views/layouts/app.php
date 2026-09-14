@@ -44,12 +44,13 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
          app/Helpers/helpers.php (icon()) pour les icônes, plus aucune
          requête vers un CDN tiers pour l'une ou l'autre. -->
     <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>
-<body>
+<body class="flex flex-col min-h-screen bg-surface">
     <?= component('header') ?>
-    <main><?= $content ?></main>
+    <main class="flex-grow"><?= $content ?></main>
     <?= component('footer') ?>
+    <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
     <script src="/assets/js/nav.js" defer></script>
-    <script src="/assets/js/password-toggle.js" defer></script>
 </body>
 </html>

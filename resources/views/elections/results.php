@@ -15,7 +15,8 @@ $groups ??= [];
 
 $electionId = (int) $election['id'];
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -31,12 +32,12 @@ $electionId = (int) $election['id'];
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
-    <div class="max-w-2xl mx-auto flex flex-col gap-8">
+    <div class="mx-auto flex flex-col gap-8">
 
         <?php if (!$published): ?>
-            <div class="bg-surface rounded-card border border-border p-8 flex flex-col items-center gap-3 text-center">
+            <div class="bg-white rounded-card border border-border p-8 flex flex-col items-center gap-3 text-center">
                 <span class="h-14 w-14 rounded-full bg-muted/[1%] text-muted flex items-center justify-center">
                     <?= icon('lock', 'text-2xl') ?>
                 </span>

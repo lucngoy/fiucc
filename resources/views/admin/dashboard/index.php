@@ -38,7 +38,7 @@ $cards = [
             $tag = $href !== null ? 'a' : 'div';
             ?>
             <<?= $tag ?> <?= $href !== null ? 'href="' . e($href) . '"' : '' ?>
-                class="flex items-center gap-4 bg-white rounded-card border border-border shadow-card p-5 <?= $href !== null ? 'hover:border-primary/40 transition-colors' : '' ?>">
+                class="flex items-center gap-4 bg-white rounded-card border border-border p-5 <?= $href !== null ? 'hover:border-primary/40 transition-colors' : '' ?>">
                 <span class="h-12 w-12 rounded-control bg-primary/10 text-primary flex items-center justify-center shrink-0">
                     <?= icon($card['icon'], 'text-xl') ?>
                 </span>

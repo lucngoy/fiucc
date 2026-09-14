@@ -130,7 +130,8 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
         . '</div>';
 };
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <div class="flex items-center justify-between gap-4 mb-6">
             <nav aria-label="Breadcrumb" class="text-body-sm text-white/90">
@@ -171,13 +172,13 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
     <?php endif; ?>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <?php if ($government === null || $members === []): ?>
         <?= component('alert', ['type' => 'info', 'message' => t('government.empty')]) ?>
     <?php else: ?>
         <?php if ($spotlight !== null): ?>
-            <div class="bg-surface rounded-card border border-border p-6 md:p-8 mb-10">
+            <div class="bg-white rounded-card border border-border p-6 md:p-8 mb-10">
                 <div class="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-8 text-center md:text-left">
                     <?php if (!empty($spotlight['photo'])): ?>
                         <img src="<?= e('/uploads/' . $spotlight['photo']) ?>" alt=""
@@ -204,7 +205,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
         <?php if ($rest !== []): ?>
             <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
                 <div>
-                    <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('shield-halved', 'mr-1.5') ?><?= e(t('government.bureau.eyebrow')) ?></p>
+                    <p class="flex flex-row items-center font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('shield-halved', 'mr-1.5') ?><?= e(t('government.bureau.eyebrow')) ?></p>
                     <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.bureau.title')) ?></h2>
                     <p class="text-body-md text-muted max-w-xl"><?= e(t('government.bureau.subtitle')) ?></p>
                 </div>
@@ -226,7 +227,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
 
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <?php foreach ($rest as $member): ?>
-                    <div data-faculty="<?= e($member['faculty'] ?? '') ?>" class="bg-surface rounded-card border border-border overflow-hidden">
+                    <div data-faculty="<?= e($member['faculty'] ?? '') ?>" class="bg-white rounded-card border border-border overflow-hidden">
                         <?php if (!empty($member['photo'])): ?>
                             <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="w-full aspect-square object-cover">
                         <?php else: ?>
@@ -257,7 +258,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <!-- En-tête de section aligné à gauche, comme code.html (pas centré). -->
     <div class="mb-8">
-        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('sitemap', 'mr-1.5') ?><?= e(t('government.orgchart.eyebrow')) ?></p>
+        <p class="flex flex-row items-center font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('sitemap', 'mr-1.5') ?><?= e(t('government.orgchart.eyebrow')) ?></p>
         <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.orgchart.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('government.orgchart.subtitle')) ?></p>
     </div>
@@ -310,7 +311,7 @@ $renderOrgTier3Box = static function (array $item) use ($renderOrgBranch): strin
          réellement quelque chose à y voir. -->
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-            <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('clock-rotate-left', 'mr-1.5') ?><?= e(t('government.history.eyebrow')) ?></p>
+            <p class="flex flex-row items-center font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= icon('clock-rotate-left', 'mr-1.5') ?><?= e(t('government.history.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('government.history.title')) ?></h2>
             <p class="text-body-md text-muted max-w-xl"><?= e(t('government.history.subtitle')) ?></p>
         </div>

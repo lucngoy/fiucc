@@ -63,11 +63,20 @@ final class VoteController extends Controller
 
         [$election] = $context;
 
+        // Déjà authentifié pour cette élection cette session (retour en
+        // arrière du navigateur, page mise en favori...) : le bulletin est
+        // prêt (FIUCC-66+), autant y renvoyer directement plutôt que de
+        // réafficher une confirmation sans suite (bug constaté 2026-09-13 —
+        // sendToken() renvoyait ici même après succès, avant ce correctif).
+        if ($_SESSION['vote_authorized'][$electionId] ?? false) {
+            $this->redirect('/elections/' . $electionId . '/vote');
+            return;
+        }
+
         $this->view('elections.authenticate', [
-            'title'      => t('elections.authenticate.title'),
-            'election'   => $election,
-            'error'      => (string) ($_GET['error'] ?? ''),
-            'authorized' => (bool) ($_SESSION['vote_authorized'][$electionId] ?? false),
+            'title'    => t('elections.authenticate.title'),
+            'election' => $election,
+            'error'    => (string) ($_GET['error'] ?? ''),
         ]);
     }
 
@@ -100,7 +109,7 @@ final class VoteController extends Controller
 
         $_SESSION['vote_authorized'][$electionId] = true;
 
-        $this->redirect('/elections/' . $electionId . '/authenticate');
+        $this->redirect('/elections/' . $electionId . '/vote');
     }
 
     public function ballot(array $params): void

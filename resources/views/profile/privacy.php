@@ -9,7 +9,7 @@
 $settings ??= ['is_public' => 0, 'show_email' => 0, 'show_phone' => 0];
 $notice ??= (string) ($_GET['notice'] ?? '');
 ?>
-<div class="max-w-2xl mx-auto px-4 py-12 md:py-16">
+<div class="max-w-layout mx-auto px-4 py-12 md:py-16">
     <div class="mb-8">
         <h1 class="font-headline-lg text-headline-lg text-ink mb-3"><?= e(t('profile.privacy.title')) ?></h1>
         <p class="text-body-md text-muted"><?= e(t('profile.privacy.subtitle')) ?></p>
@@ -21,7 +21,7 @@ $notice ??= (string) ($_GET['notice'] ?? '');
         </div>
     <?php endif; ?>
 
-    <form method="POST" action="/profile/privacy" class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col gap-6">
+    <form method="POST" action="/profile/privacy" class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-6">
         <?= csrf_field() ?>
 
         <div class="flex flex-col gap-4">

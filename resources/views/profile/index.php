@@ -43,12 +43,12 @@ if ($member['status_type'] !== 'student') {
     ], static fn ($value) => $value !== null && $value !== ''));
 }
 ?>
-<div class="max-w-3xl mx-auto px-4 py-12 flex flex-col gap-6">
+<div class="max-w-layout mx-auto px-4 py-12 flex flex-col gap-6">
     <?php if ($notice !== null): ?>
         <?= component('alert', ['type' => 'info', 'message' => $notice]) ?>
     <?php endif; ?>
 
-    <div class="bg-white rounded-card border border-border shadow-card p-6 flex flex-col md:flex-row md:flex-wrap md:items-center gap-5">
+    <div class="bg-white rounded-card border border-border p-6 flex flex-col md:flex-row md:flex-wrap md:items-center gap-5">
         <div class="flex items-center gap-5">
             <?php if (!empty($member['photo'])): ?>
                 <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-16 w-16 shrink-0 rounded-full object-cover border border-border">
@@ -91,7 +91,7 @@ if ($member['status_type'] !== 'student') {
     <?php endif; ?>
 
     <?php if ($details !== []): ?>
-        <div class="bg-white rounded-card border border-border shadow-card p-6">
+        <div class="bg-white rounded-card border border-border p-6">
             <h2 class="font-headline-sm text-headline-sm text-ink mb-4"><?= e(t('profile.info_title')) ?></h2>
             <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                 <?php foreach ($details as $label => $value): ?>

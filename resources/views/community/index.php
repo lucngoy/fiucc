@@ -46,7 +46,8 @@ $values = [
     ['title' => t('community.value.service'), 'tag' => t('community.value.service_tag'), 'body' => t('community.value.service_body')],
 ];
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-16 md:pt-10 md:pb-20">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-8">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -66,7 +67,7 @@ $values = [
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <?php if ($hasStoryPhoto): ?>
@@ -172,7 +173,8 @@ $values = [
 </div>
 <?php endif; ?>
 
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20 text-center">
         <h2 class="font-headline-md text-headline-md text-white mb-3"><?= e(t('community.cta.title')) ?></h2>
         <p class="text-body-md text-white/90 mb-8 max-w-xl mx-auto"><?= e(t('community.cta.body')) ?></p>

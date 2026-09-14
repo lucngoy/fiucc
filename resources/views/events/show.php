@@ -106,7 +106,7 @@ $mapsUrl = !empty($event['location'])
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
     <?php if ($notice !== '' && isset($noticeMap[$notice])): ?>
         <div class="mb-8">
@@ -116,14 +116,14 @@ $mapsUrl = !empty($event['location'])
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div class="lg:col-span-8 flex flex-col gap-8">
             <?php if (!empty($event['description'])): ?>
-                <article class="bg-surface rounded-card border border-border p-6 md:p-8">
+                <article class="bg-white rounded-card border border-border p-6 md:p-8">
                     <h2 class="font-headline-md text-headline-md text-ink mb-4"><?= e(t('events.detail.about')) ?></h2>
                     <div class="text-body-md text-muted leading-relaxed"><?= nl2br(e($event['description'])) ?></div>
                 </article>
             <?php endif; ?>
 
             <?php if ($mapsUrl !== null): ?>
-                <div class="bg-surface rounded-card border border-border p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
+                <div class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-wrap items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
                         <span class="h-11 w-11 rounded-full bg-primary/[4%] text-primary flex items-center justify-center shrink-0"><?= icon('map-location-dot') ?></span>
                         <div>
@@ -138,7 +138,7 @@ $mapsUrl = !empty($event['location'])
                 </div>
             <?php endif; ?>
 
-            <div class="bg-surface rounded-card border border-border p-6 md:p-8">
+            <div class="bg-white rounded-card border border-border p-6 md:p-8">
                 <h2 class="font-headline-md text-headline-md text-ink mb-4"><?= e(t('events.detail.photos')) ?></h2>
                 <?php if ($photos === []): ?>
                     <?= component('alert', ['type' => 'info', 'message' => t('events.detail.photos_empty')]) ?>

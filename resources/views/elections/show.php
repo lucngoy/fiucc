@@ -54,7 +54,8 @@ $eligibilityStyle = [
     'eligible'               => ['bg' => 'bg-success/[4%]',  'text' => 'text-success',  'icon' => 'fa-circle-check'],
 ][$eligibility] ?? ['bg' => 'bg-muted/[1%]', 'text' => 'text-muted', 'icon' => 'fa-circle-info'];
 ?>
-<div class="relative w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="relative z-10 max-w-layout mx-auto px-4 md:px-6 pt-8 pb-10 md:pt-10 md:pb-14 w-full">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-5">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -91,11 +92,11 @@ $eligibilityStyle = [
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16 flex flex-col gap-8">
 
     <?php if (in_array($window['state'], $countdownStaticStates, true)): ?>
-        <div class="bg-surface rounded-card border border-border p-6 md:p-8 flex items-center gap-4">
+        <div class="bg-white rounded-card border border-border p-6 md:p-8 flex items-center gap-4">
             <span class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
                 <?= icon($countdownIcon, 'text-xl') ?>
             </span>
@@ -114,19 +115,19 @@ $eligibilityStyle = [
                 <?= e(t('elections.countdown.' . ($isOpenCountdown ? 'closes_in_label' : 'opens_in_label'))) ?>
             </p>
             <div class="grid grid-cols-4 gap-3">
-                <div class="bg-white rounded-control p-4 shadow-sm flex flex-col items-center text-center">
+                <div class="bg-white rounded-control p-4 border border-border flex flex-col items-center text-center">
                     <span class="font-headline-lg text-headline-lg text-primary" data-countdown-days>00</span>
                     <span class="text-label-caps font-label-caps uppercase text-muted mt-1"><?= e(t('elections.countdown.days')) ?></span>
                 </div>
-                <div class="bg-white rounded-control p-4 shadow-sm flex flex-col items-center text-center">
+                <div class="bg-white rounded-control p-4 border border-border flex flex-col items-center text-center">
                     <span class="font-headline-lg text-headline-lg text-primary" data-countdown-hours>00</span>
                     <span class="text-label-caps font-label-caps uppercase text-muted mt-1"><?= e(t('elections.countdown.hours')) ?></span>
                 </div>
-                <div class="bg-white rounded-control p-4 shadow-sm flex flex-col items-center text-center">
+                <div class="bg-white rounded-control p-4 border border-border flex flex-col items-center text-center">
                     <span class="font-headline-lg text-headline-lg text-primary" data-countdown-minutes>00</span>
                     <span class="text-label-caps font-label-caps uppercase text-muted mt-1"><?= e(t('elections.countdown.minutes')) ?></span>
                 </div>
-                <div class="bg-white rounded-control p-4 shadow-sm flex flex-col items-center text-center">
+                <div class="bg-white rounded-control p-4 border border-border flex flex-col items-center text-center">
                     <span class="font-headline-lg text-headline-lg text-primary" data-countdown-seconds>00</span>
                     <span class="text-label-caps font-label-caps uppercase text-muted mt-1"><?= e(t('elections.countdown.seconds')) ?></span>
                 </div>

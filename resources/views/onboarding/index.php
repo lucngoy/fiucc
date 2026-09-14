@@ -54,26 +54,27 @@ $faqItems = [
     ['q' => t('onboarding.faq.q5'), 'a' => t('onboarding.faq.a5')],
 ];
 ?>
-<div class="w-full bg-primary">
-    <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-14 md:pt-10 md:pb-20 text-center">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6 text-left max-w-2xl mx-auto">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
+    <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-14 md:pt-10 md:pb-20">
+        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6 text-left max-w-layout mx-auto">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
             <span class="mx-2" aria-hidden="true">/</span>
             <span class="text-white"><?= e(t('onboarding.title')) ?></span>
         </nav>
-        <h1 class="font-headline-lg text-headline-lg text-white mb-4 max-w-2xl mx-auto"><?= e(t('onboarding.title')) ?></h1>
-        <p class="text-body-lg text-white/90 max-w-2xl mx-auto"><?= e(t('onboarding.subtitle')) ?></p>
+        <h1 class="font-headline-lg text-headline-lg text-white mb-4 max-w-layout mx-auto"><?= e(t('onboarding.title')) ?></h1>
+        <p class="text-body-lg text-white/90 max-w-layout mx-auto"><?= e(t('onboarding.subtitle')) ?></p>
     </div>
 </div>
 
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-14 md:py-20">
-    <div class="text-center max-w-2xl mx-auto mb-12">
+    <div class="max-w-layout mx-auto mb-12">
         <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('onboarding.steps.eyebrow')) ?></p>
         <h2 class="font-headline-md text-headline-md text-ink"><?= e(t('onboarding.steps.title')) ?></h2>
     </div>
 
-    <div class="flex flex-col gap-5 max-w-2xl mx-auto">
+    <div class="flex flex-col gap-5 max-w-layout mx-auto">
         <?php foreach ($steps as $step): ?>
             <?php $isExternalAction = $step['action']['external']; ?>
             <div class="flex flex-col sm:flex-row sm:items-center gap-4 p-5 rounded-card bg-surface border border-border">
@@ -102,12 +103,12 @@ $faqItems = [
 
 <div class="w-full bg-surface">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-14 md:py-20">
-    <div class="text-center max-w-2xl mx-auto mb-10">
+    <div class="max-w-layout mx-auto mb-10">
         <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('onboarding.contacts.eyebrow')) ?></p>
         <h2 class="font-headline-md text-headline-md text-ink mb-2"><?= e(t('onboarding.contacts.title')) ?></h2>
         <p class="text-body-md text-muted"><?= e(t('onboarding.contacts.body')) ?></p>
     </div>
-    <div class="flex flex-wrap items-center justify-center gap-3">
+    <div class="flex flex-wrap items-center gap-3">
         <a href="/community/government" class="inline-flex items-center gap-2 h-11 px-6 rounded-control bg-white border border-border text-ink text-label-lg font-label-lg hover:border-primary hover:text-primary transition-colors">
             <?= icon('sitemap') ?>
             <?= e(t('onboarding.contacts.government_link')) ?>
@@ -124,11 +125,11 @@ $faqItems = [
 
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-14 md:py-20">
-    <div class="text-center max-w-2xl mx-auto mb-10">
+    <div class="max-w-layout mx-auto mb-10">
         <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('onboarding.faq.eyebrow')) ?></p>
         <h2 class="font-headline-md text-headline-md text-ink"><?= e(t('onboarding.faq.title')) ?></h2>
     </div>
-    <div class="max-w-2xl mx-auto flex flex-col gap-3">
+    <div class="max-w-layout mx-auto flex flex-col gap-3">
         <?php foreach ($faqItems as $item): ?>
             <details class="group rounded-card border border-border bg-surface p-4">
                 <summary class="flex items-center justify-between gap-3 cursor-pointer font-label-lg text-label-lg text-ink list-none">

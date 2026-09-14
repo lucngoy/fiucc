@@ -6,14 +6,13 @@
  * un email statique — voir la conversation FIUCC-64 pour le raisonnement
  * complet). Le membre colle ou tape le code reçu par email.
  *
- * $authorized : une saisie correcte a déjà eu lieu cette session pour cette
- * élection — pas de bulletin vers lequel enchaîner pour l'instant
- * (FIUCC-66+, pas construit), donc simple confirmation plutôt qu'un lien
- * vers une page qui n'existe pas.
+ * Toujours affichée avec le formulaire (jamais un état "déjà authentifié") :
+ * App\Controllers\VoteController::authenticate() renvoie directement vers
+ * /elections/{id}/vote dès que la session l'est déjà pour cette élection —
+ * cette vue n'a donc jamais à représenter cet état elle-même.
  */
 $election ??= [];
 $error ??= '';
-$authorized ??= false;
 
 $electionId = (int) $election['id'];
 
@@ -25,7 +24,8 @@ $errorMessages = [
     'invalid'      => t('elections.authenticate.error.invalid'),
 ];
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -38,40 +38,28 @@ $errorMessages = [
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full bg-surface">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
-    <div class="max-w-md mx-auto bg-surface rounded-card border border-border p-6 md:p-8 flex flex-col gap-5">
-        <?php if ($authorized): ?>
-            <div class="flex items-start gap-3">
-                <span class="h-11 w-11 rounded-full bg-success/[4%] text-success flex items-center justify-center shrink-0">
-                    <?= icon('circle-check') ?>
-                </span>
-                <div>
-                    <p class="font-label-lg text-label-lg text-ink"><?= e(t('elections.authenticate.authorized_title')) ?></p>
-                    <p class="text-body-sm text-muted mt-1"><?= e(t('elections.authenticate.authorized_message')) ?></p>
-                </div>
-            </div>
-        <?php else: ?>
-            <p class="text-body-md text-ink"><?= e(t('elections.authenticate.intro')) ?></p>
+    <div class="mx-auto bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-5">
+        <p class="text-body-md text-ink"><?= e(t('elections.authenticate.intro')) ?></p>
 
-            <?php if ($error !== '' && isset($errorMessages[$error])): ?>
-                <?= component('alert', ['type' => 'error', 'message' => $errorMessages[$error]]) ?>
-            <?php endif; ?>
-
-            <form method="POST" action="<?= e('/elections/' . $electionId . '/authenticate') ?>" class="flex flex-col gap-3">
-                <?= csrf_field() ?>
-                <div class="flex flex-col gap-1.5">
-                    <label for="field-code" class="font-label-lg text-label-lg text-ink"><?= e(t('elections.authenticate.code_label')) ?></label>
-                    <input type="text" id="field-code" name="code" required autocomplete="off" autocapitalize="characters" spellcheck="false"
-                        placeholder="<?= e(t('elections.authenticate.code_placeholder')) ?>"
-                        class="h-12 w-full rounded-control border border-border px-3 text-body-md font-mono tracking-wider text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50">
-                    <p class="text-body-sm text-muted"><?= e(t('elections.authenticate.code_help')) ?></p>
-                </div>
-                <button type="submit" class="h-11 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
-                    <?= e(t('elections.authenticate.submit')) ?>
-                </button>
-            </form>
+        <?php if ($error !== '' && isset($errorMessages[$error])): ?>
+            <?= component('alert', ['type' => 'error', 'message' => $errorMessages[$error]]) ?>
         <?php endif; ?>
+
+        <form method="POST" action="<?= e('/elections/' . $electionId . '/authenticate') ?>" class="flex flex-col gap-3">
+            <?= csrf_field() ?>
+            <div class="flex flex-col gap-1.5">
+                <label for="field-code" class="font-label-lg text-label-lg text-ink"><?= e(t('elections.authenticate.code_label')) ?></label>
+                <input type="text" id="field-code" name="code" required autocomplete="off" autocapitalize="characters" spellcheck="false"
+                    placeholder="<?= e(t('elections.authenticate.code_placeholder')) ?>"
+                    class="h-12 w-full rounded-control border border-border px-3 text-body-md font-mono tracking-wider text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50">
+                <p class="text-body-sm text-muted"><?= e(t('elections.authenticate.code_help')) ?></p>
+            </div>
+            <button type="submit" class="h-11 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
+                <?= e(t('elections.authenticate.submit')) ?>
+            </button>
+        </form>
     </div>
 </div>
 </div>

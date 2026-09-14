@@ -86,7 +86,8 @@ $registrationLine = static function (array $event, int $registered): string {
     return $parts;
 };
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -98,10 +99,10 @@ $registrationLine = static function (array $event, int $registered): string {
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full bg-surface">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12">
     <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-10">
-        <div class="inline-flex p-1 bg-surface rounded-control shadow-inner text-label-md font-label-md self-start">
+        <div class="inline-flex p-1 bg-white border border-border rounded-control shadow-inner text-label-md font-label-md self-start">
             <a href="<?= e($tabUrl('upcoming')) ?>"
                class="px-4 py-2 rounded-control transition-colors <?= $when === 'upcoming' ? 'bg-primary text-white font-semibold shadow-card' : 'text-muted hover:text-ink' ?>">
                 <?= e(t('events.tab.upcoming', ['count' => $upcomingCount])) ?>
@@ -138,7 +139,7 @@ $registrationLine = static function (array $event, int $registered): string {
         <?php
         $featuredRegistered = $featured['registered_count'];
         ?>
-        <a href="<?= e('/events/' . $featured['slug']) ?>" class="group block bg-surface rounded-card border border-border overflow-hidden mb-10 grid grid-cols-1 lg:grid-cols-12 hover:shadow-card transition-shadow">
+        <a href="<?= e('/events/' . $featured['slug']) ?>" class="group block bg-white rounded-card border border-border overflow-hidden mb-10 grid grid-cols-1 lg:grid-cols-12 hover:shadow-card transition-shadow">
             <div class="relative min-h-[260px] lg:min-h-[360px] lg:col-span-5 overflow-hidden bg-white">
                 <?php if (!empty($featured['cover_image'])): ?>
                     <img src="<?= e('/uploads/' . $featured['cover_image']) ?>" alt=""

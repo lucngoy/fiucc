@@ -28,7 +28,7 @@ $renderInstagram = static function (?string $instagram): string {
         . icon('instagram') . '<span class="text-label-lg font-label-lg">@' . e($handle) . '</span></a>';
 };
 ?>
-<div class="max-w-2xl mx-auto px-4 py-12 md:py-16">
+<div class="max-w-layout mx-auto px-4 py-12 md:py-16">
     <nav aria-label="Breadcrumb" class="text-body-sm text-muted mb-6">
         <a href="/" class="hover:text-primary transition-colors"><?= e(t('nav.home')) ?></a>
         <span class="mx-2" aria-hidden="true">/</span>
@@ -37,7 +37,7 @@ $renderInstagram = static function (?string $instagram): string {
         <span class="text-ink"><?= e($member['full_name']) ?></span>
     </nav>
 
-    <div class="bg-white rounded-card border border-border shadow-card p-6 md:p-8 flex flex-col items-center text-center gap-4">
+    <div class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col items-center text-center gap-4">
         <?php if (!empty($member['photo'])): ?>
             <img src="<?= e('/uploads/' . $member['photo']) ?>" alt="" class="h-28 w-28 rounded-full object-cover border border-border">
         <?php else: ?>

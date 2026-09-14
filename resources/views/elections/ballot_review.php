@@ -17,7 +17,8 @@ $closingWarning ??= null;
 
 $electionId = (int) $election['id'];
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <h1 class="font-headline-lg text-headline-lg text-white"><?= e(t('elections.ballot.review_title')) ?></h1>
         <p class="text-body-md text-white/90 mt-2 max-w-2xl"><?= e(t('elections.ballot.review_intro')) ?></p>
@@ -26,7 +27,7 @@ $electionId = (int) $election['id'];
 
 <div class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
-    <div class="max-w-2xl mx-auto flex flex-col gap-6">
+    <div class="mx-auto flex flex-col gap-6">
 
         <?php if ($closingWarning !== null): ?>
             <?= component('alert', ['type' => 'warning', 'message' => $closingWarning]) ?>

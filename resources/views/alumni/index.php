@@ -26,7 +26,8 @@ $paginationBase = '/alumni?' . ($activeFilterQuery !== []
     ? http_build_query($activeFilterQuery) . '&'
     : '') . 'page={page}';
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -54,7 +55,7 @@ $paginationBase = '/alumni?' . ($activeFilterQuery !== []
     <p class="text-body-md text-muted mb-6"><?= e(t('alumni.total', ['count' => $total])) ?></p>
 
     <?php if ($members === []): ?>
-        <div class="max-w-xl mx-auto">
+        <div class="max-w-layout mx-auto">
             <?php if ($activeFilterQuery !== []): ?>
                 <?= component('alert', ['type' => 'info', 'message' => t('alumni.empty.filtered')]) ?>
             <?php else: ?>

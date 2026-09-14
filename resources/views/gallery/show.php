@@ -49,7 +49,7 @@ $photos ??= [];
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12">
     <a href="/gallery" class="inline-flex items-center gap-2 text-body-sm text-muted hover:text-ink transition-colors mb-8">
         <?= icon('arrow-left') ?>
@@ -76,7 +76,7 @@ $photos ??= [];
                 <a href="<?= e('/uploads/' . $photo['image_path']) ?>" target="_blank" rel="noopener"
                    aria-label="<?= e($accessibleName) ?>"
                    data-lightbox-trigger data-full="<?= e('/uploads/' . $photo['image_path']) ?>" data-caption="<?= e((string) ($photo['caption'] ?? '')) ?>"
-                   class="group block mb-4 md:mb-6 break-inside-avoid rounded-card overflow-hidden bg-surface border border-border hover:shadow-card transition-shadow cursor-zoom-in">
+                   class="group block mb-4 md:mb-6 break-inside-avoid rounded-card overflow-hidden bg-white border border-border hover:shadow-card transition-shadow cursor-zoom-in">
                     <?php
                     // Chargement paresseux au-delà des toutes premières
                     // photos (FIUCC-78, mesuré en 4G simulée sur un album de

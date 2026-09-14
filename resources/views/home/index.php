@@ -94,31 +94,42 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         . '</div>';
 };
 ?>
-<div class="w-full bg-primary">
-    <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-24 text-center flex flex-col items-center">
-        <span class="inline-flex items-center gap-2 h-8 px-4 rounded-full bg-gold text-ink text-label-md font-label-md mb-6">
-            <?= icon('graduation-cap') ?>
-            <?= e(t('home.hero.badge')) ?>
-        </span>
-        <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-4"><?= e(t('home.hero.title')) ?></h1>
-        <p class="text-body-lg text-white/90 max-w-2xl mb-8"><?= e(t('home.hero.tagline')) ?></p>
-        <div class="flex flex-row sm:flex-row items-center gap-4 mb-10">
-            <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
-            <?= component('button', ['label' => t('home.hero.cta_discover'), 'variant' => 'inverse', 'href' => '#events']) ?>
-        </div>
-        <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-white/90 text-label-md font-label-md pt-6">
-            <span class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
-                <?= e(t('home.stats.students', ['count' => $stats['students']])) ?>
-            </span>
-            <span class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-primary-light" aria-hidden="true"></span>
-                <?= e(t('home.stats.events', ['count' => $stats['events']])) ?>
-            </span>
-            <span class="flex items-center gap-2">
-                <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
-                <?= e(t('home.stats.years', ['count' => $stats['years']])) ?>
-            </span>
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
+    <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-24 relative z-10">
+        <div class="grid items-center gap-10 md:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr]">
+            <div class="text-left">
+                <span class="inline-flex items-center gap-2 h-8 px-4 rounded-full bg-gold text-ink text-label-md font-label-md mb-6">
+                    <?= icon('graduation-cap') ?>
+                    <?= e(t('home.hero.badge')) ?>
+                </span>
+                <h1 class="font-headline-lg text-headline-lg text-white max-w-3xl mb-4 text-left"><?= e(t('home.hero.title')) ?></h1>
+                <p class="text-body-lg text-white/90 max-w-2xl mb-8 text-left"><?= e(t('home.hero.tagline')) ?></p>
+                <div class="flex flex-row flex-wrap items-center justify-start gap-4 mb-10">
+                    <?= component('button', ['label' => t('community.cta.register'), 'variant' => 'accent', 'href' => '/register']) ?>
+                    <?= component('button', ['label' => t('home.hero.cta_discover'), 'variant' => 'inverse', 'href' => '#events']) ?>
+                </div>
+                <div class="flex flex-wrap items-center justify-start gap-x-6 gap-y-2 text-white/90 text-label-md font-label-md pt-6">
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
+                        <?= e(t('home.stats.students', ['count' => $stats['students']])) ?>
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary-light" aria-hidden="true"></span>
+                        <?= e(t('home.stats.events', ['count' => $stats['events']])) ?>
+                    </span>
+                    <span class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-gold" aria-hidden="true"></span>
+                        <?= e(t('home.stats.years', ['count' => $stats['years']])) ?>
+                    </span>
+                </div>
+            </div>
+
+            <div class="relative flex justify-center lg:justify-end">
+                <div class="relative w-full max-w-[520px] overflow-hidden">
+                    <img src="/assets/images/home/fiu1.png" alt="FIUCC" class="block h-[420px] w-full object-cover object-center">
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -260,7 +271,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
     </div>
 </div>
 
-<div class="w-full bg-surface">
+<div class="w-full bg-white">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
         <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10">
             <div>
@@ -330,7 +341,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
     </div>
 </div>
 
-<div class="w-full bg-white">
+<div class="w-full bg-surface">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-16 md:py-20">
         <div class="text-center max-w-2xl mx-auto mb-10">
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('home.gallery.eyebrow')) ?></p>

@@ -20,7 +20,7 @@ final class AuthController extends Controller
             $notice = t('auth.notice_required');
         }
 
-        $this->view('auth.login', ['title' => t('auth.sign_in'), 'notice' => $notice]);
+        $this->renderLoginView(['title' => t('auth.sign_in'), 'notice' => $notice]);
     }
 
     public function login(): void
@@ -42,7 +42,7 @@ final class AuthController extends Controller
 
         // Même message générique que le compte existe ou non : ne jamais
         // révéler si une adresse est enregistrée (évite l'énumération).
-        $this->view('auth.login', [
+        $this->renderLoginView([
             'title' => t('auth.sign_in'),
             'email' => $email,
             'error' => t('auth.invalid'),
@@ -71,7 +71,7 @@ final class AuthController extends Controller
     private function attemptAdminLogin(array $user, string $email, string $password): void
     {
         if ($this->isLocked($user)) {
-            $this->view('auth.login', [
+            $this->renderLoginView([
                 'title' => t('auth.sign_in'),
                 'email' => $email,
                 'error' => t('auth.locked'),
@@ -88,7 +88,7 @@ final class AuthController extends Controller
             );
             ActivityLog::record((int) $user['id'], 'login_failed', 'user', (int) $user['id']);
 
-            $this->view('auth.login', [
+            $this->renderLoginView([
                 'title' => t('auth.sign_in'),
                 'email' => $email,
                 'error' => t('auth.invalid'),
@@ -130,7 +130,7 @@ final class AuthController extends Controller
             LoginThrottle::registerFailure($userId, $ip);
             ActivityLog::record($userId, 'login_failed', 'user', $userId);
 
-            $this->view('auth.login', [
+            $this->renderLoginView([
                 'title' => t('auth.sign_in'),
                 'email' => $email,
                 'error' => t('auth.invalid'),
@@ -151,7 +151,7 @@ final class AuthController extends Controller
         if ($member !== null && in_array($member['status'], ['rejected', 'suspended'], true)) {
             ActivityLog::record($userId, 'login_blocked_' . $member['status'], 'user', $userId);
 
-            $this->view('auth.login', [
+            $this->renderLoginView([
                 'title' => t('auth.sign_in'),
                 'email' => $email,
                 'error' => $member['status'] === 'suspended' ? t('auth.suspended') : t('auth.rejected'),
@@ -160,6 +160,11 @@ final class AuthController extends Controller
         }
 
         $this->completeLogin($user);
+    }
+
+    private function renderLoginView(array $data): void
+    {
+        $this->view('auth.login', $data, 'layouts.auth');
     }
 
     private function completeLogin(array $user): void

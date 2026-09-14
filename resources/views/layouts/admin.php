@@ -11,6 +11,7 @@
     <title><?= e($title ?? 'FIUCC Admin') ?></title>
     <!-- Police et icônes auto-hébergées (FIUCC-78) — voir layouts/app.php. -->
     <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>
 <body class="bg-surface">
 <?php
@@ -59,10 +60,13 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
     <!-- Barre du haut sur mobile (< md), colonne latérale fixe à partir de
          md — un seul jeu de classes responsive plutôt que deux marquages
          séparés, pour ne pas désynchroniser mobile et desktop plus tard. -->
-    <aside class="w-full md:w-64 md:shrink-0 md:fixed md:inset-y-0 md:left-0 md:z-30 bg-primary text-white flex flex-col md:h-screen">
+    <aside class="relative w-full overflow-hidden md:w-64 md:shrink-0 md:fixed md:inset-y-0 md:left-0 md:z-30 bg-primary text-white flex flex-col md:h-screen">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
         <div class="flex flex-col flex-1 md:overflow-y-auto">
             <div class="flex items-center gap-3 px-4 md:px-5 h-16 bg-primary-dark/40 border-b border-white/10 shrink-0">
-                <img src="/assets/images/fiucc-seal.png" alt="<?= e(t('admin.brand.name')) ?>" class="h-9 w-9 object-contain shrink-0">
+                <a href="/" class="flex items-center gap-3 shrink-0">
+                    <img src="/assets/images/fiucc-seal.png" alt="<?= e(t('admin.brand.name')) ?>" class="h-9 w-9 object-contain shrink-0">
+                </a>
                 <div class="leading-tight min-w-0">
                     <p class="font-label-lg text-label-lg truncate"><?= e(t('admin.brand.name')) ?></p>
                     <p class="hidden sm:block text-label-caps font-label-caps uppercase text-white/90"><?= e(t('admin.brand.tagline')) ?></p>
@@ -190,6 +194,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
         </main>
     </div>
 </div>
+<script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
 <script src="/assets/js/admin-nav.js" defer></script>
 </body>
 </html>

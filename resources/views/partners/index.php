@@ -18,7 +18,8 @@ $activeType = $filters['type'];
 
 $paginationQuery = array_filter(['type' => $filters['type']], static fn ($v) => $v !== '');
 ?>
-<div class="w-full bg-primary">
+<div class="relative w-full overflow-hidden bg-primary">
+    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
     <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
         <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
             <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
@@ -44,7 +45,7 @@ $paginationQuery = array_filter(['type' => $filters['type']], static fn ($v) => 
     </div>
 
     <?php if ($partners === []): ?>
-        <div class="max-w-xl mx-auto">
+        <div class="max-w-layout mx-auto">
             <?= component('alert', ['type' => 'info', 'message' => t($filters['type'] !== '' ? 'partners.empty.filtered' : 'partners.empty.default')]) ?>
         </div>
     <?php else: ?>
