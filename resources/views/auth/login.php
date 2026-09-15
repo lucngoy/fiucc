@@ -69,7 +69,7 @@ $notice ??= null;
     </div>
 
     <!-- RIGHT: sign-in panel -->
-    <div class="flex items-center justify-center bg-[#f9fafc] px-4 py-8 lg:py-12">
+    <div class="flex items-center justify-center px-4 py-8 lg:py-12">
         <div class="w-full max-w-md p-6 md:p-8">
 
             <div class="mb-8 text-center">

@@ -42,7 +42,7 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>
-<body class="min-h-screen bg-[#0A1628] antialiased">
+<body class="min-h-screen bg-surface antialiased">
     <main><?= $content ?></main>
     <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
     <script src="/assets/js/password-toggle.js" defer></script>
