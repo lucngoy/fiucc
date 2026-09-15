@@ -2,6 +2,9 @@
 $email ??= '';
 $error ??= null;
 $notice ??= null;
+$locale = \App\Core\Lang::locale();
+$enLocaleClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
+$frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 ?>
 <style>
     .auth-login-shell {
@@ -71,6 +74,12 @@ $notice ??= null;
     <!-- RIGHT: sign-in panel -->
     <div class="flex items-center justify-center px-4 py-8 lg:py-12">
         <div class="w-full max-w-md p-6 md:p-8">
+            <div class="mb-6 flex justify-end">
+                <div class="inline-flex items-center gap-1 rounded-control border border-[#dbe3ee] bg-[#f8fafc] p-1">
+                    <a href="/lang/en" class="px-2 py-1 rounded text-label-md font-label-md transition-colors <?= e($enLocaleClasses) ?>">EN</a>
+                    <a href="/lang/fr" class="px-2 py-1 rounded text-label-md font-label-md transition-colors <?= e($frLocaleClasses) ?>">FR</a>
+                </div>
+            </div>
 
             <div class="mb-8 text-center">
                 <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e0f2fe] shadow-sm overflow-hidden ring-1 ring-[#dbe3ee]">
