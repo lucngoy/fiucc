@@ -30,91 +30,140 @@ $error = static fn (string $name) => $errors[$name] ?? null;
 
 $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.contact'), t('census.step.confirm')];
 ?>
-<div class="max-w-layout mx-auto px-4 py-12 md:px-6 md:py-16">
-    <div class="max-w-2xl mx-auto text-center mb-10 lg:hidden">
-        <h1 class="font-headline-lg text-headline-lg text-ink mb-3"><?= e(t('census.title')) ?></h1>
-        <p class="text-body-md text-muted"><?= e(t('census.subtitle')) ?></p>
-    </div>
+<style>
+    .auth-register-shell {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
 
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-        <!-- Carte d'information — lg+ uniquement, remplace le titre du haut
-             (masqué en lg via lg:hidden ci-dessus). -->
-        <aside class="hidden lg:flex lg:col-span-5 lg:sticky lg:top-24 flex-col justify-between gap-8 bg-primary text-white rounded-card p-8">
-            <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
-            <div class="flex flex-col gap-6">
-                <span class="inline-flex items-center gap-2 self-start px-3 h-7 rounded-full bg-ink/25 text-label-caps font-label-caps uppercase tracking-wider">
-                    <span class="h-2 w-2 rounded-full bg-gold" aria-hidden="true"></span>
-                    <?= e(t('census.info.eyebrow')) ?>
-                </span>
-                <div class="flex flex-col gap-2">
-                    <h1 class="font-headline-lg text-headline-lg"><?= e(t('census.info.title')) ?></h1>
-                    <p class="text-body-md text-white/90"><?= e(t('census.info.subtitle')) ?></p>
-                </div>
-                <div class="flex flex-col gap-4 pt-2">
-                    <?php foreach ([
-                        ['icon' => 'fa-solid fa-calendar-days', 'title' => t('census.info.benefit1_title'), 'body' => t('census.info.benefit1_body')],
-                        ['icon' => 'fa-solid fa-address-book', 'title' => t('census.info.benefit2_title'), 'body' => t('census.info.benefit2_body')],
-                        ['icon' => 'fa-solid fa-check-to-slot', 'title' => t('census.info.benefit3_title'), 'body' => t('census.info.benefit3_body')],
-                    ] as $benefit): ?>
-                        <div class="flex items-start gap-3">
-                            <span class="h-6 w-6 rounded-full bg-ink/25 flex items-center justify-center shrink-0 mt-0.5" aria-hidden="true">
-                                <i class="<?= e($benefit['icon']) ?> text-gold text-sm"></i>
-                            </span>
-                            <div class="flex flex-col">
-                                <span class="font-label-lg text-label-lg"><?= e($benefit['title']) ?></span>
-                                <span class="text-body-sm text-white"><?= e($benefit['body']) ?></span>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-                <div class="flex items-start gap-3 p-3 rounded-control bg-white/10">
-                    <?= icon('shield-halved', 'text-gold mt-0.5') ?>
-                    <p class="text-label-caps font-label-caps text-white leading-relaxed"><?= e(t('census.info.privacy')) ?></p>
-                </div>
+    @media (min-width: 1024px) {
+        .auth-register-shell {
+            grid-template-columns: 1.15fr 0.85fr;
+            height: 100vh;
+        }
+
+        .auth-register-shell > aside {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .auth-register-panel {
+            height: 100vh;
+            overflow-y: auto;
+            scrollbar-gutter: stable;
+        }
+    }
+</style>
+<div class="auth-register-shell min-h-screen grid">
+    <aside class="relative hidden lg:flex flex-col justify-center overflow-hidden bg-primary px-10 py-10 xl:px-16 xl:py-12">
+        <svg class="pointer-events-none absolute inset-0 h-full w-full opacity-40" viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" fill="none">
+            <g stroke="#3B82F6" stroke-width="1">
+                <path d="M120 60 L340 20 L520 140 L460 320 L620 380 L560 560 L700 620 L640 800" />
+                <path d="M340 20 L420 220 L520 140" />
+                <path d="M420 220 L460 320 L280 360 L340 20" />
+                <path d="M280 360 L120 60" />
+                <path d="M460 320 L620 380 L520 500 L280 360" />
+                <path d="M520 500 L560 560 L400 620 L280 360" />
+                <path d="M560 560 L700 620 L620 760 L400 620" />
+                <path d="M620 760 L640 800 L480 860 L400 620" />
+            </g>
+            <g fill="#60A5FA">
+                <circle cx="120" cy="60" r="3" /><circle cx="340" cy="20" r="2.5" />
+                <circle cx="520" cy="140" r="3" /><circle cx="460" cy="320" r="2.5" />
+                <circle cx="620" cy="380" r="3" /><circle cx="560" cy="560" r="2.5" />
+                <circle cx="700" cy="620" r="3" /><circle cx="640" cy="800" r="2.5" />
+                <circle cx="420" cy="220" r="2" /><circle cx="280" cy="360" r="2.5" />
+                <circle cx="520" cy="500" r="2" /><circle cx="400" cy="620" r="2.5" />
+                <circle cx="480" cy="860" r="2" /><circle cx="620" cy="760" r="2" />
+            </g>
+        </svg>
+        <div class="absolute inset-0 bg-gradient-to-r from-[#0A1628] via-[#0A1628]/60 to-transparent"></div>
+
+        <div class="relative z-10">
+            <div class="mb-10 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 backdrop-blur">
+                <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-6 w-6 rounded-md object-cover ring-1 ring-white/20" />
+                <span class="text-xs font-semibold tracking-wide text-white/80"><?= e(t('app.university_name')) ?></span>
             </div>
 
-            <a href="/contact" class="flex items-center justify-between gap-3 p-4 rounded-control bg-white/10 hover:bg-ink/25 transition-colors">
-                <span class="flex items-center gap-3">
-                    <?= icon('circle-question', 'text-lg') ?>
-                    <span class="flex flex-col">
-                        <span class="font-label-md text-label-md"><?= e(t('census.info.help_title')) ?></span>
-                        <span class="text-body-sm text-white"><?= e(t('census.info.help_body')) ?></span>
-                    </span>
+            <div class="flex flex-col gap-3">
+                <span class="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
+                    <span class="h-2 w-2 rounded-full bg-[#ECC117]" aria-hidden="true"></span>
+                    <?= e(t('census.info.eyebrow')) ?>
                 </span>
-                <?= icon('arrow-right', 'text-white/50') ?>
-            </a>
-        </aside>
+                <h1 class="font-headline-lg text-headline-lg text-white"><?= e(t('census.info.title')) ?></h1>
+                <p class="max-w-md text-base leading-relaxed text-white/80"><?= e(t('census.info.subtitle')) ?></p>
+            </div>
 
-        <div class="lg:col-span-7">
-            <?php if ($errors !== []): ?>
-                <div class="max-w-2xl mx-auto lg:max-w-none mb-8">
-                    <?= component('alert', ['type' => 'error', 'message' => t('form.error_banner')]) ?>
-                </div>
-            <?php endif; ?>
-
-            <!-- Indicateur d'étapes -->
-            <div id="step-indicator" class="max-w-2xl mx-auto lg:max-w-none relative flex items-center justify-between mb-8" aria-hidden="true">
-                <!-- Ligne reliant les cercles, centrée sur leur milieu (h-9 =
-                     36px) et bornée à leurs centres sur 4 colonnes égales
-                     (12.5% = 100%/4/2) — à ajuster si $steps change de
-                     longueur. Placée avant les cercles dans le DOM et sous
-                     "relative" comme eux : ceux-ci, étant positionnés,
-                     peignent par-dessus dans l'ordre du DOM, donc la ligne
-                     reste visible seulement entre eux, pas dessus. -->
-                <div class="absolute left-[12.5%] right-[12.5%] top-[18px] h-0.5 bg-border">
-                    <div id="step-progress" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <?php foreach ($steps as $index => $stepLabel): ?>
-                    <div class="relative flex flex-col items-center gap-2 flex-1">
-                        <span data-step-indicator class="h-9 w-9 flex items-center justify-center rounded-full font-label-lg text-label-lg bg-surface text-muted border border-border">
-                            <?= e((string) ($index + 1)) ?>
+            <div class="my-6 flex flex-col gap-4">
+                <?php foreach ([
+                    ['icon' => 'fa-solid fa-calendar-days', 'title' => t('census.info.benefit1_title'), 'body' => t('census.info.benefit1_body')],
+                    ['icon' => 'fa-solid fa-address-book', 'title' => t('census.info.benefit2_title'), 'body' => t('census.info.benefit2_body')],
+                    ['icon' => 'fa-solid fa-check-to-slot', 'title' => t('census.info.benefit3_title'), 'body' => t('census.info.benefit3_body')],
+                ] as $benefit): ?>
+                    <div class="flex items-start gap-3">
+                        <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10" aria-hidden="true">
+                            <i class="<?= e($benefit['icon']) ?> text-sm text-gold"></i>
                         </span>
-                        <span class="text-label-md font-label-md text-muted"><?= e($stepLabel) ?></span>
+                        <div>
+                            <div class="font-label-lg text-label-lg text-white"><?= e($benefit['title']) ?></div>
+                            <div class="text-sm leading-relaxed text-white/80"><?= e($benefit['body']) ?></div>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>
 
-            <form id="registration-form" method="POST" action="/register" class="max-w-2xl mx-auto lg:max-w-none bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-8" novalidate>
+            <div class="mt-8 flex items-start gap-3 rounded-control border border-white/10 bg-white/5 p-3">
+                <span class="mt-0.5 text-gold"><?= icon('shield-halved', 'text-lg text-gold') ?></span>
+                <p class="text-xs uppercase tracking-[0.12em] text-white/80"><?= e(t('census.info.privacy')) ?></p>
+            </div>
+        </div>
+
+        <div class="relative z-10 mt-10">
+            <a href="/contact" class="flex items-center justify-between gap-3 rounded-control border border-white/10 bg-white/5 p-4 text-left transition-colors hover:bg-white/10">
+                <span class="flex items-center gap-3">
+                    <?= icon('circle-question', 'text-lg text-white') ?>
+                    <span>
+                        <span class="block font-label-md text-label-md text-white"><?= e(t('census.info.help_title')) ?></span>
+                        <span class="block text-sm text-white/80"><?= e(t('census.info.help_body')) ?></span>
+                    </span>
+                </span>
+                <?= icon('arrow-right', 'text-white/60') ?>
+            </a>
+        </div>
+    </aside>
+
+    <div class="auth-register-panel flex items-center justify-center px-4 py-8 lg:py-12">
+        <div class="w-full max-w-md p-6 md:p-8">
+            <div class="mb-6 text-center lg:hidden">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e0f2fe] shadow-sm ring-1 ring-[#dbe3ee] overflow-hidden">
+                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
+                </div>
+                <h1 class="font-headline-lg text-headline-lg text-ink"><?= e(t('census.title')) ?></h1>
+                <p class="mt-2 text-sm text-[#64748b]"><?= e(t('census.subtitle')) ?></p>
+            </div>
+
+            <?php if ($errors !== []): ?>
+                <div class="mb-12">
+                    <?= component('alert', ['type' => 'error', 'message' => t('form.error_banner')]) ?>
+                </div>
+            <?php endif; ?>
+
+            <div id="step-indicator" class="relative mb-8 flex items-center justify-between" aria-hidden="true">
+                <div class="absolute left-[12.5%] right-[12.5%] top-[18px] h-0.5 bg-[#e5e7eb]">
+                    <div id="step-progress" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <?php foreach ($steps as $index => $stepLabel): ?>
+                    <div class="relative flex flex-1 flex-col items-center gap-2">
+                        <span data-step-indicator class="flex h-9 w-9 items-center justify-center rounded-full border border-[#dbe3ee] bg-[#f8fafc] text-label-lg font-label-lg text-[#64748b]">
+                            <?= e((string) ($index + 1)) ?>
+                        </span>
+                        <span class="text-label-md font-label-md text-[#64748b]"><?= e($stepLabel) ?></span>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <form id="registration-form" method="POST" action="/register" class="" novalidate>
                 <?= csrf_field() ?>
 
         <!-- Étape 1 : Identité -->
@@ -234,7 +283,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                     'placeholder' => t('census.field.instagram_placeholder'),
                 ]) ?>
 
-                <div class="flex flex-col gap-4 bg-surface rounded-control p-4 border border-border">
+                <div class="flex flex-col gap-4 bg-white rounded-control p-4 border border-border">
                     <h3 class="font-label-lg text-label-lg text-ink"><?= e(t('census.privacy.title')) ?></h3>
                     <?= component('checkbox_field', [
                         'name' => 'is_public', 'label' => t('census.privacy.is_public'),

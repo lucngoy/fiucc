@@ -111,7 +111,7 @@ final class RegistrationController extends Controller
             'passwordMinLength' => Config::get('security.password_min_length', 8),
             'old'               => $old,
             'errors'            => $errors,
-        ]);
+        ], 'layouts.auth');
     }
 
     private function collectInput(): array

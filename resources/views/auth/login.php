@@ -128,7 +128,7 @@ $notice ??= null;
             </div>
 
             <a href="/register" class="flex items-center justify-center gap-2 rounded-control border border-[#dbe3ee] bg-[#f8fafc] px-4 py-3 text-sm font-semibold text-[#111827] hover:bg-[#eef4ff] transition-colors">
-                <i class="fa fa-user-plus"></i>
+                <?= icon('user-plus', 'text-base text-[#111827]') ?>
                 <?= e(t('auth.join_community')) ?>
             </a>
         </div>
