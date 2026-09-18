@@ -35,6 +35,17 @@ $navLinks = [
     ['label' => t('nav.about'), 'href' => '/community'],
 ];
 
+$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+if ($currentPath === '' || $currentPath === false) {
+    $currentPath = '/';
+}
+if ($currentPath !== '/') {
+    $currentPath = rtrim($currentPath, '/');
+}
+$navLinkIsActive = function (string $href) use ($currentPath): bool {
+    return $currentPath === $href || ($href !== '/' && $currentPath !== '/community/government' && str_starts_with($currentPath, rtrim($href, '/') . '/'));
+};
+
 $enClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 ?>
@@ -47,7 +58,8 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
 
         <nav class="hidden lg:flex items-center gap-6" aria-label="Main navigation">
             <?php foreach ($navLinks as $link): ?>
-                <a href="<?= e($link['href']) ?>" class="font-label-lg text-label-lg text-ink hover:text-primary transition-colors"><?= e($link['label']) ?></a>
+                <?php $isActive = $navLinkIsActive($link['href']); ?>
+                <a href="<?= e($link['href']) ?>" class="<?= $isActive ? 'font-label-lg text-label-lg text-primary hover:text-primary transition-colors' : 'font-label-lg text-label-lg text-ink hover:text-primary transition-colors' ?>" <?= $isActive ? 'aria-current="page"' : '' ?>><?= e($link['label']) ?></a>
             <?php endforeach; ?>
         </nav>
 
@@ -99,7 +111,8 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
 
     <nav id="mobile-nav" class="hidden lg:hidden flex-col gap-4 border-t border-border bg-white px-4 py-4" aria-label="Mobile navigation">
         <?php foreach ($navLinks as $link): ?>
-            <a href="<?= e($link['href']) ?>" class="font-label-lg text-label-lg text-ink"><?= e($link['label']) ?></a>
+            <?php $isActive = $navLinkIsActive($link['href']); ?>
+            <a href="<?= e($link['href']) ?>" class="<?= $isActive ? 'font-label-lg text-label-lg text-primary hover:text-primary transition-colors' : 'font-label-lg text-label-lg text-ink hover:text-primary transition-colors' ?>" <?= $isActive ? 'aria-current="page"' : '' ?>><?= e($link['label']) ?></a>
         <?php endforeach; ?>
         <div class="flex items-center gap-2 pt-3 border-t border-border">
             <a href="/lang/en" class="px-3 py-1.5 rounded-control border border-border <?= e($enClasses) ?>">EN</a>

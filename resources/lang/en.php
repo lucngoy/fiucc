@@ -57,6 +57,7 @@ return [
     'auth.no_account'      => 'I don’t have an account?',
     'auth.create_account'   => 'Create an account',
     'auth.join_community'   => 'Join the community',
+    'auth.already_have_account' => "I already have an account? Sign in",
     'auth.invalid'          => 'Invalid email or password.',
     'auth.locked'           => 'This account is temporarily locked after too many failed attempts. Please try again later.',
     'auth.notice_required'  => 'Please sign in to access this page.',

@@ -57,6 +57,7 @@ return [
     'auth.no_account'      => 'Je n’ai pas de compte ?',
     'auth.create_account'   => 'Créer un compte',
     'auth.join_community'   => 'Rejoindre la communauté',
+    'auth.already_have_account' => 'J\'ai déjà un compte ? Se connecter',
     'auth.invalid'          => 'Email ou mot de passe invalide.',
     'auth.locked'           => 'Ce compte est temporairement verrouillé après trop de tentatives échouées. Réessayez plus tard.',
     'auth.notice_required'  => 'Veuillez vous connecter pour accéder à cette page.',
