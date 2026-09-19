@@ -40,9 +40,7 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
     <meta name="twitter:description" content="<?= e($description) ?>">
     <meta name="twitter:image" content="<?= e($ogImageUrl) ?>">
     <!-- Police (Inter) et icônes : auto-hébergées (FIUCC-78) — voir
-         resources/css/app.css pour le raisonnement complet et
-         app/Helpers/helpers.php (icon()) pour les icônes, plus aucune
-         requête vers un CDN tiers pour l'une ou l'autre. -->
+         resources/css/app.css pour le raisonnement complet -->
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>

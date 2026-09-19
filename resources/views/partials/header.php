@@ -39,11 +39,17 @@ $currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 if ($currentPath === '' || $currentPath === false) {
     $currentPath = '/';
 }
-if ($currentPath !== '/') {
-    $currentPath = rtrim($currentPath, '/');
+// Normalize common index filenames that some hosts (or rewrites) expose.
+$currentPath = preg_replace('#/+(index\.(php|html?))$#i', '/', $currentPath);
+// Trim trailing slashes except keep root '/'.
+$currentPath = rtrim($currentPath, '/');
+if ($currentPath === '') {
+    $currentPath = '/';
 }
+
 $navLinkIsActive = function (string $href) use ($currentPath): bool {
-    return $currentPath === $href || ($href !== '/' && $currentPath !== '/community/government' && str_starts_with($currentPath, rtrim($href, '/') . '/'));
+    $normHref = $href === '/' ? '/' : rtrim($href, '/');
+    return $currentPath === $normHref || ($normHref !== '/' && $currentPath !== '/community/government' && str_starts_with($currentPath, $normHref . '/'));
 };
 
 $enClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
