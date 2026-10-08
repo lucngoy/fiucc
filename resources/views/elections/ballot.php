@@ -30,30 +30,7 @@ $globalError = $errors['_global'] ?? null;
         </style>
         <g class="float" stroke="#3B82F6" stroke-width="1">
             <path d="M120 60 L340 20 L520 140 L460 320 L620 380 L560 560 L700 620 L640 800" />
-            <path d="M340 20 L420 220 L520 140" />
-            <path d="M420 220 L460 320 L280 360 L340 20" />
-            <path d="M280 360 L120 60" />
-            <path d="M460 320 L620 380 L520 500 L280 360" />
-            <path d="M520 500 L560 560 L400 620 L280 360" />
-            <path d="M560 560 L700 620 L620 760 L400 620" />
-            <path d="M620 760 L640 800 L480 860 L400 620" />
-        </g>
-        <g class="pulse" fill="#60A5FA">
-            <circle cx="120" cy="60" r="3" /><circle cx="340" cy="20" r="2.5" />
-            <circle cx="520" cy="140" r="3" /><circle cx="460" cy="320" r="2.5" />
-            <circle cx="620" cy="380" r="3" /><circle cx="560" cy="560" r="2.5" />
-            <circle cx="700" cy="620" r="3" /><circle cx="640" cy="800" r="2.5" />
-            <circle cx="420" cy="220" r="2" /><circle cx="280" cy="360" r="2.5" />
-            <circle cx="520" cy="500" r="2" /><circle cx="400" cy="620" r="2.5" />
-            <circle cx="480" cy="860" r="2" /><circle cx="620" cy="760" r="2" />
-        </g>
-    </svg>
-    <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
-    <div class="max-w-layout mx-auto px-4 md:px-6 pt-8 pb-8 md:pt-10">
-        <nav aria-label="Breadcrumb" class="text-body-sm text-white/90 mb-6">
-            <a href="/" class="hover:text-white transition-colors"><?= e(t('nav.home')) ?></a>
-            <span class="mx-2" aria-hidden="true">/</span>
-            <a href="<?= e('/elections/' . $electionId) ?>" class="hover:text-white transition-colors"><?= e($election['title']) ?></a>
+            <path d="M340 20 L420 22₀ L52₀ 14₀ L46₀ 32₀ L62₀ 38₀ L56₀ 56₀ L7₀₀ 6₂₀ L64₀
             <span class="mx-2" aria-hidden="true">/</span>
             <span class="text-white"><?= e(t('elections.ballot.breadcrumb')) ?></span>
         </nav>

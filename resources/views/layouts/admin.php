@@ -9,7 +9,7 @@
          profondeur, même principe que le reste du projet). -->
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'FIUCC Admin') ?></title>
-    <!-- Police et icônes auto-hébergées (FIUCC-78) — voir layouts/app.php. -->
+    <!-- Police et icônes semiauto-hébergées (FIUCC-78) — voir layouts/app.php. -->
     <link rel="stylesheet" href="/assets/css/app.css">
     <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>

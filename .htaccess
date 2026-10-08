@@ -1,2 +1,15 @@
-RewriteEngine On
-RewriteRule (.*) /public/$1 [L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Les fichiers/dossiers publics sont servis normalement
+    RewriteCond %{REQUEST_URI} ^/assets/
+    RewriteRule ^ public%{REQUEST_URI} [L]
+
+    RewriteCond %{REQUEST_URI} ^/uploads/
+    RewriteRule ^ public%{REQUEST_URI} [L]
+
+    # Toutes les autres requêtes vont vers public/index.php
+    RewriteRule ^ public/index.php [QSA,L]
+</IfModule>
+
+Options -Indexes

@@ -280,7 +280,13 @@ final class Election extends Model
         );
         $stmt->execute(['id' => $id]);
 
-        return $stmt->rowCount() > 0;
+        if ($stmt->rowCount() === 0) {
+            return false;
+        }
+
+        Government::syncFromElectionResults($id);
+
+        return true;
     }
 
     /**

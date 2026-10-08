@@ -53,7 +53,8 @@ abstract class TestCase extends BaseTestCase
      */
     private const TABLES_TO_RESET = [
         'votes', 'voting_tokens', 'candidates', 'election_positions',
-        'elections', 'mentorships', 'members', 'users', 'email_verifications', 'login_throttle',
+        'elections', 'government_members', 'governments', 'mentorships',
+        'members', 'users', 'email_verifications', 'login_throttle',
     ];
 
     protected PDO $db;

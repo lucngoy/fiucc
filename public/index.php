@@ -128,6 +128,10 @@ if (Config::get('mail.reveal_secrets', false) === true && !$isLocal) {
 date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
 
 // 4. Session sécurisée
+$isHttps = (
+    (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+    || ($_SERVER['SERVER_PORT'] ?? 80) == 443
+);
 session_name((string) Config::get('security.session_name', 'fiucc_session'));
 session_set_cookie_params([
     'lifetime' => (int) Config::get('security.session_lifetime', 120) * 60,
@@ -148,4 +152,8 @@ $router->loadRoutes(BASE_PATH . '/routes/admin.php', ['admin']);
 // en dev sans vhost dédié) : on retire ce préfixe pour router sur le chemin réel.
 $basePath = str_replace('\\', '/', dirname((string) $_SERVER['SCRIPT_NAME']));
 
-$router->dispatch((string) $_SERVER['REQUEST_METHOD'], (string) $_SERVER['REQUEST_URI'], $basePath);
+$router->dispatch(
+    (string) $_SERVER['REQUEST_METHOD'],
+    (string) $_SERVER['REQUEST_URI'],
+    ''
+);
