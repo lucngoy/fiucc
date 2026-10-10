@@ -2,15 +2,16 @@
 /**
  * Footer institutionnel — 4 colonnes (FIUCC-22) : marque, liens rapides,
  * communauté, contact. Uniquement des routes déjà déclarées dans
- * routes/web.php. Réseaux sociaux (FIUCC-89) : lien réel si WHATSAPP_GROUP_URL/
- * INSTAGRAM_URL sont configurées (config/app.php), sinon lien inerte — le
- * cahier des charges §40 ne fournit pas de handle réel, jamais une adresse
- * inventée en attendant (voir CLAUDE.md, Manques connus).
+ * routes/web.php. Réseaux sociaux : lien réel si le bureau les a saisis
+ * dans /admin/contact (App\Services\ContactSettings, repli sur
+ * WHATSAPP_GROUP_URL/INSTAGRAM_URL du .env), sinon lien inerte — jamais une
+ * adresse inventée en attendant (cahier §40, aucun handle réel fourni).
  */
 $brandName ??= 'FIUCC';
 $year = date('Y');
-$whatsappUrl = \App\Core\Config::get('app.whatsapp_url');
-$instagramUrl = \App\Core\Config::get('app.instagram_url');
+$contactSettings = \App\Services\ContactSettings::values();
+$whatsappUrl = $contactSettings['whatsapp_url'];
+$instagramUrl = $contactSettings['instagram_url'];
 ?>
 <footer class="w-full bg-white border-t border-border">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">

@@ -15,12 +15,16 @@ final class AuthController extends Controller
     public function showLogin(): void
     {
         $notice = null;
+        $noticeType = 'info';
 
         if (($_GET['notice'] ?? null) === 'auth_required') {
             $notice = t('auth.notice_required');
+        } elseif (($_GET['notice'] ?? null) === 'password_reset') {
+            $notice = t('password.reset.notice_done');
+            $noticeType = 'success';
         }
 
-        $this->renderLoginView(['title' => t('auth.sign_in'), 'notice' => $notice]);
+        $this->renderLoginView(['title' => t('auth.sign_in'), 'notice' => $notice, 'noticeType' => $noticeType]);
     }
 
     public function login(): void
@@ -140,21 +144,24 @@ final class AuthController extends Controller
 
         LoginThrottle::reset($userId, $ip);
 
-        // Cycle de statut (FIUCC-35) : rejected/suspended sont des décisions
-        // admin délibérées, pas une attaque externe — contrairement au
-        // verrouillage par mot de passe (voir plus haut), bloquer ici ne
-        // prive personne de son droit de vote par harcèlement. 'pending'
-        // reste autorisé à se connecter : rien à cacher à un membre qui
-        // attend simplement sa validation.
+        // Cycle de statut (FIUCC-35) : 'suspended' est une décision admin
+        // délibérée, pas une attaque externe — contrairement au verrouillage
+        // par mot de passe (voir plus haut), bloquer ici ne prive personne de
+        // son droit de vote par harcèlement. 'pending' reste autorisé : rien
+        // à cacher à un membre qui attend sa validation. 'rejected' aussi,
+        // depuis le renvoi de dossier (décision utilisateur, 2026-10-09) :
+        // le membre doit pouvoir lire le motif sur son profil, corriger et
+        // renvoyer (ProfileController::update()). Il n'atteint rien d'autre :
+        // tout ce qui expose la communauté exige ['validated'].
         $member = Member::findByUserIdWithStatus($userId);
 
-        if ($member !== null && in_array($member['status'], ['rejected', 'suspended'], true)) {
-            ActivityLog::record($userId, 'login_blocked_' . $member['status'], 'user', $userId);
+        if ($member !== null && $member['status'] === 'suspended') {
+            ActivityLog::record($userId, 'login_blocked_suspended', 'user', $userId);
 
             $this->renderLoginView([
                 'title' => t('auth.sign_in'),
                 'email' => $email,
-                'error' => $member['status'] === 'suspended' ? t('auth.suspended') : t('auth.rejected'),
+                'error' => t('auth.suspended'),
             ]);
             return;
         }

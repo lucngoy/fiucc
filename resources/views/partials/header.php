@@ -104,6 +104,11 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
                         <a href="/register" class="block border-t border-border px-4 py-3 text-label-lg font-label-lg text-ink hover:bg-surface transition-colors">
                             <?= e(t('nav.join')) ?>
                         </a>
+                        <!-- Onboarding (FIUCC-89) : visiteurs sans compte uniquement —
+                             le public de cette page, avant de s'inscrire. -->
+                        <a href="/new-at-final" class="block border-t border-border px-4 py-3 text-label-lg font-label-lg text-primary hover:bg-surface transition-colors">
+                            <?= e(t('footer.new_at_final')) ?>
+                        </a>
                     </div>
                 </details>
             <?php endif; ?>
@@ -153,6 +158,9 @@ $frClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text
                     </a>
                     <a href="/register" class="border-t border-border px-4 py-3 text-label-lg font-label-lg text-ink hover:bg-surface transition-colors">
                         <?= e(t('nav.join')) ?>
+                    </a>
+                    <a href="/new-at-final" class="border-t border-border px-4 py-3 text-label-lg font-label-lg text-primary hover:bg-surface transition-colors">
+                        <?= e(t('footer.new_at_final')) ?>
                     </a>
                 </div>
             </details>

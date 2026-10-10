@@ -36,4 +36,28 @@ return [
         5 => "Master's Candidate",
         6 => 'PhD Scholar',
     ],
+
+    // Fiche étendue (migration 018) : clés seulement, stockées telles quelles
+    // en base — les libellés passent par t() ('census.community_role.<clé>',
+    // 'census.district.<clé>', 'census.religion.<clé>').
+    'community_roles' => ['student', 'pupil', 'worker', 'parent', 'child', 'other'],
+
+    'districts' => ['lefkosa', 'girne', 'gazimagusa', 'guzelyurt', 'iskele', 'lefke'],
+
+    'religions' => [
+        'catholic', 'protestant', 'kimbanguist', 'muslim', 'orthodox',
+        'revival', 'other', 'none', 'prefer_not_to_say',
+    ],
+
+    // Scan du passeport : image seulement (JPG/PNG/WEBP, comme le formulaire
+    // de référence), ré-encodée par GD et stockée sous storage/passports/.
+    'passport_scan_max_size_mb'   => (int) Env::get('PASSPORT_SCAN_MAX_SIZE_MB', 8),
+    'passport_scan_max_dimension' => (int) Env::get('PASSPORT_SCAN_MAX_DIMENSION', 2000),
+
+    // Conservation de la photo du passeport : supprimée N jours après la
+    // dernière décision admin (validation, refus, suspension) — elle sert à
+    // vérifier l'identité au moment de décider, pas au-delà (minimisation
+    // RGPD/KVKK). Décision utilisateur, 2026-10-09. Voir
+    // App\Services\PassportScanRetention.
+    'passport_scan_retention_days' => (int) Env::get('PASSPORT_SCAN_RETENTION_DAYS', 90),
 ];

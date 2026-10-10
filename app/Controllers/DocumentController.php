@@ -59,6 +59,28 @@ final class DocumentController extends Controller
      */
     public function download(array $params): void
     {
+        $this->serve($params, false);
+    }
+
+    /**
+     * Ouverture dans le navigateur (onglet) plutôt que téléchargement —
+     * PDF uniquement : c'est le seul format accepté (Upload::
+     * ALLOWED_DOCUMENT_TYPES) que les navigateurs savent afficher. Un
+     * Word/Excel/PowerPoint/ODT est servi en téléchargement même par cette
+     * route : "inline" sur un type que le navigateur n'affiche pas ne fait
+     * que le télécharger quand même, et n'autoriser l'affichage que pour un
+     * type connu évite d'ouvrir un jour un format exécutable par le
+     * navigateur. Mêmes contrôles d'accès que download(), revérifiés ici.
+     * (Nommée open(), pas view() : view() est la méthode de rendu héritée
+     * d'App\Core\Controller.)
+     */
+    public function open(array $params): void
+    {
+        $this->serve($params, true);
+    }
+
+    private function serve(array $params, bool $inline): void
+    {
         $document = Document::find((int) ($params['id'] ?? 0));
 
         if ($document === null) {
@@ -80,13 +102,21 @@ final class DocumentController extends Controller
         if ($document['visibility'] !== 'public') {
             ActivityLog::record(
                 isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null,
-                'document.downloaded',
+                $inline ? 'document.viewed' : 'document.downloaded',
                 'document',
                 (int) $document['id']
             );
         }
 
-        $this->streamFile($document);
+        $this->streamFile($document, $inline && self::isViewable((string) $document['mime_type']));
+    }
+
+    /**
+     * Formats qu'un navigateur affiche lui-même (bouton « Ouvrir »).
+     */
+    public static function isViewable(string $mimeType): bool
+    {
+        return $mimeType === 'application/pdf';
     }
 
     /**
@@ -146,7 +176,7 @@ final class DocumentController extends Controller
      * le bénéfice de la lecture par blocs en accumulant quand même toute
      * la réponse avant de l'envoyer.
      */
-    private function streamFile(array $document): void
+    private function streamFile(array $document, bool $inline = false): void
     {
         $path = rtrim(BASE_PATH, '/') . '/storage/' . $document['file_path'];
 
@@ -166,7 +196,7 @@ final class DocumentController extends Controller
         // filename= (ASCII, compatibilité) + filename*= (RFC 6266, UTF-8) —
         // un titre accentué doit rester lisible dans le nom du fichier
         // téléchargé, pas seulement dans la page.
-        header('Content-Disposition: attachment; filename="' . $filename['ascii'] . '"; filename*=UTF-8\'\'' . $filename['utf8']);
+        header('Content-Disposition: ' . ($inline ? 'inline' : 'attachment') . '; filename="' . $filename['ascii'] . '"; filename*=UTF-8\'\'' . $filename['utf8']);
         header('Content-Length: ' . (string) ($size !== false ? $size : $document['file_size']));
         header('X-Content-Type-Options: nosniff');
         header('Cache-Control: private, no-cache');

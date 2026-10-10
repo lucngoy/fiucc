@@ -32,13 +32,19 @@ final class Member extends Model
     {
         $stmt = static::db()->prepare(
             "INSERT INTO members (
-                user_id, membership_number, full_name, student_id, date_of_birth, gender,
+                user_id, membership_number, full_name, last_name, middle_name, first_name,
+                student_id, date_of_birth, gender,
                 city_of_origin, faculty, department, year, phone, whatsapp, instagram,
-                status_type, status, is_public, show_email, show_phone
+                status_type, community_role, status, is_public, show_email, show_phone,
+                address_street, address_building, address_apartment, district,
+                passport_number, passport_expiry, passport_scan, religion
             ) VALUES (
-                :user_id, :membership_number, :full_name, :student_id, :date_of_birth, :gender,
+                :user_id, :membership_number, :full_name, :last_name, :middle_name, :first_name,
+                :student_id, :date_of_birth, :gender,
                 :city_of_origin, :faculty, :department, :year, :phone, :whatsapp, :instagram,
-                'student', 'pending', :is_public, :show_email, :show_phone
+                'student', :community_role, 'pending', :is_public, :show_email, :show_phone,
+                :address_street, :address_building, :address_apartment, :district,
+                :passport_number, :passport_expiry, :passport_scan, :religion
             )"
         );
 
@@ -59,6 +65,20 @@ final class Member extends Model
             'is_public'       => $data['is_public'],
             'show_email'      => $data['show_email'],
             'show_phone'      => $data['show_phone'],
+            // Fiche étendue (migration 018) : absentes des appelants
+            // antérieurs (seeders, tests) — NULL plutôt qu'une erreur.
+            'last_name'         => $data['last_name'] ?? null,
+            'middle_name'       => $data['middle_name'] ?? null,
+            'first_name'        => $data['first_name'] ?? null,
+            'community_role'    => $data['community_role'] ?? null,
+            'address_street'    => $data['address_street'] ?? null,
+            'address_building'  => $data['address_building'] ?? null,
+            'address_apartment' => $data['address_apartment'] ?? null,
+            'district'          => $data['district'] ?? null,
+            'passport_number'   => $data['passport_number'] ?? null,
+            'passport_expiry'   => $data['passport_expiry'] ?? null,
+            'passport_scan'     => $data['passport_scan'] ?? null,
+            'religion'          => $data['religion'] ?? null,
         ]);
 
         $memberId = (int) static::db()->lastInsertId();
@@ -107,7 +127,7 @@ final class Member extends Model
         $stmt = static::db()->prepare(
             "UPDATE members
              SET status = 'validated', rejection_reason = NULL, suspension_reason = NULL,
-                 validated_by = :admin_id, validated_at = NOW()
+                 resubmitted_at = NULL, validated_by = :admin_id, validated_at = NOW()
              WHERE id = :id"
         );
         $stmt->execute(['admin_id' => $adminUserId, 'id' => $memberId]);
@@ -118,10 +138,58 @@ final class Member extends Model
         $stmt = static::db()->prepare(
             "UPDATE members
              SET status = 'rejected', rejection_reason = :reason, suspension_reason = NULL,
-                 validated_by = :admin_id, validated_at = NOW()
+                 resubmitted_at = NULL, validated_by = :admin_id, validated_at = NOW()
              WHERE id = :id"
         );
         $stmt->execute(['reason' => $reason, 'admin_id' => $adminUserId, 'id' => $memberId]);
+    }
+
+    /**
+     * Renvoi d'un dossier refusé par le membre lui-même, après correction
+     * de son profil (ProfileController::update()) : retour en attente, motif
+     * effacé (il reste dans activity_logs), resubmitted_at signale le renvoi
+     * aux admins. Ne touche qu'un dossier réellement 'rejected'.
+     *
+     * @return bool false si le membre n'était pas refusé
+     */
+    public static function resubmit(int $memberId): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE members
+             SET status = 'pending', rejection_reason = NULL, resubmitted_at = NOW()
+             WHERE id = :id AND status = 'rejected'"
+        );
+        $stmt->execute(['id' => $memberId]);
+
+        return $stmt->rowCount() === 1;
+    }
+
+    public static function updatePassportScan(int $memberId, ?string $path): void
+    {
+        $stmt = static::db()->prepare('UPDATE members SET passport_scan = :path WHERE id = :id');
+        $stmt->execute(['path' => $path, 'id' => $memberId]);
+    }
+
+    /**
+     * Photos de passeport à supprimer : dernière décision admin (validated_at,
+     * posée par validate()/reject()/suspend()) plus vieille que $days jours.
+     * Jamais un dossier 'pending' — la photo y sert encore à décider.
+     *
+     * @return array<int, array{id: int, passport_scan: string}>
+     */
+    public static function passportScansDecidedBefore(int $days): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT id, passport_scan FROM members
+             WHERE passport_scan IS NOT NULL
+               AND status <> 'pending'
+               AND validated_at IS NOT NULL
+               AND validated_at < DATE_SUB(NOW(), INTERVAL :days DAY)"
+        );
+        $stmt->bindValue('days', $days, \PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     }
 
     public static function suspend(int $memberId, int $adminUserId, ?string $reason = null): void
@@ -206,6 +274,18 @@ final class Member extends Model
         return (int) static::db()->query('SELECT COUNT(*) FROM members')->fetchColumn();
     }
 
+    /**
+     * Dossiers refusés, corrigés et renvoyés par le membre, en attente d'une
+     * nouvelle décision (migration 020) — comptés à part des premières
+     * demandes dans la cloche admin (App\Services\AdminTasks).
+     */
+    public static function countResubmitted(): int
+    {
+        return (int) static::db()->query(
+            "SELECT COUNT(*) FROM members WHERE status = 'pending' AND resubmitted_at IS NOT NULL"
+        )->fetchColumn();
+    }
+
     public static function countByStatus(string $status): int
     {
         $stmt = static::db()->prepare('SELECT COUNT(*) FROM members WHERE status = :status');
@@ -286,7 +366,10 @@ final class Member extends Model
             'SELECT id, membership_number, full_name, student_id, date_of_birth, gender,
                     city_of_origin, faculty, department, year, arrival_year, graduation_year,
                     phone, whatsapp, instagram, photo, status_type, profession, company, city, country,
-                    status, rejection_reason, suspension_reason, email_verified_at, created_at
+                    status, rejection_reason, suspension_reason, email_verified_at, created_at,
+                    last_name, middle_name, first_name, community_role,
+                    address_street, address_building, address_apartment, district,
+                    passport_number, passport_expiry, passport_scan, religion
              FROM members WHERE user_id = :user_id LIMIT 1'
         );
         $stmt->execute(['user_id' => $userId]);
@@ -311,7 +394,12 @@ final class Member extends Model
             'UPDATE members SET
                 full_name = :full_name, date_of_birth = :date_of_birth, gender = :gender,
                 city_of_origin = :city_of_origin, faculty = :faculty, department = :department,
-                year = :year, phone = :phone, whatsapp = :whatsapp, instagram = :instagram
+                year = :year, phone = :phone, whatsapp = :whatsapp, instagram = :instagram,
+                last_name = :last_name, middle_name = :middle_name, first_name = :first_name,
+                community_role = :community_role, address_street = :address_street,
+                address_building = :address_building, address_apartment = :address_apartment,
+                district = :district, passport_number = :passport_number,
+                passport_expiry = :passport_expiry, religion = :religion
              WHERE id = :id'
         );
         $stmt->execute([
@@ -325,7 +413,18 @@ final class Member extends Model
             'phone'          => $data['phone'],
             'whatsapp'       => $data['whatsapp'],
             'instagram'      => $data['instagram'],
-            'id'             => $memberId,
+            'last_name'         => $data['last_name'],
+            'middle_name'       => $data['middle_name'],
+            'first_name'        => $data['first_name'],
+            'community_role'    => $data['community_role'],
+            'address_street'    => $data['address_street'],
+            'address_building'  => $data['address_building'],
+            'address_apartment' => $data['address_apartment'],
+            'district'          => $data['district'],
+            'passport_number'   => $data['passport_number'],
+            'passport_expiry'   => $data['passport_expiry'],
+            'religion'          => $data['religion'],
+            'id'                => $memberId,
         ]);
     }
 
@@ -498,7 +597,7 @@ final class Member extends Model
         $offset = ($page - 1) * $perPage;
         $stmt = static::db()->prepare(
             "SELECT m.id, m.membership_number, m.full_name, m.student_id, m.faculty, m.year, m.photo,
-                    m.status_type, m.status, m.created_at, u.email
+                    m.status_type, m.status, m.resubmitted_at, m.created_at, u.email
              FROM members m
              JOIN users u ON u.id = m.user_id
              {$where}
@@ -788,6 +887,25 @@ final class Member extends Model
         $stmt->execute($params);
 
         return ['rows' => $stmt->fetchAll(), 'total' => $total];
+    }
+
+    /**
+     * Fiche complète pour l'écran admin d'un membre (migration 018) —
+     * inclut les données sensibles du recensement (passeport, adresse,
+     * culte) : appelée uniquement derrière AdminMiddleware.
+     */
+    public static function findForAdmin(int $id): ?array
+    {
+        $stmt = static::db()->prepare(
+            'SELECT m.*, u.email
+             FROM members m
+             JOIN users u ON u.id = m.user_id
+             WHERE m.id = :id LIMIT 1'
+        );
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        return $row === false ? null : $row;
     }
 
     /**

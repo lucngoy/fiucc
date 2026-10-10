@@ -12,6 +12,10 @@ return [
     'otp_max_attempts'     => (int) Env::get('OTP_MAX_ATTEMPTS', 5),
     'otp_resend_cooldown_seconds' => (int) Env::get('OTP_RESEND_COOLDOWN_SECONDS', 60),
     'otp_max_resends_per_hour'    => (int) Env::get('OTP_MAX_RESENDS_PER_HOUR', 5),
+    // Formulaire /contact (§39, "rate limiting") : au plus N messages par
+    // IP sur la fenêtre glissante (contact_messages, migration 021).
+    'contact_max_messages'       => (int) Env::get('CONTACT_MAX_MESSAGES', 3),
+    'contact_window_minutes'     => (int) Env::get('CONTACT_WINDOW_MINUTES', 15),
     'vote_token_ttl_hours' => (int) Env::get('VOTE_TOKEN_TTL_HOURS', 72),
     // Tentatives de saisie du code de vote (FIUCC-64) avant verrouillage —
     // même principe qu'otp_max_attempts : au-delà, même un code correct est
@@ -77,4 +81,10 @@ return [
     // données personnelles (annuaire) et, pour un électeur, à un jeton de
     // vote envoyé par email au même compte.
     'password_min_length' => (int) Env::get('PASSWORD_MIN_LENGTH', 8),
+    // Lien "mot de passe oublié" (migration 019) : usage unique, durée
+    // courte. Plafond horaire par compte — au-delà, la demande est ignorée
+    // en silence (même réponse affichée), pour qu'on ne puisse pas inonder
+    // la boîte d'un membre de liens.
+    'password_reset_ttl_minutes'   => (int) Env::get('PASSWORD_RESET_TTL_MINUTES', 60),
+    'password_reset_max_per_hour'  => (int) Env::get('PASSWORD_RESET_MAX_PER_HOUR', 3),
 ];

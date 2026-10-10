@@ -8,6 +8,9 @@ use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\Member;
 use App\Models\Mentorship;
+use App\Services\CensusFields;
+use App\Services\MemberNotifier;
+use App\Services\Passwords;
 use App\Services\Upload;
 use DateTime;
 use RuntimeException;
@@ -36,9 +39,14 @@ final class ProfileController extends Controller
             return;
         }
 
-        $notice = ($_GET['notice'] ?? null) === 'validation_required'
-            ? t('profile.notice_validation_required')
-            : null;
+        // email_verified : arrivée directe après le code de vérification
+        // (VerificationController::verify(), connexion automatique).
+        $notices = [
+            'validation_required' => ['type' => 'info', 'message' => t('profile.notice_validation_required')],
+            'email_verified'      => ['type' => 'success', 'message' => t('profile.notice_email_verified')],
+            'resubmitted'         => ['type' => 'success', 'message' => t('profile.notice_resubmitted')],
+        ];
+        $notice = $notices[(string) ($_GET['notice'] ?? '')] ?? null;
 
         // Juste is_public, pas les trois réglages (FIUCC-83 en garde la
         // lecture complète séparée) : cette page n'a besoin que de savoir
@@ -96,15 +104,43 @@ final class ProfileController extends Controller
             }
         }
 
+        // Photo du passeport (migration 018) : remplaçable tant que le
+        // dossier n'est pas validé — typiquement après un refus pour photo
+        // illisible. Obligatoire pour renvoyer un dossier refusé qui n'en a
+        // plus (supprimée après 90 jours, PassportScanRetention).
+        $isRejected = $member['status'] === 'rejected';
+        $newScanPath = null;
+
+        if (self::canReplaceScan($member) && ($_FILES['passport_scan']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+            if ($errors === []) {
+                try {
+                    $newScanPath = Upload::storePrivateImage(
+                        $_FILES['passport_scan'],
+                        'passports',
+                        (int) Config::get('registration.passport_scan_max_dimension', 2000),
+                        (int) Config::get('registration.passport_scan_max_size_mb', 8) * 1024 * 1024,
+                        (int) Config::get('security.upload_max_input_dimension', 5000)
+                    );
+                } catch (RuntimeException $exception) {
+                    $errors['passport_scan'] = $exception->getMessage();
+                }
+            }
+        } elseif ($isRejected && empty($member['passport_scan'])) {
+            $errors['passport_scan'] = t('validation.passport_scan_required');
+        }
+
         if ($errors !== []) {
+            if ($newScanPath !== null) {
+                @unlink(Upload::storagePath($newScanPath));
+            }
+
             $this->showForm($member, $input, $errors);
             return;
         }
 
         $faculties = Config::get('registration.faculties', []);
 
-        Member::updateProfile((int) $member['id'], [
-            'full_name'      => $input['full_name'],
+        Member::updateProfile((int) $member['id'], CensusFields::toColumns($input) + [
             'date_of_birth'  => $input['date_of_birth'] !== '' ? $input['date_of_birth'] : null,
             'gender'         => $input['gender'] !== '' ? $input['gender'] : null,
             'city_of_origin' => $input['city_of_origin'] !== '' ? $input['city_of_origin'] : null,
@@ -127,9 +163,39 @@ final class ProfileController extends Controller
             }
         }
 
+        if ($newScanPath !== null) {
+            Member::updatePassportScan((int) $member['id'], $newScanPath);
+
+            if (!empty($member['passport_scan'])) {
+                @unlink(Upload::storagePath((string) $member['passport_scan']));
+            }
+        }
+
         ActivityLog::record($userId, 'profile_updated', 'member', (int) $member['id']);
 
+        // Dossier refusé : enregistrer les corrections le renvoie (retour en
+        // attente) et prévient les admins par email — le motif précédent
+        // reste consultable dans activity_logs. Décision utilisateur,
+        // 2026-10-09.
+        if ($isRejected && Member::resubmit((int) $member['id'])) {
+            ActivityLog::record($userId, 'member.resubmitted', 'member', (int) $member['id'], (string) $member['rejection_reason']);
+            MemberNotifier::notifyAdminsResubmitted((int) $member['id'], CensusFields::fullName($input));
+
+            $this->redirect('/profile?notice=resubmitted');
+            return;
+        }
+
         $this->redirect('/profile');
+    }
+
+    /**
+     * Photo du passeport remplaçable depuis le profil tant que le dossier
+     * n'est pas validé (pending, rejected) — après validation, l'identité a
+     * été vérifiée, il n'y a plus de raison d'en recevoir une nouvelle.
+     */
+    private static function canReplaceScan(array $member): bool
+    {
+        return in_array($member['status'], ['pending', 'rejected'], true);
     }
 
     public function privacy(): void
@@ -294,6 +360,41 @@ final class ProfileController extends Controller
         $this->redirect('/profile/mentor?notice=updated');
     }
 
+    /**
+     * Changement du mot de passe (App\Services\Passwords::change()) —
+     * ouvert à tout membre connecté, pending compris : c'est son propre
+     * compte, rien sur d'autres membres.
+     */
+    public function password(): void
+    {
+        $this->view('profile.password', [
+            'title'  => t('password.change.title'),
+            'errors' => [],
+            'notice' => (string) ($_GET['notice'] ?? ''),
+        ]);
+    }
+
+    public function updatePassword(): void
+    {
+        $errors = Passwords::change(
+            (int) $_SESSION['user_id'],
+            (string) ($_POST['current_password'] ?? ''),
+            (string) ($_POST['password'] ?? ''),
+            (string) ($_POST['password_confirmation'] ?? '')
+        );
+
+        if ($errors !== []) {
+            $this->view('profile.password', [
+                'title'  => t('password.change.title'),
+                'errors' => $errors,
+                'notice' => '',
+            ]);
+            return;
+        }
+
+        $this->redirect('/profile/password?notice=updated');
+    }
+
     private function showForm(array $member, array $input, array $errors): void
     {
         $this->view('profile.edit', [
@@ -301,6 +402,11 @@ final class ProfileController extends Controller
             'member'      => $member,
             'faculties'   => Config::get('registration.faculties', []),
             'studyLevels' => Config::get('registration.study_levels', []),
+            'communityRoles' => Config::get('registration.community_roles', []),
+            'canReplaceScan' => self::canReplaceScan($member),
+            'passportScanMaxMb' => (int) Config::get('registration.passport_scan_max_size_mb', 8),
+            'districts'   => Config::get('registration.districts', []),
+            'religions'   => Config::get('registration.religions', []),
             'old'         => $input,
             'errors'      => $errors,
         ]);
@@ -310,8 +416,7 @@ final class ProfileController extends Controller
     {
         $faculties = Config::get('registration.faculties', []);
 
-        return [
-            'full_name'      => $member['full_name'],
+        return CensusFields::fromMember($member) + [
             'date_of_birth'  => (string) ($member['date_of_birth'] ?? ''),
             'gender'         => (string) ($member['gender'] ?? ''),
             'city_of_origin' => (string) ($member['city_of_origin'] ?? ''),
@@ -329,8 +434,7 @@ final class ProfileController extends Controller
 
     private function collectInput(): array
     {
-        return [
-            'full_name'      => trim((string) ($_POST['full_name'] ?? '')),
+        return CensusFields::collect($_POST) + [
             'date_of_birth'  => trim((string) ($_POST['date_of_birth'] ?? '')),
             'gender'         => trim((string) ($_POST['gender'] ?? '')),
             'city_of_origin' => trim((string) ($_POST['city_of_origin'] ?? '')),
@@ -345,25 +449,25 @@ final class ProfileController extends Controller
 
     private function validate(array $input): array
     {
-        $errors = [];
+        $errors = CensusFields::validate($input);
         $faculties = Config::get('registration.faculties', []);
         $studyLevels = Config::get('registration.study_levels', []);
 
-        if ($input['full_name'] === '') {
-            $errors['full_name'] = t('validation.full_name_required');
-        } elseif (mb_strlen($input['full_name']) > 150) {
-            $errors['full_name'] = t('validation.full_name_too_long');
-        }
-
-        if ($input['date_of_birth'] !== '' && !$this->isValidDate($input['date_of_birth'])) {
+        if ($input['date_of_birth'] === '') {
+            $errors['date_of_birth'] = t('validation.date_of_birth_required');
+        } elseif (!$this->isValidDate($input['date_of_birth'])) {
             $errors['date_of_birth'] = t('validation.date_invalid');
         }
 
-        if ($input['gender'] !== '' && !in_array($input['gender'], ['male', 'female', 'other'], true)) {
+        if ($input['gender'] === '') {
+            $errors['gender'] = t('validation.gender_required');
+        } elseif (!in_array($input['gender'], ['male', 'female'], true)) {
             $errors['gender'] = t('validation.option_invalid');
         }
 
-        if (mb_strlen($input['city_of_origin']) > 100) {
+        if ($input['city_of_origin'] === '') {
+            $errors['city_of_origin'] = t('validation.city_of_origin_required');
+        } elseif (mb_strlen($input['city_of_origin']) > 100) {
             $errors['city_of_origin'] = t('validation.value_too_long');
         }
 
@@ -387,7 +491,9 @@ final class ProfileController extends Controller
             $errors['phone'] = t('validation.phone_too_long');
         }
 
-        if (mb_strlen($input['whatsapp']) > 30) {
+        if ($input['whatsapp'] === '') {
+            $errors['whatsapp'] = t('validation.whatsapp_required');
+        } elseif (mb_strlen($input['whatsapp']) > 30) {
             $errors['whatsapp'] = t('validation.whatsapp_too_long');
         }
 

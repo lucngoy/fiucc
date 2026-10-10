@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Controllers;
 
-use App\Core\Config;
 use App\Core\Controller;
+use App\Services\ContactSettings;
 
 /**
  * Page « Nouveau à Final ? » (FIUCC-89, section "Onboarding du nouvel
@@ -20,7 +20,8 @@ final class OnboardingController extends Controller
         $this->view('onboarding.index', [
             'title'       => t('onboarding.title'),
             'description' => t('onboarding.meta_description'),
-            'whatsappUrl' => Config::get('app.whatsapp_url'),
+            // Coordonnées modifiables depuis /admin/contact (repli sur .env).
+            'whatsappUrl' => ContactSettings::values()['whatsapp_url'],
         ]);
     }
 }

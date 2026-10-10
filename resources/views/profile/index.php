@@ -45,7 +45,7 @@ if ($member['status_type'] !== 'student') {
 ?>
 <div class="max-w-layout mx-auto px-4 py-12 flex flex-col gap-6">
     <?php if ($notice !== null): ?>
-        <?= component('alert', ['type' => 'info', 'message' => $notice]) ?>
+        <?= component('alert', $notice) ?>
     <?php endif; ?>
 
     <div class="bg-white rounded-card border border-border p-6 flex flex-col md:flex-row md:flex-wrap md:items-center gap-5">
@@ -70,6 +70,7 @@ if ($member['status_type'] !== 'student') {
                 <?= component('button', ['label' => t('profile.mentor_link'), 'variant' => 'secondary', 'href' => '/profile/mentor']) ?>
             <?php endif; ?>
             <?= component('button', ['label' => t('profile.privacy_link'), 'variant' => 'secondary', 'href' => '/profile/privacy']) ?>
+            <?= component('button', ['label' => t('profile.password_link'), 'variant' => 'secondary', 'href' => '/profile/password']) ?>
             <?= component('button', ['label' => t('profile.edit_profile'), 'variant' => 'secondary', 'href' => '/profile/edit']) ?>
         </div>
     </div>
@@ -88,6 +89,14 @@ if ($member['status_type'] !== 'student') {
 
     <?php if ($statusReason !== null && $statusReason !== ''): ?>
         <div class="-mt-3 pl-4 text-body-sm text-muted"><?= e(t('profile.status.reason', ['reason' => $statusReason])) ?></div>
+    <?php endif; ?>
+
+    <?php if ($member['status'] === 'rejected'): ?>
+        <!-- Renvoi du dossier (migration 020) : corriger le profil le renvoie aux admins. -->
+        <div class="-mt-2 pl-4 flex flex-col sm:flex-row sm:items-center gap-3">
+            <p class="text-body-sm text-ink"><?= e(t('profile.resubmit.cta_text')) ?></p>
+            <?= component('button', ['label' => t('profile.resubmit.cta'), 'variant' => 'primary', 'href' => '/profile/edit']) ?>
+        </div>
     <?php endif; ?>
 
     <?php if ($details !== []): ?>

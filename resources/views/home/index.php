@@ -60,7 +60,7 @@ $hasAboutPhoto = $aboutPhotoPath !== null;
 
 $journeySteps = [
     ['icon' => 'fa-solid fa-compass', 'label' => t('home.journey.step1_label'), 'title' => t('home.journey.step1_title'), 'body' => t('home.journey.step1_body'), 'href' => '/new-at-final'],
-    ['icon' => 'fa-solid fa-user-plus', 'label' => t('home.journey.step2_label'), 'title' => t('home.journey.step2_title'), 'body' => t('home.journey.step2_body')],
+    ['icon' => 'fa-solid fa-user-plus', 'label' => t('home.journey.step2_label'), 'title' => t('home.journey.step2_title'), 'body' => t('home.journey.step2_body'), 'href' => '/register'],
     ['icon' => 'fa-solid fa-people-group', 'label' => t('home.journey.step3_label'), 'title' => t('home.journey.step3_title'), 'body' => t('home.journey.step3_body')],
     ['icon' => 'fa-solid fa-square-check', 'label' => t('home.journey.step4_label'), 'title' => t('home.journey.step4_title'), 'body' => t('home.journey.step4_body')],
     ['icon' => 'fa-solid fa-hands-holding-circle', 'label' => t('home.journey.step5_label'), 'title' => t('home.journey.step5_title'), 'body' => t('home.journey.step5_body')],

@@ -10,7 +10,7 @@
     <meta name="robots" content="noindex, nofollow">
     <title><?= e($title ?? 'FIUCC Admin') ?></title>
     <!-- Police et icônes semiauto-hébergées (FIUCC-78) — voir layouts/app.php. -->
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="<?= e(asset('/assets/css/app.css')) ?>">
     <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>
 <body class="bg-surface">
@@ -43,11 +43,14 @@
  * existe réellement, voir 001_initial_schema.sql) : le rôle affiché est
  * "Admin" (common.role.admin), pas un intitulé de poste fictif.
  *
- * Notification : cloche décorative, aucun système de notifications construit
- * (pas de ticket dédié) — pas de pastille "non lu" inventée, ça affirmerait
- * un état qu'aucune donnée ne soutient.
+ * Cloche : tâches en attente ($adminTasks, App\Services\AdminTasks, injecté
+ * par App\Core\Controller::view()) — pas un système de notifications. La
+ * pastille montre le total à traiter, jamais un "non lu" qu'aucune donnée
+ * ne soutient.
  */
 $activeNav ??= null;
+$adminTasks ??= [];
+$adminTasksTotal = array_sum(array_column($adminTasks, 'count'));
 $adminInitial = $adminEmail ?? '' ? mb_strtoupper(mb_substr((string) $adminEmail, 0, 1)) : '?';
 // Même mécanique que resources/views/partials/header.php (public) : GET
 // /lang/{locale} (FIUCC-30) pose $_SESSION['locale'] et redirige vers la
@@ -130,6 +133,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                     <?= icon('check-to-slot', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.elections')) ?>
                 </a>
+                <a href="/admin/contact"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'contact' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'contact' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('envelope', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.contact')) ?>
+                </a>
                 <a href="/admin/backups"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'backups' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'backups' ? 'aria-current="page"' : '' ?>>
@@ -164,10 +173,35 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                     <a href="/lang/en" class="px-2 py-1 rounded-control transition-colors <?= e($enLocaleClasses) ?>">EN</a>
                     <a href="/lang/fr" class="px-2 py-1 rounded-control transition-colors <?= e($frLocaleClasses) ?>">FR</a>
                 </div>
-                <button type="button" title="<?= e(t('admin.header.notifications')) ?>" aria-label="<?= e(t('admin.header.notifications')) ?>"
-                    class="h-10 w-10 rounded-control flex items-center justify-center text-muted hover:bg-surface hover:text-ink transition-colors">
-                    <?= icon('bell') ?>
-                </button>
+                <details class="relative">
+                    <summary title="<?= e(t('admin.header.notifications')) ?>" aria-label="<?= e(t('admin.header.notifications')) ?>"
+                        class="relative cursor-pointer list-none h-10 w-10 rounded-control flex items-center justify-center text-muted hover:bg-surface hover:text-ink transition-colors">
+                        <?= icon('bell') ?>
+                        <?php if ($adminTasksTotal > 0): ?>
+                            <span class="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-gold text-ink text-[10px] font-bold leading-[18px] text-center"><?= e($adminTasksTotal > 99 ? '99+' : (string) $adminTasksTotal) ?></span>
+                        <?php endif; ?>
+                    </summary>
+                    <div class="absolute right-0 z-20 mt-2 w-72 bg-white border border-border rounded-card shadow-card overflow-hidden text-left">
+                        <p class="p-3 border-b border-border text-label-md font-label-md text-ink"><?= e(t('admin.tasks.title')) ?></p>
+                        <?php if ($adminTasks === []): ?>
+                            <p class="flex items-center gap-2 px-3 py-4 text-body-sm text-muted">
+                                <?= icon('circle-check', 'text-success') ?>
+                                <?= e(t('admin.tasks.none')) ?>
+                            </p>
+                        <?php else: ?>
+                            <ul class="divide-y divide-border">
+                                <?php foreach ($adminTasks as $task): ?>
+                                    <li>
+                                        <a href="<?= e($task['url']) ?>" class="flex items-center justify-between gap-3 px-3 py-2.5 text-body-sm text-ink hover:bg-surface transition-colors">
+                                            <span><?= e($task['label']) ?></span>
+                                            <?= icon('arrow-right', 'text-muted shrink-0') ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php endif; ?>
+                    </div>
+                </details>
                 <details class="relative">
                     <summary title="<?= e(t('admin.header.profile')) ?>" aria-label="<?= e(t('admin.header.profile')) ?>"
                         class="cursor-pointer list-none h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-label-lg text-label-lg font-bold hover:bg-primary/20 transition-colors">
@@ -178,6 +212,10 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                             <p class="text-label-md font-label-md text-ink truncate"><?= e($adminEmail ?? '') ?></p>
                             <p class="text-label-caps font-label-caps text-muted uppercase"><?= e(t('common.role.admin')) ?></p>
                         </div>
+                        <a href="/admin/account/password" class="w-full flex items-center gap-2 px-3 py-2.5 text-body-sm text-ink hover:bg-surface transition-colors">
+                            <?= icon('key', 'text-muted') ?>
+                            <?= e(t('password.change.title')) ?>
+                        </a>
                         <form method="POST" action="/logout">
                             <?= csrf_field() ?>
                             <button type="submit" class="w-full flex items-center gap-2 px-3 py-2.5 text-body-sm text-ink hover:bg-surface transition-colors">

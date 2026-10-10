@@ -71,12 +71,45 @@ document.addEventListener('DOMContentLoaded', function () {
         var fields = steps[index].querySelectorAll('[required]');
 
         for (var i = 0; i < fields.length; i++) {
+            if (fields[i].type === 'file' && !fields[i].files.length && !missingFile(fields[i])) {
+                return false;
+            }
+
             if (!fields[i].reportValidity()) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    // Champ fichier obligatoire vide (photo du passeport) : l'<input> est
+    // visuellement masqué (la zone de dépôt le remplace), la bulle native
+    // du navigateur s'afficherait donc dans le vide. Message dans la zone
+    // elle-même (libellé data-label-required, lu via t()), puis défilement
+    // jusqu'à elle. Renvoie toujours false : l'étape est bloquée.
+    function missingFile(input) {
+        var zone = input.closest('[data-passport-ocr]');
+
+        if (!zone) {
+            return input.reportValidity();
+        }
+
+        var status = zone.querySelector('[data-ocr-status]');
+        var dropzone = zone.querySelector('[data-dropzone]');
+
+        if (status) {
+            status.textContent = zone.getAttribute('data-label-required') || '';
+            status.classList.remove('text-muted', 'text-success');
+            status.classList.add('text-danger');
+        }
+
+        if (dropzone) {
+            dropzone.classList.add('border-danger');
+            dropzone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        return false;
     }
 
     form.querySelectorAll('[data-next]').forEach(function (button) {

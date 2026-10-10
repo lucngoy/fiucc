@@ -18,8 +18,10 @@
  * avantages réellement construits — annuaire (/directory), événements
  * (/events), élections (/elections), toutes des routes existantes
  * (routes/web.php) — pas de citation présidentielle ni d'email de
- * secrétariat inventés ; le renvoi d'aide pointe vers /contact, route
- * réelle. Le titre/sous-titre du haut, dupliqués dans la carte, ne
+ * secrétariat inventés ; le renvoi d'aide pointe vers /new-at-final
+ * (FIUCC-89 : premières démarches, contacts utiles, FAQ) — /contact est
+ * déclarée mais pas construite (CLAUDE.md, "Manques connus"), elle
+ * menait à un 404. Le titre/sous-titre du haut, dupliqués dans la carte, ne
  * s'affichent que sous lg (la carte les remplace visuellement au-dessus).
  */
 $old ??= [];
@@ -31,7 +33,15 @@ $locale = \App\Core\Lang::locale();
 $enLocaleClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 
-$steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.contact'), t('census.step.confirm')];
+$steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.residence'), t('census.step.contact'), t('census.step.confirm')];
+
+// Listes de la fiche étendue (migration 018) : clés en config, libellés via t().
+$labelled = static fn (array $keys, string $prefix): array => array_combine($keys, array_map(static fn (string $key): string => t($prefix . $key), $keys));
+$communityRoleOptions = $labelled($communityRoles ?? [], 'census.community_role.');
+$districtOptions = $labelled($districts ?? [], 'census.district.');
+$religionOptions = $labelled($religions ?? [], 'census.religion.');
+$passportScanMaxMb ??= 8;
+$hasPendingScan ??= false;
 ?>
 <style>
     .auth-register-shell {
@@ -93,35 +103,35 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
 
         <div class="relative z-10">
             <a href="/">
-            <div class="mb-10 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 backdrop-blur">
-                <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-6 w-6 rounded-md object-cover ring-1 ring-white/20" />
-                <span class="text-xs font-semibold tracking-wide text-white/80"><?= e(t('app.name')) ?></span>
-            </div>
+                <div class="flex justify-center mb-8">
+                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-24 w-24 rounded-md object-cover" />
+                </div>
             </a>
 
-            <div class="flex flex-col gap-3">
-                <span class="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
+            <div class="flex flex-col gap-3 text-center">
+                <span style="margin:auto;" class="inline-flex w-fit items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/80">
                     <span class="h-2 w-2 rounded-full bg-[#ECC117]" aria-hidden="true"></span>
                     <?= e(t('census.info.eyebrow')) ?>
                 </span>
                 <h1 class="font-headline-lg text-headline-lg text-white"><?= e(t('census.info.title')) ?></h1>
-                <p class="max-w-md text-base leading-relaxed text-white/80"><?= e(t('census.info.subtitle')) ?></p>
+                <p style="margin:auto; margin-bottom: 0.75rem" class="max-w-lg text-base leading-relaxed text-white/80"><?= e(t('census.info.subtitle')) ?></p>
             </div>
 
-            <div class="my-6 flex flex-col gap-4">
+            <!-- Deux avantages côte à côte, le troisième sur toute la largeur en dessous. -->
+            <div class="my-6 grid grid-cols-2 gap-x-6 gap-y-6">
                 <?php foreach ([
                     ['icon' => 'fa-solid fa-calendar-days', 'title' => t('census.info.benefit1_title'), 'body' => t('census.info.benefit1_body')],
                     ['icon' => 'fa-solid fa-address-book', 'title' => t('census.info.benefit2_title'), 'body' => t('census.info.benefit2_body')],
                     ['icon' => 'fa-solid fa-check-to-slot', 'title' => t('census.info.benefit3_title'), 'body' => t('census.info.benefit3_body')],
-                ] as $benefit): ?>
-                    <div class="flex items-start gap-3">
-                        <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10" aria-hidden="true">
-                            <i class="<?= e($benefit['icon']) ?> text-sm text-gold"></i>
-                        </span>
-                        <div>
-                            <div class="font-label-lg text-label-lg text-white"><?= e($benefit['title']) ?></div>
-                            <div class="text-sm leading-relaxed text-white/80"><?= e($benefit['body']) ?></div>
+                ] as $benefitIndex => $benefit): ?>
+                    <div class="flex flex-col gap-2 text-center ring-1 ring-white/10 ring-inset rounded-control bg-white/5 p-6 <?= $benefitIndex === 2 ? 'col-span-2' : '' ?>">
+                        <div class="mx-auto flex items-center gap-2">
+                            <span class="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-white/10" aria-hidden="true">
+                                <i class="<?= e($benefit['icon']) ?> text-sm text-gold"></i>
+                            </span>
+                            <span class="font-label-lg text-label-lg text-white"><?= e($benefit['title']) ?></span>
                         </div>
+                        <div class="text-sm leading-relaxed text-white/80"><?= e($benefit['body']) ?></div>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -133,7 +143,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
         </div>
 
         <div class="relative z-10 mt-10">
-            <a href="/contact" class="flex items-center justify-between gap-3 rounded-control border border-white/10 bg-white/5 p-4 text-left transition-colors hover:bg-white/10">
+            <a href="/new-at-final" class="flex items-center justify-between gap-3 rounded-control border border-white/10 bg-white/5 p-4 text-left transition-colors hover:bg-white/10">
                 <span class="flex items-center gap-3">
                     <?= icon('circle-question', 'text-lg text-white') ?>
                     <span>
@@ -146,20 +156,40 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
         </div>
     </aside>
 
-    <div class="auth-register-panel flex items-center justify-center px-4 py-8 lg:py-12">
-        <div class="w-full max-w-md p-6 md:p-8">
+    <!-- my-auto sur l'enfant, pas items-center sur le parent : un formulaire
+         plus haut que le panneau (scrollable) déborderait sinon au-dessus du
+         haut, hors d'atteinte du scroll — toggle de langue et étapes coupés. -->
+    <div class="auth-register-panel flex justify-center px-4 py-8 lg:py-12">
+        <div class="my-auto w-full max-w-md p-6 md:p-8">
             <div class="mb-6 flex justify-end">
                 <div class="inline-flex items-center gap-1 rounded-control border border-[#dbe3ee] bg-[#f8fafc] p-1">
                     <a href="/lang/en" class="px-2 py-1 rounded text-label-md font-label-md transition-colors <?= e($enLocaleClasses) ?>">EN</a>
                     <a href="/lang/fr" class="px-2 py-1 rounded text-label-md font-label-md transition-colors <?= e($frLocaleClasses) ?>">FR</a>
                 </div>
             </div>
+            
+            <div class="mb-8 text-center">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center shadow-sm overflow-hidden">
+                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
+                </div>
+                <h1 class="font-headline-lg text-headline-lg text-[#111827]">
+                    <?= e(t('auth.sign_up')) ?>
+                </h1>
+                <p class="mt-2 text-sm text-[#64748b]"><?= e(t('auth.subtitle')) ?></p>
+            </div>
+
             <div class="mb-6 text-center lg:hidden">
                 <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e0f2fe] shadow-sm ring-1 ring-[#dbe3ee] overflow-hidden">
                     <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
                 </div>
                 <h1 class="font-headline-lg text-headline-lg text-ink"><?= e(t('census.title')) ?></h1>
                 <p class="mt-2 text-sm text-[#64748b]"><?= e(t('census.subtitle')) ?></p>
+                <!-- Onboarding (FIUCC-89) : en lg+, la carte d'aide de la colonne
+                     de gauche y mène déjà ; ici pour mobile, où elle est masquée. -->
+                <a href="/new-at-final" class="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline">
+                    <?= icon('compass') ?>
+                    <?= e(t('census.new_at_final_link')) ?>
+                </a>
             </div>
 
             <?php if ($errors !== []): ?>
@@ -169,7 +199,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
             <?php endif; ?>
 
             <div id="step-indicator" class="relative mb-8 flex items-center justify-between" aria-hidden="true">
-                <div class="absolute left-[12.5%] right-[12.5%] top-[18px] h-0.5 bg-[#e5e7eb]">
+                <div class="absolute left-[10%] right-[10%] top-[18px] h-0.5 bg-[#e5e7eb]">
                     <div id="step-progress" class="h-full bg-primary transition-all duration-300" style="width: 0%"></div>
                 </div>
                 <?php foreach ($steps as $index => $stepLabel): ?>
@@ -182,7 +212,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                 <?php endforeach; ?>
             </div>
 
-            <form id="registration-form" method="POST" action="/register" class="" novalidate>
+            <form id="registration-form" method="POST" action="/register" enctype="multipart/form-data" novalidate>
                 <?= csrf_field() ?>
 
                 <!-- Étape 1 : Identité -->
@@ -190,33 +220,105 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                     <div class="flex flex-col gap-5">
                         <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.identity')) ?></h2>
 
+                        <!-- Photo du passeport + OCR (public/assets/js/passport-ocr.js) :
+                             obligatoire, pré-remplit les champs vides. Après un échec de
+                             validation, la photo déjà reçue est conservée côté serveur
+                             (RegistrationController::pendingScan()) : le champ n'est
+                             alors plus requis, seulement remplaçable. -->
+                        <div data-passport-ocr
+                            data-max-bytes="<?= e((string) ($passportScanMaxMb * 1024 * 1024)) ?>"
+                            data-label-reading="<?= e(t('census.ocr.reading')) ?>"
+                            data-label-reading-birthplace="<?= e(t('census.ocr.reading_birthplace')) ?>"
+                            data-label-filled="<?= e(t('census.ocr.filled')) ?>"
+                            data-label-nothing-filled="<?= e(t('census.ocr.nothing_filled')) ?>"
+                            data-label-not-found="<?= e(t('census.ocr.not_found')) ?>"
+                            data-label-failed="<?= e(t('census.ocr.failed')) ?>"
+                            data-label-invalid-type="<?= e(t('upload.invalid_type')) ?>"
+                            data-label-too-large="<?= e(t('upload.too_large')) ?>"
+                            data-label-required="<?= e(t('census.ocr.required')) ?>"
+                            class="flex flex-col gap-1.5">
+                            <span class="font-label-lg text-label-lg text-ink"><?= e(t('census.field.passport_scan')) ?> <span class="text-danger">*</span></span>
+                            <label data-dropzone for="field-passport_scan"
+                                class="relative flex cursor-pointer flex-col items-center gap-2 rounded-control border-2 border-dashed <?= $error('passport_scan') !== null ? 'border-danger' : 'border-border' ?> bg-white p-4 text-center transition-colors hover:border-primary">
+                                <!-- Indicateur de lecture : affiché par passport-ocr.js pendant
+                                     l'analyse (2 à 7 s), par-dessus la zone, qui reste visible
+                                     en transparence avec l'aperçu de la photo. -->
+                                <span data-ocr-spinner class="absolute inset-0 z-10 hidden flex-col items-center justify-center gap-3 rounded-control bg-white/80">
+                                    <svg class="h-8 w-8 animate-spin text-primary" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3" class="opacity-25"></circle>
+                                        <path d="M22 12a10 10 0 0 0-10-10" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+                                    </svg>
+                                    <span data-ocr-spinner-label class="text-body-sm font-label-md text-primary"></span>
+                                </span>
+                                <?= icon('paperclip', 'text-xl text-primary') ?>
+                                <span class="text-body-sm text-ink"><?= e(t('census.field.passport_scan_cta')) ?></span>
+                                <span class="text-body-sm text-muted"><?= e(t('census.field.passport_scan_help', ['max' => $passportScanMaxMb])) ?></span>
+                                <span data-ocr-filename class="text-body-sm font-label-md text-ink break-all"></span>
+                                <img data-ocr-preview hidden alt="" class="max-h-40 rounded-control border border-border object-contain">
+                            </label>
+                            <input type="file" id="field-passport_scan" name="passport_scan" accept="image/jpeg,image/png,image/webp" class="sr-only" <?= $hasPendingScan ? '' : 'required' ?>>
+                            <p data-ocr-status class="text-body-sm text-muted" aria-live="polite"><?= e(t('census.ocr.intro')) ?></p>
+                            <?php if ($error('passport_scan') !== null): ?>
+                                <p class="text-body-sm text-danger" role="alert"><?= e($error('passport_scan')) ?></p>
+                            <?php elseif ($hasPendingScan): ?>
+                                <p class="text-body-sm text-success"><?= e(t('census.field.passport_scan_kept')) ?></p>
+                            <?php endif; ?>
+                        </div>
+
                         <?= component('form_field', [
-                            'name' => 'full_name', 'label' => t('census.field.full_name'), 'required' => true,
-                            'value' => $field('full_name'), 'error' => $error('full_name'),
-                            'placeholder' => t('census.field.full_name_placeholder'),
+                            'name' => 'last_name', 'label' => t('census.field.last_name'), 'required' => true,
+                            'value' => $field('last_name'), 'error' => $error('last_name'),
                         ]) ?>
 
                         <?= component('form_field', [
-                            'name' => 'date_of_birth', 'label' => t('census.field.date_of_birth'), 'type' => 'date',
+                            'name' => 'middle_name', 'label' => t('census.field.middle_name'), 'required' => true,
+                            'value' => $field('middle_name'), 'error' => $error('middle_name'),
+                        ]) ?>
+
+                        <?= component('form_field', [
+                            'name' => 'first_name', 'label' => t('census.field.first_name'), 'required' => true,
+                            'value' => $field('first_name'), 'error' => $error('first_name'),
+                        ]) ?>
+
+                        <?= component('form_field', [
+                            'name' => 'date_of_birth', 'label' => t('census.field.date_of_birth'), 'type' => 'date', 'required' => true,
                             'value' => $field('date_of_birth'), 'error' => $error('date_of_birth'),
                         ]) ?>
 
                         <div class="flex flex-col gap-1.5">
-                            <span class="font-label-lg text-label-lg text-ink"><?= e(t('census.field.gender')) ?></span>
+                            <span class="font-label-lg text-label-lg text-ink"><?= e(t('census.field.gender')) ?> <span class="text-danger">*</span></span>
                             <div class="flex gap-4">
-                                <?php foreach (['male' => t('census.gender.male'), 'female' => t('census.gender.female'), 'other' => t('census.gender.other')] as $genderValue => $genderLabel): ?>
+                                <?php foreach (['male' => t('census.gender.male'), 'female' => t('census.gender.female')] as $genderValue => $genderLabel): ?>
                                     <label class="flex items-center gap-2 cursor-pointer">
-                                        <input type="radio" name="gender" value="<?= e($genderValue) ?>" <?= $field('gender') === $genderValue ? 'checked' : '' ?> class="h-4 w-4 border-border text-primary focus:outline-none focus:ring-2 focus:ring-primary-light/50">
+                                        <input type="radio" name="gender" value="<?= e($genderValue) ?>" <?= $field('gender') === $genderValue ? 'checked' : '' ?> required class="h-4 w-4 border-border text-primary focus:outline-none focus:ring-2 focus:ring-primary-light/50">
                                         <span class="text-body-sm text-ink"><?= e($genderLabel) ?></span>
                                     </label>
                                 <?php endforeach; ?>
                             </div>
+                            <?php if ($error('gender') !== null): ?>
+                                <p class="text-body-sm text-danger" role="alert"><?= e($error('gender')) ?></p>
+                            <?php endif; ?>
                         </div>
 
                         <?= component('form_field', [
-                            'name' => 'city_of_origin', 'label' => t('census.field.city_of_origin'),
+                            'name' => 'city_of_origin', 'label' => t('census.field.city_of_origin'), 'required' => true,
                             'value' => $field('city_of_origin'), 'error' => $error('city_of_origin'),
                             'placeholder' => t('census.field.city_of_origin_placeholder'),
+                        ]) ?>
+
+                        <?= component('select_field', [
+                            'name' => 'community_role', 'label' => t('census.field.community_role'), 'required' => true,
+                            'options' => $communityRoleOptions, 'value' => $field('community_role'), 'error' => $error('community_role'),
+                            'placeholder' => t('census.field.community_role_placeholder'),
+                        ]) ?>
+
+                        <!-- Culte : obligatoire, mais "Ne souhaite pas répondre" reste
+                             une réponse valide — donnée sensible, admin uniquement. -->
+                        <?= component('select_field', [
+                            'name' => 'religion', 'label' => t('census.field.religion'), 'required' => true,
+                            'options' => $religionOptions, 'placeholder' => t('census.field.religion_placeholder'),
+                            'value' => $field('religion'), 'error' => $error('religion'),
+                            'help' => t('census.field.religion_help'),
                         ]) ?>
                     </div>
 
@@ -257,12 +359,59 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
 
                     <div class="flex justify-between pt-6">
                         <?= component('button', ['label' => t('census.back'), 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
+                        <?= component('button', ['label' => t('census.next_residence'), 'variant' => 'primary', 'attributes' => 'data-next']) ?>
+                    </div>
+                </div>
+
+                <!-- Étape 3 : Résidence et passeport (migration 018) -->
+                <div data-step="3" hidden class="scroll-mt-[88px]">
+                    <div class="flex flex-col gap-5">
+                        <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.residence')) ?></h2>
+
+                        <?= component('form_field', [
+                            'name' => 'address_street', 'label' => t('census.field.address_street'), 'required' => true,
+                            'value' => $field('address_street'), 'error' => $error('address_street'),
+                        ]) ?>
+
+                        <?= component('form_field', [
+                            'name' => 'address_building', 'label' => t('census.field.address_building'), 'required' => true,
+                            'value' => $field('address_building'), 'error' => $error('address_building'),
+                        ]) ?>
+
+                        <?= component('form_field', [
+                            'name' => 'address_apartment', 'label' => t('census.field.address_apartment'), 'required' => true,
+                            'value' => $field('address_apartment'), 'error' => $error('address_apartment'),
+                        ]) ?>
+
+                        <?= component('select_field', [
+                            'name' => 'district', 'label' => t('census.field.district'), 'required' => true,
+                            'options' => $districtOptions, 'value' => $field('district'), 'error' => $error('district'),
+                            'placeholder' => t('census.field.district_placeholder'),
+                        ]) ?>
+
+                        <h2 class="pt-2 font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.passport')) ?></h2>
+
+                        <?= component('form_field', [
+                            'name' => 'passport_number', 'label' => t('census.field.passport_number'), 'required' => true,
+                            'value' => $field('passport_number'), 'error' => $error('passport_number'),
+                        ]) ?>
+
+                        <?= component('form_field', [
+                            'name' => 'passport_expiry', 'label' => t('census.field.passport_expiry'), 'type' => 'date', 'required' => true,
+                            'value' => $field('passport_expiry'), 'error' => $error('passport_expiry'),
+                        ]) ?>
+
+                        <p class="text-body-sm text-muted"><?= e(t('census.section.passport_notice')) ?></p>
+                    </div>
+
+                    <div class="flex justify-between pt-6">
+                        <?= component('button', ['label' => t('census.back'), 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
                         <?= component('button', ['label' => t('census.next_contact'), 'variant' => 'primary', 'attributes' => 'data-next']) ?>
                     </div>
                 </div>
 
-                <!-- Étape 3 : Contact et compte -->
-                <div data-step="3" hidden class="scroll-mt-[88px]">
+                <!-- Étape 4 : Contact et compte -->
+                <div data-step="4" hidden class="scroll-mt-[88px]">
                     <div class="flex flex-col gap-5">
                         <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.contact')) ?></h2>
 
@@ -291,7 +440,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                         ]) ?>
 
                         <?= component('form_field', [
-                            'name' => 'whatsapp', 'label' => t('census.field.whatsapp'), 'type' => 'tel',
+                            'name' => 'whatsapp', 'label' => t('census.field.whatsapp'), 'type' => 'tel', 'required' => true,
                             'value' => $field('whatsapp'), 'error' => $error('whatsapp'),
                             'placeholder' => t('census.field.whatsapp_placeholder'),
                         ]) ?>
@@ -326,8 +475,8 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                     </div>
                 </div>
 
-                <!-- Étape 4 : Confirmation -->
-                <div data-step="4" hidden class="scroll-mt-[88px]">
+                <!-- Étape 5 : Confirmation -->
+                <div data-step="5" hidden class="scroll-mt-[88px]">
                     <div class="flex flex-col gap-5">
                         <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('census.section.confirm')) ?></h2>
                         <p class="text-body-sm text-muted"><?= e(t('census.confirm_notice')) ?></p>
@@ -338,7 +487,7 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
                         ]) ?>
                     </div>
 
-                    <div class="flex justify-between pt-6">
+                    <div class="flex justify-between pt-6 gap-3">
                         <?= component('button', ['label' => t('census.back'), 'variant' => 'secondary', 'attributes' => 'data-prev']) ?>
                         <?= component('button', ['label' => t('census.submit'), 'variant' => 'primary', 'type' => 'submit']) ?>
                     </div>
@@ -346,11 +495,13 @@ $steps = [t('census.step.identity'), t('census.step.studies'), t('census.step.co
             </form>
 
             <!-- Lien vers la page de connexion -->
-            <div class="mb-4 mt-4 text-center">
-                <a href="/login" class="text-sm font-medium text-primary hover:underline"><?= e(t('auth.already_have_account')) ?></a>
-            </div>
+            <a href="/login" class="flex items-center justify-center gap-2 rounded-control border border-[#dbe3ee] bg-[#f8fafc] mt-8 px-4 py-3 text-sm font-semibold text-[#111827] hover:bg-[#eef4ff] transition-colors">
+                <?= icon('user-plus', 'text-base text-[#111827]') ?>
+                <?= e(t('auth.already_have_account')) ?>
+            </a>
         </div>
     </div>
 </div>
 
 <script src="/assets/js/registration-wizard.js" defer></script>
+<script src="/assets/js/passport-ocr.js" defer></script>

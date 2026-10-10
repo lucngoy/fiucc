@@ -209,6 +209,77 @@ final class Upload
         ];
     }
 
+    /**
+     * Image privée (scan de passeport, migration 018) : mêmes contrôles que
+     * storeImage() — finfo, dimensions d'entrée plafonnées, ré-encodage GD
+     * qui élimine les métadonnées EXIF et tout contenu caché dans le
+     * fichier d'origine — mais écrite sous storage/, jamais public/uploads/ :
+     * comme un document (storeDocument()), le fichier n'est atteignable que
+     * par un contrôleur qui vérifie les droits à chaque requête.
+     *
+     * @param string $subdirectory Relatif à storage/ (ex. "passports")
+     * @return string Chemin relatif à storage/ (ex. "passports/ab12...ef.jpg")
+     * @throws RuntimeException Message déjà adapté à l'affichage utilisateur.
+     */
+    public static function storePrivateImage(
+        array $file,
+        string $subdirectory,
+        int $maxDimension,
+        int $maxSizeBytes,
+        int $maxInputDimension
+    ): string {
+        self::assertUploadOk($file, $maxSizeBytes);
+
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $realMime = $finfo->file((string) $file['tmp_name']);
+
+        if ($realMime === false || !isset(self::ALLOWED_IMAGE_TYPES[$realMime])) {
+            throw new RuntimeException(t('upload.invalid_type'));
+        }
+
+        $dimensions = @getimagesize((string) $file['tmp_name']);
+
+        if ($dimensions === false) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        if ($dimensions[0] > $maxInputDimension || $dimensions[1] > $maxInputDimension) {
+            throw new RuntimeException(t('upload.dimensions_too_large', ['max' => $maxInputDimension]));
+        }
+
+        $extension = self::ALLOWED_IMAGE_TYPES[$realMime];
+        $relativeDirectory = trim($subdirectory, '/');
+        $filename = bin2hex(random_bytes(16)) . '.' . $extension;
+        $destinationDir = self::storageBasePath() . '/' . $relativeDirectory;
+
+        if (!is_dir($destinationDir)) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        $image = self::readImage((string) $file['tmp_name'], $realMime);
+        $image = self::applyExifOrientation($image, (string) $file['tmp_name'], $realMime);
+        $resized = self::resizeToFit($image, $maxDimension);
+
+        self::writeImage($resized, $realMime, $destinationDir . '/' . $filename);
+
+        imagedestroy($image);
+
+        if ($resized !== $image) {
+            imagedestroy($resized);
+        }
+
+        return $relativeDirectory . '/' . $filename;
+    }
+
+    /**
+     * Chemin absolu d'un fichier stocké sous storage/ (storeDocument(),
+     * storePrivateImage()), pour le streamer depuis un contrôleur.
+     */
+    public static function storagePath(string $relativePath): string
+    {
+        return self::storageBasePath() . '/' . ltrim($relativePath, '/');
+    }
+
     private const ALLOWED_DOCUMENT_TYPES = [
         'application/pdf' => 'pdf',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' => 'docx',

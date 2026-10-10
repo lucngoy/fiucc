@@ -109,8 +109,15 @@ $values = [
         <div>
             <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-3"><?= e(t('community.story.eyebrow')) ?></p>
             <h2 class="font-headline-md text-headline-md text-ink mb-4"><?= e(t('community.story.title')) ?></h2>
-            <p class="text-body-md text-muted mb-4"><?= e(t('community.story.body')) ?></p>
-            <p class="text-label-md font-label-md text-muted"><?= e(t('community.story.founders_caption')) ?></p>
+            <div class="flex flex-col gap-4 mb-6 text-body-md text-muted">
+                <p><?= e(t('community.story.p1')) ?></p>
+                <p><?= e(t('community.story.p2')) ?></p>
+                <p><?= e(t('community.story.p3')) ?></p>
+                <p><?= e(t('community.story.p4')) ?> <strong class="font-semibold text-ink"><?= e(t('community.story.p4_strong')) ?></strong>.</p>
+                <p><?= e(t('community.story.p5')) ?></p>
+            </div>
+            <p class="text-label-lg font-label-lg font-semibold text-ink"><?= e(t('community.story.founders_caption')) ?></p>
+            <p class="mt-2 text-body-md italic text-primary"><?= e(t('community.story.motto')) ?> <span aria-hidden="true">🇨🇩</span></p>
         </div>
     </div>
 </div>

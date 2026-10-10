@@ -6,6 +6,9 @@ declare(strict_types=1);
 return [
     ['GET',  '/admin',                          'Admin\DashboardController@index'],
 
+    ['GET',  '/admin/account/password',         'Admin\AccountController@password'],
+    ['POST', '/admin/account/password',         'Admin\AccountController@updatePassword'],
+
     ['GET',  '/admin/members',                  'Admin\MemberController@index'],
     ['POST', '/admin/members/{id}/validate',    'Admin\MemberController@validate'],
     ['POST', '/admin/members/{id}/reject',      'Admin\MemberController@reject'],
@@ -15,6 +18,10 @@ return [
     ['POST', '/admin/members/bulk-reject',      'Admin\MemberController@bulkReject'],
     ['POST', '/admin/members/bulk-suspend',     'Admin\MemberController@bulkSuspend'],
     ['GET',  '/admin/members/export',           'Admin\MemberController@export'],
+    // Après /export : {id} accepte n'importe quel segment, la première
+    // route qui correspond gagne (App\Core\Router).
+    ['GET',  '/admin/members/{id}',             'Admin\MemberController@show'],
+    ['GET',  '/admin/members/{id}/passport-scan', 'Admin\MemberController@passportScan'],
 
     ['GET',  '/admin/events',                   'Admin\EventController@index'],
     ['GET',  '/admin/events/create',            'Admin\EventController@create'],
@@ -85,6 +92,10 @@ return [
     ['POST', '/admin/elections/{id}/publish',   'Admin\ElectionController@publishResults'],
     ['GET',  '/admin/elections/{id}/results',   'Admin\ElectionController@results'],
     ['GET',  '/admin/elections/{id}/report',    'Admin\ElectionController@report'],
+
+    // Coordonnées de la communauté + messages reçus (page /contact, §39).
+    ['GET',  '/admin/contact',                  'Admin\ContactController@index'],
+    ['POST', '/admin/contact',                  'Admin\ContactController@update'],
 
     ['GET',  '/admin/backups',                  'Admin\BackupController@index'],
     ['POST', '/admin/backups',                  'Admin\BackupController@create'],

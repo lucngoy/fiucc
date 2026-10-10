@@ -49,7 +49,30 @@ final class VerificationController extends Controller
 
         unset($_SESSION['pending_verification_user_id']);
 
-        $this->render(null, null, true);
+        // Connexion automatique : le membre vient de prouver qu'il possède
+        // l'adresse, dans la MÊME session que celle où il a choisi son mot de
+        // passe à l'inscription (pending_verification_user_id n'est posé que
+        // par RegistrationController::store()) — lui redemander ce mot de
+        // passe n'apporterait aucune garantie de plus. Même mise en place que
+        // AuthController::completeLogin() : nouvel identifiant de session
+        // (anti-fixation), dernière connexion, journalisation. Un compte
+        // 'pending' peut se connecter (AuthController::attemptMemberLogin) :
+        // ['auth'] lui ouvre son profil, ['validated'] reste fermé.
+        $user = User::find($userId);
+
+        if ($user === null) {
+            $this->redirect('/login');
+            return;
+        }
+
+        User::touchLastLogin($userId);
+        ActivityLog::record($userId, 'login_after_verification', 'user', $userId);
+
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['role'] = $user['role'];
+
+        $this->redirect('/profile?notice=email_verified');
     }
 
     public function resend(): void
@@ -96,7 +119,7 @@ final class VerificationController extends Controller
             : null;
     }
 
-    private function render(?string $notice = null, ?string $error = null, bool $verified = false): void
+    private function render(?string $notice = null, ?string $error = null): void
     {
         $userId = $this->pendingUserId();
 
@@ -104,7 +127,6 @@ final class VerificationController extends Controller
             'title'             => t('verify.title'),
             'notice'            => $notice,
             'error'             => $error,
-            'verified'          => $verified,
             'resendWaitSeconds' => $userId !== null ? Otp::secondsUntilResendAllowed($userId) : 0,
         ]);
     }

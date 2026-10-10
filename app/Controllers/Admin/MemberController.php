@@ -8,7 +8,10 @@ use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\Member;
 use App\Models\User;
+use App\Core\View;
 use App\Services\MemberNotifier;
+use App\Services\PassportScanRetention;
+use App\Services\Upload;
 
 /**
  * Gestion des membres côté admin (FIUCC-43/44/45, section 24 du cahier des
@@ -21,6 +24,11 @@ final class MemberController extends Controller
 
     public function index(): void
     {
+        // Conservation de 90 jours des photos de passeport : appliquée ici en
+        // plus du cron (bin/purge_passport_scans.php), pour que le délai
+        // tienne même si le cron n'a jamais été configuré.
+        PassportScanRetention::purgeExpired();
+
         $filters = $this->filtersFromQuery();
         $sort = (string) ($_GET['sort'] ?? 'submitted');
         $dir = strtolower((string) ($_GET['dir'] ?? 'desc')) === 'asc' ? 'asc' : 'desc';
@@ -46,6 +54,75 @@ final class MemberController extends Controller
             'requested'   => (int) ($_GET['requested'] ?? 0),
             'applied'     => (int) ($_GET['applied'] ?? 0),
         ], 'layouts.admin');
+    }
+
+    /**
+     * Fiche de recensement complète d'un membre (migration 018) : la liste
+     * ne montre que l'essentiel, les champs étendus (adresse, passeport,
+     * culte) ne sont lisibles qu'ici. Consultation journalisée — la page
+     * affiche des données d'identité sensibles.
+     */
+    public function show(array $params): void
+    {
+        $member = Member::findForAdmin((int) ($params['id'] ?? 0));
+
+        if ($member === null) {
+            $this->notFound();
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'member.viewed', 'member', (int) $member['id']);
+
+        $this->view('admin.members.show', [
+            'title'          => $member['full_name'],
+            'activeNav'      => 'members',
+            'adminEmail'     => $this->currentAdminEmail(),
+            'member'         => $member,
+            'studyLevels'    => Config::get('registration.study_levels', []),
+            'scanDeletionOn' => PassportScanRetention::deletionDate($member),
+            'retentionDays'  => PassportScanRetention::days(),
+            'notice'         => (string) ($_GET['notice'] ?? ''),
+            'isSelf'         => (int) $member['user_id'] === (int) $_SESSION['user_id'],
+        ], 'layouts.admin');
+    }
+
+    /**
+     * Scan du passeport, stocké sous storage/passports/ (jamais servi par
+     * Apache) : seul point d'accès au fichier, derrière AdminMiddleware.
+     * Affiché en ligne (inline) pour être vu dans l'onglet sans laisser de
+     * copie dans les téléchargements, jamais mis en cache.
+     */
+    public function passportScan(array $params): void
+    {
+        $member = Member::findForAdmin((int) ($params['id'] ?? 0));
+        $relativePath = (string) ($member['passport_scan'] ?? '');
+        $path = $relativePath !== '' ? Upload::storagePath($relativePath) : '';
+
+        if ($member === null || $path === '' || !is_file($path)) {
+            $this->notFound();
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'member.passport_scan_viewed', 'member', (int) $member['id']);
+
+        $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($path);
+
+        if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp'], true)) {
+            $this->notFound();
+            return;
+        }
+
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: ' . $mime);
+        header('Content-Disposition: inline');
+        header('Content-Length: ' . (string) filesize($path));
+        header('X-Content-Type-Options: nosniff');
+        header('Cache-Control: private, no-store');
+
+        readfile($path);
     }
 
     /**
@@ -165,7 +242,8 @@ final class MemberController extends Controller
         }
 
         Member::reject((int) $member['id'], $adminId, $reason);
-        ActivityLog::record($adminId, 'member.rejected', 'member', (int) $member['id']);
+        ActivityLog::record($adminId, 'member.rejected', 'member', (int) $member['id'], $reason);
+        MemberNotifier::notifyRejected((int) $member['user_id'], $reason);
 
         $this->redirectToList('rejected');
     }
@@ -267,7 +345,8 @@ final class MemberController extends Controller
 
         foreach ($candidates as $candidate) {
             Member::reject((int) $candidate['id'], $adminId, $reason);
-            ActivityLog::record($adminId, 'member.rejected', 'member', (int) $candidate['id']);
+            ActivityLog::record($adminId, 'member.rejected', 'member', (int) $candidate['id'], $reason);
+            MemberNotifier::notifyRejected((int) $candidate['user_id'], $reason);
         }
 
         $this->redirectToList('bulk_rejected', count($ids), count($candidates));
@@ -370,6 +449,12 @@ final class MemberController extends Controller
         parse_str((string) (parse_url($returnTo, PHP_URL_QUERY) ?? ''), $query);
 
         return [$path, $query];
+    }
+
+    private function notFound(): void
+    {
+        http_response_code(404);
+        echo View::render('errors.404', ['title' => t('error.404_title')], 'layouts.error');
     }
 
     private function currentAdminEmail(): string

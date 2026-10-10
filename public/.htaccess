@@ -19,6 +19,18 @@
     # NOTE : option 2 = garder le kit JS Font Awesome, donc il faut autoriser
     # explicitement ses chargements externes et les scripts inline qu'il injecte.
     Header always set Content-Security-Policy "default-src 'self'; connect-src 'self' https://ka-f.fontawesome.com https://kit.fontawesome.com; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://site-assets.fontawesome.com; font-src 'self' https://site-assets.fontawesome.com data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+
+    # OCR du passeport (recensement, migration 018) : le worker Tesseract.js
+    # compile du WebAssembly, ce que script-src 'self' seul interdit. Un
+    # worker reçoit la CSP de SA PROPRE réponse, pas celle de la page —
+    # 'wasm-unsafe-eval' est donc accordé uniquement aux fichiers auto-
+    # hébergés de assets/vendor/tesseract/, jamais au reste du site.
+    # 'wasm-unsafe-eval' n'autorise que la compilation WASM, pas eval() JS.
+    # connect-src data: : le cœur Tesseract embarque son .wasm en base64 et
+    # le relit par fetch(data:...) — sans ça, repli plus lent + erreur console.
+    <If "%{REQUEST_URI} =~ m#/assets/vendor/tesseract/#">
+        Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' data:; object-src 'none'; base-uri 'self'"
+    </If>
 </IfModule>
 
 Options -Indexes

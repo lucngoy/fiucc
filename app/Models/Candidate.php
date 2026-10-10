@@ -53,6 +53,33 @@ final class Candidate extends Model
     }
 
     /**
+     * Candidatures en attente d'approbation, regroupées par élection —
+     * cloche admin (App\Services\AdminTasks). Seulement les élections
+     * encore 'draft'/'candidacies' : passé ce stade, approve() est
+     * verrouillé, une candidature pending n'est plus une action possible.
+     *
+     * @return list<array{election_id: int, title: string, pending: int}>
+     */
+    public static function pendingCountsByElection(): array
+    {
+        $rows = static::db()->query(
+            "SELECT e.id AS election_id, e.title, COUNT(*) AS pending
+             FROM candidates c
+             INNER JOIN election_positions ep ON ep.id = c.election_position_id
+             INNER JOIN elections e ON e.id = ep.election_id
+             WHERE c.status = 'pending' AND e.status IN ('draft', 'candidacies')
+             GROUP BY e.id, e.title
+             ORDER BY e.start_at ASC"
+        )->fetchAll();
+
+        return array_map(static fn (array $row): array => [
+            'election_id' => (int) $row['election_id'],
+            'title'       => (string) $row['title'],
+            'pending'     => (int) $row['pending'],
+        ], $rows);
+    }
+
+    /**
      * Liste publique des candidats approuvés d'une élection (FIUCC-63,
      * §17-18 du cahier des charges) — jamais 'pending'/'rejected'/
      * 'withdrawn' : seul un candidat "publié" (approve(), même verbe que le

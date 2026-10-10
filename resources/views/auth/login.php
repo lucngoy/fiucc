@@ -2,6 +2,7 @@
 $email ??= '';
 $error ??= null;
 $notice ??= null;
+$noticeType ??= 'info';
 $locale = \App\Core\Lang::locale();
 $enLocaleClasses = $locale === 'en' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
 $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hover:text-ink';
@@ -20,7 +21,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
 <div class="auth-login-shell min-h-screen grid">
 
     <!-- LEFT: hero panel -->
-    <div class="relative bg-primary hidden lg:flex flex-col justify-center overflow-hidden px-10 py-10 xl:px-16 xl:py-12">
+    <aside class="relative bg-primary hidden lg:flex flex-col justify-center overflow-hidden px-10 py-10 xl:px-16 xl:py-12">
         <!-- decorative mesh background -->
         <svg class="pointer-events-none absolute inset-0 h-full w-full opacity-40" viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" fill="none">
             <style>
@@ -53,12 +54,11 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
         <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
         <div class="absolute inset-0 bg-gradient-to-r from-[#0A1628] via-[#0A1628]/60 to-transparent"></div>
 
-        <div class="relative z-10 max-w-lg">
+        <div class="relative z-10 text-center">
             <a href="/">
-            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 mb-10 backdrop-blur">
-                <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-6 w-6 rounded-md object-cover ring-1 ring-white/20" />
-                <span class="text-xs font-semibold tracking-wide text-white/80"><?= e(t('app.name')) ?></span>
-            </div>
+                <div class="flex justify-center mb-8">
+                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-24 w-24 rounded-md object-cover" />
+                </div>
             </a>
 
             <h1 class="font-headline-lg font-extrabold uppercase leading-[0.95] text-white text-5xl xl:text-6xl">
@@ -71,15 +71,15 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 <?= e(t('auth.hero_line3')) ?>
             </h1>
 
-            <p class="text-white/60 text-base leading-relaxed max-w-sm">
+            <p style="margin:auto;" class="text-white/60 text-base leading-relaxed max-w-sm">
                 <?= e(t('auth.hero_subtitle')) ?>
             </p>
         </div>
 
-        <div class="relative z-10 mt-16 text-xs text-white/30 tracking-wide">
+        <div class="relative z-10 mt-16 text-xs text-white/30 tracking-wide text-center">
             <?= e(t('app.name')) ?> &middot; <?= date('Y') ?>
         </div>
-    </div>
+    </aside>
 
     <!-- RIGHT: sign-in panel -->
     <div class="flex items-center justify-center px-4 py-8 lg:py-12">
@@ -92,7 +92,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
             </div>
 
             <div class="mb-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e0f2fe] shadow-sm overflow-hidden ring-1 ring-[#dbe3ee]">
+                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center shadow-sm overflow-hidden">
                     <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
                 </div>
                 <h1 class="font-headline-lg text-headline-lg text-[#111827]">
@@ -102,7 +102,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
             </div>
 
             <?php if ($notice !== null): ?>
-                <div class="mb-6"><?= component('alert', ['type' => 'info', 'message' => $notice]) ?></div>
+                <div class="mb-6"><?= component('alert', ['type' => $noticeType, 'message' => $notice]) ?></div>
             <?php endif; ?>
 
             <?php if ($error !== null): ?>
@@ -120,6 +120,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                     'label' => t('auth.email'),
                     'type' => 'email',
                     'value' => $email,
+                    'placeholder' => 'ex. lucius.shawn@final.edu.tr',
                     'required' => true,
                 ]) ?>
                 <?= component('form_field', [
@@ -145,7 +146,8 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 <span class="text-[11px] text-[#64748b]"><?= e(t('auth.or')) ?></span>
                 <div class="h-px flex-1 bg-[#e5e7eb]"></div>
             </div>
-
+            
+            <!-- Lien vers la page de création de compte -->
             <a href="/register" class="flex items-center justify-center gap-2 rounded-control border border-[#dbe3ee] bg-[#f8fafc] px-4 py-3 text-sm font-semibold text-[#111827] hover:bg-[#eef4ff] transition-colors">
                 <?= icon('user-plus', 'text-base text-[#111827]') ?>
                 <?= e(t('auth.join_community')) ?>

@@ -39,6 +39,10 @@
 # jamais être un fichier statique atteignable, seulement streamé par
 # DocumentController::download() après vérification des droits.
 /storage/documents/*
+# storage/passports (migration 018) : scans de passeport du recensement,
+# même principe que storage/documents — streamés uniquement par
+# Admin\MemberController::passportScan(), jamais une URL statique.
+/storage/passports/*
 # Scratch d'upload et de logs des tests (FIUCC-79) — jamais public/uploads/,
 # storage/documents ou storage/logs réels, voir .env.testing.example.
 /storage/testing_uploads/*

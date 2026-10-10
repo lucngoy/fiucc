@@ -39,7 +39,7 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
     <meta name="twitter:title" content="<?= e($title) ?>">
     <meta name="twitter:description" content="<?= e($description) ?>">
     <meta name="twitter:image" content="<?= e($ogImageUrl) ?>">
-    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="stylesheet" href="<?= e(asset('/assets/css/app.css')) ?>">
     <link rel="icon" href="/assets/images/fiucc-seal.png">
 </head>
 <body class="min-h-screen bg-surface antialiased">

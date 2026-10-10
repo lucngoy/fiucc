@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Core\Config;
 use App\Models\Member;
 use App\Models\User;
 
@@ -60,6 +61,56 @@ final class MemberNotifier
             t('mail.approved.heading'),
             t('mail.approved.body')
         );
+    }
+
+    /**
+     * Refus du dossier, avec le motif saisi par l'admin et le chemin pour
+     * corriger : se connecter, modifier son profil, ce qui renvoie le dossier
+     * (ProfileController::update()). Le motif est du texte libre saisi par
+     * un admin : échappé avant d'entrer dans le corps HTML (CLAUDE.md, règle
+     * 5), retours à la ligne conservés.
+     */
+    public static function notifyRejected(int $userId, string $reason): void
+    {
+        $recipient = self::recipient($userId);
+
+        if ($recipient === null) {
+            return;
+        }
+
+        [$email, $fullName] = $recipient;
+
+        Mail::send(
+            $email,
+            $fullName,
+            t('mail.rejected.subject'),
+            t('mail.rejected.heading'),
+            t('mail.rejected.body', [
+                'reason' => nl2br(e($reason)),
+                'url'    => e(rtrim((string) Config::get('app.url'), '/') . '/profile/edit'),
+            ])
+        );
+    }
+
+    /**
+     * Dossier refusé, corrigé et renvoyé par le membre : chaque admin est
+     * prévenu par email, avec le lien direct vers la fiche (où il retrouve
+     * la photo du passeport et les boutons de décision). Le dossier est
+     * aussi signalé dans la liste des membres (members.resubmitted_at).
+     */
+    public static function notifyAdminsResubmitted(int $memberId, string $fullName): void
+    {
+        $url = rtrim((string) Config::get('app.url'), '/') . '/admin/members/' . $memberId;
+
+        foreach (User::admins() as $admin) {
+            Mail::send(
+                (string) $admin['email'],
+                (string) $admin['email'],
+                t('mail.resubmitted.subject', ['name' => $fullName]),
+                t('mail.resubmitted.heading'),
+                t('mail.resubmitted.body', ['name' => e($fullName), 'url' => e($url)])
+            );
+        }
     }
 
     /**

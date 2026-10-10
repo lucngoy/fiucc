@@ -110,6 +110,21 @@ if (!function_exists('meta_description')) {
     }
 }
 
+if (!function_exists('asset')) {
+    /**
+     * URL d'un fichier de public/ suffixée de sa date de modification
+     * (?v=...) : après un `npm run build:css`, le navigateur recharge
+     * app.css au lieu de garder l'ancienne version en cache — sinon une
+     * classe Tailwind fraîchement ajoutée semble "ne pas marcher".
+     */
+    function asset(string $path): string
+    {
+        $mtime = @filemtime(BASE_PATH . '/public' . $path);
+
+        return $mtime === false ? $path : $path . '?v=' . $mtime;
+    }
+}
+
 if (!function_exists('icon')) {
     /**
      * Icône SVG en ligne (FIUCC-78) — remplace la police web Font Awesome

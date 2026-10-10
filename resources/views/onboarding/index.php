@@ -137,6 +137,10 @@ $faqItems = [
         <p class="text-body-md text-muted"><?= e(t('onboarding.contacts.body')) ?></p>
     </div>
     <div class="flex flex-wrap items-center gap-3">
+        <a href="/contact" class="inline-flex items-center gap-2 h-11 px-6 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
+            <?= icon('envelope') ?>
+            <?= e(t('onboarding.contacts.contact_link')) ?>
+        </a>
         <a href="/community/government" class="inline-flex items-center gap-2 h-11 px-6 rounded-control bg-white border border-border text-ink text-label-lg font-label-lg hover:border-primary hover:text-primary transition-colors">
             <?= icon('sitemap') ?>
             <?= e(t('onboarding.contacts.government_link')) ?>

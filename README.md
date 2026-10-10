@@ -168,6 +168,25 @@ cp -r restore/uploads/*   public/uploads/
 cp -r restore/documents/* storage/documents/
 ```
 
+## Photos de passeport (recensement)
+
+La photo du passeport jointe au recensement est stockée sous `storage/passports/`
+(jamais servie par Apache, visible uniquement par un admin depuis la fiche du membre).
+Elle est **supprimée automatiquement 90 jours après la décision admin** (validation, refus
+ou suspension ; `PASSPORT_SCAN_RETENTION_DAYS` dans `.env` pour changer le délai).
+Les photos d'inscriptions jamais terminées sont supprimées après 24 h.
+
+La suppression tourne à chaque ouverture de la liste des membres côté admin, et par la
+commande `php bin/purge_passport_scans.php`, à planifier une fois par jour :
+
+```cron
+30 2 * * * cd /var/www/fiucc-portal && php bin/purge_passport_scans.php >> storage/logs/passport-purge-cron.log 2>&1
+```
+
+Ces photos ne font **pas** partie des sauvegardes (`bin/backup.php`) — volontairement :
+une copie de pièce d'identité ne doit pas survivre à son délai de conservation dans une
+archive.
+
 ## Tests
 
 ```bash
@@ -219,6 +238,8 @@ comportement du code, pas à une recommandation générique.
 - [ ] Permissions d'écriture confirmées pour l'utilisateur du serveur web sur
       `storage/logs/`, `storage/cache/`, `storage/backups/`, `storage/documents/`, et
       chaque sous-dossier de `public/uploads/`.
+- [ ] Suppression des photos de passeport planifiée (cron quotidien, voir section
+  Photos de passeport) et `storage/passports/` accessible en écriture par le serveur web.
 - [ ] Sauvegarde automatique planifiée (cron, voir section Sauvegardes) — et **au moins
       une restauration testée une fois**, sur un environnement de test, avant d'en avoir
       réellement besoin en urgence.

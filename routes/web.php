@@ -40,6 +40,7 @@ return [
     // Pas de middleware fixe : l'autorisation dépend de documents.visibility
     // (par ligne), pas de la route — voir DocumentController::download().
     ['GET',  '/documents/{id}/download',       'DocumentController@download'],
+    ['GET',  '/documents/{id}/open',           'DocumentController@open'],
     ['GET',  '/partners',                      'PartnerController@index'],
 
     // Recensement et authentification
@@ -51,6 +52,10 @@ return [
     ['GET',  '/login',                         'AuthController@showLogin'],
     ['POST', '/login',                         'AuthController@login'],
     ['POST', '/logout',                        'AuthController@logout'],
+    ['GET',  '/password/forgot',               'PasswordController@forgot'],
+    ['POST', '/password/forgot',               'PasswordController@sendLink'],
+    ['GET',  '/password/reset',                'PasswordController@showReset'],
+    ['POST', '/password/reset',                'PasswordController@reset'],
 
     // Espace membre
     ['GET',  '/profile',                       'ProfileController@index',         ['auth']],
@@ -58,6 +63,8 @@ return [
     ['POST', '/profile',                       'ProfileController@update',        ['auth']],
     ['GET',  '/profile/privacy',               'ProfileController@privacy',       ['auth']],
     ['POST', '/profile/privacy',               'ProfileController@updatePrivacy', ['auth']],
+    ['GET',  '/profile/password',              'ProfileController@password',       ['auth']],
+    ['POST', '/profile/password',              'ProfileController@updatePassword', ['auth']],
     ['GET',  '/profile/mentor',                'ProfileController@mentor',        ['auth']],
     ['POST', '/profile/mentor',                'ProfileController@updateMentor',  ['auth']],
     ['POST', '/profile/mentor/requests/{id}/respond', 'ProfileController@respondToMentorship', ['auth']],

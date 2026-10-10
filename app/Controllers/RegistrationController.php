@@ -9,13 +9,21 @@ use App\Core\Database;
 use App\Models\ActivityLog;
 use App\Models\Member;
 use App\Models\User;
+use App\Services\CensusFields;
 use App\Services\Otp;
+use App\Services\Upload;
 use DateTime;
 use PDOException;
+use RuntimeException;
 use Throwable;
 
 final class RegistrationController extends Controller
 {
+    /** Photo du passeport reçue, en attente d'une inscription valide. */
+    private const PENDING_SCAN_KEY = 'census_pending_passport_scan';
+    private const PENDING_SCAN_DIR = 'passports/pending';
+    private const PENDING_SCAN_TTL_SECONDS = 86400;
+
     public function create(): void
     {
         $this->showForm([], []);
@@ -26,13 +34,50 @@ final class RegistrationController extends Controller
         $input = $this->collectInput();
         $errors = $this->validate($input);
 
+        self::purgeStalePendingScans();
+        $pendingScan = $this->pendingScan();
+
+        // Photo du passeport (migration 018) : obligatoire. Stockée dès
+        // réception, MÊME si d'autres champs sont en erreur — un <input
+        // type="file"> n'est jamais repeuplé, sans ça le membre devrait la
+        // renvoyer à chaque correction. Elle attend sous passports/pending/,
+        // rattachée à SA session uniquement, jusqu'à l'inscription réussie
+        // (purgée après 24 h sinon, voir purgeStalePendingScans()).
+        if (($_FILES['passport_scan']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
+            try {
+                $stored = Upload::storePrivateImage(
+                    $_FILES['passport_scan'],
+                    self::PENDING_SCAN_DIR,
+                    (int) Config::get('registration.passport_scan_max_dimension', 2000),
+                    (int) Config::get('registration.passport_scan_max_size_mb', 8) * 1024 * 1024,
+                    (int) Config::get('security.upload_max_input_dimension', 5000)
+                );
+
+                if ($pendingScan !== null) {
+                    @unlink(Upload::storagePath($pendingScan));
+                }
+
+                $pendingScan = $stored;
+                $_SESSION[self::PENDING_SCAN_KEY] = $stored;
+            } catch (RuntimeException $exception) {
+                $errors['passport_scan'] = $exception->getMessage();
+            }
+        } elseif ($pendingScan === null) {
+            $errors['passport_scan'] = t('validation.passport_scan_required');
+        }
+
         if ($errors !== []) {
             $this->showForm($input, $errors);
             return;
         }
 
+        // Chemin définitif, hors de pending/ : la ligne members le référence
+        // dès l'écriture, le fichier n'est déplacé qu'après succès — un échec
+        // d'écriture laisse la photo en attente pour le prochain essai.
+        $passportScan = 'passports/' . basename($pendingScan);
+
         try {
-            [$userId, $memberId] = $this->persist($input);
+            [$userId, $memberId] = $this->persist($input, $passportScan);
         } catch (PDOException $exception) {
             // Course entre la vérification d'unicité et l'écriture (deux
             // inscriptions concurrentes avec le même email/student_id) :
@@ -47,12 +92,15 @@ final class RegistrationController extends Controller
             throw $exception;
         }
 
+        rename(Upload::storagePath($pendingScan), Upload::storagePath($passportScan));
+        unset($_SESSION[self::PENDING_SCAN_KEY]);
+
         ActivityLog::record($userId, 'member_registered', 'member', $memberId);
 
         // Envoi immédiat du premier code (section 14 du cahier des charges) :
         // pas de garde-fou sur l'échec d'envoi ici, la page de vérification
         // propose un renvoi si le premier message se perd.
-        Otp::send($userId, $input['email'], $input['full_name']);
+        Otp::send($userId, $input['email'], CensusFields::fullName($input));
 
         // Pas de session pleinement authentifiée à ce stade — juste assez
         // pour savoir qui vérifie, sans redemander l'email.
@@ -64,7 +112,7 @@ final class RegistrationController extends Controller
     /**
      * @return array{0: int, 1: int} [user.id, member.id] du nouveau compte
      */
-    private function persist(array $input): array
+    private function persist(array $input, ?string $passportScan): array
     {
         $pdo = Database::connection();
         $pdo->beginTransaction();
@@ -74,9 +122,9 @@ final class RegistrationController extends Controller
 
             $faculties = Config::get('registration.faculties', []);
 
-            $memberId = Member::create([
+            $memberId = Member::create(CensusFields::toColumns($input) + [
+                'passport_scan'  => $passportScan,
                 'user_id'        => $userId,
-                'full_name'      => $input['full_name'],
                 'student_id'     => $input['student_id'],
                 'date_of_birth'  => $input['date_of_birth'] !== '' ? $input['date_of_birth'] : null,
                 'gender'         => $input['gender'] !== '' ? $input['gender'] : null,
@@ -102,6 +150,49 @@ final class RegistrationController extends Controller
         }
     }
 
+    /**
+     * Photo en attente pour CETTE session, si elle existe toujours. Le
+     * chemin vient de la session (jamais de la requête) et doit avoir la
+     * forme exacte produite par Upload::storePrivateImage() : aucune autre
+     * valeur ne peut désigner un fichier.
+     */
+    private function pendingScan(): ?string
+    {
+        $path = $_SESSION[self::PENDING_SCAN_KEY] ?? null;
+
+        if (is_string($path)
+            && preg_match('#^passports/pending/[a-f0-9]{32}\.(jpg|png|webp)$#', $path) === 1
+            && is_file(Upload::storagePath($path))) {
+            return $path;
+        }
+
+        unset($_SESSION[self::PENDING_SCAN_KEY]);
+
+        return null;
+    }
+
+    /**
+     * Photos de passeport abandonnées (inscription jamais terminée) :
+     * supprimées après 24 h — une pièce d'identité ne doit pas traîner sur
+     * le disque sans membre associé. Crée aussi le dossier au besoin
+     * (storage/passports/ n'est pas versionné, voir .gitignore).
+     */
+    private static function purgeStalePendingScans(): void
+    {
+        $directory = Upload::storagePath(self::PENDING_SCAN_DIR);
+
+        if (!is_dir($directory)) {
+            @mkdir($directory, 0775, true);
+            return;
+        }
+
+        foreach (glob($directory . '/*.{jpg,png,webp}', GLOB_BRACE) ?: [] as $file) {
+            if (is_file($file) && filemtime($file) < time() - self::PENDING_SCAN_TTL_SECONDS) {
+                @unlink($file);
+            }
+        }
+    }
+
     private function showForm(array $old, array $errors): void
     {
         $this->view('registration.create', [
@@ -109,6 +200,11 @@ final class RegistrationController extends Controller
             'faculties'         => Config::get('registration.faculties', []),
             'studyLevels'       => Config::get('registration.study_levels', []),
             'passwordMinLength' => Config::get('security.password_min_length', 8),
+            'communityRoles'    => Config::get('registration.community_roles', []),
+            'districts'         => Config::get('registration.districts', []),
+            'religions'         => Config::get('registration.religions', []),
+            'passportScanMaxMb' => (int) Config::get('registration.passport_scan_max_size_mb', 8),
+            'hasPendingScan'    => $this->pendingScan() !== null,
             'old'               => $old,
             'errors'            => $errors,
         ], 'layouts.auth');
@@ -116,15 +212,15 @@ final class RegistrationController extends Controller
 
     private function collectInput(): array
     {
-        return [
-            'full_name'             => trim((string) ($_POST['full_name'] ?? '')),
+        return CensusFields::collect($_POST) + [
             'date_of_birth'         => trim((string) ($_POST['date_of_birth'] ?? '')),
             'gender'                => trim((string) ($_POST['gender'] ?? '')),
             'city_of_origin'        => trim((string) ($_POST['city_of_origin'] ?? '')),
             'faculty'               => trim((string) ($_POST['faculty'] ?? '')),
             'department'            => trim((string) ($_POST['department'] ?? '')),
             'year'                  => trim((string) ($_POST['year'] ?? '')),
-            'student_id'            => trim((string) ($_POST['student_id'] ?? '')),
+            // Espaces retirés : "2103 010202" recopié d'une carte reste valide.
+            'student_id'            => (string) preg_replace('/\s+/', '', (string) ($_POST['student_id'] ?? '')),
             'email'                 => strtolower(trim((string) ($_POST['email'] ?? ''))),
             'password'              => (string) ($_POST['password'] ?? ''),
             'password_confirmation' => (string) ($_POST['password_confirmation'] ?? ''),
@@ -147,21 +243,23 @@ final class RegistrationController extends Controller
         $allowedDomains = Config::get('registration.allowed_email_domains', []);
         $passwordMinLength = (int) Config::get('security.password_min_length', 8);
 
-        if ($input['full_name'] === '') {
-            $errors['full_name'] = t('validation.full_name_required');
-        } elseif (mb_strlen($input['full_name']) > 150) {
-            $errors['full_name'] = t('validation.full_name_too_long');
-        }
+        $errors = CensusFields::validate($input);
 
-        if ($input['date_of_birth'] !== '' && !$this->isValidDate($input['date_of_birth'])) {
+        if ($input['date_of_birth'] === '') {
+            $errors['date_of_birth'] = t('validation.date_of_birth_required');
+        } elseif (!$this->isValidDate($input['date_of_birth'])) {
             $errors['date_of_birth'] = t('validation.date_invalid');
         }
 
-        if ($input['gender'] !== '' && !in_array($input['gender'], ['male', 'female', 'other'], true)) {
+        if ($input['gender'] === '') {
+            $errors['gender'] = t('validation.gender_required');
+        } elseif (!in_array($input['gender'], ['male', 'female'], true)) {
             $errors['gender'] = t('validation.option_invalid');
         }
 
-        if (mb_strlen($input['city_of_origin']) > 100) {
+        if ($input['city_of_origin'] === '') {
+            $errors['city_of_origin'] = t('validation.city_of_origin_required');
+        } elseif (mb_strlen($input['city_of_origin']) > 100) {
             $errors['city_of_origin'] = t('validation.value_too_long');
         }
 
@@ -181,8 +279,11 @@ final class RegistrationController extends Controller
 
         if ($input['student_id'] === '') {
             $errors['student_id'] = t('validation.student_id_required');
-        } elseif (mb_strlen($input['student_id']) > 50) {
-            $errors['student_id'] = t('validation.student_id_too_long');
+        } elseif (preg_match('/\A[0-9]{10}\z/', $input['student_id']) !== 1) {
+            // Format des numéros étudiants de Final : 10 chiffres (ex.
+            // 2103010202). Remplace l'ancienne limite de 50 caractères,
+            // plus large que n'importe quel numéro valide.
+            $errors['student_id'] = t('validation.student_id_format');
         } elseif (Member::studentIdExists($input['student_id'])) {
             $errors['student_id'] = t('validation.student_id_taken');
         }
@@ -213,7 +314,9 @@ final class RegistrationController extends Controller
             $errors['phone'] = t('validation.phone_too_long');
         }
 
-        if (mb_strlen($input['whatsapp']) > 30) {
+        if ($input['whatsapp'] === '') {
+            $errors['whatsapp'] = t('validation.whatsapp_required');
+        } elseif (mb_strlen($input['whatsapp']) > 30) {
             $errors['whatsapp'] = t('validation.whatsapp_too_long');
         }
 

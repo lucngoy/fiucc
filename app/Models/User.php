@@ -81,6 +81,44 @@ final class User extends Model
         return (int) static::db()->lastInsertId();
     }
 
+    /**
+     * Pour vérifier le mot de passe actuel avant un changement — find()
+     * ne renvoie volontairement jamais le hash.
+     */
+    public static function passwordHash(int $id): ?string
+    {
+        $stmt = static::db()->prepare('SELECT password_hash FROM users WHERE id = :id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        $value = $stmt->fetchColumn();
+
+        return $value === false ? null : (string) $value;
+    }
+
+    /**
+     * Remet aussi à zéro le verrouillage admin (failed_attempts/
+     * locked_until) : un admin verrouillé qui vient de prouver qu'il
+     * contrôle sa boîte mail via un lien de réinitialisation reprend la
+     * main immédiatement, sans attendre la fin du verrouillage.
+     */
+    public static function updatePassword(int $id, string $passwordHash): void
+    {
+        $stmt = static::db()->prepare(
+            'UPDATE users SET password_hash = :password_hash, failed_attempts = 0, locked_until = NULL WHERE id = :id'
+        );
+        $stmt->execute(['password_hash' => $passwordHash, 'id' => $id]);
+    }
+
+    /**
+     * Destinataires des alertes admin (ex. dossier refusé renvoyé par un
+     * membre, MemberNotifier::notifyAdminsResubmitted()).
+     *
+     * @return array<int, array{id: int, email: string}>
+     */
+    public static function admins(): array
+    {
+        return static::db()->query("SELECT id, email FROM users WHERE role = 'admin' ORDER BY id")->fetchAll();
+    }
+
     public static function find(int $id): ?array
     {
         $stmt = static::db()->prepare('SELECT id, email, role FROM users WHERE id = :id LIMIT 1');

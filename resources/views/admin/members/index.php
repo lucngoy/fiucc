@@ -254,7 +254,7 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                         </span>
                                     <?php endif; ?>
                                     <div class="min-w-0">
-                                        <p class="font-label-lg text-label-lg text-ink truncate"><?= e($member['full_name']) ?></p>
+                                        <a href="<?= e('/admin/members/' . $memberId) ?>" class="block font-label-lg text-label-lg text-ink truncate hover:text-primary hover:underline"><?= e($member['full_name']) ?></a>
                                         <p class="text-body-sm text-muted truncate"><?= e($member['email']) ?></p>
                                     </div>
                                 </div>
@@ -266,7 +266,17 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                                     <p class="text-label-caps font-label-caps text-muted"><?= e($studyLevels[$member['year']]) ?></p>
                                 <?php endif; ?>
                             </td>
-                            <td class="p-3"><?= $statusBadge($member['status']) ?></td>
+                            <td class="p-3">
+                                <div class="flex flex-col items-start gap-1">
+                                    <?= $statusBadge($member['status']) ?>
+                                    <?php if ($member['status'] === 'pending' && !empty($member['resubmitted_at'])): ?>
+                                        <!-- Dossier refusé, corrigé et renvoyé par le membre (migration 020). -->
+                                        <span class="inline-flex items-center h-6 px-2.5 rounded-full bg-gold/20 text-ink text-label-md font-label-md whitespace-nowrap">
+                                            <?= e(t('admin.members.resubmitted_badge')) ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
                             <td class="p-3 text-body-sm text-muted"><?= e(local_date($member['created_at'])) ?></td>
                             <td class="p-3">
                                 <div class="flex items-center justify-end gap-1.5">
