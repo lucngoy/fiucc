@@ -27,6 +27,13 @@
 $election ??= [];
 $groups ??= [];
 $studyLevels ??= [];
+$listPending ??= false;
+$listAtLabel = !empty($election['candidate_list_at'])
+    ? t('elections.candidates.list_pending', [
+        'date' => local_date((string) $election['candidate_list_at']),
+        'time' => date('H:i', strtotime((string) $election['candidate_list_at'])),
+    ])
+    : '';
 
 $electionId = (int) $election['id'];
 $totalCandidates = array_sum(array_map(static fn (array $group): int => count($group['candidates']), $groups));
@@ -104,7 +111,9 @@ $candidateMeta = static function (array $candidate) use ($studyLevels): string {
 <div class="w-full bg-surface">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-10 md:py-12 flex flex-col gap-10">
 
-    <?php if ($totalCandidates === 0): ?>
+    <?php if ($listPending): ?>
+        <?= component('alert', ['type' => 'info', 'message' => $listAtLabel]) ?>
+    <?php elseif ($totalCandidates === 0): ?>
         <?= component('alert', ['type' => 'info', 'message' => t('elections.candidates.empty')]) ?>
     <?php else: ?>
 

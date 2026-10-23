@@ -12,6 +12,7 @@
 $election ??= [];
 $published ??= false;
 $groups ??= [];
+$rounds ??= ['first' => null, 'second' => null];
 
 $electionId = (int) $election['id'];
 ?>
@@ -64,6 +65,21 @@ $electionId = (int) $election['id'];
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16">
     <div class="mx-auto flex flex-col gap-8">
 
+        <?php if ($rounds['first'] !== null): ?>
+            <p class="flex flex-wrap items-center gap-2 rounded-control bg-primary-light/20 p-4 text-body-md text-primary">
+                <?= icon('scale-balanced') ?>
+                <?= e(t('elections.rounds.is_second_round')) ?>
+                <a href="<?= e('/elections/' . (int) $rounds['first']['id']) ?>" class="font-label-lg text-label-lg underline"><?= e($rounds['first']['title']) ?></a>
+            </p>
+        <?php endif; ?>
+        <?php if ($rounds['second'] !== null): ?>
+            <p class="flex flex-wrap items-center gap-2 rounded-control bg-primary-light/20 p-4 text-body-md text-primary">
+                <?= icon('scale-balanced') ?>
+                <?= e(t('elections.rounds.has_second_round')) ?>
+                <a href="<?= e('/elections/' . (int) $rounds['second']['id']) ?>" class="font-label-lg text-label-lg underline"><?= e($rounds['second']['title']) ?></a>
+            </p>
+        <?php endif; ?>
+
         <?php if (!$published): ?>
             <div class="bg-white rounded-card border border-border p-8 flex flex-col items-center gap-3 text-center">
                 <span class="h-14 w-14 rounded-full bg-muted/[1%] text-muted flex items-center justify-center">
@@ -73,7 +89,7 @@ $electionId = (int) $election['id'];
                 <p class="text-body-md text-muted"><?= e(t('elections.results.unavailable_message')) ?></p>
             </div>
         <?php else: ?>
-            <?= component('election_results_body', ['groups' => $groups]) ?>
+            <?= component('election_results_body', ['groups' => $groups, 'isSecondRound' => $election['first_round_id'] !== null]) ?>
         <?php endif; ?>
 
         <a href="<?= e('/elections/' . $electionId) ?>" class="inline-flex items-center gap-2 text-primary font-label-lg font-label-lg hover:underline self-start">

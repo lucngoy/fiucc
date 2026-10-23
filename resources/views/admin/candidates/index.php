@@ -16,6 +16,7 @@
 $election ??= [];
 $candidates ??= [];
 $canManage ??= false;
+$canAdd ??= false;
 $canWithdraw ??= false;
 $notice ??= '';
 
@@ -24,6 +25,7 @@ $electionId = (int) $election['id'];
 $statusBadge = static function (string $status): string {
     $variants = [
         'pending'   => 'bg-gold/20 text-ink',
+        'correction' => 'bg-gold/20 text-ink',
         'approved'  => 'bg-success/[4%] text-success',
         'rejected'  => 'bg-danger/10 text-danger',
         'withdrawn' => 'bg-muted/[1%] text-muted',
@@ -44,6 +46,7 @@ $noticeMap = [
     'not_found'        => ['type' => 'error',   'message' => t('admin.candidates.notice.not_found')],
     'member_ineligible'=> ['type' => 'error',   'message' => t('admin.candidates.notice.member_ineligible')],
     'reason_required'  => ['type' => 'error',   'message' => t('admin.candidates.notice.reason_required')],
+    'decision_reason_required' => ['type' => 'error',   'message' => t('admin.candidates.notice.decision_reason_required')],
     'cannot_withdraw'  => ['type' => 'error',   'message' => t('admin.candidates.notice.cannot_withdraw')],
 ];
 
@@ -64,7 +67,7 @@ $actionTooltip = static function (string $label): string {
 
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
         <h1 class="font-headline-md text-headline-md text-ink"><?= e(t('admin.candidates.title')) ?></h1>
-        <?php if ($canManage): ?>
+        <?php if ($canAdd): ?>
             <a href="/admin/elections/<?= e((string) $electionId) ?>/candidates/create"
                class="inline-flex items-center gap-2 h-10 px-4 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
                 <?= icon('plus') ?>
@@ -106,7 +109,10 @@ $actionTooltip = static function (string $label): string {
                                         </span>
                                     <?php endif; ?>
                                     <div>
-                                        <p class="font-label-lg text-label-lg text-ink"><?= e($candidate['full_name']) ?></p>
+                                        <a href="/admin/elections/<?= e((string) $electionId) ?>/candidates/<?= e((string) $candidateId) ?>" class="block font-label-lg text-label-lg text-ink hover:text-primary hover:underline"><?= e($candidate['full_name']) ?></a>
+                                        <?php if (!empty($candidate['submitted_at'])): ?>
+                                            <p class="text-body-sm text-muted"><?= e(t('admin.candidates.submitted_by_member', ['date' => local_date($candidate['submitted_at'])])) ?></p>
+                                        <?php endif; ?>
                                         <?php if (!$candidate['eligible']): ?>
                                             <p class="flex items-center gap-1.5 text-label-md font-label-md text-danger mt-0.5">
                                                 <?= icon('triangle-exclamation') ?>
@@ -130,7 +136,7 @@ $actionTooltip = static function (string $label): string {
                                             </a>
                                             <?= $actionTooltip(t('admin.candidates.action.edit')) ?>
                                         </div>
-                                        <?php if ($candidate['status'] === 'pending'): ?>
+                                        <?php if (in_array($candidate['status'], ['pending', 'correction'], true)): ?>
                                             <div class="relative group">
                                                 <form method="POST" action="/admin/elections/<?= e((string) $electionId) ?>/candidates/<?= e((string) $candidateId) ?>/approve">
                                                     <?= csrf_field() ?>
@@ -141,15 +147,15 @@ $actionTooltip = static function (string $label): string {
                                                 </form>
                                                 <?= $actionTooltip(t('admin.candidates.action.approve')) ?>
                                             </div>
+                                            <!-- Rejet / correction : motif obligatoire (lot 4), donc
+                                                 depuis le panneau de décision du dossier. -->
                                             <div class="relative group">
-                                                <form method="POST" action="/admin/elections/<?= e((string) $electionId) ?>/candidates/<?= e((string) $candidateId) ?>/reject">
-                                                    <?= csrf_field() ?>
-                                                    <button type="submit" aria-label="<?= e(t('admin.candidates.action.reject')) ?>"
-                                                        class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
-                                                        <?= icon('xmark') ?>
-                                                    </button>
-                                                </form>
-                                                <?= $actionTooltip(t('admin.candidates.action.reject')) ?>
+                                                <a href="/admin/elections/<?= e((string) $electionId) ?>/candidates/<?= e((string) $candidateId) ?>#decision"
+                                                    aria-label="<?= e(t('admin.candidates.action.decide')) ?>"
+                                                    class="h-9 w-9 rounded-control bg-surface text-danger hover:bg-danger/15 flex items-center justify-center transition-colors">
+                                                    <?= icon('xmark') ?>
+                                                </a>
+                                                <?= $actionTooltip(t('admin.candidates.action.decide')) ?>
                                             </div>
                                         <?php endif; ?>
                                     <?php endif; ?>

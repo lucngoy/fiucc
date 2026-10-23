@@ -143,6 +143,10 @@ session_set_cookie_params([
 ]);
 session_start();
 
+// Fichiers envoyés en base64 (contournement du pare-feu InfinityFree) :
+// reconstitués en uploads ordinaires avant tout contrôleur.
+App\Core\EncodedUploads::hydrate();
+
 // 5. Routing
 $router = new Router();
 $router->loadRoutes(BASE_PATH . '/routes/web.php');

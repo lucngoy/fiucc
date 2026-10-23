@@ -25,6 +25,7 @@ final class ElectionConfigLockTest extends TestCase
     public static function nonDraftStatuses(): iterable
     {
         yield 'candidacies' => ['candidacies'];
+        yield 'candidacies_closed' => ['candidacies_closed'];
         yield 'open' => ['open'];
         yield 'closed' => ['closed'];
         yield 'published' => ['published'];
@@ -179,8 +180,7 @@ final class ElectionConfigLockTest extends TestCase
         $winnerMemberId = $this->makeMember(['full_name' => 'Nouveau président']);
         $candidateId = $this->makeApprovedCandidate($positionId, $winnerMemberId);
 
-        self::assertTrue(Election::startCandidacies($electionId));
-        self::assertTrue(Election::open($electionId));
+        self::assertTrue($this->openElection($electionId));
 
         $this->issueToken($electionId, $winnerMemberId);
         $ballot = Vote::castBallot($electionId, $winnerMemberId, [$positionId => $candidateId]);
@@ -218,17 +218,20 @@ final class ElectionConfigLockTest extends TestCase
             'display_name' => 'Ancien président',
         ]);
 
+        // Mandat d'un an à partir de la passation (règlement électoral
+        // art. 33, migration 022) — plus les dates du vote elles-mêmes.
+        $handover = date('Y-m-d', strtotime('+301 days'));
         $electionId = $this->makeElection([
-            'title'    => 'Government Election 2026',
-            'start_at' => date('Y-m-d H:i:s', strtotime('+10 days')),
-            'end_at'   => date('Y-m-d H:i:s', strtotime('+300 days')),
+            'title'         => 'Government Election 2026',
+            'start_at'      => date('Y-m-d H:i:s', strtotime('+10 days')),
+            'end_at'        => date('Y-m-d H:i:s', strtotime('+300 days')),
+            'handover_date' => $handover,
         ]);
         $positionId = $this->makePosition($electionId, ['name' => 'President']);
         $winnerMemberId = $this->makeMember(['full_name' => 'Élu du nouveau gouvernement']);
         $candidateId = $this->makeApprovedCandidate($positionId, $winnerMemberId);
 
-        self::assertTrue(Election::startCandidacies($electionId));
-        self::assertTrue(Election::open($electionId));
+        self::assertTrue($this->openElection($electionId));
 
         $this->issueToken($electionId, $winnerMemberId);
         $ballot = Vote::castBallot($electionId, $winnerMemberId, [$positionId => $candidateId]);
@@ -239,7 +242,8 @@ final class ElectionConfigLockTest extends TestCase
         $government = Government::currentWithMembers();
 
         self::assertNotNull($government);
-        self::assertSame('2026-2027', $government['mandate']);
+        self::assertSame(date('Y', strtotime($handover)) . '-' . ((int) date('Y', strtotime($handover)) + 1), $government['mandate']);
+        self::assertSame($handover, $government['start_date']);
         self::assertSame('President', $government['members'][0]['role']);
         self::assertSame('Élu du nouveau gouvernement', $government['members'][0]['display_name']);
         self::assertTrue(Government::isCurrentMember($winnerMemberId));
@@ -268,6 +272,12 @@ final class ElectionConfigLockTest extends TestCase
         self::assertTrue(Election::startCandidacies($electionId));
 
         if ($status === 'candidacies') {
+            return;
+        }
+
+        self::assertTrue(Election::closeCandidacies($electionId));
+
+        if ($status === 'candidacies_closed') {
             return;
         }
 

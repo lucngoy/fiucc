@@ -80,8 +80,7 @@ final class VoteIntegrityTest extends TestCase
         $validCandidateId = $this->makeApprovedCandidate($validPositionId);
         $otherPositionId = $this->makePosition($electionId, ['name' => 'Poste avec candidat invalide', 'sort_order' => 1]);
 
-        Election::startCandidacies($electionId);
-        Election::open($electionId);
+        self::assertTrue($this->openElection($electionId));
 
         $member = $this->makeMember();
         $this->plantToken($electionId, $member);

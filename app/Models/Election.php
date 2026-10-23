@@ -24,7 +24,7 @@ use App\Core\Model;
 final class Election extends Model
 {
     private const ADMIN_PER_PAGE = 20;
-    public const STATUSES = ['draft', 'candidacies', 'open', 'closed', 'published'];
+    public const STATUSES = ['draft', 'candidacies', 'candidacies_closed', 'open', 'closed', 'published'];
 
     /**
      * @param array{search?: string, status?: string} $filters
@@ -94,10 +94,16 @@ final class Election extends Model
      * effectivement ouvert en ce moment — pas candidacies/closed/published,
      * des phases qui ne demandent aucune surveillance en temps réel.
      */
-    public static function countOpen(): int
+    /**
+     * Élections en cours (tableau de bord admin) : lancées et pas encore
+     * publiées — candidatures, liste arrêtée, vote, dépouillement. Pas
+     * seulement 'open' : une élection en phase de candidatures est bien
+     * en cours pour le bureau, même si le vote n'a pas commencé.
+     */
+    public static function countInProgress(): int
     {
         return (int) static::db()
-            ->query("SELECT COUNT(*) FROM elections WHERE status = 'open'")
+            ->query("SELECT COUNT(*) FROM elections WHERE status IN ('candidacies', 'candidacies_closed', 'open', 'closed')")
             ->fetchColumn();
     }
 
@@ -131,7 +137,7 @@ final class Election extends Model
         $end = strtotime((string) $election['end_at']);
         $status = $election['status'];
 
-        if (in_array($status, ['draft', 'candidacies'], true)) {
+        if (in_array($status, ['draft', 'candidacies', 'candidacies_closed'], true)) {
             return $now >= $start
                 ? ['state' => 'opening_imminent', 'target' => null]
                 : ['state' => 'before_open', 'target' => (string) $election['start_at']];
@@ -152,14 +158,22 @@ final class Election extends Model
     public static function create(array $data): int
     {
         $stmt = static::db()->prepare(
-            "INSERT INTO elections (title, description, start_at, end_at, status)
-             VALUES (:title, :description, :start_at, :end_at, 'draft')"
+            "INSERT INTO elections (title, description, candidacy_deadline, candidate_list_at, candidacy_fee_required, candidacy_fee_details,
+                                    rules_document_id, start_at, end_at, handover_date, status)
+             VALUES (:title, :description, :candidacy_deadline, :candidate_list_at, :candidacy_fee_required, :candidacy_fee_details,
+                     :rules_document_id, :start_at, :end_at, :handover_date, 'draft')"
         );
         $stmt->execute([
-            'title'       => $data['title'],
-            'description' => $data['description'],
-            'start_at'    => $data['start_at'],
-            'end_at'      => $data['end_at'],
+            'title'         => $data['title'],
+            'description'   => $data['description'],
+            'candidacy_deadline' => $data['candidacy_deadline'] ?? null,
+            'candidate_list_at'  => $data['candidate_list_at'] ?? null,
+            'candidacy_fee_required' => !empty($data['candidacy_fee_required']) ? 1 : 0,
+            'candidacy_fee_details'  => $data['candidacy_fee_details'] ?? null,
+            'rules_document_id'      => $data['rules_document_id'] ?? null,
+            'start_at'      => $data['start_at'],
+            'end_at'        => $data['end_at'],
+            'handover_date' => $data['handover_date'] ?? null,
         ]);
 
         return (int) static::db()->lastInsertId();
@@ -177,15 +191,25 @@ final class Election extends Model
     public static function update(int $id, array $data): bool
     {
         $stmt = static::db()->prepare(
-            "UPDATE elections SET title = :title, description = :description, start_at = :start_at, end_at = :end_at
+            "UPDATE elections SET title = :title, description = :description, candidacy_deadline = :candidacy_deadline,
+                    candidate_list_at = :candidate_list_at,
+                    candidacy_fee_required = :candidacy_fee_required, candidacy_fee_details = :candidacy_fee_details,
+                    rules_document_id = :rules_document_id,
+                    start_at = :start_at, end_at = :end_at, handover_date = :handover_date
              WHERE id = :id AND status = 'draft'"
         );
         $stmt->execute([
-            'title'       => $data['title'],
-            'description' => $data['description'],
-            'start_at'    => $data['start_at'],
-            'end_at'      => $data['end_at'],
-            'id'          => $id,
+            'title'         => $data['title'],
+            'description'   => $data['description'],
+            'candidacy_deadline' => $data['candidacy_deadline'] ?? null,
+            'candidate_list_at'  => $data['candidate_list_at'] ?? null,
+            'candidacy_fee_required' => !empty($data['candidacy_fee_required']) ? 1 : 0,
+            'candidacy_fee_details'  => $data['candidacy_fee_details'] ?? null,
+            'rules_document_id'      => $data['rules_document_id'] ?? null,
+            'start_at'      => $data['start_at'],
+            'end_at'        => $data['end_at'],
+            'handover_date' => $data['handover_date'] ?? null,
+            'id'            => $id,
         ]);
 
         return $stmt->rowCount() > 0;
@@ -216,14 +240,16 @@ final class Election extends Model
      * postes (Admin\ElectionController::update()/storePosition()/etc. ne
      * s'appliquent qu'à 'draft'). Exige au moins un poste — faire
      * progresser une élection sans aucun poste n'a pas de sens, et la
-     * configuration devient justement figée à cet instant.
+     * configuration devient justement figée à cet instant — ainsi qu'une
+     * date limite de dépôt (migration 023) : on n'ouvre pas des
+     * candidatures sans dire aux membres jusqu'à quand.
      */
     public static function startCandidacies(int $id): bool
     {
         $stmt = static::db()->prepare(
             "UPDATE elections e
              SET e.status = 'candidacies'
-             WHERE e.id = :id AND e.status = 'draft'
+             WHERE e.id = :id AND e.status = 'draft' AND e.candidacy_deadline IS NOT NULL
                AND EXISTS (SELECT 1 FROM election_positions WHERE election_id = e.id)"
         );
         $stmt->execute(['id' => $id]);
@@ -232,15 +258,198 @@ final class Election extends Model
     }
 
     /**
-     * 'candidacies' -> 'open' : ouvre le vote. Ne vérifie pas qu'un
-     * candidat approuvé existe par poste — un poste sans candidat approuvé
-     * reste votable en blanc (App\Models\Vote::castBallot()), pas une
-     * erreur de configuration à bloquer ici.
+     * Prolongation de la date limite de dépôt (décision du bureau
+     * 2026-10-10) — seulement pendant que les candidatures sont ouvertes,
+     * vers une date future et antérieure au début du vote : prolonger au-
+     * delà du scrutin n'aurait pas de sens. Garde SQL en plus du contrôle
+     * de Admin\ElectionController::extendCandidacyDeadline().
+     */
+    public static function extendCandidacyDeadline(int $id, string $newDeadline): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET candidacy_deadline = :deadline
+             WHERE id = :id AND status = 'candidacies'
+               AND :deadline_future > NOW() AND :deadline_before_vote < start_at
+               AND (candidacy_deadline IS NULL OR :deadline_later > candidacy_deadline)
+               AND (candidate_list_at IS NULL OR :deadline_before_list <= candidate_list_at)"
+        );
+        // Seulement repoussée, jamais avancée (décision du bureau
+        // 2026-10-21) : une date annoncée publiquement ne doit priver
+        // personne du dépôt sur lequel il comptait (art. 8).
+        $stmt->execute([
+            'deadline'             => $newDeadline,
+            'deadline_future'      => $newDeadline,
+            'deadline_before_vote' => $newDeadline,
+            'deadline_later'       => $newDeadline,
+            'deadline_before_list' => $newDeadline,
+            'id'                   => $id,
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * 'candidacies' -> 'candidacies_closed' (migration 023) : fin du dépôt,
+     * début de la vérification des dossiers et de la campagne. Seulement
+     * une fois la date limite annoncée passée — clôturer plus tôt priverait
+     * des membres d'un délai qui leur avait été promis (art. 16, égalité
+     * entre candidats). Pour clôturer plus tard, le bureau prolonge.
+     */
+    public static function closeCandidacies(int $id): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET status = 'candidacies_closed'
+             WHERE id = :id AND status = 'candidacies'
+               AND candidacy_deadline IS NOT NULL AND candidacy_deadline <= NOW()"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * 'candidacies_closed' -> 'candidacies' avec une nouvelle date limite
+     * (décision du bureau 2026-10-21) : si le dépôt a été clos trop tôt,
+     * tant que le vote n'est pas ouvert. Jamais pour un second tour (pas
+     * de dépôt : ses candidats sont les ex aequo du 1er tour). Les dossiers
+     * déjà décidés gardent leur décision.
+     */
+    public static function reopenCandidacies(int $id, string $newDeadline): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET status = 'candidacies', candidacy_deadline = :deadline
+             WHERE id = :id AND status = 'candidacies_closed' AND first_round_id IS NULL
+               AND :deadline_future > NOW() AND :deadline_before_vote < start_at
+               AND (candidate_list_at IS NULL OR :deadline_before_list <= candidate_list_at)"
+        );
+        $stmt->execute([
+            'deadline'             => $newDeadline,
+            'deadline_future'      => $newDeadline,
+            'deadline_before_vote' => $newDeadline,
+            'deadline_before_list' => $newDeadline,
+            'id'                   => $id,
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Dates du vote et de la passation tant que le vote n'est pas ouvert
+     * (décision du bureau 2026-10-21) : avant le premier bulletin, rien
+     * n'est encore acquis. Mêmes règles qu'à la création : ouverture dans
+     * le futur et après la date limite des candidatures, 24 h minimum, fin
+     * au plus tard le jour de la passation. Une fois le vote ouvert, son
+     * début ne bouge plus (extendEndAt() pour la fin, updateHandoverDate()
+     * pour la passation).
+     */
+    public static function rescheduleVote(int $id, string $startAt, string $endAt, string $handoverDate, ?string $candidateListAt = null): bool
+    {
+        // Publication de la liste (migration 027) : après la date limite
+        // des candidatures, au plus tard à l'ouverture du vote. null garde
+        // la valeur en place (élection antérieure sans date, second tour).
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET start_at = :start_at, end_at = :end_at, handover_date = :handover_date,
+                    candidate_list_at = COALESCE(:list_at, candidate_list_at)
+             WHERE id = :id AND status IN ('candidacies', 'candidacies_closed')
+               AND :start_future > NOW()
+               AND (COALESCE(:list_check, candidate_list_at) IS NULL OR (
+                   (candidacy_deadline IS NULL OR COALESCE(:list_after_deadline, candidate_list_at) >= candidacy_deadline)
+                   AND COALESCE(:list_before_vote, candidate_list_at) <= :start_for_list
+               ))
+               AND (candidacy_deadline IS NULL OR candidacy_deadline < :start_after_deadline)
+               AND TIMESTAMPDIFF(SECOND, :start_duration, :end_duration) >= 86400
+               AND DATE(:end_handover) <= :handover_check"
+        );
+        $stmt->execute([
+            'start_at'             => $startAt,
+            'end_at'               => $endAt,
+            'handover_date'        => $handoverDate,
+            'list_at'              => $candidateListAt,
+            'list_check'           => $candidateListAt,
+            'list_after_deadline'  => $candidateListAt,
+            'list_before_vote'     => $candidateListAt,
+            'start_for_list'       => $startAt,
+            'id'                   => $id,
+            'start_future'         => $startAt,
+            'start_after_deadline' => $startAt,
+            'start_duration'       => $startAt,
+            'end_duration'         => $endAt,
+            'end_handover'         => $endAt,
+            'handover_check'       => $handoverDate,
+        ]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Description (et le calendrier électoral qu'elle contient, art. 8)
+     * jusqu'à la publication des résultats (décision du bureau
+     * 2026-10-21) : un texte d'information, sans effet sur le scrutin —
+     * contrairement au titre et aux postes, qui restent figés hors
+     * brouillon. En brouillon, le formulaire complet s'en charge (update()).
+     */
+    public static function updateDescription(int $id, ?string $description): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET description = :description
+             WHERE id = :id AND status IN ('candidacies', 'candidacies_closed', 'open', 'closed')"
+        );
+        $stmt->execute(['description' => $description, 'id' => $id]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Date de passation jusqu'à la publication des résultats : une fois
+     * publiés, le gouvernement est installé avec ce mandat
+     * (Government::syncFromElectionResults()), la date ne bouge plus.
+     */
+    public static function updateHandoverDate(int $id, string $handoverDate): bool
+    {
+        $stmt = static::db()->prepare(
+            "UPDATE elections SET handover_date = :handover_date
+             WHERE id = :id AND status IN ('draft', 'candidacies', 'candidacies_closed', 'open', 'closed')
+               AND DATE(end_at) <= :handover_check"
+        );
+        $stmt->execute(['handover_date' => $handoverDate, 'id' => $id, 'handover_check' => $handoverDate]);
+
+        return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * La liste des candidats est-elle publique (migration 027) ? Oui dès
+     * candidate_list_at atteinte ; une élection sans date (antérieure à la
+     * migration) garde l'ancien comportement : liste visible.
+     */
+    public static function candidateListPublished(array $election): bool
+    {
+        $listAt = $election['candidate_list_at'] ?? null;
+
+        return $listAt === null || $listAt === '' || strtotime((string) $listAt) <= time();
+    }
+
+    /**
+     * Dépôt de candidature encore possible (lot 3 : candidature déposée
+     * par le membre lui-même) — statut ET date limite, les deux.
+     */
+    public static function acceptsCandidacies(array $election): bool
+    {
+        return $election['status'] === 'candidacies'
+            && !empty($election['candidacy_deadline'])
+            && strtotime((string) $election['candidacy_deadline']) > time();
+    }
+
+    /**
+     * 'candidacies_closed' -> 'open' : ouvre le vote — plus jamais
+     * directement depuis 'candidacies' (migration 023) : la liste des
+     * candidats doit être arrêtée avant le premier bulletin. Ne vérifie pas
+     * qu'un candidat approuvé existe par poste — un poste sans candidat
+     * approuvé reste votable en blanc (App\Models\Vote::castBallot()).
      */
     public static function open(int $id): bool
     {
         $stmt = static::db()->prepare(
-            "UPDATE elections SET status = 'open' WHERE id = :id AND status = 'candidacies'"
+            "UPDATE elections SET status = 'open' WHERE id = :id AND status = 'candidacies_closed'"
         );
         $stmt->execute(['id' => $id]);
 

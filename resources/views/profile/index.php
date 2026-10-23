@@ -99,6 +99,24 @@ if ($member['status_type'] !== 'student') {
         </div>
     <?php endif; ?>
 
+    <?php if (($candidacies ?? []) !== []): ?>
+        <!-- Mes candidatures (lot 3) : statut seulement, lien vers le dossier. -->
+        <div class="bg-white rounded-card border border-border p-6">
+            <h2 class="font-headline-sm text-headline-sm text-ink mb-4"><?= e(t('profile.candidacies.title')) ?></h2>
+            <ul class="flex flex-col divide-y divide-border">
+                <?php foreach ($candidacies as $candidacyRow): ?>
+                    <li class="py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                        <div>
+                            <p class="text-label-md font-label-md text-ink"><?= e($candidacyRow['election_title']) ?></p>
+                            <p class="text-body-sm text-muted"><?= e($candidacyRow['position_name']) ?> · <?= e(t('candidacy.status.' . $candidacyRow['status'])) ?></p>
+                        </div>
+                        <a href="<?= e('/elections/' . (int) $candidacyRow['election_id'] . '/candidacy') ?>" class="text-label-md font-label-md text-primary hover:underline"><?= e(t('profile.candidacies.view')) ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
     <?php if ($details !== []): ?>
         <div class="bg-white rounded-card border border-border p-6">
             <h2 class="font-headline-sm text-headline-sm text-ink mb-4"><?= e(t('profile.info_title')) ?></h2>

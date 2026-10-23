@@ -55,6 +55,13 @@ abstract class TestCase extends BaseTestCase
         'votes', 'voting_tokens', 'candidates', 'election_positions',
         'elections', 'government_members', 'governments', 'mentorships',
         'members', 'users', 'email_verifications', 'login_throttle',
+        // Migration 023 : sinon une Commission d'un test précédent reste
+        // rattachée au même election_id, réutilisé après TRUNCATE elections.
+        'election_commission_members',
+        // Migration 024 : pièces des dossiers de candidature.
+        'candidate_documents',
+        // Migration 026 : décisions de la Commission sur un poste.
+        'election_position_decisions',
     ];
 
     protected PDO $db;
@@ -141,8 +148,15 @@ abstract class TestCase extends BaseTestCase
         return Election::create([
             'title'       => $overrides['title'] ?? ('Élection de test ' . bin2hex(random_bytes(4))),
             'description' => null,
+            // Date limite de dépôt déjà passée par défaut (migration 023) :
+            // la plupart des scénarios veulent pouvoir clôturer le dépôt
+            // tout de suite pour atteindre le vote.
+            'candidacy_deadline' => array_key_exists('candidacy_deadline', $overrides)
+                ? $overrides['candidacy_deadline']
+                : date('Y-m-d H:i:s', strtotime('-1 minute')),
             'start_at'    => $overrides['start_at'] ?? date('Y-m-d H:i:s', strtotime('-1 hour')),
             'end_at'      => $overrides['end_at'] ?? date('Y-m-d H:i:s', strtotime('+1 day')),
+            'handover_date' => $overrides['handover_date'] ?? null,
         ]);
     }
 
@@ -199,7 +213,7 @@ abstract class TestCase extends BaseTestCase
         $candidateMemberId = $this->makeMember(['full_name' => 'Candidat de test']);
         $candidateId = $this->makeApprovedCandidate($positionId, $candidateMemberId);
 
-        if (!Election::startCandidacies($electionId) || !Election::open($electionId)) {
+        if (!$this->openElection($electionId)) {
             throw new RuntimeException('Impossible de faire progresser l\'élection de test jusqu\'à "open".');
         }
 
@@ -209,6 +223,19 @@ abstract class TestCase extends BaseTestCase
             'candidate_id' => $candidateId,
             'member_id'    => $candidateMemberId,
         ];
+    }
+
+    /**
+     * Fait passer une élection de 'draft' à 'open' par les vraies
+     * transitions (migration 023) : candidatures ouvertes, puis closes,
+     * puis vote ouvert. Chaque transition porte sa propre garde SQL — aucune
+     * n'est contournée.
+     */
+    protected function openElection(int $electionId): bool
+    {
+        return Election::startCandidacies($electionId)
+            && Election::closeCandidacies($electionId)
+            && Election::open($electionId);
     }
 
     /**

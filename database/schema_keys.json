@@ -1,0 +1,1086 @@
+{
+    "activity_logs": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_logs_action": {
+                "unique": false,
+                "cols": [
+                    "action"
+                ]
+            },
+            "idx_logs_user": {
+                "unique": false,
+                "cols": [
+                    "user_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_logs_user": {
+                "cols": [
+                    "user_id"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "album_photos": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_albumphotos_album": {
+                "unique": false,
+                "cols": [
+                    "album_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_albumphotos_album": {
+                "cols": [
+                    "album_id"
+                ],
+                "ref_table": "albums",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "albums": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_albums_creator": {
+                "unique": false,
+                "cols": [
+                    "created_by"
+                ]
+            },
+            "idx_albums_status": {
+                "unique": false,
+                "cols": [
+                    "status"
+                ]
+            },
+            "uq_albums_event": {
+                "unique": true,
+                "cols": [
+                    "event_id"
+                ]
+            },
+            "uq_albums_slug": {
+                "unique": true,
+                "cols": [
+                    "slug"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_albums_creator": {
+                "cols": [
+                    "created_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            },
+            "fk_albums_event": {
+                "cols": [
+                    "event_id"
+                ],
+                "ref_table": "events",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "candidate_documents": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "uq_candidate_document_slot": {
+                "unique": true,
+                "cols": [
+                    "candidate_id",
+                    "type",
+                    "slot"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_candidate_documents_candidate": {
+                "cols": [
+                    "candidate_id"
+                ],
+                "ref_table": "candidates",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "candidates": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_cand_member": {
+                "unique": false,
+                "cols": [
+                    "member_id"
+                ]
+            },
+            "uq_candidate_position_ballot": {
+                "unique": true,
+                "cols": [
+                    "election_position_id",
+                    "ballot_number"
+                ]
+            },
+            "uq_candidate_position_member": {
+                "unique": true,
+                "cols": [
+                    "election_position_id",
+                    "member_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_cand_member": {
+                "cols": [
+                    "member_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_cand_position": {
+                "cols": [
+                    "election_position_id"
+                ],
+                "ref_table": "election_positions",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "contact_messages": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_contact_messages_created": {
+                "unique": false,
+                "cols": [
+                    "created_at"
+                ]
+            },
+            "idx_contact_messages_ip_created": {
+                "unique": false,
+                "cols": [
+                    "ip_address",
+                    "created_at"
+                ]
+            }
+        },
+        "foreign_keys": []
+    },
+    "documents": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_docs_uploader": {
+                "unique": false,
+                "cols": [
+                    "uploaded_by"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_docs_uploader": {
+                "cols": [
+                    "uploaded_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "election_commission_members": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_commission_member": {
+                "unique": false,
+                "cols": [
+                    "member_id"
+                ]
+            },
+            "idx_commission_election": {
+                "unique": false,
+                "cols": [
+                    "election_id"
+                ]
+            },
+            "uq_commission_election_member": {
+                "unique": true,
+                "cols": [
+                    "election_id",
+                    "member_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_commission_election": {
+                "cols": [
+                    "election_id"
+                ],
+                "ref_table": "elections",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_commission_member": {
+                "cols": [
+                    "member_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "election_position_decisions": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_decision_candidate": {
+                "unique": false,
+                "cols": [
+                    "candidate_id"
+                ]
+            },
+            "uq_decision_position": {
+                "unique": true,
+                "cols": [
+                    "election_position_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_decision_candidate": {
+                "cols": [
+                    "candidate_id"
+                ],
+                "ref_table": "candidates",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "RESTRICT",
+                "on_update": "RESTRICT"
+            },
+            "fk_decision_position": {
+                "cols": [
+                    "election_position_id"
+                ],
+                "ref_table": "election_positions",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "election_positions": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_pos_election": {
+                "unique": false,
+                "cols": [
+                    "election_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_pos_election": {
+                "cols": [
+                    "election_id"
+                ],
+                "ref_table": "elections",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "elections": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_elections_rules_document": {
+                "unique": false,
+                "cols": [
+                    "rules_document_id"
+                ]
+            },
+            "idx_elections_status": {
+                "unique": false,
+                "cols": [
+                    "status"
+                ]
+            },
+            "uq_elections_first_round": {
+                "unique": true,
+                "cols": [
+                    "first_round_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_elections_first_round": {
+                "cols": [
+                    "first_round_id"
+                ],
+                "ref_table": "elections",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "RESTRICT",
+                "on_update": "RESTRICT"
+            },
+            "fk_elections_rules_document": {
+                "cols": [
+                    "rules_document_id"
+                ],
+                "ref_table": "documents",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "email_verifications": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_ev_user": {
+                "unique": false,
+                "cols": [
+                    "user_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_ev_user": {
+                "cols": [
+                    "user_id"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "event_registrations": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_evreg_member": {
+                "unique": false,
+                "cols": [
+                    "member_id"
+                ]
+            },
+            "uq_evreg": {
+                "unique": true,
+                "cols": [
+                    "event_id",
+                    "member_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_evreg_event": {
+                "cols": [
+                    "event_id"
+                ],
+                "ref_table": "events",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_evreg_member": {
+                "cols": [
+                    "member_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "events": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_events_creator": {
+                "unique": false,
+                "cols": [
+                    "created_by"
+                ]
+            },
+            "idx_events_start": {
+                "unique": false,
+                "cols": [
+                    "start_date"
+                ]
+            },
+            "idx_events_status": {
+                "unique": false,
+                "cols": [
+                    "status"
+                ]
+            },
+            "uq_events_slug": {
+                "unique": true,
+                "cols": [
+                    "slug"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_events_creator": {
+                "cols": [
+                    "created_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "government_members": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_govmem_member": {
+                "unique": false,
+                "cols": [
+                    "member_id"
+                ]
+            },
+            "idx_govmem_gov": {
+                "unique": false,
+                "cols": [
+                    "government_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_govmem_gov": {
+                "cols": [
+                    "government_id"
+                ],
+                "ref_table": "governments",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_govmem_member": {
+                "cols": [
+                    "member_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "governments": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "uq_gov_mandate": {
+                "unique": true,
+                "cols": [
+                    "mandate"
+                ]
+            }
+        },
+        "foreign_keys": []
+    },
+    "login_throttle": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "uq_throttle_user_ip": {
+                "unique": true,
+                "cols": [
+                    "user_id",
+                    "ip_address"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_throttle_user": {
+                "cols": [
+                    "user_id"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "members": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_members_validator": {
+                "unique": false,
+                "cols": [
+                    "validated_by"
+                ]
+            },
+            "idx_members_faculty": {
+                "unique": false,
+                "cols": [
+                    "faculty"
+                ]
+            },
+            "idx_members_graduation": {
+                "unique": false,
+                "cols": [
+                    "graduation_year"
+                ]
+            },
+            "idx_members_status": {
+                "unique": false,
+                "cols": [
+                    "status"
+                ]
+            },
+            "idx_members_status_type": {
+                "unique": false,
+                "cols": [
+                    "status_type"
+                ]
+            },
+            "uq_members_number": {
+                "unique": true,
+                "cols": [
+                    "membership_number"
+                ]
+            },
+            "uq_members_student_id": {
+                "unique": true,
+                "cols": [
+                    "student_id"
+                ]
+            },
+            "uq_members_user": {
+                "unique": true,
+                "cols": [
+                    "user_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_members_user": {
+                "cols": [
+                    "user_id"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_members_validator": {
+                "cols": [
+                    "validated_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "mentorships": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_mentorship_mentor": {
+                "unique": false,
+                "cols": [
+                    "mentor_id"
+                ]
+            },
+            "idx_mentorship_student": {
+                "unique": false,
+                "cols": [
+                    "student_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_mentorship_mentor": {
+                "cols": [
+                    "mentor_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_mentorship_student": {
+                "cols": [
+                    "student_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "migrations": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "uq_migrations_name": {
+                "unique": true,
+                "cols": [
+                    "migration"
+                ]
+            }
+        },
+        "foreign_keys": []
+    },
+    "news": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_news_author": {
+                "unique": false,
+                "cols": [
+                    "author_id"
+                ]
+            },
+            "idx_news_published": {
+                "unique": false,
+                "cols": [
+                    "published_at"
+                ]
+            },
+            "uq_news_slug": {
+                "unique": true,
+                "cols": [
+                    "slug"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_news_author": {
+                "cols": [
+                    "author_id"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "partners": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_partners_creator": {
+                "unique": false,
+                "cols": [
+                    "created_by"
+                ]
+            },
+            "idx_partners_status": {
+                "unique": false,
+                "cols": [
+                    "status"
+                ]
+            },
+            "idx_partners_type": {
+                "unique": false,
+                "cols": [
+                    "type"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_partners_creator": {
+                "cols": [
+                    "created_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "password_resets": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_password_resets_user": {
+                "unique": false,
+                "cols": [
+                    "user_id"
+                ]
+            },
+            "uq_password_resets_token": {
+                "unique": true,
+                "cols": [
+                    "token_hash"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_password_resets_user": {
+                "cols": [
+                    "user_id"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "site_settings": {
+        "primary": [
+            "setting_key"
+        ],
+        "auto_increment": [],
+        "indexes": {
+            "fk_site_settings_user": {
+                "unique": false,
+                "cols": [
+                    "updated_by"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_site_settings_user": {
+                "cols": [
+                    "updated_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "users": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "uq_users_email": {
+                "unique": true,
+                "cols": [
+                    "email"
+                ]
+            }
+        },
+        "foreign_keys": []
+    },
+    "votes": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_votes_candidate": {
+                "unique": false,
+                "cols": [
+                    "candidate_id"
+                ]
+            },
+            "idx_votes_election": {
+                "unique": false,
+                "cols": [
+                    "election_id"
+                ]
+            },
+            "idx_votes_position": {
+                "unique": false,
+                "cols": [
+                    "position_id"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_votes_candidate": {
+                "cols": [
+                    "candidate_id"
+                ],
+                "ref_table": "candidates",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            },
+            "fk_votes_election": {
+                "cols": [
+                    "election_id"
+                ],
+                "ref_table": "elections",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_votes_position": {
+                "cols": [
+                    "position_id"
+                ],
+                "ref_table": "election_positions",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    },
+    "voting_tokens": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_token_member": {
+                "unique": false,
+                "cols": [
+                    "member_id"
+                ]
+            },
+            "uq_token_election_member": {
+                "unique": true,
+                "cols": [
+                    "election_id",
+                    "member_id"
+                ]
+            },
+            "uq_token_hash": {
+                "unique": true,
+                "cols": [
+                    "token_hash"
+                ]
+            },
+            "uq_voting_tokens_receipt": {
+                "unique": true,
+                "cols": [
+                    "receipt_code"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_token_election": {
+                "cols": [
+                    "election_id"
+                ],
+                "ref_table": "elections",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            },
+            "fk_token_member": {
+                "cols": [
+                    "member_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
+    }
+}

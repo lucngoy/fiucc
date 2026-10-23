@@ -24,8 +24,19 @@ final class VoteTokenNotifier
         string $toName,
         array $election,
         string $groupedCode,
-        string $expiresAt
+        string $expiresAt,
+        ?string $whatsapp = null
     ): bool {
+        // Copie WhatsApp du code (modèle "Utility" {{1}}, voir
+        // config/whatsapp.php) : best-effort, le résultat renvoyé reste
+        // celui de l'email — c'est lui que VotingToken::markSent() enregistre.
+        WhatsApp::sendTemplate(
+            $whatsapp,
+            (string) Config::get('whatsapp.vote_template_id', ''),
+            [$groupedCode],
+            [$groupedCode, str_replace('-', '', $groupedCode)]
+        );
+
         $link = rtrim((string) Config::get('app.url', ''), '/') . '/elections/' . (int) $election['id'] . '/authenticate';
 
         $body = View::partial('emails.vote_token', [

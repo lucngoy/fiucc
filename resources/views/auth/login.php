@@ -92,9 +92,11 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
             </div>
 
             <div class="mb-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center shadow-sm overflow-hidden">
-                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
-                </div>
+                <a href="/">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center shadow-sm overflow-hidden">
+                        <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
+                    </div>
+                </a>
                 <h1 class="font-headline-lg text-headline-lg text-[#111827]">
                     <?= e(t('auth.sign_in')) ?>
                 </h1>

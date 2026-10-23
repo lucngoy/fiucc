@@ -49,6 +49,37 @@ $inputClasses = static function (?string $errorMessage): string {
                 class="<?= e($inputClasses($error('description'))) ?> !h-auto py-2"><?= e($field('description')) ?></textarea>
         </div>
 
+        <!-- Dépôt des candidatures par les membres (migration 024). -->
+        <div class="flex flex-col gap-4 rounded-control border border-border p-4">
+            <?= component('checkbox_field', [
+                'name' => 'candidacy_fee_required', 'label' => t('admin.elections.field.candidacy_fee_required'),
+                'description' => t('admin.elections.field.candidacy_fee_required_help'),
+                'checked' => $field('candidacy_fee_required') === '1',
+            ]) ?>
+            <?= component('form_field', [
+                'name' => 'candidacy_fee_details', 'label' => t('admin.elections.field.candidacy_fee_details'),
+                'value' => $field('candidacy_fee_details'), 'error' => $error('candidacy_fee_details'),
+                'placeholder' => t('admin.elections.field.candidacy_fee_details_placeholder'),
+            ]) ?>
+            <?= component('select_field', [
+                'name' => 'rules_document_id', 'label' => t('admin.elections.field.rules_document'),
+                'options' => ['' => t('admin.elections.field.rules_document_none')] + ($documents ?? []),
+                'value' => $field('rules_document_id'), 'error' => $error('rules_document_id'),
+                'help' => t('admin.elections.field.rules_document_help'),
+            ]) ?>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <?= component('form_field', [
+                'name' => 'candidacy_deadline', 'label' => t('admin.elections.field.candidacy_deadline'), 'type' => 'datetime-local', 'required' => true,
+                'value' => $field('candidacy_deadline'), 'error' => $error('candidacy_deadline'), 'help' => t('admin.elections.field.candidacy_deadline_help'),
+            ]) ?>
+            <?= component('form_field', [
+                'name' => 'candidate_list_at', 'label' => t('admin.elections.field.candidate_list_at'), 'type' => 'datetime-local', 'required' => true,
+                'value' => $field('candidate_list_at'), 'error' => $error('candidate_list_at'), 'help' => t('admin.elections.field.candidate_list_at_help'),
+            ]) ?>
+        </div>
+
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <?= component('form_field', [
                 'name' => 'start_at', 'label' => t('admin.elections.field.start_at'), 'type' => 'datetime-local', 'required' => true,
@@ -58,6 +89,11 @@ $inputClasses = static function (?string $errorMessage): string {
             <?= component('form_field', [
                 'name' => 'end_at', 'label' => t('admin.elections.field.end_at'), 'type' => 'datetime-local', 'required' => true,
                 'value' => $field('end_at'), 'error' => $error('end_at'), 'help' => t('admin.elections.field.end_at_help'),
+            ]) ?>
+
+            <?= component('form_field', [
+                'name' => 'handover_date', 'label' => t('admin.elections.field.handover_date'), 'type' => 'date', 'required' => true,
+                'value' => $field('handover_date'), 'error' => $error('handover_date'), 'help' => t('admin.elections.field.handover_date_help'),
             ]) ?>
         </div>
 

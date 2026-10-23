@@ -39,7 +39,7 @@ final class DashboardController extends Controller
                 'pending_members'    => Member::countByStatus('pending'),
                 'upcoming_events'    => Event::countByWhen('upcoming'),
                 'published_news'     => News::countPublished(),
-                'active_elections'   => Election::countOpen(),
+                'active_elections'   => Election::countInProgress(),
                 'votes'              => Vote::countAll(),
             ],
         ], 'layouts.admin');

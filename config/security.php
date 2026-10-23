@@ -14,6 +14,10 @@ return [
     'otp_max_resends_per_hour'    => (int) Env::get('OTP_MAX_RESENDS_PER_HOUR', 5),
     // Formulaire /contact (§39, "rate limiting") : au plus N messages par
     // IP sur la fenêtre glissante (contact_messages, migration 021).
+    // Dossier de candidature (migration 024) : taille maximale par pièce,
+    // et dimension maximale des photos ré-encodées.
+    'candidacy_file_max_size_mb'   => (int) Env::get('CANDIDACY_FILE_MAX_SIZE_MB', 8),
+    'candidacy_photo_max_dimension' => (int) Env::get('CANDIDACY_PHOTO_MAX_DIMENSION', 2000),
     'contact_max_messages'       => (int) Env::get('CONTACT_MAX_MESSAGES', 3),
     'contact_window_minutes'     => (int) Env::get('CONTACT_WINDOW_MINUTES', 15),
     'vote_token_ttl_hours' => (int) Env::get('VOTE_TOKEN_TTL_HOURS', 72),

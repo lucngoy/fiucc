@@ -13,6 +13,7 @@ $elections ??= [];
 $statusBadge = static function (string $status): string {
     $variants = [
         'candidacies' => 'bg-gold/20 text-ink',
+        'candidacies_closed' => 'bg-gold/20 text-ink',
         'open'        => 'bg-success/[4%] text-success',
         'closed'      => 'bg-muted/[1%] text-muted',
         'published'   => 'bg-primary/10 text-primary',

@@ -11,6 +11,15 @@ declare(strict_types=1);
 
 $mandate = '2025-2026';
 
+// Données réelles en place (gouvernement fondateur 2025-2026 saisi le
+// 2026-10-10) : ce gouvernement fictif ne doit JAMAIS s'y mêler — même
+// libellé de mandat, il ajouterait ses 6 membres inventés au vrai mandat.
+// Il ne sert plus qu'à une base vierge (tests, nouvelle installation).
+if ((int) $pdo->query('SELECT COUNT(*) FROM governments')->fetchColumn() > 0) {
+    echo "  006_demo_government : gouvernement déjà présent, rien à faire.\n";
+    return;
+}
+
 $govStmt = $pdo->prepare(
     'INSERT INTO governments (mandate, start_date, end_date, is_current)
      VALUES (:mandate, :start_date, :end_date, 1)

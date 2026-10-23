@@ -9,11 +9,14 @@ declare(strict_types=1);
  *
  * Usage : php database/migrate.php
  *         php database/migrate.php --env=testing   (cible .env.testing — FIUCC-79)
+ *
+ * Sans accès en ligne de commande (InfinityFree) : même logique depuis le
+ * back office, /admin/migrations (App\Services\Migrator).
  */
 
 use App\Core\Config;
-use App\Core\Database;
 use App\Core\Env;
+use App\Services\Migrator;
 
 $root = dirname(__DIR__);
 
@@ -31,39 +34,13 @@ foreach ($argv as $arg) {
 Env::load($root . '/.env' . ($envSuffix !== null ? '.' . $envSuffix : ''));
 Config::load($root . '/config');
 
-$pdo = Database::connection();
-
-$pdo->exec(
-    'CREATE TABLE IF NOT EXISTS migrations (
-        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        migration VARCHAR(191) NOT NULL,
-        applied_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (id),
-        UNIQUE KEY uq_migrations_name (migration)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci'
-);
-
-$applied = $pdo->query('SELECT migration FROM migrations')->fetchAll(PDO::FETCH_COLUMN);
-
-$files = glob(__DIR__ . '/migrations/*.sql');
-sort($files);
-
-$ranAny = false;
-
-foreach ($files as $file) {
-    $name = basename($file);
-
-    if (in_array($name, $applied, true)) {
-        continue;
-    }
-
+$result = Migrator::applyPending(static function (string $name): void {
     echo "Applique {$name}...\n";
-    $pdo->exec((string) file_get_contents($file));
+});
 
-    $stmt = $pdo->prepare('INSERT INTO migrations (migration) VALUES (:name)');
-    $stmt->execute(['name' => $name]);
-
-    $ranAny = true;
+if ($result['failed'] !== null) {
+    fwrite(STDERR, "Échec de {$result['failed']} : {$result['error']}\n");
+    exit(1);
 }
 
-echo $ranAny ? "Migrations à jour.\n" : "Rien à appliquer, déjà à jour.\n";
+echo $result['applied'] !== [] ? "Migrations à jour.\n" : "Rien à appliquer, déjà à jour.\n";

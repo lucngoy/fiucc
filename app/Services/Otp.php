@@ -13,6 +13,11 @@ use App\Models\EmailVerification;
  * security.otp_ttl_minutes, invalidé après security.otp_max_attempts essais
  * incorrects. Renvoi limité par un délai (otp_resend_cooldown_seconds) et un
  * plafond horaire (otp_max_resends_per_hour).
+ *
+ * Email uniquement, jamais WhatsApp (décision 2026-10-21) : ce code prouve
+ * que la personne possède l'adresse @final.edu.tr saisie. Le numéro
+ * WhatsApp est déclaratif et jamais vérifié — y envoyer le code
+ * permettrait de valider l'adresse universitaire de quelqu'un d'autre.
  */
 final class Otp
 {

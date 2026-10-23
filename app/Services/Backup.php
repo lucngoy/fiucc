@@ -52,6 +52,10 @@ final class Backup
         $zip->addFromString('database.sql', self::dumpDatabase());
         self::addDirectory($zip, self::uploadsBasePath(), 'uploads');
         self::addDirectory($zip, self::documentsBasePath(), 'documents');
+        // Dossiers de candidature (migration 024) : archives institutionnelles
+        // conservées sans limite (règlement électoral, art. 34) — inclus,
+        // contrairement à storage/passports/, exclu volontairement.
+        self::addDirectory($zip, self::candidaciesBasePath(), 'candidacies');
 
         $zip->close();
 
@@ -210,6 +214,11 @@ final class Backup
     private static function uploadsBasePath(): string
     {
         return self::resolveBasePath('upload_images_base_path', BASE_PATH . '/public/uploads');
+    }
+
+    private static function candidaciesBasePath(): string
+    {
+        return Upload::storagePath('candidacies');
     }
 
     private static function documentsBasePath(): string

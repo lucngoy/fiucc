@@ -97,6 +97,12 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                     <?= icon('users', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.members')) ?>
                 </a>
+                <a href="/admin/government"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'government' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'government' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('people-group', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.government')) ?>
+                </a>
                 <a href="/admin/events"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'events' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'events' ? 'aria-current="page"' : '' ?>>
@@ -145,6 +151,25 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                     <?= icon('database', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.backups')) ?>
                 </a>
+                <?php
+                // Mises à jour de la base en attente : compteur visible dès
+                // un déploiement, sans aller voir la page. Une erreur de
+                // lecture ne doit jamais casser la navigation admin.
+                try {
+                    $pendingMigrations = count(\App\Services\Migrator::pending());
+                } catch (\Throwable) {
+                    $pendingMigrations = 0;
+                }
+                ?>
+                <a href="/admin/migrations"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'migrations' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'migrations' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('rotate', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.migrations')) ?>
+                    <?php if ($pendingMigrations > 0): ?>
+                        <span class="ml-auto inline-flex items-center justify-center min-w-[1.25rem] h-5 px-1.5 rounded-full bg-gold text-ink text-label-caps font-label-caps"><?= e((string) $pendingMigrations) ?></span>
+                    <?php endif; ?>
+                </a>
             </nav>
         </div>
         <div class="hidden md:flex items-center gap-3 p-4 bg-primary-dark/40 border-t border-white/10 shrink-0">
@@ -166,7 +191,7 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
     </aside>
 
     <div class="flex-1 flex flex-col min-w-0 md:ml-64">
-        <header class="h-14 md:h-16 bg-white border-b border-border flex items-center justify-between px-4 md:px-6 shrink-0">
+        <header class="sticky top-0 z-50 h-14 md:h-16 bg-white border-b border-border flex items-center justify-between px-4 md:px-6 shrink-0">
             <h1 class="font-headline-sm text-headline-sm text-ink"><?= e($title ?? '') ?></h1>
             <div class="flex items-center gap-2 shrink-0">
                 <div class="flex items-center gap-1 mr-1 text-label-md font-label-md">
@@ -234,5 +259,6 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
 </div>
 <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
 <script src="/assets/js/admin-nav.js" defer></script>
+<script src="/assets/js/encoded-uploads.js" defer></script>
 </body>
 </html>

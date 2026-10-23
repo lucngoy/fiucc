@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Core\Config;
+use App\Core\EncodedUploads;
 use finfo;
 use GdImage;
 use RuntimeException;
@@ -42,6 +43,16 @@ final class Upload
      * par Apache. Chemin relatif à BASE_PATH si la valeur ne commence pas
      * par "/".
      */
+    /**
+     * Chemin absolu d'une image publique (relatif à public/uploads, ou à
+     * son équivalent de test) — pour App\Services\SecondRound, qui copie
+     * la photo d'un candidat sans passer par un upload.
+     */
+    public static function publicPath(string $relativePath): string
+    {
+        return self::imagesBasePath() . '/' . ltrim($relativePath, '/');
+    }
+
     private static function imagesBasePath(): string
     {
         return self::resolveBasePath('upload_images_base_path', BASE_PATH . '/public/uploads');
@@ -272,6 +283,48 @@ final class Upload
     }
 
     /**
+     * Copie publique, redimensionnée, d'une image déjà stockée en privé par
+     * storePrivateImage() — ex. la photo professionnelle d'un candidat
+     * (lot 3), conservée en privé dans son dossier ET affichée sur la page
+     * publique des candidats. Re-décodée et ré-encodée par GD, nom aléatoire.
+     *
+     * @param string $privatePath Chemin relatif à storage/
+     * @return string Chemin relatif à public/uploads/
+     * @throws RuntimeException
+     */
+    public static function publishPrivateImage(string $privatePath, string $subdirectory, int $maxDimension): string
+    {
+        $source = self::storagePath($privatePath);
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime = is_file($source) ? $finfo->file($source) : false;
+
+        if ($mime === false || !isset(self::ALLOWED_IMAGE_TYPES[$mime])) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        $relativeDirectory = trim($subdirectory, '/');
+        $destinationDir = self::imagesBasePath() . '/' . $relativeDirectory;
+
+        if (!is_dir($destinationDir)) {
+            throw new RuntimeException(t('upload.processing_failed'));
+        }
+
+        $filename = bin2hex(random_bytes(16)) . '.' . self::ALLOWED_IMAGE_TYPES[$mime];
+        $image = self::readImage($source, $mime);
+        $resized = self::resizeToFit($image, $maxDimension);
+
+        self::writeImage($resized, $mime, $destinationDir . '/' . $filename);
+
+        imagedestroy($image);
+
+        if ($resized !== $image) {
+            imagedestroy($resized);
+        }
+
+        return $relativeDirectory . '/' . $filename;
+    }
+
+    /**
      * Chemin absolu d'un fichier stocké sous storage/ (storeDocument(),
      * storePrivateImage()), pour le streamer depuis un contrôleur.
      */
@@ -325,7 +378,7 @@ final class Upload
 
         $destination = $destinationDir . '/' . $filename;
 
-        if (!move_uploaded_file($tmpPath, $destination)) {
+        if (!EncodedUploads::moveUploaded($tmpPath, $destination)) {
             throw new RuntimeException(t('upload.processing_failed'));
         }
 
@@ -413,8 +466,9 @@ final class Upload
         }
 
         // Défense en profondeur : ne jamais traiter un fichier qui n'est pas
-        // réellement passé par le mécanisme d'upload HTTP de PHP.
-        if (!is_uploaded_file((string) $file['tmp_name'])) {
+        // réellement passé par le mécanisme d'upload HTTP de PHP — ou
+        // reconstitué pendant cette requête (App\Core\EncodedUploads).
+        if (!EncodedUploads::isUploaded((string) $file['tmp_name'])) {
             throw new RuntimeException(t('upload.failed'));
         }
 

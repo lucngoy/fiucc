@@ -23,7 +23,8 @@ if ($isLoggedIn && $role === 'admin') {
     $accountDisplayName = trim((string) ($member['full_name'] ?? '')) !== '' ? (string) $member['full_name'] : 'User';
 }
 $accountLabel = $accountDisplayName;
-$profileMenuLabel = t('profile.title');
+// Admin : le lien mène au back office (/admin), pas à un profil membre.
+$profileMenuLabel = $role === 'admin' ? t('admin.nav.dashboard') : t('profile.title');
 
 $navLinks = [
     ['label' => t('nav.home'), 'href' => '/'],

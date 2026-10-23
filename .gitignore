@@ -25,6 +25,7 @@
 /public/uploads/documents/*
 /public/uploads/events/*
 /public/uploads/gallery/*
+/public/uploads/government/*
 /public/uploads/members/*
 /public/uploads/news/*
 /public/uploads/partners/*
@@ -43,6 +44,9 @@
 # même principe que storage/documents — streamés uniquement par
 # Admin\MemberController::passportScan(), jamais une URL statique.
 /storage/passports/*
+# storage/candidacies (migration 024) : dossiers de candidature (photos
+# d'identité, CV, preuve de paiement) — streamés par l'admin uniquement.
+/storage/candidacies/*
 # Scratch d'upload et de logs des tests (FIUCC-79) — jamais public/uploads/,
 # storage/documents ou storage/logs réels, voir .env.testing.example.
 /storage/testing_uploads/*

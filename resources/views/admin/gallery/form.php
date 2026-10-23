@@ -156,34 +156,59 @@ $noticeMap = [
             <?php else: ?>
                 <form method="POST" action="/admin/gallery/<?= e((string) $albumId) ?>/photos/manage" class="flex flex-col gap-4">
                     <?= csrf_field() ?>
-                    <div class="flex flex-col gap-3">
-                        <?php foreach ($photos as $photo): ?>
+                    <p class="text-body-sm text-muted"><?= e(t('admin.gallery.manage.drag_help')) ?></p>
+                    <!-- Disposition masonry (colonnes CSS) : chaque photo garde ses
+                         proportions, une carte courte ne s'étire pas sur la hauteur de
+                         sa voisine. L'ordre se lit donc colonne par colonne (de haut en
+                         bas, puis colonne suivante) — le numéro sur chaque vignette fait
+                         foi.
+                         Ordre par glisser-déposer (public/assets/js/admin-gallery-sort.js) :
+                         le JS réécrit orders[id] = position à chaque déplacement, le
+                         contrôleur (managePhotos) reçoit le même champ qu'avant. Les
+                         flèches gardent un chemin clavier/mobile, où le drag HTML5
+                         n'est pas disponible. -->
+                    <ul data-gallery-sort class="columns-2 sm:columns-3 lg:columns-4 gap-4"
+                        data-label-move-left="<?= e(t('admin.gallery.manage.move_left')) ?>"
+                        data-label-move-right="<?= e(t('admin.gallery.manage.move_right')) ?>">
+                        <?php foreach ($photos as $position => $photo): ?>
                             <?php $photoId = (int) $photo['id']; ?>
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-3 p-3 rounded-control border border-border">
-                                <img src="<?= e('/uploads/' . ($photo['thumbnail_path'] ?: $photo['image_path'])) ?>" alt=""
-                                    class="h-16 w-24 rounded-control object-cover border border-border shrink-0">
-                                <div class="flex-1 min-w-0">
+                            <li data-photo draggable="true"
+                                class="group relative mb-4 flex flex-col break-inside-avoid rounded-card border border-border bg-white overflow-hidden cursor-grab active:cursor-grabbing transition-shadow hover:shadow-card">
+                                <input type="hidden" data-order name="orders[<?= e((string) $photoId) ?>]" value="<?= e((string) $position) ?>">
+                                <div class="relative bg-surface">
+                                    <img src="<?= e('/uploads/' . ($photo['thumbnail_path'] ?: $photo['image_path'])) ?>" alt=""
+                                        draggable="false" class="block w-full h-auto select-none">
+                                    <span data-position class="absolute top-2 left-2 min-w-[24px] h-6 px-1.5 rounded-full bg-ink/70 text-white text-label-md font-label-md leading-6 text-center"><?= e((string) ($position + 1)) ?></span>
+                                    <span class="absolute top-2 right-2 h-7 w-7 rounded-full bg-white/90 text-muted flex items-center justify-center" aria-hidden="true">
+                                        <?= icon('grip-vertical', 'text-sm') ?>
+                                    </span>
+                                </div>
+                                <div class="flex flex-col gap-2 p-2">
                                     <label for="caption-<?= e((string) $photoId) ?>" class="sr-only"><?= e(t('admin.gallery.manage.caption')) ?></label>
                                     <input type="text" id="caption-<?= e((string) $photoId) ?>" name="captions[<?= e((string) $photoId) ?>]"
                                         value="<?= e((string) ($photo['caption'] ?? '')) ?>" placeholder="<?= e(t('admin.gallery.manage.caption')) ?>"
-                                        class="h-10 w-full rounded-control border border-border px-3 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50">
-                                </div>
-                                <div class="flex items-center gap-3 shrink-0">
-                                    <div class="flex flex-col gap-1">
-                                        <label for="order-<?= e((string) $photoId) ?>" class="text-label-caps font-label-caps text-muted uppercase"><?= e(t('admin.gallery.manage.order')) ?></label>
-                                        <input type="number" id="order-<?= e((string) $photoId) ?>" name="orders[<?= e((string) $photoId) ?>]"
-                                            value="<?= e((string) $photo['sort_order']) ?>" min="0"
-                                            class="h-10 w-20 rounded-control border border-border px-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50">
+                                        class="h-9 w-full rounded-control border border-border px-2 text-body-sm text-ink focus:outline-none focus:ring-2 focus:ring-primary-light/50">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <div class="flex items-center gap-1">
+                                            <button type="button" data-move="-1" title="<?= e(t('admin.gallery.manage.move_left')) ?>" aria-label="<?= e(t('admin.gallery.manage.move_left')) ?>"
+                                                class="h-8 w-8 rounded-control border border-border text-muted flex items-center justify-center hover:bg-surface hover:text-ink transition-colors">
+                                                <?= icon('arrow-left', 'text-xs') ?>
+                                            </button>
+                                            <button type="button" data-move="1" title="<?= e(t('admin.gallery.manage.move_right')) ?>" aria-label="<?= e(t('admin.gallery.manage.move_right')) ?>"
+                                                class="h-8 w-8 rounded-control border border-border text-muted flex items-center justify-center hover:bg-surface hover:text-ink transition-colors">
+                                                <?= icon('arrow-right', 'text-xs') ?>
+                                            </button>
+                                        </div>
+                                        <label class="flex items-center gap-1.5 text-label-caps font-label-caps text-danger uppercase cursor-pointer">
+                                            <input type="checkbox" name="delete[]" value="<?= e((string) $photoId) ?>"
+                                                class="h-4 w-4 rounded border-border text-danger focus:outline-none focus:ring-2 focus:ring-danger/30">
+                                            <?= e(t('admin.gallery.manage.delete')) ?>
+                                        </label>
                                     </div>
-                                    <label class="flex flex-col items-center gap-1 text-label-caps font-label-caps text-danger uppercase cursor-pointer">
-                                        <?= e(t('admin.gallery.manage.delete')) ?>
-                                        <input type="checkbox" name="delete[]" value="<?= e((string) $photoId) ?>"
-                                            class="h-4 w-4 rounded border-border text-danger focus:outline-none focus:ring-2 focus:ring-danger/30">
-                                    </label>
                                 </div>
-                            </div>
+                            </li>
                         <?php endforeach; ?>
-                    </div>
+                    </ul>
                     <div class="flex justify-end">
                         <button type="submit" class="h-10 px-5 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors">
                             <?= e(t('admin.gallery.manage.submit')) ?>
@@ -194,3 +219,4 @@ $noticeMap = [
         </div>
     <?php endif; ?>
 </div>
+<script src="/assets/js/admin-gallery-sort.js" defer></script>

@@ -68,6 +68,11 @@ final class ElectionController extends Controller
             'description' => meta_description($election['description']),
             'election'    => $election,
             'window'      => Election::votingWindowState($election),
+            // Commission électorale (art. 5-7 du règlement) : publique, nom
+            // et fonction seulement — jamais le numéro de membre.
+            'commission'  => \App\Models\ElectionCommission::forElection($electionId),
+            // Lot 5 : lien entre un 1er tour et son second tour (art. 24).
+            'rounds'      => $this->rounds($election),
             'eligibility' => $context['state'],
             // Reçu déjà émis (FIUCC-67) — sa seule preuve d'avoir voté si
             // elle a perdu l'email/l'écran de confirmation. Jamais rien
@@ -100,6 +105,7 @@ final class ElectionController extends Controller
             'election'  => $election,
             'published' => $published,
             'groups'    => $groups,
+            'rounds'    => $this->rounds($election),
         ]);
     }
 
@@ -112,6 +118,21 @@ final class ElectionController extends Controller
         }
 
         $electionId = (int) $election['id'];
+
+        // Liste pas encore publiée (migration 027, art. 8) : aucune donnée
+        // de candidat n'est lue, pas seulement cachée — même en tapant
+        // l'adresse de la page.
+        if (!Election::candidateListPublished($election)) {
+            $this->view('elections.candidates', [
+                'title'       => t('elections.candidates.title', ['election' => $election['title']]),
+                'election'    => $election,
+                'groups'      => [],
+                'listPending' => true,
+                'studyLevels' => [],
+            ]);
+            return;
+        }
+
         $positions = Election::positions($electionId);
 
         $groups = [];
@@ -208,5 +229,19 @@ final class ElectionController extends Controller
         }
 
         return ['state' => 'eligible', 'member' => $member, 'receipt' => null];
+    }
+
+    /**
+     * Lot 5 : le 1er tour dont cette élection est le second tour, et/ou son
+     * second tour. Jamais un brouillon — un second tour naît en
+     * 'candidacies_closed' et n'est donc jamais un brouillon.
+     *
+     * @return array{first: ?array, second: ?array}
+     */
+    private function rounds(array $election): array
+    {
+        $first = $election['first_round_id'] !== null ? Election::find((int) $election['first_round_id']) : null;
+
+        return ['first' => $first, 'second' => \App\Services\SecondRound::of((int) $election['id'])];
     }
 }

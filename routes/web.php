@@ -81,6 +81,11 @@ return [
     ['GET',  '/elections',                     'ElectionController@index'],
     ['GET',  '/elections/{id}',                'ElectionController@show'],
     ['GET',  '/elections/{id}/candidates',     'ElectionController@candidates'],
+    // Dépôt de candidature par le membre (lot 3, règlement électoral art.
+    // 9-14) — membre validé ; le reste est revérifié en SQL (Candidate).
+    ['GET',  '/elections/{id}/candidacy',        'CandidacyController@show',        ['validated']],
+    ['POST', '/elections/{id}/candidacy',        'CandidacyController@submit',      ['validated']],
+    ['POST', '/elections/{id}/candidacy/cancel', 'CandidacyController@cancel',      ['validated']],
     ['GET',  '/elections/{id}/authenticate',   'VoteController@authenticate',     ['auth']],
     ['POST', '/elections/{id}/authenticate',   'VoteController@sendToken',        ['auth']],
     ['GET',  '/elections/{id}/vote',           'VoteController@ballot',           ['auth']], // [vote] voir ci-dessous

@@ -46,5 +46,6 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
     <main><?= $content ?></main>
     <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
     <script src="/assets/js/password-toggle.js" defer></script>
+    <script src="/assets/js/encoded-uploads.js" defer></script>
 </body>
 </html>

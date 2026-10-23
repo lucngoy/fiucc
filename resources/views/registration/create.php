@@ -167,21 +167,13 @@ $hasPendingScan ??= false;
                     <a href="/lang/fr" class="px-2 py-1 rounded text-label-md font-label-md transition-colors <?= e($frLocaleClasses) ?>">FR</a>
                 </div>
             </div>
-            
-            <div class="mb-8 text-center">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center shadow-sm overflow-hidden">
-                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
-                </div>
-                <h1 class="font-headline-lg text-headline-lg text-[#111827]">
-                    <?= e(t('auth.sign_up')) ?>
-                </h1>
-                <p class="mt-2 text-sm text-[#64748b]"><?= e(t('auth.subtitle')) ?></p>
-            </div>
 
             <div class="mb-6 text-center lg:hidden">
-                <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#e0f2fe] shadow-sm ring-1 ring-[#dbe3ee] overflow-hidden">
-                    <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
-                </div>
+                <a href="/">
+                    <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl overflow-hidden">
+                        <img src="/assets/images/fiucc-seal.png" alt="FIUCC" class="h-full w-full object-cover" />
+                    </div>
+                </a>
                 <h1 class="font-headline-lg text-headline-lg text-ink"><?= e(t('census.title')) ?></h1>
                 <p class="mt-2 text-sm text-[#64748b]"><?= e(t('census.subtitle')) ?></p>
                 <!-- Onboarding (FIUCC-89) : en lg+, la carte d'aide de la colonne

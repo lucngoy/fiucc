@@ -23,6 +23,7 @@ $statusBadge = static function (string $status): string {
     $variants = [
         'draft'       => 'bg-muted/[1%] text-muted',
         'candidacies' => 'bg-gold/20 text-ink',
+        'candidacies_closed' => 'bg-gold/20 text-ink',
         'open'        => 'bg-success/[4%] text-success',
         'closed'      => 'bg-primary/10 text-primary',
         'published'   => 'bg-primary/10 text-primary',
@@ -68,7 +69,7 @@ $paginationBase = '/admin/elections?' . ($activeFilterQuery !== []
             <label for="election-status" class="block text-label-md font-label-md text-muted mb-1"><?= e(t('admin.elections.filter.status')) ?></label>
             <select id="election-status" name="status" class="h-10 rounded-control border border-border px-3 text-body-sm text-ink bg-white">
                 <option value=""><?= e(t('admin.elections.filter.status_all')) ?></option>
-                <?php foreach (['draft', 'candidacies', 'open', 'closed', 'published'] as $statusOption): ?>
+                <?php foreach (\App\Models\Election::STATUSES as $statusOption): ?>
                     <option value="<?= e($statusOption) ?>" <?= $filters['status'] === $statusOption ? 'selected' : '' ?>>
                         <?= e(t('admin.elections.status.' . $statusOption)) ?>
                     </option>

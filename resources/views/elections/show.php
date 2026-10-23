@@ -26,11 +26,13 @@
  * ne simule jamais un lien vers une fonctionnalité qui n'est pas construite.
  */
 $election ??= [];
+$rounds ??= ['first' => null, 'second' => null];
 $window ??= ['state' => 'closed', 'target' => null];
 $eligibility ??= 'not_signed_in';
 $receipt ??= null;
+$commission ??= [];
 
-$statusBadgeLabel = in_array($election['status'], ['candidacies', 'open', 'closed', 'published'], true)
+$statusBadgeLabel = in_array($election['status'], ['candidacies', 'candidacies_closed', 'open', 'closed', 'published'], true)
     ? t('elections.status.' . $election['status'])
     : '';
 
@@ -123,6 +125,42 @@ $eligibilityStyle = [
 <div class="w-full">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-12 md:py-16 flex flex-col gap-8">
 
+    <?php if ($rounds['first'] !== null): ?>
+        <p class="flex flex-wrap items-center gap-2 rounded-control bg-primary-light/20 p-4 text-body-md text-primary">
+            <?= icon('scale-balanced') ?>
+            <?= e(t('elections.rounds.is_second_round')) ?>
+            <a href="<?= e('/elections/' . (int) $rounds['first']['id']) ?>" class="font-label-lg text-label-lg underline"><?= e($rounds['first']['title']) ?></a>
+        </p>
+    <?php endif; ?>
+    <?php if ($rounds['second'] !== null): ?>
+        <p class="flex flex-wrap items-center gap-2 rounded-control bg-primary-light/20 p-4 text-body-md text-primary">
+            <?= icon('scale-balanced') ?>
+            <?= e(t('elections.rounds.has_second_round')) ?>
+            <a href="<?= e('/elections/' . (int) $rounds['second']['id']) ?>" class="font-label-lg text-label-lg underline"><?= e($rounds['second']['title']) ?></a>
+        </p>
+    <?php endif; ?>
+
+    <?php if ($election['status'] === 'candidacies' && !empty($election['candidacy_deadline'])): ?>
+        <!-- Phase de dépôt (migration 023) : date limite annoncée aux membres,
+             et accès au dépôt (lot 3, CandidacyController — ['validated']). -->
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3 rounded-control bg-primary-light/20 p-4">
+            <?php $acceptsCandidacies = \App\Models\Election::acceptsCandidacies($election); ?>
+            <!-- Date limite passée, dépôt pas encore clôturé par le bureau :
+                 ne plus annoncer un dépôt "ouvert" sans bouton pour y accéder. -->
+            <p class="flex-1 text-body-md text-primary"><?= e(t($acceptsCandidacies ? 'elections.candidacies.open_until' : 'elections.candidacies.deadline_passed', [
+                'date' => local_date($election['candidacy_deadline']),
+                'time' => date('H:i', strtotime((string) $election['candidacy_deadline'])),
+            ])) ?></p>
+            <?php if ($acceptsCandidacies): ?>
+                <?= component('button', ['label' => t('elections.candidacies.cta'), 'variant' => 'primary', 'href' => '/elections/' . (int) $election['id'] . '/candidacy']) ?>
+            <?php endif; ?>
+        </div>
+    <?php elseif ($election['status'] === 'candidacies_closed'): ?>
+        <?= component('alert', ['type' => 'info', 'message' => t('elections.candidacies.closed_notice', [
+            'date' => local_date($election['start_at']),
+        ])]) ?>
+    <?php endif; ?>
+
     <?php if (in_array($window['state'], $countdownStaticStates, true)): ?>
         <div class="bg-white rounded-card border border-border p-6 md:p-8 flex items-center gap-4">
             <span class="h-12 w-12 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -196,11 +234,22 @@ $eligibilityStyle = [
     </div>
 
     <div class="flex flex-wrap gap-3">
-        <a href="<?= e('/elections/' . $election['id'] . '/candidates') ?>"
-           class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
-            <?= e(t('elections.detail.view_candidates')) ?>
-            <?= icon('arrow-right', 'text-sm') ?>
-        </a>
+        <?php if (\App\Models\Election::candidateListPublished($election)): ?>
+            <a href="<?= e('/elections/' . $election['id'] . '/candidates') ?>"
+               class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control bg-primary text-white text-label-lg font-label-lg font-semibold hover:bg-primary-dark transition-colors">
+                <?= e(t('elections.detail.view_candidates')) ?>
+                <?= icon('arrow-right', 'text-sm') ?>
+            </a>
+        <?php else: ?>
+            <!-- Liste pas encore publiée (migration 027, art. 8). -->
+            <span class="inline-flex items-center gap-2 h-11 px-5 rounded-control bg-surface border border-border text-muted text-label-lg font-label-lg">
+                <?= icon('clock', 'text-sm') ?>
+                <?= e(t('elections.candidates.list_pending', [
+                    'date' => local_date((string) $election['candidate_list_at']),
+                    'time' => date('H:i', strtotime((string) $election['candidate_list_at'])),
+                ])) ?>
+            </span>
+        <?php endif; ?>
         <?php if (in_array($election['status'], ['closed', 'published'], true)): ?>
             <a href="<?= e('/elections/' . $election['id'] . '/results') ?>"
                class="inline-flex items-center justify-center gap-2 h-11 px-6 rounded-control border border-border text-ink text-label-lg font-label-lg font-semibold hover:bg-surface transition-colors">
@@ -210,5 +259,19 @@ $eligibilityStyle = [
         <?php endif; ?>
     </div>
 
+    <?php if ($commission !== []): ?>
+        <section class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-4">
+            <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('elections.commission.title')) ?></h2>
+            <p class="text-body-sm text-muted"><?= e(t('elections.commission.help')) ?></p>
+            <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <?php foreach ($commission as $commissioner): ?>
+                    <li class="rounded-control border border-border p-3">
+                        <p class="text-label-md font-label-md text-ink"><?= e($commissioner['display_name']) ?></p>
+                        <p class="text-body-sm text-muted"><?= e(t('admin.elections.commission.role.' . $commissioner['role'])) ?></p>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </section>
+    <?php endif; ?>
 </div>
 </div>

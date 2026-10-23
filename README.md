@@ -57,7 +57,7 @@ peine d'exposer `app/`, `config/`, `.env` et `storage/` directement au navigateu
 Permissions d'écriture nécessaires pour l'utilisateur du serveur web (souvent `www-data`
 ou `_www`) : `storage/logs/`, `storage/cache/`, `storage/backups/`, `storage/documents/`,
 et chaque sous-dossier de `public/uploads/` (`candidates/`, `documents/`, `events/`,
-`gallery/`, `members/`, `news/`, `partners/`). Ces sous-dossiers et le
+`gallery/`, `government/`, `members/`, `news/`, `partners/`). Ces sous-dossiers et le
 `public/uploads/.htaccess` qui interdit toute exécution PHP dedans (règle de sécurité non
 négociable, section 35 du cahier) sont versionnés — un clone frais les a déjà, il suffit
 de vérifier les permissions, pas de les recréer.
@@ -238,6 +238,15 @@ comportement du code, pas à une recommandation générique.
 - [ ] Permissions d'écriture confirmées pour l'utilisateur du serveur web sur
       `storage/logs/`, `storage/cache/`, `storage/backups/`, `storage/documents/`, et
       chaque sous-dossier de `public/uploads/`.
+- [ ] Un envoi de fichier testé en conditions réelles (photo d'un poste, pièce d'un
+      dossier de candidature). Certains hébergeurs (InfinityFree, constaté le
+      2026-10-21) bloquent tout envoi `multipart/form-data` par un 403 « openresty »
+      avant même PHP : les fichiers partent donc encodés en base64 dans un formulaire
+      classique (`public/assets/js/encoded-uploads.js`, reconstitués par
+      `App\Core\EncodedUploads` avant le routage, mêmes contrôles qu'un upload
+      ordinaire). Ce chargement suppose JavaScript ; sans lui, l'envoi part en multipart
+      comme avant. Le base64 pèse un tiers de plus que le fichier : `post_max_size` doit
+      couvrir un dossier de candidature complet.
 - [ ] Suppression des photos de passeport planifiée (cron quotidien, voir section
   Photos de passeport) et `storage/passports/` accessible en écriture par le serveur web.
 - [ ] Sauvegarde automatique planifiée (cron, voir section Sauvegardes) — et **au moins

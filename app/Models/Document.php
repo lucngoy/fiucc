@@ -115,6 +115,19 @@ final class Document extends Model
      * streamer le fichier (jamais par publicList()/adminList(), qui ne
      * renvoient pas file_path).
      */
+    /**
+     * Liste courte (id, titre) pour un sélecteur — ex. le règlement
+     * électoral lié à une élection (migration 024).
+     *
+     * @return array<int, string> id => titre
+     */
+    public static function options(): array
+    {
+        $rows = static::db()->query('SELECT id, title FROM documents ORDER BY created_at DESC, id DESC')->fetchAll();
+
+        return array_column($rows, 'title', 'id');
+    }
+
     public static function find(int $id): ?array
     {
         $stmt = static::db()->prepare('SELECT * FROM documents WHERE id = :id LIMIT 1');

@@ -60,7 +60,7 @@ $electionId = (int) $election['id'];
     </div>
 
     <div class="flex flex-col gap-6">
-        <?= component('election_results_body', ['groups' => $groups, 'cardBg' => 'bg-white']) ?>
+        <?= component('election_results_body', ['groups' => $groups, 'cardBg' => 'bg-white', 'isSecondRound' => $election['first_round_id'] !== null, 'showDecisionReason' => true]) ?>
     </div>
 
     <footer class="pt-6 border-t border-border text-body-sm text-muted">

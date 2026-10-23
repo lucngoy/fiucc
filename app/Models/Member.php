@@ -103,6 +103,19 @@ final class Member extends Model
         return $row === false ? null : $row;
     }
 
+    /**
+     * Numéro WhatsApp du membre, pour la copie WhatsApp de son code de
+     * vote (App\Services\WhatsApp) — jamais affiché à un autre membre.
+     */
+    public static function whatsappForMember(int $memberId): ?string
+    {
+        $stmt = static::db()->prepare('SELECT whatsapp FROM members WHERE id = :id LIMIT 1');
+        $stmt->execute(['id' => $memberId]);
+        $value = $stmt->fetchColumn();
+
+        return $value === false || $value === null ? null : (string) $value;
+    }
+
     public static function markEmailVerified(int $userId): void
     {
         $stmt = static::db()->prepare('UPDATE members SET email_verified_at = NOW() WHERE user_id = :user_id');
@@ -695,9 +708,12 @@ final class Member extends Model
      * un filtre après coup côté PHP ou vue (même discipline que CASE WHEN
      * dans Candidate::publicListForElection(), FIUCC-63, pour la même
      * raison : qu'aucun futur appelant ne puisse fuiter en oubliant un
-     * contrôle). instagram/whatsapp ne sont pas rédigés séparément : une
-     * fois is_public = 1, ils font partie du "profil public simplifié" que
-     * le membre a accepté de montrer, sans bascule propre dans le schéma.
+     * contrôle). instagram fait partie du "profil public simplifié" que le
+     * membre a accepté de montrer une fois is_public = 1. whatsapp, lui,
+     * est un numéro de téléphone : il n'est renvoyé que si show_phone = 1
+     * ("Afficher mon numéro de téléphone aux autres membres inscrits"),
+     * sinon NULL dès le SELECT — un membre qui décoche la case ne doit
+     * retrouver son numéro nulle part dans l'annuaire.
      *
      * student/alumni/honorary tous inclus : le cahier dit que les alumni
      * "conservent... l'accès à l'annuaire" sans les exclure d'y apparaître,
@@ -748,7 +764,8 @@ final class Member extends Model
         $offset = ($page - 1) * $perPage;
         $stmt = static::db()->prepare(
             "SELECT m.id, m.full_name, m.faculty, m.year, m.arrival_year, m.city_of_origin, m.photo,
-                    m.instagram, m.whatsapp
+                    m.instagram,
+                    CASE WHEN m.show_phone = 1 THEN m.whatsapp ELSE NULL END AS whatsapp
              FROM members m
              {$where}
              ORDER BY m.full_name ASC

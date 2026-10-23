@@ -106,7 +106,8 @@ final class VotingTokenController extends Controller
                 (string) $member['full_name'],
                 ['id' => $electionId, 'title' => $election['title']],
                 $code,
-                $expiresAt
+                $expiresAt,
+                Member::whatsappForMember($memberId)
             );
 
             VotingToken::markSent($electionId, $memberId, $sent);
@@ -184,7 +185,8 @@ final class VotingTokenController extends Controller
             $fullName,
             ['id' => $electionId, 'title' => $election['title']],
             $code,
-            $expiresAt
+            $expiresAt,
+            Member::whatsappForMember($memberId)
         );
 
         VotingToken::markSent($electionId, $memberId, $sent);

@@ -60,6 +60,8 @@ final class ProfileController extends Controller
             'studyLevels' => Config::get('registration.study_levels', []),
             'notice'      => $notice,
             'isPublic'    => $privacySettings !== null && (int) $privacySettings['is_public'] === 1,
+            // "Mes candidatures" (lot 3) : statut de chaque dépôt, rien du vote.
+            'candidacies' => \App\Models\Candidate::allForMember((int) $member['id']),
         ]);
     }
 

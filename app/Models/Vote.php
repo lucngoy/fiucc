@@ -258,12 +258,13 @@ final class Vote extends Model
     public static function resultsForElection(int $electionId): array
     {
         $stmt = static::db()->prepare(
-            "SELECT v.position_id, v.candidate_id, m.full_name AS candidate_name, COUNT(*) AS vote_count
+            "SELECT v.position_id, v.candidate_id, c.member_id, c.status AS candidate_status,
+                    m.full_name AS candidate_name, COUNT(*) AS vote_count
              FROM votes v
              LEFT JOIN candidates c ON c.id = v.candidate_id
              LEFT JOIN members m ON m.id = c.member_id
              WHERE v.election_id = :election_id
-             GROUP BY v.position_id, v.candidate_id, m.full_name
+             GROUP BY v.position_id, v.candidate_id, c.member_id, c.status, m.full_name
              ORDER BY v.position_id ASC, vote_count DESC"
         );
         $stmt->execute(['election_id' => $electionId]);
@@ -291,14 +292,19 @@ final class Vote extends Model
      * fois, ce n'était plus une garde de sécurité à répéter par écriture
      * (comme ailleurs dans cette épopée), juste de l'assemblage de lecture.
      *
-     * @return array<int, array{position: array, candidates: array, total: int}>
+     * total = tous les bulletins du poste (blancs compris) ; expressed =
+     * suffrages exprimés, blancs exclus (décision du bureau 2026-10-10 :
+     * le blanc figure au procès-verbal mais ne compte ni pour le
+     * vainqueur ni pour l'égalité) ; outcome = positionOutcome().
+     *
+     * @return array<int, array{position: array, candidates: array, total: int, expressed: int, blank: int, outcome: array, decision: ?array}>
      */
     public static function groupResultsByPosition(int $electionId): array
     {
         $groups = [];
 
         foreach (Election::positions($electionId) as $position) {
-            $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0];
+            $groups[(int) $position['id']] = ['position' => $position, 'candidates' => [], 'total' => 0, 'expressed' => 0, 'blank' => 0];
         }
 
         foreach (self::resultsForElection($electionId) as $row) {
@@ -310,8 +316,67 @@ final class Vote extends Model
 
             $groups[$positionId]['candidates'][] = $row;
             $groups[$positionId]['total'] += (int) $row['vote_count'];
+
+            if ($row['candidate_id'] === null) {
+                $groups[$positionId]['blank'] += (int) $row['vote_count'];
+            } else {
+                $groups[$positionId]['expressed'] += (int) $row['vote_count'];
+            }
+        }
+
+        // Décision de la Commission (lot 5) : à côté de l'issue du vote,
+        // jamais à sa place — positionOutcome() reste le seul calcul.
+        $decisions = PositionDecision::forElection($electionId);
+
+        foreach ($groups as $positionId => $group) {
+            $groups[$positionId]['outcome'] = self::positionOutcome($group['candidates']);
+            $groups[$positionId]['decision'] = $decisions[$positionId] ?? null;
         }
 
         return $groups;
+    }
+
+    /**
+     * Issue d'un poste à partir de ses lignes de résultats — la SEULE règle
+     * de désignation du vainqueur, utilisée par l'affichage des résultats
+     * ET par l'installation du gouvernement (Government::
+     * syncFromElectionResults()) : les deux ne peuvent pas diverger.
+     *
+     * Règlement électoral 2026 : majorité simple des suffrages exprimés
+     * (art. 23), second tour en cas d'égalité entre les candidats arrivés en
+     * tête (art. 24). Jamais de départage implicite (ordre de création,
+     * numéro de bulletin...) : une égalité reste une égalité.
+     *
+     * - 'winner'    : un seul candidat en tête, toujours en lice ;
+     * - 'tie'       : plusieurs candidats en tête à égalité -> second tour ;
+     * - 'withdrawn' : le candidat seul en tête s'est retiré pendant le
+     *                 scrutin — personne n'est désigné automatiquement, la
+     *                 Commission électorale décide (art. 30) ;
+     * - 'none'      : aucun suffrage exprimé (aucun vote, ou que des blancs).
+     *
+     * @param array<int, array{candidate_id: mixed, candidate_status?: ?string, vote_count: mixed}> $rows
+     * @return array{status: string, candidate_ids: list<int>, top_votes: int}
+     */
+    public static function positionOutcome(array $rows): array
+    {
+        $expressed = array_values(array_filter($rows, static fn (array $row): bool => $row['candidate_id'] !== null));
+
+        if ($expressed === []) {
+            return ['status' => 'none', 'candidate_ids' => [], 'top_votes' => 0];
+        }
+
+        $topVotes = max(array_map(static fn (array $row): int => (int) $row['vote_count'], $expressed));
+        $leaders = array_values(array_filter($expressed, static fn (array $row): bool => (int) $row['vote_count'] === $topVotes));
+        $leaderIds = array_map(static fn (array $row): int => (int) $row['candidate_id'], $leaders);
+
+        if (count($leaders) > 1) {
+            return ['status' => 'tie', 'candidate_ids' => $leaderIds, 'top_votes' => $topVotes];
+        }
+
+        if (($leaders[0]['candidate_status'] ?? null) === 'withdrawn') {
+            return ['status' => 'withdrawn', 'candidate_ids' => $leaderIds, 'top_votes' => $topVotes];
+        }
+
+        return ['status' => 'winner', 'candidate_ids' => $leaderIds, 'top_votes' => $topVotes];
     }
 }

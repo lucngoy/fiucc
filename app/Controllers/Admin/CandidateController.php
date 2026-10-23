@@ -7,9 +7,12 @@ use App\Core\Config;
 use App\Core\Controller;
 use App\Models\ActivityLog;
 use App\Models\Candidate;
+use App\Models\CandidateDocument;
 use App\Models\Election;
+use App\Models\ElectionCommission;
 use App\Models\Member;
 use App\Models\User;
+use App\Services\CandidacyNotifier;
 use App\Services\Upload;
 use RuntimeException;
 
@@ -68,7 +71,11 @@ final class CandidateController extends Controller
             'adminEmail'  => $this->currentAdminEmail(),
             'election'    => $election,
             'candidates'  => $candidates,
-            'canManage'   => in_array($election['status'], ['draft', 'candidacies'], true),
+            // Ajout : jusqu'à la clôture du dépôt. Modification/approbation/
+            // rejet : aussi pendant la vérification (candidacies_closed,
+            // migration 023, art. 15 du règlement).
+            'canManage'   => in_array($election['status'], ['draft', 'candidacies', 'candidacies_closed'], true),
+            'canAdd'      => in_array($election['status'], ['draft', 'candidacies'], true),
             'canWithdraw' => $election['status'] !== 'published',
             'notice'      => (string) ($_GET['notice'] ?? ''),
         ], 'layouts.admin');
@@ -113,6 +120,12 @@ final class CandidateController extends Controller
         $input = $this->collectInput();
         $errors = $this->validate($input, $positions, null);
 
+        // Art. 6 du règlement : un membre de la Commission électorale ne
+        // peut pas être candidat (garde SQL aussi dans Candidate::create()).
+        if (!isset($errors['member_id']) && ElectionCommission::isCommissionMember($electionId, (int) $input['member_id'])) {
+            $errors['member_id'] = t('admin.candidates.field.member_in_commission');
+        }
+
         $photo = null;
 
         if ($errors === [] && ($_FILES['photo']['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE) {
@@ -153,6 +166,74 @@ final class CandidateController extends Controller
         $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=created');
     }
 
+    /**
+     * Dossier d'un candidat (lot 3 ; règlement électoral art. 14-15) :
+     * pièces privées, parcours et plan d'action, pour que le bureau vérifie
+     * avant d'approuver ou de rejeter. Consultation journalisée.
+     */
+    public function show(array $params): void
+    {
+        $candidate = Candidate::find((int) ($params['candidate_id'] ?? 0));
+        $electionId = (int) ($params['id'] ?? 0);
+
+        if ($candidate === null || (int) $candidate['election_id'] !== $electionId) {
+            $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=not_found');
+            return;
+        }
+
+        $election = Election::find($electionId);
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'candidate.dossier_viewed', 'candidate', (int) $candidate['id']);
+
+        $this->view('admin.candidates.show', [
+            'title'      => $candidate['full_name'],
+            'activeNav'  => 'elections',
+            'adminEmail' => $this->currentAdminEmail(),
+            'election'   => $election,
+            'candidate'  => $candidate,
+            'documents'  => CandidateDocument::forCandidate((int) $candidate['id']),
+            'canReview'  => in_array($election['status'], ['draft', 'candidacies', 'candidacies_closed'], true),
+            'notice'     => (string) ($_GET['notice'] ?? ''),
+        ], 'layouts.admin');
+    }
+
+    /**
+     * Une pièce du dossier, servie depuis storage/candidacies/ (jamais une
+     * URL statique) : image ou PDF uniquement, affichée dans le navigateur,
+     * jamais mise en cache. Le document doit appartenir à CE candidat de
+     * CETTE élection — un identifiant deviné ailleurs renvoie 404.
+     */
+    public function document(array $params): void
+    {
+        $candidate = Candidate::find((int) ($params['candidate_id'] ?? 0));
+        $electionId = (int) ($params['id'] ?? 0);
+        $document = $candidate !== null && (int) $candidate['election_id'] === $electionId
+            ? CandidateDocument::find((int) ($params['document_id'] ?? 0), (int) $candidate['id'])
+            : null;
+        $path = $document !== null ? Upload::storagePath((string) $document['file_path']) : '';
+        $mime = $path !== '' && is_file($path) ? (new \finfo(FILEINFO_MIME_TYPE))->file($path) : false;
+
+        if (!in_array($mime, ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'], true)) {
+            http_response_code(404);
+            echo \App\Core\View::render('errors.404', ['title' => t('error.404_title')], 'layouts.error');
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'candidate.document_viewed', 'candidate', (int) $candidate['id'], (string) $document['type']);
+
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        header('Content-Type: ' . $mime);
+        header('Content-Disposition: inline');
+        header('Content-Length: ' . (string) filesize($path));
+        header('X-Content-Type-Options: nosniff');
+        header('Cache-Control: private, no-store');
+
+        readfile($path);
+    }
+
     public function edit(array $params): void
     {
         $electionId = (int) ($params['id'] ?? 0);
@@ -165,7 +246,7 @@ final class CandidateController extends Controller
             return;
         }
 
-        if (!in_array($election['status'], ['draft', 'candidacies'], true)) {
+        if (!in_array($election['status'], ['draft', 'candidacies', 'candidacies_closed'], true)) {
             $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=locked');
             return;
         }
@@ -185,7 +266,7 @@ final class CandidateController extends Controller
             return;
         }
 
-        if (!in_array($election['status'], ['draft', 'candidacies'], true)) {
+        if (!in_array($election['status'], ['draft', 'candidacies', 'candidacies_closed'], true)) {
             $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=locked');
             return;
         }
@@ -253,7 +334,7 @@ final class CandidateController extends Controller
             return;
         }
 
-        if (!in_array($election['status'], ['draft', 'candidacies'], true)) {
+        if (!in_array($election['status'], ['draft', 'candidacies', 'candidacies_closed'], true)) {
             $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=locked');
             return;
         }
@@ -266,13 +347,14 @@ final class CandidateController extends Controller
         $approved = Candidate::approve($candidateId);
 
         if (!$approved) {
-            $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=locked');
+            $this->afterDecision($electionId, $candidateId, 'locked');
             return;
         }
 
         ActivityLog::record((int) $_SESSION['user_id'], 'candidate.approved', 'candidate', $candidateId);
+        CandidacyNotifier::approved($candidateId);
 
-        $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=approved');
+        $this->afterDecision($electionId, $candidateId, 'approved');
     }
 
     public function reject(array $params): void
@@ -287,21 +369,85 @@ final class CandidateController extends Controller
             return;
         }
 
-        if (!in_array($election['status'], ['draft', 'candidacies'], true)) {
+        if (!in_array($election['status'], ['draft', 'candidacies', 'candidacies_closed'], true)) {
             $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=locked');
             return;
         }
 
-        $rejected = Candidate::reject($candidateId);
+        // Motif obligatoire (décision du bureau 2026-10-10) : il est envoyé
+        // au candidat et affiché sur sa page — un rejet sans explication
+        // n'est pas possible.
+        $reason = trim(str_replace("\r\n", "\n", (string) ($_POST['reason'] ?? '')));
+
+        if ($reason === '' || mb_strlen($reason) > 2000) {
+            $this->afterDecision($electionId, $candidateId, 'decision_reason_required');
+            return;
+        }
+
+        $rejected = Candidate::reject($candidateId, $reason);
 
         if (!$rejected) {
-            $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=locked');
+            $this->afterDecision($electionId, $candidateId, 'locked');
             return;
         }
 
-        ActivityLog::record((int) $_SESSION['user_id'], 'candidate.rejected', 'candidate', $candidateId);
+        ActivityLog::record((int) $_SESSION['user_id'], 'candidate.rejected', 'candidate', $candidateId, $reason);
+        CandidacyNotifier::rejected($candidateId);
 
-        $this->redirect('/admin/elections/' . $electionId . '/candidates?notice=rejected');
+        $this->afterDecision($electionId, $candidateId, 'rejected');
+    }
+
+    /**
+     * Demande de correction (lot 4 ; règlement électoral art. 15) : motif
+     * et délai obligatoires. Le candidat peut alors compléter son dossier
+     * jusqu'au délai, même après la clôture du dépôt ; son envoi remet la
+     * candidature "en attente" et prévient les admins.
+     */
+    public function requestCorrection(array $params): void
+    {
+        $electionId = (int) ($params['id'] ?? 0);
+        $candidateId = (int) ($params['candidate_id'] ?? 0);
+        $election = Election::find($electionId);
+        $candidate = Candidate::find($candidateId);
+
+        if ($election === null || $candidate === null || (int) $candidate['election_id'] !== $electionId) {
+            $this->redirect('/admin/elections?notice=not_found');
+            return;
+        }
+
+        $reason = trim(str_replace("\r\n", "\n", (string) ($_POST['reason'] ?? '')));
+        $deadline = \DateTime::createFromFormat('Y-m-d\TH:i', trim((string) ($_POST['correction_deadline'] ?? '')));
+
+        if ($reason === '' || mb_strlen($reason) > 2000) {
+            $this->afterDecision($electionId, $candidateId, 'decision_reason_required');
+            return;
+        }
+
+        if ($deadline === false || $deadline->getTimestamp() <= time() || $deadline->getTimestamp() >= strtotime((string) $election['start_at'])) {
+            $this->afterDecision($electionId, $candidateId, 'invalid_correction_deadline');
+            return;
+        }
+
+        if (!Candidate::requestCorrection($candidateId, $reason, $deadline->format('Y-m-d H:i:s'))) {
+            $this->afterDecision($electionId, $candidateId, 'locked');
+            return;
+        }
+
+        ActivityLog::record((int) $_SESSION['user_id'], 'candidate.correction_requested', 'candidate', $candidateId, $reason);
+        CandidacyNotifier::correctionRequested($candidateId);
+
+        $this->afterDecision($electionId, $candidateId, 'correction_requested');
+    }
+
+    /**
+     * Après une décision : retour sur le dossier si l'action en vient
+     * (return=dossier), sinon sur la liste — avec le code du résultat.
+     */
+    private function afterDecision(int $electionId, int $candidateId, string $notice): void
+    {
+        $base = '/admin/elections/' . $electionId . '/candidates';
+
+        $this->redirect(((string) ($_POST['return'] ?? '') === 'dossier' ? $base . '/' . $candidateId : $base) . '?notice=' . $notice);
     }
 
     /**
