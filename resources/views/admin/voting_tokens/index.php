@@ -18,6 +18,8 @@ $tokens ??= [];
 $canManage ??= false;
 $maxAttempts ??= 5;
 $notice ??= '';
+$currentPage ??= 1;
+$totalPages ??= 1;
 
 $electionId = (int) $election['id'];
 $now = time();
@@ -145,6 +147,7 @@ $noticeMap = [
                                     <dialog id="regen-dialog-<?= e((string) $memberId) ?>" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-sm backdrop:bg-ink/40">
                                         <form method="POST" action="/admin/elections/<?= e((string) $electionId) ?>/tokens/<?= e((string) $memberId) ?>/regenerate" class="flex flex-col gap-2 p-4 text-left">
                                             <?= csrf_field() ?>
+                                            <input type="hidden" name="page" value="<?= e((string) $currentPage) ?>">
                                             <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.voting_tokens.regenerate.confirm_title')) ?></h2>
                                             <p class="text-body-sm text-muted"><?= e(t('admin.voting_tokens.regenerate.confirm_message', ['name' => $row['full_name']])) ?></p>
                                             <p class="text-body-sm font-label-md text-danger"><?= e(t('admin.voting_tokens.regenerate.confirm_warning')) ?></p>
@@ -168,6 +171,8 @@ $noticeMap = [
         </table>
         </div>
     </div>
+
+    <?= component('pagination', ['currentPage' => $currentPage, 'totalPages' => $totalPages, 'baseUrl' => '/admin/elections/' . $electionId . '/tokens?page={page}']) ?>
 </div>
 
 <script src="/assets/js/admin-dialogs.js" defer></script>

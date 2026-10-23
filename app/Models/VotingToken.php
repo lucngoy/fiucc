@@ -43,6 +43,8 @@ use PDOException;
  */
 final class VotingToken extends Model
 {
+    public const ADMIN_PER_PAGE = 25;
+
     private const TOKEN_BYTES = 16;
 
     /**
@@ -223,9 +225,20 @@ final class VotingToken extends Model
     /**
      * Vue admin — membres actuellement éligibles avec leur état de jeton
      * pour cette élection (aucune ligne si jamais émis : LEFT JOIN).
+     * Paginée : une ligne par étudiant validé, la liste grandit avec la
+     * communauté.
+     *
+     * @return array{rows: array<int, array<string, mixed>>, total: int}
      */
-    public static function adminListForElection(int $electionId): array
+    public static function adminListForElection(int $electionId, int $page, int $perPage = self::ADMIN_PER_PAGE): array
     {
+        $total = (int) static::db()
+            ->query("SELECT COUNT(*) FROM members WHERE status = 'validated' AND status_type = 'student'")
+            ->fetchColumn();
+
+        // LIMIT/OFFSET interpolés — même raison qu'Event::publicList() :
+        // sûrs ici parce que $page/$perPage sont typés int (strict_types=1).
+        $offset = ($page - 1) * $perPage;
         $stmt = static::db()->prepare(
             "SELECT m.id AS member_id, m.full_name,
                     vt.sent_at, vt.used_at, vt.expires_at, vt.attempts,
@@ -233,11 +246,12 @@ final class VotingToken extends Model
              FROM members m
              LEFT JOIN voting_tokens vt ON vt.member_id = m.id AND vt.election_id = :election_id
              WHERE m.status = 'validated' AND m.status_type = 'student'
-             ORDER BY m.full_name ASC"
+             ORDER BY m.full_name ASC, m.id ASC
+             LIMIT {$perPage} OFFSET {$offset}"
         );
         $stmt->execute(['election_id' => $electionId]);
 
-        return $stmt->fetchAll();
+        return ['rows' => $stmt->fetchAll(), 'total' => $total];
     }
 
     /**

@@ -44,13 +44,25 @@ final class VotingTokenController extends Controller
         }
 
         $electionId = (int) $election['id'];
+        $page = max(1, (int) ($_GET['page'] ?? 1));
+        $result = VotingToken::adminListForElection($electionId, $page);
+        $totalPages = (int) max(1, (int) ceil($result['total'] / VotingToken::ADMIN_PER_PAGE));
+
+        // Page au-delà de la dernière (lien ancien, membres retirés depuis) :
+        // la dernière page plutôt qu'un tableau vide.
+        if ($page > $totalPages) {
+            $page = $totalPages;
+            $result = VotingToken::adminListForElection($electionId, $page);
+        }
 
         $this->view('admin.voting_tokens.index', [
             'title'      => t('admin.voting_tokens.title'),
             'activeNav'  => 'elections',
             'adminEmail' => $this->currentAdminEmail(),
             'election'   => $election,
-            'tokens'     => VotingToken::adminListForElection($electionId),
+            'tokens'     => $result['rows'],
+            'currentPage' => min($page, $totalPages),
+            'totalPages'  => $totalPages,
             'canManage'  => $election['status'] === 'open',
             'maxAttempts' => (int) Config::get('security.vote_token_max_attempts', 5),
             'notice'     => (string) ($_GET['notice'] ?? ''),
@@ -146,6 +158,9 @@ final class VotingTokenController extends Controller
         $electionId = (int) ($params['id'] ?? 0);
         $memberId = (int) ($params['member_id'] ?? 0);
         $election = Election::find($electionId);
+        // Page de la liste d'où l'admin a régénéré, pour l'y ramener.
+        $page = max(1, (int) ($_POST['page'] ?? 1));
+        $back = static fn (string $notice): string => '/admin/elections/' . $electionId . '/tokens?notice=' . $notice . ($page > 1 ? '&page=' . $page : '');
 
         if ($election === null) {
             $this->redirect('/admin/elections?notice=not_found');
@@ -153,7 +168,7 @@ final class VotingTokenController extends Controller
         }
 
         if ($election['status'] !== 'open') {
-            $this->redirect('/admin/elections/' . $electionId . '/tokens?notice=not_open');
+            $this->redirect($back('not_open'));
             return;
         }
 
@@ -165,7 +180,7 @@ final class VotingTokenController extends Controller
             // trois : côté admin, la distinction n'est pas actionnable
             // différemment (dans tous les cas, l'écran de statut fait
             // autorité, pas ce message).
-            $this->redirect('/admin/elections/' . $electionId . '/tokens?notice=cannot_regenerate');
+            $this->redirect($back('cannot_regenerate'));
             return;
         }
 
@@ -174,7 +189,7 @@ final class VotingTokenController extends Controller
         if ($recipient === null) {
             // Ne devrait pas arriver : regenerate() vient de réussir, donc
             // le membre existe et est éligible — filet de sécurité.
-            $this->redirect('/admin/elections/' . $electionId . '/tokens?notice=cannot_regenerate');
+            $this->redirect($back('cannot_regenerate'));
             return;
         }
 
@@ -201,7 +216,7 @@ final class VotingTokenController extends Controller
             $reason !== '' ? "raison: {$reason}" : null
         );
 
-        $this->redirect('/admin/elections/' . $electionId . '/tokens?notice=' . ($sent ? 'regenerated' : 'regenerated_send_failed'));
+        $this->redirect($back($sent ? 'regenerated' : 'regenerated_send_failed'));
     }
 
     /**
