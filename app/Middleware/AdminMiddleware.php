@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Core\Intended;
+
 /**
  * Exige une session admin active. Un membre connecté mais non-admin reçoit un
  * refus explicite (403) : une redirection vers /login ne résoudrait rien
@@ -13,6 +15,8 @@ final class AdminMiddleware
     public function handle(): bool
     {
         if (!isset($_SESSION['user_id'])) {
+            // Ramené ici une fois reconnecté (App\Core\Intended).
+            Intended::remember();
             header('Location: /login?notice=auth_required');
 
             return false;

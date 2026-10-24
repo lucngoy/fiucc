@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Core\Intended;
+
 /**
  * Exige une session membre active. Redirection propre vers /login avec un
  * message clair sinon — jamais un blocage silencieux.
@@ -15,6 +17,8 @@ final class AuthMiddleware
             return true;
         }
 
+        // Ramené ici une fois reconnecté (App\Core\Intended).
+        Intended::remember();
         header('Location: /login?notice=auth_required');
 
         return false;

@@ -37,7 +37,8 @@
  * de compte (email, déconnexion) — dupliqué avec le menu profil de la
  * barre du haut par choix : les deux restent accessibles, l'un visible en
  * permanence en bas de la colonne latérale (desktop), l'autre présent
- * même sur mobile où la sidebar passe en rangée horizontale. Pas de nom/
+ * même sur mobile où la sidebar devient une barre du haut, sa nav repliée
+ * derrière un bouton hamburger (admin-nav.js). Pas de nom/
  * rôle inventé (la maquette montre "Jonathan Mukendi / Executive
  * President" mais `users` n'a ni display_name ni titre — seul l'email
  * existe réellement, voir 001_initial_schema.sql) : le rôle affiché est
@@ -70,19 +71,28 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                 <a href="/" class="flex items-center gap-3 shrink-0">
                     <img src="/assets/images/fiucc-seal.png" alt="<?= e(t('admin.brand.name')) ?>" class="h-9 w-9 object-contain shrink-0">
                 </a>
-                <div class="leading-tight min-w-0">
+                <div class="leading-tight min-w-0 flex-1">
                     <p class="font-label-lg text-label-lg truncate"><?= e(t('admin.brand.name')) ?></p>
                     <p class="hidden sm:block text-label-caps font-label-caps uppercase text-white/90"><?= e(t('admin.brand.tagline')) ?></p>
                 </div>
+                <!-- Mobile (< md) : la nav est repliée derrière ce bouton
+                     (admin-nav.js) plutôt qu'une rangée de 12 liens à faire
+                     défiler à l'horizontale. -->
+                <button type="button" id="admin-nav-toggle"
+                    class="md:hidden shrink-0 h-10 w-10 flex items-center justify-center rounded-control text-white hover:bg-white/10 transition-colors"
+                    aria-expanded="false" aria-controls="admin-nav"
+                    title="<?= e(t('admin.nav.toggle')) ?>" aria-label="<?= e(t('admin.nav.toggle')) ?>">
+                    <span data-icon-open><?= icon('bars', 'text-lg') ?></span>
+                    <span data-icon-close class="hidden"><?= icon('xmark', 'text-lg') ?></span>
+                </button>
             </div>
             <p class="hidden md:block px-3 pt-3 pb-1 font-label-caps text-label-caps uppercase text-white/90 tracking-wider"><?= e(t('admin.nav.section_label')) ?></p>
-            <nav class="flex-1 py-2 md:py-1 px-3 flex flex-row md:flex-col gap-1 overflow-x-auto">
+            <nav id="admin-nav" class="hidden md:flex flex-1 py-2 md:py-1 px-3 flex-col gap-1">
                 <?php
                 // Item actif : pastille claire + liseré or à gauche (charte —
-                // l'or comme accent, jamais comme fond) sur md+ ; sur mobile
-                // (nav horizontale), juste la pastille, le liseré vertical
-                // n'aurait pas de sens dans une rangée.
-                $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:hidden md:before:block before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
+                // l'or comme accent, jamais comme fond), en colonne sur
+                // mobile (menu déplié) comme sur desktop.
+                $activeClasses = 'relative bg-white text-primary font-bold shadow-card before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-5 before:bg-gold before:rounded-r-full';
                 $inactiveClasses = 'text-white/90 hover:bg-white/10 hover:text-white';
                 ?>
                 <a href="/admin"

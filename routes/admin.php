@@ -70,6 +70,7 @@ return [
     ['POST', '/admin/government/mandates/{id}/delete',         'Admin\GovernmentController@deleteMandate'],
     ['GET',  '/admin/government/mandates/{id}/members/create', 'Admin\GovernmentController@createMember'],
     ['POST', '/admin/government/mandates/{id}/members',        'Admin\GovernmentController@storeMember'],
+    ['POST', '/admin/government/mandates/{id}/reorder',        'Admin\GovernmentController@reorderMembers'],
     ['GET',  '/admin/government/mandates/{id}/import',         'Admin\GovernmentController@importForm'],
     ['POST', '/admin/government/mandates/{id}/import/preview', 'Admin\GovernmentController@previewImport'],
     ['POST', '/admin/government/mandates/{id}/import',         'Admin\GovernmentController@confirmImport'],

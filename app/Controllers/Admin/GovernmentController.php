@@ -251,6 +251,27 @@ final class GovernmentController extends Controller
     }
 
     /**
+     * Ordre complet après un glisser-déposer (admin-government-sort.js) :
+     * ids[] dans le nouvel ordre. Un ordre refusé (liste qui ne correspond
+     * plus au mandat — poste ajouté/retiré dans un autre onglet entre-temps)
+     * ne change rien et le signale.
+     */
+    public function reorderMembers(array $params): void
+    {
+        $mandate = Government::findMandate((int) ($params['id'] ?? 0));
+
+        if ($mandate === null) {
+            $this->redirect('/admin/government?notice=not_found');
+            return;
+        }
+
+        $ids = $_POST['ids'] ?? [];
+        $ok = is_array($ids) && GovernmentMember::reorder((int) $mandate['id'], array_values($ids));
+
+        $this->redirect('/admin/government?mandate=' . (int) $mandate['id'] . ($ok ? '' : '&notice=order_invalid'));
+    }
+
+    /**
      * Import d'un comité (décision du bureau 2026-10-21) : fichier Excel /
      * CSV ou liste collée -> aperçu -> confirmation. Rien n'est écrit avant
      * confirmImport() : le rapprochement des noms (GovernmentImport) ne

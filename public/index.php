@@ -147,6 +147,11 @@ session_start();
 // reconstitués en uploads ordinaires avant tout contrôleur.
 App\Core\EncodedUploads::hydrate();
 
+// Élections : clôture du dépôt, ouverture et fermeture du vote à l'heure
+// prévue, sans cron (App\Services\ElectionSchedule) — avant le routage,
+// pour qu'un bulletin envoyé juste après l'heure trouve le vote ouvert.
+App\Services\ElectionSchedule::tick();
+
 // 5. Routing
 $router = new Router();
 $router->loadRoutes(BASE_PATH . '/routes/web.php');

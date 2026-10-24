@@ -79,8 +79,9 @@ final class VotingToken extends Model
 
     /**
      * Émission (première fois). Renvoie le code Base32 groupé (prêt à
-     * afficher/emailer) si l'émission a eu lieu, null sinon — élection pas
-     * 'open', membre pas validated+student, ou jeton déjà existant pour ce
+     * afficher/emailer) si l'émission a eu lieu, null sinon — élection ni
+     * 'open' ni en attente du vote avec sa liste publiée (envoi à l'avance,
+     * Election::tokensSendable()), membre pas validated+student, ou jeton déjà existant pour ce
      * couple (UNIQUE(election_id, member_id), capturé en PDOException plutôt
      * qu'en pré-contrôle séparé : la contrainte est l'autorité, pas une
      * lecture préalable qui pourrait être périmée au moment de l'écriture).
@@ -90,14 +91,15 @@ final class VotingToken extends Model
         $raw = random_bytes(self::TOKEN_BYTES);
         $hash = hash('sha256', $raw);
         $code = Base32::encode($raw);
-        $expiresAt = self::expiryFor((int) Config::get('security.vote_token_ttl_hours', 72));
+        $expiresAt = self::expiryFor(self::ttlHours());
 
         $stmt = static::db()->prepare(
             "INSERT INTO voting_tokens (election_id, member_id, token_hash, expires_at)
-             SELECT :election_id, :member_id, :token_hash, LEAST(:expires_at, e.end_at)
+             SELECT :election_id, :member_id, :token_hash, LEAST(GREATEST(:expires_at, e.start_at + INTERVAL :ttl_hours HOUR), e.end_at)
              FROM elections e
              INNER JOIN members m ON m.id = :member_id_check
-             WHERE e.id = :election_id_check AND e.status = 'open'
+             WHERE e.id = :election_id_check
+               AND (e.status = 'open' OR (e.status = 'candidacies_closed' AND (e.candidate_list_at IS NULL OR e.candidate_list_at <= NOW())))
                AND m.status = 'validated' AND m.status_type = 'student'"
         );
 
@@ -109,6 +111,7 @@ final class VotingToken extends Model
                 'member_id_check'   => $memberId,
                 'token_hash'        => $hash,
                 'expires_at'        => $expiresAt,
+                'ttl_hours'         => self::ttlHours(),
             ]);
         } catch (PDOException) {
             // Course : un jeton existe déjà pour ce couple (UNIQUE), ou
@@ -132,25 +135,26 @@ final class VotingToken extends Model
         $raw = random_bytes(self::TOKEN_BYTES);
         $hash = hash('sha256', $raw);
         $code = Base32::encode($raw);
-        $expiresAt = self::expiryFor((int) Config::get('security.vote_token_ttl_hours', 72));
+        $expiresAt = self::expiryFor(self::ttlHours());
 
         $stmt = static::db()->prepare(
             "UPDATE voting_tokens vt
              INNER JOIN elections e ON e.id = vt.election_id
              INNER JOIN members m ON m.id = vt.member_id
              SET vt.token_hash = :token_hash,
-                 vt.expires_at = LEAST(:expires_at, e.end_at),
+                 vt.expires_at = LEAST(GREATEST(:expires_at, e.start_at + INTERVAL :ttl_hours HOUR), e.end_at),
                  vt.sent_at = NULL,
                  vt.attempts = 0
              WHERE vt.election_id = :election_id AND vt.member_id = :member_id
                AND vt.used_at IS NULL
-               AND e.status = 'open'
+               AND (e.status = 'open' OR (e.status = 'candidacies_closed' AND (e.candidate_list_at IS NULL OR e.candidate_list_at <= NOW())))
                AND m.status = 'validated' AND m.status_type = 'student'"
         );
 
         $stmt->execute([
             'token_hash'  => $hash,
             'expires_at'  => $expiresAt,
+            'ttl_hours'   => self::ttlHours(),
             'election_id' => $electionId,
             'member_id'   => $memberId,
         ]);
@@ -355,6 +359,18 @@ final class VotingToken extends Model
              WHERE election_id = :election_id AND member_id = :member_id'
         );
         $stmt->execute(['election_id' => $electionId, 'member_id' => $memberId]);
+    }
+
+    /**
+     * Durée de validité d'un code, comptée depuis l'envoi — ou depuis
+     * l'ouverture du vote pour un code envoyé à l'avance (GREATEST(...,
+     * start_at + ttl) dans issue()/regenerate()), sinon un code envoyé
+     * trois jours avant expirerait avant même d'avoir servi. Toujours
+     * plafonnée à end_at.
+     */
+    private static function ttlHours(): int
+    {
+        return (int) Config::get('security.vote_token_ttl_hours', 72);
     }
 
     private static function expiryFor(int $ttlHours): string

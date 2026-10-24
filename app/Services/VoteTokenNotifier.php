@@ -44,6 +44,11 @@ final class VoteTokenNotifier
             'code'      => $groupedCode,
             'link'      => $link,
             'expiresAt' => local_date($expiresAt),
+            // Code envoyé à l'avance (Election::tokensSendable()) : dire
+            // quand il commencera à servir.
+            'opensAt'   => !empty($election['start_at']) && strtotime((string) $election['start_at']) > time()
+                ? ['date' => local_date((string) $election['start_at']), 'time' => date('H:i', strtotime((string) $election['start_at']))]
+                : null,
         ]);
 
         return Mail::send(

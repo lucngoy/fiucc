@@ -21,9 +21,14 @@
  * @param string $code     Code Base32 déjà groupé (App\Services\Base32::group())
  * @param string $link     URL de /elections/{id}/authenticate, sans requête
  * @param string $expiresAt Date lisible (local_date()), déjà formatée par l'appelant
+ * @param array{date: string, time: string}|null $opensAt Ouverture du vote si le code est envoyé à l'avance, sinon null
  */
+$opensAt ??= null;
 ?>
 <p style="margin:0 0 16px;"><?= t('mail.vote_token.intro', ['election' => e($election['title'])]) ?></p>
+<?php if ($opensAt !== null): ?>
+<p style="margin:0 0 16px;font-weight:700;"><?= e(t('mail.vote_token.opens_at', $opensAt)) ?></p>
+<?php endif; ?>
 
 <div style="margin:0 0 20px;padding:20px;background-color:#F8FAFC;border:1px solid #E5E7EB;border-radius:8px;text-align:center;">
     <span style="display:block;font-family:'Courier New',Courier,monospace;font-size:22px;font-weight:700;letter-spacing:2px;color:#111827;word-break:break-all;">

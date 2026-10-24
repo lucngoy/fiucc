@@ -63,7 +63,7 @@ final class VotingTokenController extends Controller
             'tokens'     => $result['rows'],
             'currentPage' => min($page, $totalPages),
             'totalPages'  => $totalPages,
-            'canManage'  => $election['status'] === 'open',
+            'canManage'  => Election::tokensSendable($election),
             'maxAttempts' => (int) Config::get('security.vote_token_max_attempts', 5),
             'notice'     => (string) ($_GET['notice'] ?? ''),
         ], 'layouts.admin');
@@ -80,7 +80,8 @@ final class VotingTokenController extends Controller
 
         $electionId = (int) $election['id'];
 
-        if ($election['status'] !== 'open') {
+        // Vote ouvert, ou envoi à l'avance une fois la liste publiée.
+        if (!Election::tokensSendable($election)) {
             $this->redirect('/admin/elections/' . $electionId . '/tokens?notice=not_open');
             return;
         }
@@ -116,7 +117,7 @@ final class VotingTokenController extends Controller
             $sent = VoteTokenNotifier::send(
                 (string) $member['email'],
                 (string) $member['full_name'],
-                ['id' => $electionId, 'title' => $election['title']],
+                ['id' => $electionId, 'title' => $election['title'], 'start_at' => $election['start_at']],
                 $code,
                 $expiresAt,
                 Member::whatsappForMember($memberId)
@@ -167,7 +168,8 @@ final class VotingTokenController extends Controller
             return;
         }
 
-        if ($election['status'] !== 'open') {
+        // Vote ouvert, ou envoi à l'avance une fois la liste publiée.
+        if (!Election::tokensSendable($election)) {
             $this->redirect($back('not_open'));
             return;
         }
@@ -198,7 +200,7 @@ final class VotingTokenController extends Controller
         $sent = VoteTokenNotifier::send(
             $email,
             $fullName,
-            ['id' => $electionId, 'title' => $election['title']],
+            ['id' => $electionId, 'title' => $election['title'], 'start_at' => $election['start_at']],
             $code,
             $expiresAt,
             Member::whatsappForMember($memberId)

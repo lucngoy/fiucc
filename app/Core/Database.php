@@ -26,7 +26,7 @@ final class Database
         $dsn = "mysql:host={$host};port={$port};dbname={$database};charset={$charset}";
 
         try {
-            return new PDO(
+            $pdo = new PDO(
                 $dsn,
                 (string) Config::get('database.username'),
                 (string) Config::get('database.password'),
@@ -36,6 +36,24 @@ final class Database
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                 ]
             );
+
+            // NOW() à l'heure de l'application, pas à celle du serveur MySQL :
+            // les dates sont écrites par PHP (app.timezone) et comparées à
+            // NOW() en SQL (ouverture/fermeture du vote, dates limites,
+            // expiration des codes). Un MySQL réglé ailleurs — UTC chez un
+            // hébergeur, par exemple — décalerait chaque échéance de
+            // plusieurs heures. Décalage numérique (+03:00) : n'exige pas
+            // les tables de fuseaux nommés côté MySQL.
+            // Jamais bloquant : un refus ne doit pas rendre tout le site
+            // inaccessible — il se voit dans les logs (et dans
+            // tests/Database/TimezoneAlignmentTest).
+            try {
+                $pdo->prepare('SET time_zone = :offset')->execute(['offset' => date('P')]);
+            } catch (PDOException $e) {
+                Logger::error('database', 'Fuseau horaire MySQL non aligné', ['offset' => date('P'), 'error' => $e->getMessage()]);
+            }
+
+            return $pdo;
         } catch (PDOException) {
             // Message volontairement générique : jamais le message natif du driver
             // (il peut mentionner l'utilisateur de connexion).

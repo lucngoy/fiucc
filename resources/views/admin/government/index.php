@@ -24,6 +24,7 @@ $noticeMap = [
     'mandate_duplicate'     => ['type' => 'error',   'message' => t('admin.government.notice.mandate_duplicate')],
     'mandate_not_deletable' => ['type' => 'error',   'message' => t('admin.government.notice.mandate_not_deletable')],
     'not_found'             => ['type' => 'error',   'message' => t('admin.government.notice.not_found')],
+    'order_invalid'         => ['type' => 'error',   'message' => t('admin.government.notice.order_invalid')],
 ];
 
 $actionTooltip = static function (string $label): string {
@@ -164,7 +165,7 @@ $isCurrent = $selected !== null && (int) $selected['is_current'] === 1;
                             <th class="p-3 text-label-caps font-label-caps uppercase text-right"><?= e(t('admin.government.column.actions')) ?></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody data-government-sort>
                         <?php if ($members === []): ?>
                             <tr>
                                 <td colspan="5" class="p-6">
@@ -175,10 +176,13 @@ $isCurrent = $selected !== null && (int) $selected['is_current'] === 1;
                             <?php $lastIndex = count($members) - 1; ?>
                             <?php foreach ($members as $index => $member): ?>
                                 <?php $memberId = (int) $member['id']; ?>
-                                <tr id="member-<?= e((string) $memberId) ?>" class="border-b border-border last:border-0 align-middle">
+                                <tr id="member-<?= e((string) $memberId) ?>" data-member-id="<?= e((string) $memberId) ?>" draggable="true" class="border-b border-border last:border-0 align-middle bg-white">
                                     <td class="p-3">
                                         <div class="flex items-center gap-1">
-                                            <span class="w-6 text-body-sm text-muted tabular-nums"><?= e((string) ($index + 1)) ?></span>
+                                            <span class="hidden md:flex h-8 w-5 items-center justify-center text-muted cursor-grab active:cursor-grabbing" title="<?= e(t('admin.government.action.drag', ['name' => $member['display_name']])) ?>" aria-hidden="true">
+                                                <?= icon('grip-vertical') ?>
+                                            </span>
+                                            <span data-position class="w-6 text-body-sm text-muted tabular-nums"><?= e((string) ($index + 1)) ?></span>
                                             <?php foreach (['up', 'down'] as $direction): ?>
                                                 <?php $disabled = ($direction === 'up' && $index === 0) || ($direction === 'down' && $index === $lastIndex); ?>
                                                 <form method="POST" action="/admin/government/members/<?= e((string) $memberId) ?>/move">
@@ -247,6 +251,14 @@ $isCurrent = $selected !== null && (int) $selected['is_current'] === 1;
                 </table>
                 </div>
             </div>
+            <?php if (count($members) > 1): ?>
+                <!-- Rempli et envoyé par admin-government-sort.js après un
+                     glisser-déposer : l'ordre complet, ids[] du premier au
+                     dernier. -->
+                <form method="POST" action="/admin/government/mandates/<?= e((string) $selected['id']) ?>/reorder" data-government-sort-form hidden>
+                    <?= csrf_field() ?>
+                </form>
+            <?php endif; ?>
         </section>
 
         <dialog id="mandate-edit-dialog" class="rounded-card border border-border shadow-card p-0 w-[90vw] max-w-md backdrop:bg-ink/40">
@@ -306,3 +318,4 @@ $isCurrent = $selected !== null && (int) $selected['is_current'] === 1;
 
 <script src="/assets/js/admin-dialogs.js" defer></script>
 <script src="/assets/js/admin-tooltip.js" defer></script>
+<script src="/assets/js/admin-government-sort.js" defer></script>

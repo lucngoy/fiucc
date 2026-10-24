@@ -70,12 +70,19 @@ final class CandidacyPhaseTest extends TestCase
         self::assertTrue(Election::open($electionId));
     }
 
-    public function test_no_token_and_no_ballot_while_candidacies_are_closed(): void
+    /**
+     * Codes envoyables à l'avance depuis le 2026-10-23, mais seulement une
+     * fois la liste publiée (voir ElectionScheduleTest) — et aucun bulletin
+     * avant l'ouverture, code ou pas.
+     */
+    public function test_no_token_before_the_list_and_no_ballot_while_candidacies_are_closed(): void
     {
         [$electionId, $positionId] = $this->draftWithPosition();
         $candidateId = $this->makeApprovedCandidate($positionId);
         self::assertTrue(Election::startCandidacies($electionId));
         self::assertTrue(Election::closeCandidacies($electionId));
+        $this->db->prepare('UPDATE elections SET candidate_list_at = :at WHERE id = :id')
+            ->execute(['at' => date('Y-m-d H:i:s', strtotime('+1 hour')), 'id' => $electionId]);
 
         $voter = $this->makeMember();
         self::assertNull(VotingToken::issue($electionId, $voter));

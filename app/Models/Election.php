@@ -475,6 +475,130 @@ final class Election extends Model
     }
 
     /**
+     * Dossiers sans décision de la Commission : « en attente » ou « à
+     * corriger ». Tant qu'il en reste, le vote ne s'ouvre pas tout seul
+     * (décision du bureau 2026-10-23) — sinon ces candidats manqueraient
+     * au bulletin sans que personne ne l'ait décidé.
+     */
+    public static function undecidedCandidacies(int $id): int
+    {
+        $stmt = static::db()->prepare(
+            "SELECT COUNT(*) FROM candidates c
+             INNER JOIN election_positions p ON p.id = c.election_position_id
+             WHERE p.election_id = :id AND c.status IN ('pending', 'correction')"
+        );
+        $stmt->execute(['id' => $id]);
+
+        return (int) $stmt->fetchColumn();
+    }
+
+    /**
+     * Codes de vote envoyables : vote ouvert, ou à l'avance dès la liste
+     * des candidats publiée (décision du bureau 2026-10-23). Un code reçu
+     * avant l'ouverture ne sert à rien tant que le vote n'est pas ouvert —
+     * chaque garde de vote vérifie elections.status = 'open'. Même règle,
+     * en SQL, dans VotingToken::issue()/regenerate().
+     */
+    public static function tokensSendable(array $election): bool
+    {
+        return $election['status'] === 'open'
+            || ($election['status'] === 'candidacies_closed' && self::candidateListPublished($election));
+    }
+
+    /**
+     * Passages de statut à l'heure prévue (décision du bureau 2026-10-23),
+     * sans cron : App\Services\ElectionSchedule::tick() les déclenche à
+     * chaque requête. Chaque passage est un UPDATE qui porte toute sa
+     * condition (statut ET horloge) : deux requêtes simultanées ne font
+     * qu'un passage, et un admin qui prolonge une date entre la lecture et
+     * l'écriture n'est jamais contredit. Renvoie les élections passées.
+     *
+     * Dépôt clos dès la date limite passée : mêmes conditions que la
+     * clôture manuelle (closeCandidacies()).
+     *
+     * @return list<int>
+     */
+    public static function closeCandidaciesOnSchedule(): array
+    {
+        return self::advance(
+            "SELECT id FROM elections
+             WHERE status = 'candidacies' AND candidacy_deadline IS NOT NULL AND candidacy_deadline <= NOW()",
+            static fn (int $id): bool => self::closeCandidacies($id)
+        );
+    }
+
+    /**
+     * Vote ouvert à start_at — seulement depuis un dépôt clos, liste des
+     * candidats publiée, aucun dossier sans décision, et jamais si end_at
+     * est déjà passé (un scrutin manqué reste une décision du bureau).
+     *
+     * @return list<int>
+     */
+    public static function openOnSchedule(): array
+    {
+        $sql = "UPDATE elections e SET e.status = 'open'
+                WHERE e.id = :id AND e.status = 'candidacies_closed'
+                  AND e.start_at <= NOW() AND e.end_at > NOW()
+                  AND (e.candidate_list_at IS NULL OR e.candidate_list_at <= NOW())
+                  AND NOT EXISTS (
+                      SELECT 1 FROM candidates c
+                      INNER JOIN election_positions p ON p.id = c.election_position_id
+                      WHERE p.election_id = e.id AND c.status IN ('pending', 'correction')
+                  )";
+
+        return self::advance(
+            "SELECT id FROM elections WHERE status = 'candidacies_closed' AND start_at <= NOW() AND end_at > NOW()",
+            static function (int $id) use ($sql): bool {
+                $stmt = static::db()->prepare($sql);
+                $stmt->execute(['id' => $id]);
+
+                return $stmt->rowCount() > 0;
+            }
+        );
+    }
+
+    /**
+     * Vote fermé à end_at. Le vote est de toute façon refusé après end_at
+     * (gardes de App\Models\Vote) ; ce passage permet au bureau de
+     * dépouiller et publier sans attendre un clic. La garde end_at <= NOW()
+     * dans l'UPDATE lui-même : une prolongation (extendEndAt()) faite entre
+     * la lecture et l'écriture l'emporte.
+     *
+     * @return list<int>
+     */
+    public static function closeOnSchedule(): array
+    {
+        return self::advance(
+            "SELECT id FROM elections WHERE status = 'open' AND end_at <= NOW()",
+            static function (int $id): bool {
+                $stmt = static::db()->prepare(
+                    "UPDATE elections SET status = 'closed' WHERE id = :id AND status = 'open' AND end_at <= NOW()"
+                );
+                $stmt->execute(['id' => $id]);
+
+                return $stmt->rowCount() > 0;
+            }
+        );
+    }
+
+    /**
+     * @param callable(int): bool $move
+     * @return list<int>
+     */
+    private static function advance(string $candidatesSql, callable $move): array
+    {
+        $moved = [];
+
+        foreach (static::db()->query($candidatesSql)->fetchAll(\PDO::FETCH_COLUMN) as $id) {
+            if ($move((int) $id)) {
+                $moved[] = (int) $id;
+            }
+        }
+
+        return $moved;
+    }
+
+    /**
      * 'closed' -> 'published' (FIUCC-68, §22 du cahier des charges) — étape
      * séparée et délibérée d'open()/close() : le bureau ferme, vérifie,
      * PUIS publie, jamais les deux à la fois. results_published_at

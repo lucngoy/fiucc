@@ -43,6 +43,25 @@ $descriptionEditable = $datesEditable; // candidacies, candidacies_closed, open,
 $toLocal = static fn (?string $value): string => $value !== null && $value !== '' ? date('Y-m-d\TH:i', strtotime($value)) : '';
 $canDelete = $isDraft && $positions === [];
 $canStartCandidacies = $isDraft && $positions !== [];
+$undecided ??= 0;
+$tokensSendable = \App\Models\Election::tokensSendable($election);
+
+// Passages automatiques (App\Services\ElectionSchedule) : dire à l'admin
+// ce qui va se passer seul, et pourquoi le vote ne s'est pas ouvert si un
+// dossier attend encore une décision.
+$at = static fn (?string $value): array => ['date' => local_date($value), 'time' => $value ? date('H:i', strtotime($value)) : ''];
+$scheduleAlert = null;
+if ($isCandidacies && !$deadlinePassed) {
+    $scheduleAlert = ['type' => 'info', 'message' => t('admin.elections.schedule.candidacies_close', $at($election['candidacy_deadline']))];
+} elseif (($isCandidacies || $isCandidaciesClosed) && $undecided > 0 && strtotime((string) $election['start_at']) <= time()) {
+    $scheduleAlert = ['type' => 'error', 'message' => t('admin.elections.schedule.blocked', ['count' => (string) $undecided])];
+} elseif ($isCandidaciesClosed && $undecided > 0) {
+    $scheduleAlert = ['type' => 'warning', 'message' => t('admin.elections.schedule.open_pending', $at($election['start_at']) + ['count' => (string) $undecided])];
+} elseif ($isCandidaciesClosed && strtotime((string) $election['start_at']) > time()) {
+    $scheduleAlert = ['type' => 'info', 'message' => t('admin.elections.schedule.open', $at($election['start_at']))];
+} elseif ($isOpen) {
+    $scheduleAlert = ['type' => 'info', 'message' => t('admin.elections.schedule.close', $at($election['end_at']))];
+}
 
 $statusBadge = static function (string $status): string {
     $variants = [
@@ -130,6 +149,10 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
         <?= component('alert', $noticeMap[$notice]) ?>
     <?php endif; ?>
 
+    <?php if ($scheduleAlert !== null): ?>
+        <?= component('alert', $scheduleAlert) ?>
+    <?php endif; ?>
+
     <?php if ($rounds['first'] !== null): ?>
         <p class="flex flex-wrap items-center gap-2 rounded-control bg-primary-light/20 p-4 text-body-md text-primary">
             <?= icon('scale-balanced') ?>
@@ -171,12 +194,14 @@ $inputClasses = 'h-10 rounded-control border border-border px-3 text-body-sm tex
                     <?= icon('users') ?>
                     <?= e(t('admin.elections.action.manage_candidates')) ?>
                 </a>
-                <?php if ($isOpen): ?>
+                <?php if ($tokensSendable): ?>
                     <a href="/admin/elections/<?= e((string) $election['id']) ?>/tokens"
                        class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
                         <?= icon('key') ?>
                         <?= e(t('admin.elections.action.voting_tokens')) ?>
                     </a>
+                <?php endif; ?>
+                <?php if ($isOpen): ?>
                     <button type="button" data-open-dialog="send-reminder-dialog"
                         class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-surface text-ink text-label-md font-label-md hover:bg-ink/10 transition-colors">
                         <?= icon('bell') ?>

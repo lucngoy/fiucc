@@ -21,7 +21,22 @@ use Tests\TestCase;
  */
 final class SecondRoundTest extends TestCase
 {
-    private const HANDOVER = '2026-10-25';
+    /**
+     * Dates relatives à aujourd'hui, jamais en dur : un 1er tour qui se
+     * termine à une date fixe devient une élection déjà close le jour où
+     * cette date passe, et chaque bulletin du test est alors refusé.
+     */
+    private static function handover(): string
+    {
+        return date('Y-m-d', strtotime('+10 days'));
+    }
+
+    private static function mandateLabel(): string
+    {
+        $year = (int) substr(self::handover(), 0, 4);
+
+        return $year . '-' . ($year + 1);
+    }
 
     /**
      * 1er tour : "Président" à égalité A=2, B=2, C=1 ; "Secrétaire" gagné
@@ -31,7 +46,7 @@ final class SecondRoundTest extends TestCase
      */
     private function publishedFirstRoundWithTie(): array
     {
-        $electionId = $this->makeElection(['handover_date' => self::HANDOVER, 'end_at' => '2026-10-24 06:00:00']);
+        $electionId = $this->makeElection(['handover_date' => self::handover(), 'end_at' => date('Y-m-d H:i:s', strtotime('+1 day'))]);
         $president = $this->makePosition($electionId, ['name' => 'Président', 'sort_order' => 1]);
         $secretary = $this->makePosition($electionId, ['name' => 'Secrétaire', 'sort_order' => 2]);
         $a = $this->makeApprovedCandidate($president, $this->makeMember(['full_name' => 'Candidat A']));
@@ -100,7 +115,7 @@ final class SecondRoundTest extends TestCase
         $second = Election::find($result['id']);
         self::assertSame('candidacies_closed', $second['status'], 'Pas de nouveau dépôt de candidatures.');
         self::assertSame($first['election'], (int) $second['first_round_id']);
-        self::assertSame(self::HANDOVER, $second['handover_date']);
+        self::assertSame(self::handover(), $second['handover_date']);
         self::assertTrue(Election::candidateListPublished($second), 'La liste d\'un second tour est publique dès sa création.');
 
         $positions = Election::positions($result['id']);
@@ -220,7 +235,7 @@ final class SecondRoundTest extends TestCase
         self::assertTrue(Election::publishResults($secondId));
 
         $government = Government::currentWithMembers();
-        self::assertSame('2026-2027', $government['mandate']);
+        self::assertSame(self::mandateLabel(), $government['mandate']);
         self::assertCount(1, $this->db->query('SELECT id FROM governments')->fetchAll(), 'Un seul mandat pour les deux tours.');
         $byRole = array_column($government['members'], 'display_name', 'role');
         self::assertSame('Candidat B', $byRole['Président']);
@@ -298,7 +313,7 @@ final class SecondRoundTest extends TestCase
 
     public function test_a_withdrawn_leader_is_replaced_by_a_commission_decision_among_candidates_still_running(): void
     {
-        $electionId = $this->makeElection(['handover_date' => self::HANDOVER]);
+        $electionId = $this->makeElection(['handover_date' => self::handover()]);
         $position = $this->makePosition($electionId, ['name' => 'Président']);
         $leader = $this->makeApprovedCandidate($position, $this->makeMember(['full_name' => 'Leader retiré']));
         $second = $this->makeApprovedCandidate($position, $this->makeMember(['full_name' => 'Deuxième']));

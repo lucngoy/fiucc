@@ -5,6 +5,7 @@ namespace App\Controllers;
 
 use App\Core\Config;
 use App\Core\Controller;
+use App\Core\Intended;
 use App\Models\ActivityLog;
 use App\Models\LoginThrottle;
 use App\Models\Member;
@@ -189,7 +190,9 @@ final class AuthController extends Controller
         $_SESSION['user_id'] = $userId;
         $_SESSION['role'] = $user['role'];
 
-        $this->redirect($user['role'] === 'admin' ? '/admin' : '/profile');
+        // Page où il était avant d'être renvoyé ici (session expirée...),
+        // sinon l'accueil de son espace.
+        $this->redirect(Intended::pull($user['role']) ?? ($user['role'] === 'admin' ? '/admin' : '/profile'));
     }
 
     private function isLocked(array $user): bool

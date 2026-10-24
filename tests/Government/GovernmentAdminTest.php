@@ -125,6 +125,38 @@ final class GovernmentAdminTest extends TestCase
         self::assertSame(7, (int) GovernmentMember::find($other)['sort_order']);
     }
 
+    public function test_reordering_saves_the_dropped_order_as_one_to_n(): void
+    {
+        $governmentId = Government::createMandate('2025-2026', '2025-09-15', '2026-10-24');
+        $a = $this->post($governmentId, 'Président', 'A', null, 1);
+        $b = $this->post($governmentId, 'Vice-président', 'B', null, 5);
+        $c = $this->post($governmentId, 'Ministre', 'C', null, 5);
+
+        self::assertTrue(GovernmentMember::reorder($governmentId, [$c, $a, $b]));
+
+        $members = GovernmentMember::forGovernment($governmentId);
+        self::assertSame(['C', 'A', 'B'], array_column($members, 'display_name'));
+        self::assertSame([1, 2, 3], array_map('intval', array_column($members, 'sort_order')));
+    }
+
+    public function test_a_reorder_that_does_not_match_the_mandate_exactly_changes_nothing(): void
+    {
+        $first = Government::createMandate('2025-2026', '2025-09-15', '2026-10-24');
+        $second = Government::createMandate('2026-2027', '2026-10-25', '2027-10-24');
+        $a = $this->post($first, 'Président', 'A', null, 1);
+        $b = $this->post($first, 'Ministre', 'B', null, 2);
+        $other = $this->post($second, 'Président', 'Z', null, 7);
+
+        self::assertFalse(GovernmentMember::reorder($first, [$b]), 'Poste manquant.');
+        self::assertFalse(GovernmentMember::reorder($first, [$b, $a, $a]), 'Poste en double.');
+        self::assertFalse(GovernmentMember::reorder($first, [$b, $other]), 'Poste d\'un autre mandat à la place.');
+        self::assertFalse(GovernmentMember::reorder($first, [$b, $a, $other]), 'Poste d\'un autre mandat en plus.');
+        self::assertFalse(GovernmentMember::reorder($second, []), 'Liste vide.');
+
+        self::assertSame(['A', 'B'], array_column(GovernmentMember::forGovernment($first), 'display_name'));
+        self::assertSame(7, (int) GovernmentMember::find($other)['sort_order']);
+    }
+
     public function test_a_linked_account_on_the_current_mandate_grants_government_access(): void
     {
         $memberId = $this->makeMember(['full_name' => 'Ministre lié']);

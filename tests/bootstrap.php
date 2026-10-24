@@ -44,6 +44,9 @@ $envFile = is_string($envFile) && $envFile !== '' ? $envFile : $root . '/.env.te
 
 Env::load($envFile);
 Config::load($root . '/config');
+// Même fuseau qu'en production (public/index.php) : les dates écrites par
+// PHP et NOW() côté MySQL (App\Core\Database) doivent concorder.
+date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
 
 $appEnv = Config::get('app.env');
 $database = (string) Config::get('database.database');

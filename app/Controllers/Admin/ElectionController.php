@@ -108,6 +108,9 @@ final class ElectionController extends Controller
             'commission' => ElectionCommission::forElection((int) $election['id']),
             'eligibleMembers' => Member::eligibleForCandidacy(),
             'rounds'     => $this->roundsSummary($election),
+            'undecided'  => in_array($election['status'], ['candidacies', 'candidacies_closed'], true)
+                ? Election::undecidedCandidacies((int) $election['id'])
+                : 0,
             'notice'     => (string) ($_GET['notice'] ?? ''),
         ], 'layouts.admin');
     }

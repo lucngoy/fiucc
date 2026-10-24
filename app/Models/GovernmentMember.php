@@ -86,6 +86,46 @@ final class GovernmentMember extends Model
     }
 
     /**
+     * Nouvel ordre complet d'un mandat (glisser-déposer, admin/government).
+     * Refusé si la liste reçue n'est pas exactement les postes du mandat —
+     * un poste en trop (autre mandat), en moins ou en double : un ordre
+     * partiel laisserait les autres postes à des places incohérentes.
+     *
+     * @param list<int> $ids postes dans l'ordre voulu, le premier en tête
+     */
+    public static function reorder(int $governmentId, array $ids): bool
+    {
+        $ids = array_map('intval', $ids);
+        $current = array_map('intval', array_column(self::forGovernment($governmentId), 'id'));
+        $expected = $current;
+        $received = $ids;
+        sort($expected);
+        sort($received);
+
+        if ($current === [] || $expected !== $received) {
+            return false;
+        }
+
+        $db = static::db();
+        $db->beginTransaction();
+
+        try {
+            $stmt = $db->prepare('UPDATE government_members SET sort_order = :sort_order WHERE id = :id AND government_id = :government_id');
+
+            foreach ($ids as $position => $memberId) {
+                $stmt->execute(['sort_order' => $position + 1, 'id' => $memberId, 'government_id' => $governmentId]);
+            }
+
+            $db->commit();
+        } catch (\Throwable $e) {
+            $db->rollBack();
+            throw $e;
+        }
+
+        return true;
+    }
+
+    /**
      * Monte ou descend un poste d'un cran. Les ordres du mandat sont d'abord
      * renumérotés 1..n (des saisies manuelles peuvent avoir laissé des
      * doublons, où "échanger avec le voisin" ne changerait rien), puis le

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Middleware;
 
+use App\Core\Intended;
 use App\Models\Member;
 
 /**
@@ -23,6 +24,8 @@ final class ValidatedMiddleware
     public function handle(): bool
     {
         if (!isset($_SESSION['user_id'])) {
+            // Ramené ici une fois reconnecté (App\Core\Intended).
+            Intended::remember();
             header('Location: /login?notice=auth_required');
 
             return false;
