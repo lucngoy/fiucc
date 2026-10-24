@@ -95,11 +95,11 @@ $actionTooltip = static function (string $label): string {
  * complète le message plutôt que de laisser deviner, et on bascule sur le
  * jaune (pas vert) dès qu'au moins un élément a été ignoré.
  */
-$bulkNotice = static function (string $messageKey, string $sourceStatus) use ($applied, $requested): array {
+$bulkNotice = static function (string $messageKey, string $sourceStatus, string $skippedKey = 'admin.members.notice.bulk_skipped') use ($applied, $requested): array {
     $message = t($messageKey, ['applied' => $applied, 'requested' => $requested]);
 
     if ($requested > 0 && $applied < $requested) {
-        $message .= ' ' . t('admin.members.notice.bulk_skipped', ['status' => $sourceStatus]);
+        $message .= ' ' . t($skippedKey, ['status' => $sourceStatus]);
     }
 
     return ['type' => $requested > 0 && $applied < $requested ? 'warning' : 'success', 'message' => $message];
@@ -117,6 +117,7 @@ $noticeMap = [
     'bulk_validated'      => $bulkNotice('admin.members.notice.bulk_validated', mb_strtolower(t('admin.members.status.pending'))),
     'bulk_rejected'       => $bulkNotice('admin.members.notice.bulk_rejected', mb_strtolower(t('admin.members.status.pending'))),
     'bulk_suspended'      => $bulkNotice('admin.members.notice.bulk_suspended', mb_strtolower(t('admin.members.status.validated'))),
+    'bulk_marked_alumni'  => $bulkNotice('admin.members.notice.bulk_marked_alumni', '', 'admin.members.notice.bulk_alumni_skipped'),
 ];
 
 $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 'submitted' || $dir !== 'desc'
@@ -407,6 +408,14 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
                     disabled
                     class="h-9 px-4 rounded-control bg-ink text-white text-label-md font-label-md hover:bg-ink/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
                     <?= e(t('admin.members.bulk.suspend_count', ['count' => 0])) ?>
+                </button>
+                <button type="submit" form="<?= e($bulkFormId) ?>" formaction="/admin/members/bulk-mark-alumni"
+                    data-bulk-action="mark-alumni"
+                    data-confirm-template="<?= e(t('admin.members.bulk.confirm_alumni', ['count' => '__COUNT__'])) ?>"
+                    data-label-template="<?= e(t('admin.members.bulk.alumni_count', ['count' => '__COUNT__'])) ?>"
+                    disabled
+                    class="h-9 px-4 rounded-control bg-primary text-white text-label-md font-label-md hover:bg-primary-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+                    <?= e(t('admin.members.bulk.alumni_count', ['count' => 0])) ?>
                 </button>
             </div>
         <?php endif; ?>

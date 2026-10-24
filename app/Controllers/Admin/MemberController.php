@@ -380,6 +380,32 @@ final class MemberController extends Controller
     }
 
     /**
+     * Passage groupé en alumni : mêmes cibles que le bouton par ligne
+     * (membres validés encore 'student'), le reste de la sélection est
+     * ignoré et compté. Pas d'email : le passage par ligne n'en envoie pas
+     * non plus.
+     */
+    public function bulkMarkAlumni(): void
+    {
+        $adminId = (int) $_SESSION['user_id'];
+        $ids = $this->postedIds();
+
+        if ($ids === []) {
+            $this->redirectToList('bulk_none_selected');
+            return;
+        }
+
+        $candidates = $this->excludeSelf(Member::findManyByIdsAndStatus($ids, 'validated', 'student'), $adminId);
+
+        foreach ($candidates as $candidate) {
+            Member::markAlumni((int) $candidate['id']);
+            ActivityLog::record($adminId, 'member.marked_alumni', 'member', (int) $candidate['id']);
+        }
+
+        $this->redirectToList('bulk_marked_alumni', count($ids), count($candidates));
+    }
+
+    /**
      * @return int[]
      */
     private function postedIds(): array

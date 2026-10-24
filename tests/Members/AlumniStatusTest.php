@@ -29,6 +29,21 @@ final class AlumniStatusTest extends TestCase
         self::assertSame('alumni', $row['status_type']);
     }
 
+    public function test_bulk_alumni_targets_only_validated_students_in_the_selection(): void
+    {
+        $student = $this->makeMember();
+        $alreadyAlumni = $this->makeMember(['status_type' => 'alumni']);
+        $pending = $this->makeMember(['status' => 'pending']);
+        $suspended = $this->makeMember(['status' => 'suspended']);
+        $notSelected = $this->makeMember();
+
+        $targets = Member::findManyByIdsAndStatus([$student, $alreadyAlumni, $pending, $suspended], 'validated', 'student');
+
+        self::assertSame([$student], array_map('intval', array_column($targets, 'id')));
+        self::assertCount(2, Member::findManyByIdsAndStatus([$student, $alreadyAlumni], 'validated'), 'Sans type : comportement inchangé pour les autres actions groupées.');
+        self::assertNotContains($notSelected, array_map('intval', array_column($targets, 'id')));
+    }
+
     public function test_an_alumni_member_is_no_longer_voter_eligible(): void
     {
         $memberId = $this->makeMember();

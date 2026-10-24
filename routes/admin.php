@@ -17,6 +17,7 @@ return [
     ['POST', '/admin/members/bulk-validate',    'Admin\MemberController@bulkValidate'],
     ['POST', '/admin/members/bulk-reject',      'Admin\MemberController@bulkReject'],
     ['POST', '/admin/members/bulk-suspend',     'Admin\MemberController@bulkSuspend'],
+    ['POST', '/admin/members/bulk-mark-alumni', 'Admin\MemberController@bulkMarkAlumni'],
     ['GET',  '/admin/members/export',           'Admin\MemberController@export'],
     // Après /export : {id} accepte n'importe quel segment, la première
     // route qui correspond gagne (App\Core\Router).

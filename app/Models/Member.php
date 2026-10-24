@@ -949,10 +949,13 @@ final class Member extends Model
      * de départ attendu, le reste est ignoré et compté séparément par
      * l'appelant (nombre demandé vs. nombre réellement affecté).
      *
+     * $statusType restreint en plus au type de membre (passage groupé en
+     * alumni : seuls les 'student' sont concernés).
+     *
      * @param int[] $ids
      * @return array<int, array{id: int, user_id: int, full_name: string}>
      */
-    public static function findManyByIdsAndStatus(array $ids, string $status): array
+    public static function findManyByIdsAndStatus(array $ids, string $status, ?string $statusType = null): array
     {
         $ids = array_values(array_unique(array_filter(array_map('intval', $ids), static fn (int $id) => $id > 0)));
 
@@ -961,10 +964,11 @@ final class Member extends Model
         }
 
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $typeClause = $statusType !== null ? ' AND status_type = ?' : '';
         $stmt = static::db()->prepare(
-            "SELECT id, user_id, full_name FROM members WHERE status = ? AND id IN ({$placeholders})"
+            "SELECT id, user_id, full_name FROM members WHERE status = ?{$typeClause} AND id IN ({$placeholders})"
         );
-        $stmt->execute(array_merge([$status], $ids));
+        $stmt->execute(array_merge([$status], $statusType !== null ? [$statusType] : [], $ids));
 
         return $stmt->fetchAll();
     }
