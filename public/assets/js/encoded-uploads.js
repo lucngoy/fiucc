@@ -61,6 +61,17 @@
         });
     }
 
+    // Pour les envois faits par script (admin-gallery-upload.js) : la
+    // valeur d'un champ FIELD, à poster telle quelle.
+    window.EncodedUploads = {
+        field: FIELD,
+        encode: function (fieldName, file) {
+            return shrinkImage(file).then(readAsBase64).then(function (data) {
+                return JSON.stringify({ field: fieldName, name: file.name, data: data });
+            });
+        }
+    };
+
     function restore(form) {
         form.querySelectorAll('input[data-encoded-upload]').forEach(function (hidden) { hidden.remove(); });
         form.querySelectorAll('input[data-encoded-disabled]').forEach(function (input) {

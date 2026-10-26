@@ -48,8 +48,10 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
     <?= component('header') ?>
     <main class="flex-grow"><?= $content ?></main>
     <?= component('footer') ?>
+    <?= component('cookie_notice') ?>
     <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
     <script src="/assets/js/nav.js" defer></script>
     <script src="/assets/js/encoded-uploads.js" defer></script>
+    <script src="<?= e(asset('/assets/js/cookie-notice.js')) ?>" defer></script>
 </body>
 </html>

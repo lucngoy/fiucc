@@ -66,7 +66,7 @@ $motherCommunityUrl = $contactSettings['mother_community_url'];
     <div class="relative w-full overflow-hidden bg-primary">
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(rgba(255,255,255,0.10) 1px, transparent 1px); background-size: 16px 16px;"></div>
         <div class="max-w-layout mx-auto px-4 md:px-6 py-4 text-center text-body-sm text-white">
-            <p>&copy; <?= e($year) ?> <?= e($brandName) ?>. <?= e(t('footer.rights')) ?></p>
+            <p>&copy; <?= e($year) ?> <?= e($brandName) ?>. <?= e(t('footer.rights')) ?> · <a href="/cookies" class="underline hover:no-underline"><?= e(t('footer.cookies')) ?></a></p>
         </div>
     </div>
 </footer>

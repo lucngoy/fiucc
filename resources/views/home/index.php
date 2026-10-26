@@ -410,7 +410,7 @@ $imagePlaceholder = static function (string $iconClass, string $iconSize = 'text
         // hover "expand" promettait déjà un agrandissement au clic ;
         // jusqu'ici rien ne l'ouvrait vraiment. ?>
         <?= component('lightbox') ?>
-        <script src="/assets/js/gallery-lightbox.js" defer></script>
+        <script src="<?= e(asset('/assets/js/gallery-lightbox.js')) ?>" defer></script>
     <?php endif; ?>
 </div>
 

@@ -18,7 +18,9 @@
     # le risque réel qu'un CSP strict couvre est côté script, pas style.
     # NOTE : option 2 = garder le kit JS Font Awesome, donc il faut autoriser
     # explicitement ses chargements externes et les scripts inline qu'il injecte.
-    Header always set Content-Security-Policy "default-src 'self'; connect-src 'self' https://ka-f.fontawesome.com https://kit.fontawesome.com; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://site-assets.fontawesome.com; font-src 'self' https://site-assets.fontawesome.com data:; img-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
+    # img-src blob: : aperçus des photos choisies avant l'envoi (galerie admin),
+    # créés par la page elle-même depuis les fichiers de l'appareil.
+    Header always set Content-Security-Policy "default-src 'self'; connect-src 'self' https://ka-f.fontawesome.com https://kit.fontawesome.com; script-src 'self' 'unsafe-inline' https://kit.fontawesome.com; style-src 'self' 'unsafe-inline' https://site-assets.fontawesome.com; font-src 'self' https://site-assets.fontawesome.com data:; img-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'"
 
     # OCR du passeport (recensement, migration 018) : le worker Tesseract.js
     # compile du WebAssembly, ce que script-src 'self' seul interdit. Un

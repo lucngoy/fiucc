@@ -138,13 +138,56 @@ $noticeMap = [
         <div class="bg-white rounded-card border border-border p-6 md:p-8 flex flex-col gap-4 mb-8">
             <h2 class="font-headline-sm text-headline-sm text-ink"><?= e(t('admin.gallery.upload.title')) ?></h2>
             <p class="text-body-sm text-muted"><?= e(t('admin.gallery.upload.help')) ?></p>
-            <form method="POST" action="/admin/gallery/<?= e((string) $albumId) ?>/photos" enctype="multipart/form-data" class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <!-- Sans JavaScript : envoi groupé classique. Avec admin-gallery-upload.js :
+                 aperçus retirables, puis envoi photo par photo — une photo en échec
+                 reste dans la liste pour être renvoyée, sans tout resélectionner. -->
+            <form method="POST" action="/admin/gallery/<?= e((string) $albumId) ?>/photos" enctype="multipart/form-data"
+                  data-gallery-upload
+                  data-redirect="<?= e('/admin/gallery/' . $albumId . '/edit?notice=uploaded') ?>"
+                  data-label-waiting="<?= e(t('admin.gallery.upload.status.waiting')) ?>"
+                  data-label-sending="<?= e(t('admin.gallery.upload.status.sending')) ?>"
+                  data-label-done="<?= e(t('admin.gallery.upload.status.done')) ?>"
+                  data-label-failed="<?= e(t('admin.gallery.upload.status.failed')) ?>"
+                  data-label-remove="<?= e(t('admin.gallery.upload.remove')) ?>"
+                  data-label-count="<?= e(t('admin.gallery.upload.count')) ?>"
+                  data-label-submit="<?= e(t('admin.gallery.upload.submit')) ?>"
+                  data-label-retry="<?= e(t('admin.gallery.upload.retry')) ?>"
+                  data-label-kept="<?= e(t('admin.gallery.upload.kept')) ?>"
+                  data-label-network="<?= e(t('admin.gallery.upload.network_error')) ?>"
+                  data-label-invalid-type="<?= e(t('upload.invalid_type')) ?>"
+                  class="flex flex-col gap-4">
                 <?= csrf_field() ?>
-                <input type="file" name="photos[]" multiple accept="image/jpeg,image/png,image/webp"
-                    class="text-body-sm text-ink file:mr-3 file:h-9 file:px-4 file:rounded-control file:border-0 file:bg-primary file:text-white file:font-label-md file:text-label-md hover:file:bg-primary-dark">
-                <button type="submit" class="h-10 px-5 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark transition-colors shrink-0">
-                    <?= e(t('admin.gallery.upload.submit')) ?>
-                </button>
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                    <label for="gallery-photos" data-upload-picker
+                           class="hidden cursor-pointer inline-flex items-center gap-2 h-10 px-4 rounded-control bg-white border border-primary text-primary text-label-lg font-label-lg hover:bg-primary-light/10 focus-within:ring-2 focus-within:ring-primary transition-colors shrink-0">
+                        <?= icon('images') ?>
+                        <?= e(t('admin.gallery.upload.choose')) ?>
+                    </label>
+                    <input type="file" id="gallery-photos" name="photos[]" multiple accept="image/jpeg,image/png,image/webp"
+                        class="text-body-sm text-ink file:mr-3 file:h-9 file:px-4 file:rounded-control file:border-0 file:bg-primary file:text-white file:font-label-md file:text-label-md hover:file:bg-primary-dark">
+                    <button type="submit" data-upload-submit class="h-10 px-5 rounded-control bg-primary text-white text-label-lg font-label-lg hover:bg-primary-dark disabled:opacity-50 disabled:pointer-events-none transition-colors shrink-0">
+                        <?= e(t('admin.gallery.upload.submit')) ?>
+                    </button>
+                </div>
+                <p data-upload-summary class="hidden text-body-sm text-muted" aria-live="polite"></p>
+                <ul data-upload-queue class="hidden grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"></ul>
+                <template data-upload-item>
+                    <li class="relative flex flex-col rounded-control border border-border bg-surface overflow-hidden" data-item>
+                        <img data-item-preview src="" alt="" class="w-full aspect-square object-cover bg-surface">
+                        <button type="button" data-item-remove
+                                class="absolute top-1.5 right-1.5 h-8 w-8 rounded-full bg-white/90 text-danger shadow-card hover:bg-white flex items-center justify-center transition-colors disabled:hidden">
+                            <?= icon('xmark') ?>
+                        </button>
+                        <div class="p-2 flex flex-col gap-1">
+                            <p data-item-name class="text-body-sm text-ink truncate"></p>
+                            <span data-item-status="waiting" class="hidden self-start inline-flex items-center h-6 px-2 rounded-full bg-white border border-border text-muted text-label-md font-label-md"></span>
+                            <span data-item-status="sending" class="hidden self-start inline-flex items-center h-6 px-2 rounded-full bg-primary-light/30 text-primary text-label-md font-label-md"></span>
+                            <span data-item-status="done" class="hidden self-start inline-flex items-center gap-1 h-6 px-2 rounded-full bg-success/10 text-success text-label-md font-label-md"><?= icon('check') ?><span data-item-status-text></span></span>
+                            <span data-item-status="failed" class="hidden self-start inline-flex items-center h-6 px-2 rounded-full bg-danger/10 text-danger text-label-md font-label-md"></span>
+                            <p data-item-reason class="hidden text-body-sm text-danger"></p>
+                        </div>
+                    </li>
+                </template>
             </form>
         </div>
 
@@ -220,3 +263,6 @@ $noticeMap = [
     <?php endif; ?>
 </div>
 <script src="/assets/js/admin-gallery-sort.js" defer></script>
+<!-- Versionné (asset()) : avec une version en cache d'encoded-uploads.js, l'envoi
+     photo par photo n'aurait pas sa fonction d'encodage. -->
+<script src="<?= e(asset('/assets/js/admin-gallery-upload.js')) ?>" defer></script>

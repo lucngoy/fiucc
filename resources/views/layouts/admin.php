@@ -287,6 +287,6 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
 </div>
 <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
 <script src="/assets/js/admin-nav.js" defer></script>
-<script src="/assets/js/encoded-uploads.js" defer></script>
+<script src="<?= e(asset('/assets/js/encoded-uploads.js')) ?>" defer></script>
 </body>
 </html>

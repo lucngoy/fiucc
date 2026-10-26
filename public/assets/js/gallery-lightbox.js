@@ -12,6 +12,8 @@
     var image = document.getElementById('lightbox-image');
     var caption = document.getElementById('lightbox-caption');
     var counter = document.getElementById('lightbox-counter');
+    var loader = document.getElementById('lightbox-loading');
+    var loaderTimer = null;
     var current = 0;
 
     function show(index) {
@@ -26,12 +28,62 @@
 
         // image_path (data-full), jamais la miniature de la grille — seul
         // endroit où la pleine résolution a du sens (voir gallery/show.php).
-        image.src = trigger.dataset.full;
+        // Le navigateur garde l'ancienne image affichée tant que la
+        // nouvelle charge : elle est masquée jusqu'au « load », sinon la
+        // photo ouverte précédemment apparaît d'abord.
+        var full = new URL(trigger.dataset.full, window.location.href).href;
+
+        if (image.src !== full) {
+            setLoading(true);
+            image.src = full;
+        }
+
+        if (image.complete && image.naturalWidth > 0) {
+            setLoading(false);
+        }
+
         image.alt = text;
         caption.textContent = text;
         caption.hidden = text === '';
         counter.textContent = (current + 1) + ' / ' + triggers.length;
     }
+
+    // Indicateur de chargement : affiché seulement si la photo tarde
+    // (150 ms), pour ne pas clignoter quand elle est déjà en cache.
+    function setLoading(on) {
+        image.style.visibility = on ? 'hidden' : '';
+        window.clearTimeout(loaderTimer);
+
+        if (!loader) {
+            return;
+        }
+
+        if (on) {
+            loaderTimer = window.setTimeout(function () { loader.classList.remove('hidden'); }, 150);
+        } else {
+            loader.classList.add('hidden');
+        }
+    }
+
+    // Photos voisines chargées d'avance, une fois la photo affichée
+    // (pour ne pas lui prendre de bande passante) : Suivant/Précédent
+    // s'affichent sans attente.
+    function preload(index) {
+        var trigger = triggers[((index % triggers.length) + triggers.length) % triggers.length];
+        new Image().src = trigger.dataset.full;
+    }
+
+    // Seule l'image demandée en dernier se révèle : un « load » tardif
+    // d'une photo déjà quittée ne compte pas (image.src a changé depuis).
+    image.addEventListener('load', function () {
+        setLoading(false);
+        preload(current + 1);
+        preload(current - 1);
+    });
+
+    image.addEventListener('error', function () {
+        setLoading(false);
+    });
 
     triggers.forEach(function (trigger, index) {
         trigger.addEventListener('click', function (event) {

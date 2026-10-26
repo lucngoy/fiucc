@@ -44,8 +44,10 @@ $ogImageUrl = rtrim((string) \App\Core\Config::get('app.url', ''), '/') . $ogIma
 </head>
 <body class="min-h-screen bg-surface antialiased">
     <main><?= $content ?></main>
+    <?= component('cookie_notice') ?>
     <script src="https://kit.fontawesome.com/683aca505a.js" crossorigin="anonymous"></script>
     <script src="/assets/js/password-toggle.js" defer></script>
     <script src="/assets/js/encoded-uploads.js" defer></script>
+    <script src="<?= e(asset('/assets/js/cookie-notice.js')) ?>" defer></script>
 </body>
 </html>

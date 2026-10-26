@@ -104,4 +104,6 @@ return [
 
     // Langue (FIUCC-30)
     ['GET',  '/lang/{locale}',                 'LocaleController@switch'],
+    ['GET',  '/cookies',                       'CookieController@index'],
+    ['POST', '/cookies/dismiss',               'CookieController@dismiss'],
 ];

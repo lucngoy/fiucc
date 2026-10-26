@@ -18,7 +18,11 @@
             class="absolute -top-3 -right-3 sm:-top-2 sm:-right-2 z-20 h-10 w-10 rounded-full bg-ink/70 hover:bg-ink text-white flex items-center justify-center transition-colors">
             <?= icon('xmark') ?>
         </button>
-        <div class="relative w-full flex items-center justify-center">
+        <div class="relative w-full min-h-[200px] flex items-center justify-center">
+            <div id="lightbox-loading" role="status" class="hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+                <span class="h-10 w-10 rounded-full border-4 border-white/30 border-t-white animate-spin motion-reduce:animate-none" aria-hidden="true"></span>
+                <span class="sr-only"><?= e(t('gallery.lightbox.loading')) ?></span>
+            </div>
             <button type="button" id="lightbox-prev" aria-label="<?= e(t('gallery.lightbox.previous')) ?>"
                 class="absolute left-1 sm:left-2 z-10 h-10 w-10 rounded-full bg-ink/50 hover:bg-ink/70 text-white flex items-center justify-center transition-colors">
                 <?= icon('chevron-left') ?>

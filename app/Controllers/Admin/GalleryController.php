@@ -174,6 +174,24 @@ final class GalleryController extends Controller
             ActivityLog::record((int) $_SESSION['user_id'], 'gallery.photos_uploaded', 'album', $albumId);
         }
 
+        // Envoi photo par photo depuis admin-gallery-upload.js : le script
+        // garde les photos en échec dans sa file, pour les renvoyer sans
+        // les resélectionner. Sans JavaScript, envoi groupé et redirection.
+        // Les succès s'additionnent d'un envoi à l'autre, pour le message
+        // affiché quand le script recharge la page une fois la file vide.
+        // Les échecs, eux, restent dans la file du script, pas ici.
+        if (str_contains((string) ($_SERVER['HTTP_ACCEPT'] ?? ''), 'application/json')) {
+            $previous = (array) (Flash::get('gallery_upload_result') ?? []);
+            Flash::set('gallery_upload_result', [
+                'succeeded' => (int) ($previous['succeeded'] ?? 0) + $succeeded,
+                'failures'  => [],
+            ]);
+
+            header('Content-Type: application/json; charset=utf-8');
+            echo json_encode(['succeeded' => $succeeded, 'failures' => $failures], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+
         Flash::set('gallery_upload_result', ['succeeded' => $succeeded, 'failures' => $failures]);
 
         $this->redirect('/admin/gallery/' . $albumId . '/edit?notice=uploaded');

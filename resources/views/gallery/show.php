@@ -102,4 +102,4 @@ $photos ??= [];
 </div>
 </div>
 
-<script src="/assets/js/gallery-lightbox.js" defer></script>
+<script src="<?= e(asset('/assets/js/gallery-lightbox.js')) ?>" defer></script>
