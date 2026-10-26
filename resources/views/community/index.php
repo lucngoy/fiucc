@@ -18,6 +18,7 @@
  * pas une liste inventée. $journey vient de CommunityController::index().
  */
 $journey ??= [];
+$presidents ??= [];
 // Entrées visibles avant "Voir plus" — au-delà, repliées derrière le bouton
 // (Event::timelineEntries() en récupère jusqu'à 12, pour qu'il y ait
 // réellement quelque chose à déplier une fois la chronologie plus longue).
@@ -29,9 +30,13 @@ $journeyVisibleCount = 4;
 $renderJourneyEntry = static function (array $entry, string $align = 'left'): string {
     $alignClass = $align === 'right' ? 'text-right' : 'text-left';
 
-    return '<p class="text-label-md font-label-md text-primary uppercase tracking-wider mb-1 ' . $alignClass . '">' . e(local_date($entry['start_date'])) . '</p>'
-        . '<h3 class="font-headline-sm text-headline-sm text-ink mb-1 ' . $alignClass . '">' . e($entry['title']) . '</h3>'
-        . (!empty($entry['location']) ? '<p class="text-body-sm text-muted ' . $alignClass . '">' . e($entry['location']) . '</p>' : '');
+    // Toute l'étape mène à la page de l'événement (/events/{slug}), qui
+    // affiche aussi les publiés et archivés, les seuls statuts de la frise.
+    return '<a href="' . e('/events/' . $entry['slug']) . '" class="group block rounded-control focus:outline-none focus-visible:ring-2 focus-visible:ring-primary">'
+        . '<p class="text-label-md font-label-md text-primary uppercase tracking-wider mb-1 ' . $alignClass . '">' . e(local_date($entry['start_date'])) . '</p>'
+        . '<h3 class="font-headline-sm text-headline-sm text-ink group-hover:text-primary group-hover:underline mb-1 ' . $alignClass . '">' . e($entry['title']) . '</h3>'
+        . (!empty($entry['location']) ? '<p class="text-body-sm text-muted ' . $alignClass . '">' . e($entry['location']) . '</p>' : '')
+        . '</a>';
 };
 
 $storyPhotoPath = 'assets/images/community/founding-story.jpg';
@@ -205,6 +210,40 @@ $values = [
             </button>
         </div>
     <?php endif; ?>
+</div>
+<?php endif; ?>
+
+<?php if ($presidents !== []): ?>
+<!-- Aperçu de /community/presidents : les portraits, de l'actuel au premier. -->
+<div class="w-full bg-white border-y border-border">
+<div class="max-w-layout mx-auto px-4 md:px-6 py-14 md:py-16 flex flex-col lg:flex-row lg:items-center gap-8">
+    <div class="lg:w-1/3">
+        <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('community.presidents.eyebrow')) ?></p>
+        <h2 class="font-headline-md text-headline-md text-ink mb-3"><?= e(t('community.presidents.title')) ?></h2>
+        <p class="text-body-md text-muted mb-5"><?= e(t('community.presidents.body', ['first' => $presidents[array_key_last($presidents)]['name'], 'current' => $presidents[0]['name']])) ?></p>
+        <?= component('button', ['label' => t('community.presidents.link'), 'variant' => 'secondary', 'href' => '/community/presidents']) ?>
+    </div>
+    <ol class="lg:flex-1 grid grid-cols-3 sm:grid-cols-5 gap-4">
+        <?php foreach ($presidents as $president): ?>
+            <li>
+                <a href="/community/presidents" class="group flex flex-col items-center text-center gap-2">
+                    <?php if ($president['photo_url'] !== null): ?>
+                        <img src="<?= e($president['photo_url']) ?>"
+                             alt="<?= e(t('presidents.photo_alt', ['name' => $president['name']])) ?>"
+                             width="400" height="500" loading="lazy"
+                             class="w-full aspect-[4/5] object-cover object-top rounded-card border border-border group-hover:border-primary transition-colors">
+                    <?php endif; ?>
+                    <span class="text-label-md font-label-md text-ink leading-tight"><?= e($president['name']) ?></span>
+                    <span class="text-body-sm text-muted tabular-nums">
+                        <?= e($president['until'] === null
+                            ? t('presidents.period_current', ['from' => (string) $president['from']])
+                            : t('presidents.period', ['from' => (string) $president['from'], 'until' => (string) $president['until']])) ?>
+                    </span>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ol>
+</div>
 </div>
 <?php endif; ?>
 

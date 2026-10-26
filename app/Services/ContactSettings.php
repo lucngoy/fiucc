@@ -38,6 +38,14 @@ final class ContactSettings
         'office_hours'    => ['multiline', 500, true],
         'emergency_phone' => ['phone', 30, true],
         'recipient_email' => ['email', 190, false],
+        // Page /help : ambassade de la RDC (Ankara) et communauté mère.
+        // Saisies par le bureau, jamais en dur : leurs coordonnées changent
+        // et aucune source officielle en ligne ne les confirme.
+        'embassy_address' => ['multiline', 300, true],
+        'embassy_phone'   => ['phone', 30, true],
+        'embassy_email'   => ['email', 190, true],
+        'embassy_url'     => ['url', 255, true],
+        'mother_community_url' => ['url', 255, true],
     ];
 
     private const KEY_PREFIX = 'contact.';

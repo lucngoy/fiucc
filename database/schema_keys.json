@@ -562,6 +562,24 @@
             }
         }
     },
+    "faq_items": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_faq_items_published_order": {
+                "unique": false,
+                "cols": [
+                    "is_published",
+                    "sort_order"
+                ]
+            }
+        },
+        "foreign_keys": []
+    },
     "government_members": {
         "primary": [
             "id"
@@ -624,6 +642,60 @@
             }
         },
         "foreign_keys": []
+    },
+    "help_requests": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "fk_help_requests_handler": {
+                "unique": false,
+                "cols": [
+                    "handled_by"
+                ]
+            },
+            "idx_help_requests_member_created": {
+                "unique": false,
+                "cols": [
+                    "member_id",
+                    "created_at"
+                ]
+            },
+            "idx_help_requests_status_created": {
+                "unique": false,
+                "cols": [
+                    "status",
+                    "created_at"
+                ]
+            }
+        },
+        "foreign_keys": {
+            "fk_help_requests_handler": {
+                "cols": [
+                    "handled_by"
+                ],
+                "ref_table": "users",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "SET NULL",
+                "on_update": "RESTRICT"
+            },
+            "fk_help_requests_member": {
+                "cols": [
+                    "member_id"
+                ],
+                "ref_table": "members",
+                "ref_cols": [
+                    "id"
+                ],
+                "on_delete": "CASCADE",
+                "on_update": "RESTRICT"
+            }
+        }
     },
     "login_throttle": {
         "primary": [
@@ -916,6 +988,24 @@
                 "on_update": "RESTRICT"
             }
         }
+    },
+    "presidents": {
+        "primary": [
+            "id"
+        ],
+        "auto_increment": {
+            "id": "bigint(20) unsigned"
+        },
+        "indexes": {
+            "idx_presidents_published_from": {
+                "unique": false,
+                "cols": [
+                    "is_published",
+                    "from_year"
+                ]
+            }
+        },
+        "foreign_keys": []
     },
     "site_settings": {
         "primary": [

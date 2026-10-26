@@ -12,6 +12,7 @@ $year = date('Y');
 $contactSettings = \App\Services\ContactSettings::values();
 $whatsappUrl = $contactSettings['whatsapp_url'];
 $instagramUrl = $contactSettings['instagram_url'];
+$motherCommunityUrl = $contactSettings['mother_community_url'];
 ?>
 <footer class="w-full bg-white border-t border-border">
     <div class="max-w-layout mx-auto px-4 md:px-6 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -27,6 +28,7 @@ $instagramUrl = $contactSettings['instagram_url'];
             <h4 class="font-label-caps text-label-caps uppercase text-muted"><?= e(t('footer.quick_links')) ?></h4>
             <ul class="flex flex-col gap-2 text-body-sm text-muted">
                 <li><a href="/new-at-final" class="hover:text-primary transition-colors"><?= e(t('footer.new_at_final')) ?></a></li>
+                <li><a href="/help" class="hover:text-primary transition-colors"><?= e(t('footer.help')) ?></a></li>
                 <li><a href="/community" class="hover:text-primary transition-colors"><?= e(t('nav.community')) ?></a></li>
                 <li><a href="/events" class="hover:text-primary transition-colors"><?= e(t('nav.events')) ?></a></li>
                 <li><a href="/news" class="hover:text-primary transition-colors"><?= e(t('nav.news')) ?></a></li>
@@ -42,6 +44,7 @@ $instagramUrl = $contactSettings['instagram_url'];
                 <li><a href="/alumni" class="hover:text-primary transition-colors"><?= e(t('footer.alumni')) ?></a></li>
                 <li><a href="/mentors" class="hover:text-primary transition-colors"><?= e(t('footer.mentors')) ?></a></li>
                 <li><a href="/community/government" class="hover:text-primary transition-colors"><?= e(t('footer.government')) ?></a></li>
+                <li><a href="/community/presidents" class="hover:text-primary transition-colors"><?= e(t('footer.presidents')) ?></a></li>
                 <li><a href="/documents" class="hover:text-primary transition-colors"><?= e(t('footer.documents')) ?></a></li>
                 <li><a href="/partners" class="hover:text-primary transition-colors"><?= e(t('footer.partners')) ?></a></li>
             </ul>
@@ -53,6 +56,9 @@ $instagramUrl = $contactSettings['instagram_url'];
                 <li><a href="<?= e($instagramUrl ?: '#') ?>" <?= $instagramUrl ? 'target="_blank" rel="noopener noreferrer"' : '' ?> class="hover:text-primary transition-colors"><?= e(t('footer.instagram')) ?></a></li>
                 <li><a href="<?= e($whatsappUrl ?: '#') ?>" <?= $whatsappUrl ? 'target="_blank" rel="noopener noreferrer"' : '' ?> class="hover:text-primary transition-colors"><?= e(t('footer.whatsapp')) ?></a></li>
                 <li><a href="/contact" class="hover:text-primary transition-colors"><?= e(t('footer.contact')) ?></a></li>
+                <?php if ($motherCommunityUrl !== ''): ?>
+                    <li><a href="<?= e($motherCommunityUrl) ?>" target="_blank" rel="noopener noreferrer" class="hover:text-primary transition-colors"><?= e(t('footer.mother_community')) ?></a></li>
+                <?php endif; ?>
             </ul>
         </div>
     </div>

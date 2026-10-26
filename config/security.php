@@ -20,6 +20,8 @@ return [
     'candidacy_photo_max_dimension' => (int) Env::get('CANDIDACY_PHOTO_MAX_DIMENSION', 2000),
     'contact_max_messages'       => (int) Env::get('CONTACT_MAX_MESSAGES', 3),
     'contact_window_minutes'     => (int) Env::get('CONTACT_WINDOW_MINUTES', 15),
+    // Demandes d'aide (/help, migration 028) : au plus N par membre sur 24 h.
+    'help_max_requests_per_day'  => (int) Env::get('HELP_MAX_REQUESTS_PER_DAY', 3),
     'vote_token_ttl_hours' => (int) Env::get('VOTE_TOKEN_TTL_HOURS', 72),
     // Tentatives de saisie du code de vote (FIUCC-64) avant verrouillage —
     // même principe qu'otp_max_attempts : au-delà, même un code correct est

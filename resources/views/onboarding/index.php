@@ -51,8 +51,12 @@ $faqItems = [
     ['q' => t('onboarding.faq.q2'), 'a' => t('onboarding.faq.a2')],
     ['q' => t('onboarding.faq.q3'), 'a' => t('onboarding.faq.a3')],
     ['q' => t('onboarding.faq.q4'), 'a' => t('onboarding.faq.a4')],
-    ['q' => t('onboarding.faq.q5'), 'a' => t('onboarding.faq.a5')],
 ];
+// Questions ajoutées par le bureau (/admin/faq, migration 029), entre
+// celles du site et « Ma question n'est pas ici », qui reste la dernière.
+$faqItems = array_merge($faqItems, $customFaq ?? [], [
+    ['q' => t('onboarding.faq.q5'), 'a' => t('onboarding.faq.a5')],
+]);
 ?>
 <div class="relative w-full overflow-hidden bg-primary">
     <svg class="pointer-events-none absolute inset-0 h-full w-full opacity-40" viewBox="0 0 800 900" preserveAspectRatio="xMidYMid slice" fill="none">
@@ -145,6 +149,10 @@ $faqItems = [
             <?= icon('sitemap') ?>
             <?= e(t('onboarding.contacts.government_link')) ?>
         </a>
+        <a href="/help" class="inline-flex items-center gap-2 h-11 px-6 rounded-control bg-white border border-border text-ink text-label-lg font-label-lg hover:border-primary hover:text-primary transition-colors">
+            <?= icon('hands-holding-circle') ?>
+            <?= e(t('onboarding.contacts.help_link')) ?>
+        </a>
         <?php if (!empty($whatsappUrl)): ?>
             <a href="<?= e($whatsappUrl) ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 h-11 px-6 rounded-control bg-white border border-border text-ink text-label-lg font-label-lg hover:border-primary hover:text-primary transition-colors">
                 <?= icon('people-group') ?>
@@ -155,7 +163,7 @@ $faqItems = [
 </div>
 </div>
 
-<div class="w-full bg-white">
+<div id="faq" class="w-full bg-white">
 <div class="max-w-layout mx-auto px-4 md:px-6 py-14 md:py-20">
     <div class="max-w-layout mx-auto mb-10">
         <p class="font-label-caps text-label-caps uppercase text-primary tracking-wider mb-2"><?= e(t('onboarding.faq.eyebrow')) ?></p>
@@ -168,7 +176,7 @@ $faqItems = [
                     <?= e($item['q']) ?>
                     <?= icon('chevron-down', 'text-muted shrink-0 transition-transform group-open:rotate-180') ?>
                 </summary>
-                <p class="text-body-sm text-muted mt-3"><?= e($item['a']) ?></p>
+                <p class="text-body-sm text-muted mt-3"><?= nl2br(e($item['a'])) ?></p>
             </details>
         <?php endforeach; ?>
     </div>

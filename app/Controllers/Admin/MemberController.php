@@ -21,6 +21,8 @@ use App\Services\Upload;
 final class MemberController extends Controller
 {
     private const PER_PAGE = 20;
+    /** Horizons proposés sur /admin/members/passports, en mois. */
+    private const PASSPORT_HORIZONS = [3, 6, 12];
 
     public function index(): void
     {
@@ -177,6 +179,60 @@ final class MemberController extends Controller
         }
 
         fclose($output);
+    }
+
+    /**
+     * Passeports expirés ou proches de l'expiration (3, 6 ou 12 mois), pour
+     * préparer une mission biométrique de l'ambassade. ?format=csv : même
+     * liste en fichier, journalisée comme l'export des membres (numéros de
+     * passeport).
+     */
+    public function passports(): void
+    {
+        $months = (int) ($_GET['months'] ?? 6);
+        $months = in_array($months, self::PASSPORT_HORIZONS, true) ? $months : 6;
+        $rows = Member::passportsExpiringBefore(date('Y-m-d', strtotime('+' . $months . ' months')));
+
+        if (($_GET['format'] ?? '') === 'csv') {
+            ActivityLog::record((int) $_SESSION['user_id'], 'members.passports_exported', 'member', null);
+
+            header('Content-Type: text/csv; charset=UTF-8');
+            header('Content-Disposition: attachment; filename="' . t('admin.passports.filename', ['date' => date('Y-m-d')]) . '"');
+
+            $output = fopen('php://output', 'w');
+            fwrite($output, "\xEF\xBB\xBF");
+            fputcsv($output, [
+                t('admin.members.export.column.number'),
+                t('admin.members.export.column.name'),
+                t('admin.passports.column.passport_number'),
+                t('admin.passports.column.expiry'),
+                t('admin.members.export.column.email'),
+                t('admin.passports.column.whatsapp'),
+            ]);
+
+            foreach ($rows as $row) {
+                fputcsv($output, [
+                    self::csvSafe((string) $row['membership_number']),
+                    self::csvSafe((string) $row['full_name']),
+                    self::csvSafe((string) ($row['passport_number'] ?? '')),
+                    (string) $row['passport_expiry'],
+                    self::csvSafe((string) $row['email']),
+                    self::csvSafe((string) ($row['whatsapp'] ?? '')),
+                ]);
+            }
+
+            fclose($output);
+            return;
+        }
+
+        $this->view('admin.members.passports', [
+            'title'      => t('admin.passports.title'),
+            'activeNav'  => 'members',
+            'adminEmail' => $this->currentAdminEmail(),
+            'rows'       => $rows,
+            'months'     => $months,
+            'horizons'   => self::PASSPORT_HORIZONS,
+        ], 'layouts.admin');
     }
 
     /**

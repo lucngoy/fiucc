@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\Controller;
+use App\Core\Lang;
+use App\Models\FaqItem;
 use App\Services\ContactSettings;
 
 /**
@@ -22,6 +24,22 @@ final class OnboardingController extends Controller
             'description' => t('onboarding.meta_description'),
             // Coordonnées modifiables depuis /admin/contact (repli sur .env).
             'whatsappUrl' => ContactSettings::values()['whatsapp_url'],
+            'customFaq'   => $this->customFaq(),
         ]);
+    }
+
+    /**
+     * Table de la migration 029 absente (juste après un déploiement) : la
+     * page reste affichée avec les questions du site seules.
+     *
+     * @return list<array{q: string, a: string}>
+     */
+    private function customFaq(): array
+    {
+        try {
+            return FaqItem::publishedFor(Lang::locale());
+        } catch (\PDOException) {
+            return [];
+        }
     }
 }

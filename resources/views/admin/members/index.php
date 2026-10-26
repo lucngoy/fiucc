@@ -131,11 +131,16 @@ $paginationBase = '/admin/members?' . ($activeFilterQuery !== [] || $sort !== 's
 
     <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
         <p class="text-body-md text-muted"><?= e(t('admin.members.subtitle')) ?></p>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-3">
             <p class="text-body-sm text-muted"><?= e(t('admin.members.total', ['count' => $total])) ?></p>
             <!-- L'export reprend les filtres actifs (mêmes conditions que
                  Member::adminExportRows(), FIUCC-45) — pas de pagination,
                  tout ce qui correspond part dans le fichier. -->
+            <a href="/admin/members/passports"
+               class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-white border border-border text-ink text-label-md font-label-md hover:bg-surface transition-colors">
+                <?= icon('passport') ?>
+                <?= e(t('admin.passports.button')) ?>
+            </a>
             <a href="/admin/members/export<?= $activeFilterQuery !== [] ? '?' . http_build_query($activeFilterQuery) : '' ?>"
                class="inline-flex items-center gap-2 h-9 px-4 rounded-control bg-white border border-border text-ink text-label-md font-label-md hover:bg-surface transition-colors">
                 <?= icon('download') ?>

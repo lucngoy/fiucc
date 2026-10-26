@@ -25,6 +25,7 @@ return [
     ['GET',  '/community',                     'CommunityController@index'],
     ['GET',  '/community/government',          'GovernmentController@index'],
     ['GET',  '/community/government/archives', 'GovernmentController@archives'],
+    ['GET',  '/community/presidents',          'CommunityController@presidents'],
     ['GET',  '/new-at-final',                  'OnboardingController@index'],
 
     // Contenu
@@ -95,6 +96,11 @@ return [
     // Divers
     ['GET',  '/contact',                       'ContactController@index'],
     ['POST', '/contact',                       'ContactController@send'],
+    // Aide et urgences (migration 028) : page publique (numéros d'urgence),
+    // demande d'aide réservée à un membre connecté, validé ou non — elle
+    // n'expose aucun autre membre (voir HelpController).
+    ['GET',  '/help',                          'HelpController@index'],
+    ['POST', '/help',                          'HelpController@store',            ['auth']],
 
     // Langue (FIUCC-30)
     ['GET',  '/lang/{locale}',                 'LocaleController@switch'],

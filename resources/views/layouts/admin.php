@@ -149,6 +149,24 @@ $frLocaleClasses = $locale === 'fr' ? 'bg-primary text-white' : 'text-muted hove
                     <?= icon('check-to-slot', 'w-5 text-center') ?>
                     <?= e(t('admin.nav.elections')) ?>
                 </a>
+                <a href="/admin/faq"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'faq' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'faq' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('circle-question', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.faq')) ?>
+                </a>
+                <a href="/admin/presidents"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'presidents' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'presidents' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('flag', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.presidents')) ?>
+                </a>
+                <a href="/admin/help"
+                   class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'help' ? $activeClasses : $inactiveClasses ?>"
+                   <?= $activeNav === 'help' ? 'aria-current="page"' : '' ?>>
+                    <?= icon('hands-holding-circle', 'w-5 text-center') ?>
+                    <?= e(t('admin.nav.help')) ?>
+                </a>
                 <a href="/admin/contact"
                    class="flex items-center gap-3 h-10 px-3 rounded-control text-label-lg font-label-lg whitespace-nowrap transition-colors <?= $activeNav === 'contact' ? $activeClasses : $inactiveClasses ?>"
                    <?= $activeNav === 'contact' ? 'aria-current="page"' : '' ?>>

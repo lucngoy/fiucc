@@ -19,6 +19,7 @@ return [
     ['POST', '/admin/members/bulk-suspend',     'Admin\MemberController@bulkSuspend'],
     ['POST', '/admin/members/bulk-mark-alumni', 'Admin\MemberController@bulkMarkAlumni'],
     ['GET',  '/admin/members/export',           'Admin\MemberController@export'],
+    ['GET',  '/admin/members/passports',        'Admin\MemberController@passports'],
     // Après /export : {id} accepte n'importe quel segment, la première
     // route qui correspond gagne (App\Core\Router).
     ['GET',  '/admin/members/{id}',             'Admin\MemberController@show'],
@@ -128,6 +129,24 @@ return [
     // Coordonnées de la communauté + messages reçus (page /contact, §39).
     ['GET',  '/admin/contact',                  'Admin\ContactController@index'],
     ['POST', '/admin/contact',                  'Admin\ContactController@update'],
+    // Questions fréquentes de « Nouveau à Final ? » (migration 029).
+    ['GET',  '/admin/faq',                      'Admin\FaqController@index'],
+    ['GET',  '/admin/faq/create',               'Admin\FaqController@create'],
+    ['POST', '/admin/faq',                      'Admin\FaqController@store'],
+    ['GET',  '/admin/faq/{id}/edit',            'Admin\FaqController@edit'],
+    ['POST', '/admin/faq/{id}',                 'Admin\FaqController@update'],
+    ['POST', '/admin/faq/{id}/delete',          'Admin\FaqController@delete'],
+    ['POST', '/admin/faq/{id}/move',            'Admin\FaqController@move'],
+    ['GET',  '/admin/presidents',               'Admin\PresidentController@index'],
+    ['GET',  '/admin/presidents/create',        'Admin\PresidentController@create'],
+    ['POST', '/admin/presidents',               'Admin\PresidentController@store'],
+    ['GET',  '/admin/presidents/{id}/edit',     'Admin\PresidentController@edit'],
+    ['POST', '/admin/presidents/{id}',          'Admin\PresidentController@update'],
+    ['POST', '/admin/presidents/{id}/delete',   'Admin\PresidentController@delete'],
+    // Demandes d'aide (page /help, migration 028).
+    ['GET',  '/admin/help',                     'Admin\HelpController@index'],
+    ['GET',  '/admin/help/{id}',                'Admin\HelpController@show'],
+    ['POST', '/admin/help/{id}',                'Admin\HelpController@update'],
 
     // Mises à jour de la base sans SSH (InfinityFree) — App\Services\Migrator.
     ['GET',  '/admin/migrations',               'Admin\MigrationController@index'],

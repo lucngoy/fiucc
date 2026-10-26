@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Candidate;
+use App\Models\HelpRequest;
 use App\Models\Member;
 
 /**
@@ -51,6 +52,22 @@ final class AdminTasks
                 'label' => t('admin.tasks.pending_candidates', ['count' => $row['pending'], 'election' => $row['title']]),
                 'count' => $row['pending'],
                 'url'   => '/admin/elections/' . $row['election_id'] . '/candidates',
+            ];
+        }
+
+        // Table de la migration 028 : tant qu'elle n'est pas appliquée (juste
+        // après un déploiement), la cloche ne doit pas casser tout l'admin —
+        // y compris /admin/migrations, qui sert justement à l'appliquer.
+        try {
+            $openHelp = HelpRequest::countByStatus('open');
+        } catch (\PDOException) {
+            $openHelp = 0;
+        }
+        if ($openHelp > 0) {
+            $tasks[] = [
+                'label' => t('admin.tasks.open_help_requests', ['count' => $openHelp]),
+                'count' => $openHelp,
+                'url'   => '/admin/help?status=open',
             ];
         }
 

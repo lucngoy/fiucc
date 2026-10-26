@@ -210,16 +210,22 @@ final class Event extends Model
 
     /**
      * Chronologie de la vie de la communauté : événements publiés ou déjà
-     * passés (archived), jamais les brouillons ni les annulés.
+     * passés (archived), jamais les brouillons ni les annulés. Les $limit
+     * plus récents, rendus du plus ancien au plus récent : sinon, passé le
+     * $limit-ième événement, la frise resterait figée sur les premiers.
      */
     public static function timelineEntries(int $limit = 12): array
     {
         $stmt = static::db()->prepare(
-            "SELECT title, description, location, start_date
-             FROM events
-             WHERE status IN ('published', 'archived')
-             ORDER BY start_date ASC
-             LIMIT :limit"
+            "SELECT title, slug, description, location, start_date
+             FROM (
+                 SELECT title, slug, description, location, start_date
+                 FROM events
+                 WHERE status IN ('published', 'archived')
+                 ORDER BY start_date DESC
+                 LIMIT :limit
+             ) AS recent
+             ORDER BY start_date ASC"
         );
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();

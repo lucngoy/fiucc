@@ -72,6 +72,28 @@ $textareaClasses = static function (?string $errorMessage): string {
         </section>
 
         <section class="bg-white rounded-card border border-border p-6 flex flex-col gap-5">
+            <div>
+                <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.contact.section.embassy')) ?></h2>
+                <p class="text-body-sm text-muted"><?= e(t('admin.contact.section.embassy_help')) ?></p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="flex flex-col gap-1.5">
+                    <label for="field-embassy_address" class="font-label-lg text-label-lg text-ink"><?= e(t('admin.contact.field.embassy_address')) ?></label>
+                    <textarea id="field-embassy_address" name="embassy_address" rows="3" maxlength="300" class="<?= e($textareaClasses($error('embassy_address'))) ?>"><?= e($value('embassy_address')) ?></textarea>
+                    <?php if ($error('embassy_address') !== null): ?>
+                        <p class="text-body-sm text-danger" role="alert"><?= e($error('embassy_address')) ?></p>
+                    <?php endif; ?>
+                </div>
+                <div class="flex flex-col gap-5">
+                    <?= component('form_field', ['name' => 'embassy_phone', 'label' => t('admin.contact.field.embassy_phone'), 'type' => 'tel', 'value' => $value('embassy_phone'), 'error' => $error('embassy_phone')]) ?>
+                    <?= component('form_field', ['name' => 'embassy_email', 'label' => t('admin.contact.field.embassy_email'), 'type' => 'email', 'value' => $value('embassy_email'), 'error' => $error('embassy_email')]) ?>
+                </div>
+                <?= component('form_field', ['name' => 'embassy_url', 'label' => t('admin.contact.field.embassy_url'), 'type' => 'url', 'value' => $value('embassy_url'), 'error' => $error('embassy_url'), 'placeholder' => 'https://…']) ?>
+                <?= component('form_field', ['name' => 'mother_community_url', 'label' => t('admin.contact.field.mother_community_url'), 'type' => 'url', 'value' => $value('mother_community_url'), 'error' => $error('mother_community_url'), 'placeholder' => 'https://congolais-chypre.org/', 'help' => t('admin.contact.field.mother_community_url_help')]) ?>
+            </div>
+        </section>
+
+        <section class="bg-white rounded-card border border-border p-6 flex flex-col gap-5">
             <h2 class="font-label-lg text-label-lg text-ink"><?= e(t('admin.contact.section.form')) ?></h2>
             <?= component('form_field', ['name' => 'recipient_email', 'label' => t('admin.contact.field.recipient_email'), 'type' => 'email', 'value' => $value('recipient_email'), 'error' => $error('recipient_email'), 'help' => t('admin.contact.field.recipient_email_help')]) ?>
         </section>

@@ -649,6 +649,30 @@ final class Member extends Model
     }
 
     /**
+     * Passeports expirés ou qui expirent avant $limitDate (page admin
+     * /admin/members/passports) : à transmettre au bureau quand l'ambassade
+     * annonce une mission biométrique à Chypre. Membres validés seulement,
+     * étudiants comme alumni — tous restent des ressortissants concernés.
+     * Un membre sans date d'expiration n'apparaît pas : rien à signaler.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function passportsExpiringBefore(string $limitDate): array
+    {
+        $stmt = static::db()->prepare(
+            "SELECT m.id, m.membership_number, m.full_name, m.passport_number, m.passport_expiry,
+                    m.whatsapp, m.status_type, u.email
+             FROM members m
+             JOIN users u ON u.id = m.user_id
+             WHERE m.status = 'validated' AND m.passport_expiry IS NOT NULL AND m.passport_expiry <= :limit_date
+             ORDER BY m.passport_expiry ASC, m.full_name ASC"
+        );
+        $stmt->execute(['limit_date' => $limitDate]);
+
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Facultés distinctes réellement présentes dans les données (comme le
      * filtre de /community/government) — pas une liste figée qui pourrait ne
      * correspondre à aucun membre.

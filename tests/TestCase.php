@@ -62,6 +62,15 @@ abstract class TestCase extends BaseTestCase
         'candidate_documents',
         // Migration 026 : décisions de la Commission sur un poste.
         'election_position_decisions',
+        // Migration 028 : demandes d'aide.
+        'help_requests',
+        // Migration 029 : questions fréquentes.
+        'faq_items',
+        // Frise de la page « À propos » (Event::timelineEntries).
+        'events', 'event_registrations',
+        // Migration 030 : présidents de la RDC (les cinq de la migration
+        // sont recréés par chaque test qui en a besoin).
+        'presidents',
     ];
 
     protected PDO $db;

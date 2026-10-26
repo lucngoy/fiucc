@@ -29,6 +29,7 @@
 /public/uploads/members/*
 /public/uploads/news/*
 /public/uploads/partners/*
+/public/uploads/presidents/*
 !/public/uploads/**/.gitkeep
 
 # Stockage runtime
